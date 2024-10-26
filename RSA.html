@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Key Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>RSA Key Calculator</h1>
+    <input type="number" id="p" placeholder="Enter prime number p">
+    <input type="number" id="q" placeholder="Enter prime number q">
+    <input type="number" id="e" placeholder="Enter public exponent e">
+    <input type="number" id="d" placeholder="Enter private exponent d">
+    <button onclick="calculateRSA()">Calculate Keys</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculateRSA() {
+        const p = parseInt(document.getElementById("p").value);
+        const q = parseInt(document.getElementById("q").value);
+        const e = parseInt(document.getElementById("e").value);
+        const d = parseInt(document.getElementById("d").value);
+
+        if (isNaN(p) || isNaN(q) || isNaN(e) || isNaN(d) || p <= 0 || q <= 0 || e <= 0 || d <= 0) {
+            document.getElementById("result").innerHTML = "<p style='color: red;'>Please enter valid positive integers.</p>";
+            return;
+        }
+
+        // Calculate n and phi(n)
+        const n = p * q;
+        const phiN = (p - 1) * (q - 1);
+
+        // Calculate public and private keys
+        const publicKey = `{${e}, ${n}}`;
+        const privateKey = `{${d}, ${n}}`;
+
+        // Display the results
+        document.getElementById("result").innerHTML = `
+            <h3>Results</h3>
+            <p><strong>n:</strong> ${n}</p>
+            <p><strong>Φ(n):</strong> ${phiN}</p>
+            <p><strong>Public Key:</strong> ${publicKey}</p>
+            <p><strong>Private Key:</strong> ${privateKey}</p>
+        `;
+    }
+</script>
+
+</body>
+</html>

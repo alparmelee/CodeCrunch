@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRC Validation Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="button"] {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        input[type="button"]:hover {
+            background-color: #218838;
+        }
+        #result {
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>CRC Validation Calculator</h1>
+    <p>Enter your binary message and generator polynomial to validate the CRC.</p>
+
+    <label for="message">Binary Message:</label>
+    <input type="text" id="message" placeholder="Enter binary message (e.g., 10100001110010)" required>
+
+    <label for="generator">Generator Polynomial (Binary):</label>
+    <input type="text" id="generator" placeholder="Enter generator polynomial (e.g., 1101)" required>
+
+    <input type="button" value="Validate CRC" onclick="validateCRC()">
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function xor(a, b) {
+        let result = "";
+        for (let i = 0; i < a.length; i++) {
+            result += a[i] === b[i] ? "0" : "1";
+        }
+        return result;
+    }
+
+    function modulo2Division(dividend, divisor) {
+        let remainder = dividend.slice(0, divisor.length);
+
+        for (let i = divisor.length; i <= dividend.length; i++) {
+            if (remainder[0] === '1') {
+                remainder = xor(remainder, divisor) + (dividend[i] || '');
+            } else {
+                remainder = xor(remainder, '0'.repeat(divisor.length)) + (dividend[i] || '');
+            }
+            remainder = remainder.slice(1);
+        }
+        return remainder;
+    }
+
+    function validateCRC() {
+        let message = document.getElementById("message").value;
+        let generator = document.getElementById("generator").value;
+        let appendedMessage = message + "0".repeat(generator.length - 1);
+
+        if (!/^[01]+$/.test(message) || !/^[01]+$/.test(generator)) {
+            document.getElementById("result").innerHTML = "Please enter valid binary strings for both message and generator.";
+            return;
+        }
+
+        let remainder = modulo2Division(appendedMessage, generator);
+        
+        let result = (remainder === '0'.repeat(generator.length - 1)) 
+            ? "The message is valid. CRC remainder (syndrome) is 0." 
+            : "The message is invalid. CRC remainder (syndrome) is " + remainder + ".";
+        
+        document.getElementById("result").innerHTML = result;
+    }
+</script>
+
+</body>
+</html>
