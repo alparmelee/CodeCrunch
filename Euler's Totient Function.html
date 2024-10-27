@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euler's Totient Function Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Euler's Totient Function Calculator</h1>
+    <input type="number" id="n" placeholder="Enter a number n">
+    <button onclick="calculateTotient()">Calculate ϕ(n)</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function gcd(a, b) {
+        // Calculate the greatest common divisor using the Euclidean algorithm
+        if (b === 0) {
+            return a;
+        }
+        return gcd(b, a % b);
+    }
+
+    function calculateTotient() {
+        const n = parseInt(document.getElementById("n").value);
+
+        if (isNaN(n) || n <= 0) {
+            document.getElementById("result").innerHTML = "<p style='color: red;'>Please enter a valid positive integer.</p>";
+            return;
+        }
+
+        let totient = 0;
+        let coprimeNumbers = [];
+
+        for (let i = 1; i < n; i++) {
+            if (gcd(i, n) === 1) {
+                totient++;
+                coprimeNumbers.push(i); // Collecting coprime numbers
+            }
+        }
+
+        // Display the result
+        document.getElementById("result").innerHTML = `
+            <h3>Result</h3>
+            <p>ϕ(${n}) = ${totient}</p>
+            <p>Coprime numbers less than ${n}: {${coprimeNumbers.join(', ')}}</p>
+        `;
+    }
+</script>
+
+</body>
+</html>
