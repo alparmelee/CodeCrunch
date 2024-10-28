@@ -12,38 +12,71 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 110vh;
             margin: 0;
         }
-        h1 {
+        h1, h2 {
             color: #333;
         }
+        .module {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+            max-width: 400px; /* Limit the width of the entire module */
+        }
+        .module h2 {
+            margin-bottom: 10px;
+        }
         a {
-            margin: 10px;
+            display: block;
+            margin: 10px 0;
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            text-align: center;
+            max-width: 100%; /* Ensure links do not stretch too wide */
         }
         a:hover {
             background-color: #45a049;
+        }
+        .module-1 a {
+            background-color: #007BFF; /* Blue for Module 1 */
+        }
+        .module-1 a:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <h1>Homepage</h1>
-    <p>Select a page to visit:</p>
-    <a href="bi_hex_dec.html">Bi Hex Dec</a>
-    <a href="Checksum.html">Checksum</a>
-    <a href="CheckSumSpacesValidation.html">Checksum Spaces Validation</a>
-    <a href="ChecksumValidation.html">Checksum Validation</a>
-    <a href="ChecsumSpaces.html">Checksum Spaces</a>
-    <a href="CRC.html">CRC</a>
-    <a href="CRCValidate.html">CRC Validate</a>
-    <a href="Mod.html">Mod</a>
-    <a href="RSA.html">RSA</a>
-    <a href="Diffie-Hellman.html">Diffie-Hellman</a>
-    <a href="Euler's Totient Function.html">Φ(n)</a>
+
+    <!-- Module 1 Section -->
+    <div class="module module-1">
+        <h2>Module 1</h2>
+        <a href="keyword.html" aria-label="Keyword Cipher">Keyword Cipher</a>
+        <a href="ceaser.html" aria-label="Caesar Cipher">Caesar Cipher</a>
+        <a href="OFB.html" aria-label="OFB">OFB</a>
+        <a href="ECB.html" aria-label="ECB">ECB</a>
+        <a href="CBC.html" aria-label="CBC">CBC</a>
+    </div>
+
+    <!-- Module 2 Section -->
+    <div class="module module-2">
+        <h2>Module 2</h2>
+        <a href="bi_hex_dec.html" aria-label="Bi Hex Dec">Bi Hex Dec</a>
+        <a href="checksum.html" aria-label="Checksum 4-Bit">Checksum 4-Bit</a>
+        <a href="checksum-validation.html" aria-label="Checksum 4-Bit Validation">Checksum 4-Bit Validation</a>
+        <a href="checksum-spaces.html" aria-label="Checksum 8-Bit">Checksum 8-Bit</a>
+        <a href="checksum-spaces-validation.html" aria-label="Checksum Spaces Validation">Checksum 8-Bit Validation</a>
+        <a href="crc.html" aria-label="CRC">CRC</a>
+        <a href="crc-validate.html" aria-label="CRC Validate">CRC Validate</a>
+        <a href="mod.html" aria-label="Mod">Mod</a>
+        <a href="rsa.html" aria-label="RSA">RSA</a>
+        <a href="diffie-hellman.html" aria-label="Diffie-Hellman">Diffie-Hellman</a>
+        <a href="eulers-totient-function.html" aria-label="Euler's Totient Function">Φ(n)</a>
+    </div>
+
 </body>
 </html>
