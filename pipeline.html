@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5-Stage Pipelined Architecture Simulation</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; text-align: center; }
+        select, button { padding: 10px; font-size: 16px; margin: 10px 0; }
+        .stage-container { margin-top: 20px; text-align: left; }
+        .stage { margin-bottom: 10px; font-weight: bold; }
+        .active { color: green; font-weight: bold; }
+        .image-container { text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>5-Stage Pipelined Architecture Simulation</h2>
+
+    <label for="instruction">Select Instruction:</label>
+    <select id="instruction">
+        <option value="add">Add</option>
+        <option value="load">Load</option>
+        <option value="store">Store</option>
+        <option value="sub">Subtract</option>
+        <option value="mul">Multiply</option>
+    </select>
+
+    <button onclick="simulate()">Simulate Pipeline</button>
+
+    <div class="stage-container">
+        <div class="stage">Instruction Fetch (IF): <span id="ifStage"></span></div>
+        <div class="stage">Operand Fetch (OF): <span id="ofStage"></span></div>
+        <div class="stage">Execute (EX): <span id="exStage"></span></div>
+        <div class="stage">Memory (MEM): <span id="memStage"></span></div>
+        <div class="stage">Write-back (WB): <span id="wbStage"></span></div>
+    </div>
+</div>
+
+<div class="image-container">
+    <img id="pipelineImage" src="https://i.ibb.co/pXstFRH/2024-11-11-16-04-page-0001.jpg" alt="Pipeline" width="700">
+</div>
+
+<script>
+    function simulate() {
+        const instruction = document.getElementById("instruction").value;
+        const pipelineImage = document.getElementById("pipelineImage");
+
+        // Clear all stages
+        document.getElementById("ifStage").innerText = "";
+        document.getElementById("ofStage").innerText = "";
+        document.getElementById("exStage").innerText = "";
+        document.getElementById("memStage").innerText = "";
+        document.getElementById("wbStage").innerText = "";
+
+        // Set active stages and images based on selected instruction
+        switch (instruction) {
+            case "add":
+            case "sub":
+            case "mul":
+                document.getElementById("ifStage").innerText = "Active";
+                document.getElementById("ofStage").innerText = "Active";
+                document.getElementById("exStage").innerText = "Active";
+                document.getElementById("wbStage").innerText = "Active";
+                pipelineImage.src = "https://i.ibb.co/pXstFRH/2024-11-11-16-04-page-0001.jpg";
+                break;
+            case "load":
+                document.getElementById("ifStage").innerText = "Active";
+                document.getElementById("exStage").innerText = "Active";
+                document.getElementById("memStage").innerText = "Active";
+                document.getElementById("wbStage").innerText = "Active";
+                pipelineImage.src = "https://i.ibb.co/47tPMtq/2024-11-11-16-04-page-0002.jpg";
+                break;
+            case "store":
+                document.getElementById("ifStage").innerText = "Active";
+                document.getElementById("ofStage").innerText = "Active";
+                document.getElementById("exStage").innerText = "Active";
+                document.getElementById("memStage").innerText = "Active";
+                pipelineImage.src = "https://i.ibb.co/M8DMQvZ/2024-11-11-16-04-page-0003.jpg";
+                break;
+        }
+    }
+</script>
+
+</body>
+</html>

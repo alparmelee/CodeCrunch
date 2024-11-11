@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SR Flip-Flop Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 300px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; text-align: center; }
+        input { margin: 5px; padding: 10px; font-size: 16px; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        .image-container { text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>SR Flip-Flop Calculator</h2>
+    <label for="s">S (Set):</label>
+    <input type="number" id="s" min="0" max="1" value="0"><br>
+
+    <label for="r">R (Reset):</label>
+    <input type="number" id="r" min="0" max="1" value="0"><br>
+
+    <button onclick="calculate()">Calculate Q(t+1)</button>
+
+    <p>Q(t) = 0, Q(t+1): <span id="qT1_0">0</span></p>
+    <p>Q(t) = 1, Q(t+1): <span id="qT1_1">1</span></p>
+    <p>State: <span id="state">No Change</span></p>
+</div>
+
+<div class="image-container">
+    <img src="https://cdn1.byjus.com/wp-content/uploads/2022/04/s-r-flip-flop.png" alt="SR Flip-Flop Diagram" width="500">
+</div>
+
+<script>
+    function calculate() {
+        let S = parseInt(document.getElementById("s").value);
+        let R = parseInt(document.getElementById("r").value);
+
+        let qT1_0, qT1_1;
+        let state;
+
+        // Calculate Q(t+1) when Q(t) is 0
+        if (S === 0 && R === 0) {
+            qT1_0 = 0; // No change, Q(t+1) = Q(t) = 0
+            qT1_1 = 1; // No change, Q(t+1) = Q(t) = 1
+            state = "No Change";
+        } else if (S === 0 && R === 1) {
+            qT1_0 = 0; // Reset, Q(t+1) = 0
+            qT1_1 = 0; // Reset, Q(t+1) = 0
+            state = "Reset";
+        } else if (S === 1 && R === 0) {
+            qT1_0 = 1; // Set, Q(t+1) = 1
+            qT1_1 = 1; // Set, Q(t+1) = 1
+            state = "Set";
+        } else {
+            qT1_0 = "Invalid"; // Invalid state
+            qT1_1 = "Invalid"; // Invalid state
+            state = "Invalid";
+        }
+
+        // Display results
+        document.getElementById("qT1_0").innerText = qT1_0;
+        document.getElementById("qT1_1").innerText = qT1_1;
+        document.getElementById("state").innerText = state;
+    }
+</script>
+
+</body>
+</html>
+
+
+
