@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        label {
+            flex: 0 0 60%;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input[type="number"] {
+            flex: 0 0 35%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="number"]:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Grade Calculator</h2>
+        <form id="gradeCalculator">
+            <div class="form-group">
+                <label for="exam1">Exam 1 (25%): </label>
+                <input type="number" id="exam1" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="exam2">Exam 2 (25%): </label>
+                <input type="number" id="exam2" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="finalExam">Final Exam (20%): </label>
+                <input type="number" id="finalExam" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="programming1">Programming Assignment 1 (10%): </label>
+                <input type="number" id="programming1" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="programming2">Programming Assignment 2 (10%): </label>
+                <input type="number" id="programming2" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="researchPaper">Research Paper (5%): </label>
+                <input type="number" id="researchPaper" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="peerReviews">Peer Reviews (2.5%): </label>
+                <input type="number" id="peerReviews" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="wireshark">Wireshark (2.5%): </label>
+                <input type="number" id="wireshark" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="extraCredit1">Extra Credit - Exam Questions (1%): </label>
+                <input type="number" id="extraCredit1" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <div class="form-group">
+                <label for="extraCredit2">Extra Credit - Handwritten Notes (1%): </label>
+                <input type="number" id="extraCredit2" min="0" max="100" placeholder="Score out of 100">
+            </div>
+            <button type="button" onclick="calculateGrade()">Calculate Grade</button>
+        </form>
+        <h3 id="result">Your current grade is: </h3>
+    </div>
+
+    <script>
+        function calculateGrade() {
+            const weights = {
+                exam1: 25, exam2: 25, finalExam: 20, programming1: 10, programming2: 10, 
+                researchPaper: 5, peerReviews: 2.5, wireshark: 2.5, extraCredit1: 1, extraCredit2: 1
+            };
+
+            let totalWeightedScore = 0;
+            let totalWeight = 0;
+
+            for (const [key, weight] of Object.entries(weights)) {
+                const score = parseFloat(document.getElementById(key).value);
+                if (!isNaN(score)) {
+                    totalWeightedScore += (score / 100) * weight;
+                    totalWeight += weight;
+                }
+            }
+
+            const finalGrade = totalWeight > 0 ? (totalWeightedScore / totalWeight) * 100 : 0;
+            document.getElementById("result").innerText = `Your current grade is: ${finalGrade.toFixed(2)}%`;
+        }
+    </script>
+</body>
+</html>
