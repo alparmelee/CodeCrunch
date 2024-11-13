@@ -31,7 +31,6 @@
             display: block;
             margin: 10px 0;
             padding: 10px 20px;
-            background-color: #4CAF50;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -39,7 +38,7 @@
             max-width: 100%;
         }
         a:hover {
-            background-color: #45a049;
+            opacity: 0.9;
         }
         .module-1 a {
             background-color: #007BFF; /* Blue for Module 1 */
@@ -47,10 +46,17 @@
         .module-1 a:hover {
             background-color: #0056b3;
         }
-        .module-0 a, .module-comparch a {
-            background-color: #FF5733; /* Orange for Computer Arch and Module 0 */
+        .module-0 a {
+            background-color: #FFD700; /* Yellow for Module 0 */
+            color: #333; /* Dark text for contrast */
         }
-        .module-0 a:hover, .module-comparch a:hover {
+        .module-0 a:hover {
+            background-color: #e6c200;
+        }
+        .module-comparch a {
+            background-color: #FF5733; /* Orange for Computer Arch */
+        }
+        .module-comparch a:hover {
             background-color: #c84f2d;
         }
     </style>
@@ -104,5 +110,6 @@
 
 </body>
 </html>
+
 
 
