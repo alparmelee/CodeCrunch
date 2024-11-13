@@ -22,7 +22,7 @@
             margin: 20px 0;
             text-align: center;
             width: 100%;
-            max-width: 400px; /* Limit the width of the entire module */
+            max-width: 400px;
         }
         .module h2 {
             margin-bottom: 10px;
@@ -36,7 +36,7 @@
             text-decoration: none;
             border-radius: 5px;
             text-align: center;
-            max-width: 100%; /* Ensure links do not stretch too wide */
+            max-width: 100%;
         }
         a:hover {
             background-color: #45a049;
@@ -47,10 +47,10 @@
         .module-1 a:hover {
             background-color: #0056b3;
         }
-        .module-0 a {
-            background-color: #FF5733; /* Orange for Module 0 */
+        .module-0 a, .module-comparch a {
+            background-color: #FF5733; /* Orange for Computer Arch and Module 0 */
         }
-        .module-0 a:hover {
+        .module-0 a:hover, .module-comparch a:hover {
             background-color: #c84f2d;
         }
     </style>
@@ -58,9 +58,9 @@
 <body>
     <h1>Homepage</h1>
 
-    <!-- Module 0 Section for IEEE and Standard Form -->
-    <div class="module module-0">
-        <h2>Module 0</h2>
+    <!-- Computer Arch Module Section -->
+    <div class="module module-comparch">
+        <h2>Computer Arch</h2>
         <a href="IEEE.html" aria-label="IEEE Floating Point">IEEE Floating Point</a>
         <a href="standard.html" aria-label="Standard Floating Point">Standard Floating Point</a>
         <a href="ControlUnit.html" aria-label="Control Unit">Control Unit</a>
@@ -68,6 +68,12 @@
         <a href="D.html" aria-label="D Flip-Flop">D Flip-Flop</a>
         <a href="JK.html" aria-label="JK Flip-Flop">JK Flip-Flop</a>
         <a href="SR.html" aria-label="SR Flip-Flop">SR Flip-Flop</a>
+    </div>
+
+    <!-- New Module 0 Section with Grade Calculator -->
+    <div class="module module-0">
+        <h2>Module 0</h2>
+        <a href="GradeCalc.html" aria-label="Grade Calculator">Grade Calculator</a>
     </div>
 
     <!-- Module 1 Section -->
@@ -98,4 +104,5 @@
 
 </body>
 </html>
+
 
