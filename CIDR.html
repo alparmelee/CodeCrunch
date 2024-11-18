@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIDR Subnet Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { margin-top: 10px; display: block; }
+        input { margin-top: 5px; padding: 8px; width: 100%; max-width: 300px; }
+        button { margin-top: 15px; padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+<h1>CIDR Subnet Calculator</h1>
+<form id="cidrForm">
+    <label for="hostsLocation1">Number of Hosts for Location 1:</label>
+    <input type="number" id="hostsLocation1" name="hostsLocation1" value="4000" required>
+
+    <label for="hostsLocation2">Number of Hosts for Location 2:</label>
+    <input type="number" id="hostsLocation2" name="hostsLocation2" value="2000" required>
+
+    <label for="ipLocation1">IP Address for Location 1:</label>
+    <input type="text" id="ipLocation1" name="ipLocation1" value="192.100.0.0" placeholder="e.g., 192.100.0.0" required>
+
+    <button type="button" onclick="calculateCIDR()">Calculate CIDR</button>
+</form>
+
+<div class="result" id="result"></div>
+
+<script>
+    function calculateCIDR() {
+        const hostsLocation1 = parseInt(document.getElementById('hostsLocation1').value);
+        const hostsLocation2 = parseInt(document.getElementById('hostsLocation2').value);
+        const ipLocation1 = document.getElementById('ipLocation1').value.trim();
+
+        if (isNaN(hostsLocation1) || isNaN(hostsLocation2) || !ipLocation1) {
+            alert("Please enter valid inputs.");
+            return;
+        }
+
+        function getCIDRForHosts(hosts) {
+            let subnetSize = 32;
+            while (Math.pow(2, 32 - subnetSize) - 2 < hosts) {
+                subnetSize--;
+            }
+            return subnetSize;
+        }
+
+        const cidrLocation1 = getCIDRForHosts(hostsLocation1);
+        const cidrLocation2 = getCIDRForHosts(hostsLocation2);
+
+        const ipToArray = ip => ip.split('.').map(Number);
+        const arrayToIp = arr => arr.join('.');
+
+        let ipLocation1Array = ipToArray(ipLocation1);
+        
+        // Correctly calculate Location 2 subnet start
+        let ipLocation2Array = [...ipLocation1Array];
+        ipLocation2Array[2] = 8;  // Explicitly set to 8
+        ipLocation2Array[3] = 0;  // Ensure last octet is 0
+
+        const subnetLocation1Str = arrayToIp(ipLocation1Array) + '/' + cidrLocation1;
+        const subnetLocation2Str = arrayToIp(ipLocation2Array) + '/' + cidrLocation2;
+
+        document.getElementById('result').innerHTML = ` 
+            <h3>Results:</h3>
+            <p><strong>Location 1 CIDR Subnet:</strong> ${subnetLocation1Str}</p>
+            <p><strong>Location 2 CIDR Subnet:</strong> ${subnetLocation2Str}</p>
+        `;
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
