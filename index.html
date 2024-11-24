@@ -21,11 +21,13 @@
         h1 {
             font-size: 36px;
             color: #2C3E50;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
         }
 
-        .logo {
-            margin-bottom: 30px;
+        h2 {
+            font-size: 24px;
+            color: #7F8C8D;
+            margin-bottom: 40px;
         }
 
         .button-container {
@@ -40,33 +42,17 @@
             text-align: center;
             background-color: #3498db;
             border-radius: 12px;
-            overflow: hidden;
+            padding: 20px;
             width: 250px;
+            font-size: 18px;
+            color: white;
+            text-decoration: none;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
         .button:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .button img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: opacity 0.3s ease;
-        }
-
-        .button img:hover {
-            opacity: 0.8;
-        }
-
-        .button p {
-            font-size: 18px;
-            color: white;
-            background-color: #34495e;
-            padding: 10px;
-            margin: 0;
         }
 
         /* Mobile responsiveness */
@@ -79,23 +65,15 @@
 </head>
 <body>
     <h1>Welcome to CodeCrunch</h1>
-    <h2>Select a Class</h2>
+    <h2>Select Class</h2>
     <div class="button-container">
-        <a href="comparch.html" class="button">
-            <img src="https://www.sigarch.org/wp-content/uploads/2017/03/Welcome.jpg" alt="Computer Architecture">
-            <p>Computer Architecture</p>
-        </a>
-        <a href="security.html" class="button">
-            <img src="https://ontech.com/wp-content/uploads/2022/11/ComputerSecurity.png" alt="Security">
-            <p>Security in Computing</p>
-        </a>
-        <a href="calculators.html" class="button">
-            <img src="https://www.jamesgmartin.center/wp-content/uploads/2020/07/AdobeStock_328366715-1200x800.jpeg" alt="Calculators">
-            <p>Calculate Grade</p>
-        </a>
+        <a href="comparch.html" class="button">Computer Architecture</a>
+        <a href="security.html" class="button">Security</a>
+        <a href="calculators.html" class="button">Calculators</a>
     </div>
 </body>
 </html>
+
 
 
 
