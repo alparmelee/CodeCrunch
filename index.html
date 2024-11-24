@@ -25,12 +25,12 @@
         }
 
         .button-container {
-            display: flex;
-            justify-content: flex-start; /* Align buttons to the left */
+            display: grid;
+            grid-template-columns: repeat(4, 250px); /* 4 columns */
             gap: 30px;
-            flex-wrap: wrap;
-            width: 100%; /* Ensure container spans full width */
-            max-width: 1200px; /* Limit width for better alignment */
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px; /* Max width for better alignment */
         }
 
         .button {
@@ -39,7 +39,6 @@
             background-color: #3498db;
             border-radius: 12px;
             overflow: hidden;
-            width: 250px;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
@@ -92,7 +91,7 @@
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .button-container {
-                flex-direction: column;
+                grid-template-columns: 1fr; /* Single column on small screens */
             }
         }
     </style>
