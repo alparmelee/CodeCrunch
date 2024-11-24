@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #eaf2f8; /* New background color */
+            background-color: #eaf2f8; /* Background color */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,16 +22,6 @@
             font-size: 36px;
             color: #2C3E50;
             margin-bottom: 50px;
-        }
-
-        .logo {
-            margin-bottom: 30px;
-        }
-
-        .logo img {
-            max-width: 400px; /* Increased size of the logo */
-            width: 100%;
-            height: auto;
         }
 
         .button-container {
@@ -77,20 +67,27 @@
 
         .discord-button {
             margin-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: #5865F2;
-            color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
+            padding: 10px 20px;
             border-radius: 8px;
-            cursor: pointer;
             text-decoration: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .discord-button:hover {
             background-color: #4752c4;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .discord-button img {
+            height: 30px;
+            margin-right: 10px;
         }
 
         /* Mobile responsiveness */
@@ -102,10 +99,7 @@
     </style>
 </head>
 <body>
-    <div class="logo">
-        <img src="https://i.ibb.co/z8xjQX4/Screenshot-2024-11-23-211536.png" alt="Logo">
-    </div>
-    <h1>Welcome to the Homepage</h1>
+    <h1>Welcome to CodeCrunch</h1>
     <div class="button-container">
         <a href="comparch.html" class="button">
             <img src="https://www.sigarch.org/wp-content/uploads/2017/03/Welcome.jpg" alt="Computer Architecture">
@@ -120,9 +114,13 @@
             <p>Calculate Grade</p>
         </a>
     </div>
-    <a href="https://discord.gg/r7UHWcxY5X" class="discord-button">Join the Discord Server</a>
+    <a href="https://discord.gg/r7UHWcxY5X" class="discord-button">
+        <img src="https://blog.pinwheel.com/hubfs/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord">
+        Join the Discord Server
+    </a>
 </body>
 </html>
+
 
 
 
