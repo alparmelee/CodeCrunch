@@ -4,35 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security in Computing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #2C3E50;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 30px 0 20px;
+        }
+
+        .module {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .module a {
+            display: block;
+            padding: 15px;
+            background-color: #9b59b6;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .module a:hover {
+            background-color: #8e44ad;
+        }
+    </style>
 </head>
 <body>
     <h1>Security in Computing</h1>
     <h2>Module 1</h2>
-    <ul>
-        <li><a href="Keyword.html">Keyword Cipher</a></li>
-        <li><a href="Ceaser.html">Caesar Cipher</a></li>
-        <li><a href="OFB.html">OFB</a></li>
-        <li><a href="ECB.html">ECB</a></li>
-        <li><a href="CBC.html">CBC</a></li>
-    </ul>
+    <div class="module">
+        <a href="Keyword.html">Keyword Cipher</a>
+        <a href="Ceaser.html">Caesar Cipher</a>
+        <a href="OFB.html">OFB</a>
+        <a href="ECB.html">ECB</a>
+        <a href="CBC.html">CBC</a>
+    </div>
     <h2>Module 2</h2>
-    <ul>
-        <li><a href="bi_hex_dec.html">Bi Hex Dec</a></li>
-        <li><a href="Checksum.html">Checksum 4-Bit</a></li>
-        <li><a href="ChecksumValidation.html">Checksum 4-Bit Validation</a></li>
-        <li><a href="ChecsumSpaces.html">Checksum 8-Bit</a></li>
-        <li><a href="CheckSumSpacesValidation.html">Checksum 8-Bit Validation</a></li>
-        <li><a href="CRC.html">CRC</a></li>
-        <li><a href="CRCValidate.html">CRC Validate</a></li>
-        <li><a href="Mod.html">Mod</a></li>
-        <li><a href="RSA.html">RSA</a></li>
-        <li><a href="Diffie-Hellman.html">Diffie-Hellman</a></li>
-        <li><a href="Euler's Totient Function.html">Φ(n)</a></li>
-    </ul>
+    <div class="module">
+        <a href="bi_hex_dec.html">Bi Hex Dec</a>
+        <a href="Checksum.html">Checksum 4-Bit</a>
+        <a href="ChecksumValidation.html">Checksum 4-Bit Validation</a>
+        <a href="ChecsumSpaces.html">Checksum 8-Bit</a>
+        <a href="CheckSumSpacesValidation.html">Checksum 8-Bit Validation</a>
+        <a href="CRC.html">CRC</a>
+        <a href="CRCValidate.html">CRC Validate</a>
+        <a href="Mod.html">Mod</a>
+        <a href="RSA.html">RSA</a>
+        <a href="Diffie-Hellman.html">Diffie-Hellman</a>
+        <a href="Euler's Totient Function.html">Φ(n)</a>
+    </div>
     <h2>Module 3</h2>
-    <ul>
-        <li><a href="CIDR.html">CIDR Subnet Calculator 2 Locations</a></li>
-        <li><a href="CIDR3.html">CIDR Subnet Calculator 3 Locations</a></li>
-    </ul>
+    <div class="module">
+        <a href="CIDR.html">CIDR Subnet Calculator 2 Locations</a>
+        <a href="CIDR3.html">CIDR Subnet Calculator 3 Locations</a>
+    </div>
 </body>
 </html>
