@@ -4,30 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Computer Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #2C3E50;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 30px 0 20px;
+        }
+
+        .module {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .module a {
+            display: block;
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .module a:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
     <h1>Computer Architecture</h1>
     <h2>Module 1</h2>
-    <ul>
-        <li><a href="BiAddition.html">Binary Addition</a></li>
-        <li><a href="negbinary.html">Negative Binary</a></li>
-        <li><a href="numberSystemConverter.html">Number System Converter</a></li>
-    </ul>
+    <div class="module">
+        <a href="BiAddition.html">Binary Addition</a>
+        <a href="negbinary.html">Negative Binary</a>
+        <a href="numberSystemConverter.html">Number System Converter</a>
+    </div>
     <h2>Module 2</h2>
-    <ul>
-        <li><a href="kmap.html">K-Map</a></li>
-        <li><a href="ControlUnit.html">Control Unit</a></li>
-        <li><a href="pipeline.html">Pipeline</a></li>
-        <li><a href="D.html">D Flip-Flop</a></li>
-        <li><a href="JK.html">JK Flip-Flop</a></li>
-        <li><a href="SR.html">SR Flip-Flop</a></li>
-    </ul>
+    <div class="module">
+        <a href="kmap.html">K-Map</a>
+        <a href="ControlUnit.html">Control Unit</a>
+        <a href="pipeline.html">Pipeline</a>
+        <a href="D.html">D Flip-Flop</a>
+        <a href="JK.html">JK Flip-Flop</a>
+        <a href="SR.html">SR Flip-Flop</a>
+    </div>
     <h2>Module 3</h2>
-    <ul>
-        <li><a href="IEEE.html">IEEE Floating Point</a></li>
-        <li><a href="standard.html">Standard Floating Point</a></li>
-        <li><a href="IEEE2.html">IEEE Floating Point 2</a></li>
-        <li><a href="standard2.html">Standard Floating Point 2</a></li>
-    </ul>
+    <div class="module">
+        <a href="IEEE.html">IEEE Floating Point</a>
+        <a href="standard.html">Standard Floating Point</a>
+        <a href="IEEE2.html">IEEE Floating Point 2</a>
+        <a href="standard2.html">Standard Floating Point 2</a>
+    </div>
 </body>
 </html>
+
