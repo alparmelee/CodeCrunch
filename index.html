@@ -12,129 +12,52 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 270vh;
+            height: 100vh;
             margin: 0;
         }
-        h1, h2 {
+        h1 {
             color: #333;
         }
-        .module {
-            margin: 20px 0;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
         }
-        .module h2 {
-            margin-bottom: 10px;
-        }
-        a {
+        .button {
             display: block;
-            margin: 10px 0;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
             text-align: center;
-            max-width: 100%;
+            width: 200px;
         }
-        a:hover {
-            background-color: #45a049;
+        .button img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
         }
-        .module-1 a {
-            background-color: #007BFF; /* Blue for Module 1 */
-        }
-        .module-1 a:hover {
-            background-color: #0056b3;
-        }
-        .module-0 a, .module-comparch a {
-            background-color: #FF5733; /* Orange for Computer Arch and Module 0 */
-        }
-        .module-0 a:hover, .module-comparch a:hover {
-            background-color: #c84f2d;
-        }
-        .module-3 a {
-            background-color: #9C27B0; /* Purple for Module 3 */
-        }
-        .module-3 a:hover {
-            background-color: #7b1fa2;
+        .button p {
+            margin-top: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Homepage</h1>
-
-    <!-- New Module 1 Section with BiAddition, negbinary, and numberSystemConverter -->
-    <div class="module module-1">
-        <h2>Computer Architecture - Module 1</h2>
-        <a href="BiAddition.html" aria-label="Binary Addition">Binary Addition</a>
-        <a href="negbinary.html" aria-label="Negative Binary">Negative Binary</a>
-        <a href="numberSystemConverter.html" aria-label="Number System Converter">Number System Converter</a>
+    <h1>Welcome to the Homepage</h1>
+    <div class="button-container">
+        <a href="comparch.html" class="button">
+            <img src="https://www.sigarch.org/wp-content/uploads/2017/03/Welcome.jpg" alt="Computer Architecture">
+            <p>Computer Architecture</p>
+        </a>
+        <a href="security.html" class="button">
+            <img src="https://ontech.com/wp-content/uploads/2022/11/ComputerSecurity.png" alt="Security">
+            <p>Security</p>
+        </a>
+        <a href="calculators.html" class="button">
+            <img src="https://www.traceable.com/media/catalog/product/cache/2/image/9df78eab33525d08d6e5fb8d27136e95/6/0/6031mainweb.jpg" alt="Calculators">
+            <p>Calculators</p>
+        </a>
     </div>
-
-
-    <!-- Computer Architecture Module Section 2 -->
-    <div class="module module-comparch">
-        <h2>Computer Architecture - Module 2</h2>
-        <a href="kmap.html" aria-label="K-Map">K-Map</a>
-        <a href="ControlUnit.html" aria-label="Control Unit">Control Unit</a>
-        <a href="pipeline.html" aria-label="Pipeline">Pipeline</a>
-        <a href="D.html" aria-label="D Flip-Flop">D Flip-Flop</a>
-        <a href="JK.html" aria-label="JK Flip-Flop">JK Flip-Flop</a>
-        <a href="SR.html" aria-label="SR Flip-Flop">SR Flip-Flop</a>
-    </div>
-
-    <!-- Computer Architecture Module Section 3 (Floating Points) -->
-    <div class="module module-comparch">
-        <h2>Computer Architecture - Module 3</h2>
-        <a href="IEEE.html" aria-label="IEEE Floating Point">IEEE Floating Point</a>
-        <a href="standard.html" aria-label="Standard Floating Point">Standard Floating Point</a>
-        <a href="IEEE2.html" aria-label="IEEE Floating Point 2">IEEE Floating Point 2</a>
-        <a href="standard2.html" aria-label="Standard Floating Point 2">Standard Floating Point 2</a>
-    </div>
-
-    <!-- New Module 0 Section with Grade Calculators -->
-    <div class="module module-0">
-        <h2>Grade Calculator - Module 0</h2>
-        <a href="GradeCalc.html" aria-label="Security Grade Calculator">Security Grade Calculator</a>
-        <a href="arch.html" aria-label="Computer Arch Grade Calculator">Computer Arch Grade Calculator</a>
-    </div>
-
-    <!-- Module 1 Section -->
-    <div class="module module-1">
-        <h2>Security in Computing - Module 1</h2>
-        <a href="Keyword.html" aria-label="Keyword Cipher">Keyword Cipher</a>
-        <a href="Ceaser.html" aria-label="Caesar Cipher">Caesar Cipher</a>
-        <a href="OFB.html" aria-label="OFB">OFB</a>
-        <a href="ECB.html" aria-label="ECB">ECB</a>
-        <a href="CBC.html" aria-label="CBC">CBC</a>
-    </div>
-
-    <!-- Module 2 Section -->
-    <div class="module module-2">
-        <h2>Security in Computing - Module 2</h2>
-        <a href="bi_hex_dec.html" aria-label="Bi Hex Dec">Bi Hex Dec</a>
-        <a href="Checksum.html" aria-label="Checksum 4-Bit">Checksum 4-Bit</a>
-        <a href="ChecksumValidation.html" aria-label="Checksum 4-Bit Validation">Checksum 4-Bit Validation</a>
-        <a href="ChecsumSpaces.html" aria-label="Checksum 8-Bit">Checksum 8-Bit</a>
-        <a href="CheckSumSpacesValidation.html" aria-label="Checksum Spaces Validation">Checksum 8-Bit Validation</a>
-        <a href="CRC.html" aria-label="CRC">CRC</a>
-        <a href="CRCValidate.html" aria-label="CRC Validate">CRC Validate</a>
-        <a href="Mod.html" aria-label="Mod">Mod</a>
-        <a href="RSA.html" aria-label="RSA">RSA</a>
-        <a href="Diffie-Hellman.html" aria-label="Diffie-Hellman">Diffie-Hellman</a>
-        <a href="Euler's Totient Function.html" aria-label="Euler's Totient Function">Φ(n)</a>
-    </div>
-
-    <!-- Module 3 Section -->
-    <div class="module module-3">
-        <h2>Security in Computing - Module 3</h2>
-        <a href="CIDR.html" aria-label="CIDR Subnet Calculator 2 Locations">CIDR Subnet Calculator 2 Locations</a>
-        <a href="CIDR3.html" aria-label="CIDR Subnet Calculator 3 Locations">CIDR Subnet Calculator 3 Locations</a>
-    </div>
-
 </body>
 </html>
+
 
 
 
