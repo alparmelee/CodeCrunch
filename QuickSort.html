@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Same styling as before */
+        .container {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .input-area {
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 8px;
+            margin-right: 10px;
+            width: 50px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: red;
+            margin: 10px 0;
+        }
+
+        .steps-container {
+            margin-top: 20px;
+        }
+
+        .step {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            animation: fadeIn 0.5s;
+        }
+
+        .number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin: 0 5px;
+            background-color: #fff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .comparing {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+
+        .swapped {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .pivot {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .array-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QuickSort Visualization</h1>
+        
+        <div class="input-area">
+            <h3>Enter up to 10 numbers:</h3>
+            <div class="array-input" id="arrayInputs">
+                <input type="number" placeholder="#">
+            </div>
+            <button onclick="addInput()">Add Number</button>
+            <button onclick="startSort()">Sort</button>
+            <button onclick="resetCalculator()">Reset</button>
+        </div>
+
+        <div class="error" id="errorMsg"></div>
+        
+        <div class="steps-container" id="stepsContainer"></div>
+    </div>
+
+    <script>
+        let steps = [];
+
+        function addInput() {
+            const container = document.getElementById('arrayInputs');
+            if (container.children.length >= 10) {
+                showError('Maximum 10 numbers allowed');
+                return;
+            }
+            
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.placeholder = '#';
+            container.appendChild(input);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = message;
+        }
+
+        function getInputArray() {
+            const inputs = document.getElementById('arrayInputs').getElementsByTagName('input');
+            const array = [];
+            
+            for (let input of inputs) {
+                if (input.value !== '') {
+                    const num = parseInt(input.value);
+                    if (isNaN(num)) {
+                        showError('Please enter valid numbers');
+                        return null;
+                    }
+                    array.push(num);
+                }
+            }
+            
+            if (array.length < 2) {
+                showError('Please enter at least 2 numbers');
+                return null;
+            }
+            
+            return array;
+        }
+
+        function quickSort(arr, low, high) {
+            if (low < high) {
+                const pivotIndex = partition(arr, low, high);
+                
+                // Add the partition step
+                steps.push({
+                    array: [...arr],
+                    comparing: [],
+                    swapped: [],
+                    pivot: pivotIndex,
+                    message: `Pivot positioned at index ${pivotIndex}`
+                });
+
+                quickSort(arr, low, pivotIndex - 1);
+                quickSort(arr, pivotIndex + 1, high);
+            }
+        }
+
+        function partition(arr, low, high) {
+            const pivot = arr[high];
+            let i = low - 1;
+
+            // Add pivot selection step
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [],
+                pivot: high,
+                message: `Choosing pivot: ${pivot}`
+            });
+
+            for (let j = low; j < high; j++) {
+                // Add comparison step
+                steps.push({
+                    array: [...arr],
+                    comparing: [j, high],
+                    swapped: [],
+                    pivot: high,
+                    message: `Comparing ${arr[j]} with pivot ${pivot}`
+                });
+
+                if (arr[j] < pivot) {
+                    i++;
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                    steps.push({
+                        array: [...arr],
+                        comparing: [],
+                        swapped: [i, j],
+                        pivot: high,
+                        message: `Swapped ${arr[i]} and ${arr[j]}`
+                    });
+                }
+            }
+
+            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [i + 1, high],
+                pivot: high,
+                message: `Swapped pivot ${arr[i + 1]} to its correct position`
+            });
+
+            return i + 1;
+        }
+
+        function renderStep(step, index) {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step';
+            
+            const stepHeader = document.createElement('div');
+            stepHeader.textContent = `Step ${index + 1}: ${step.message}`;
+            stepDiv.appendChild(stepHeader);
+            
+            const arrayDiv = document.createElement('div');
+            arrayDiv.style.marginTop = '10px';
+            
+            step.array.forEach((num, i) => {
+                const numDiv = document.createElement('div');
+                numDiv.className = 'number';
+                
+                if (step.comparing.includes(i)) {
+                    numDiv.classList.add('comparing');
+                }
+                if (step.swapped.includes(i)) {
+                    numDiv.classList.add('swapped');
+                }
+                if (step.pivot === i) {
+                    numDiv.classList.add('pivot');
+                }
+                
+                numDiv.textContent = num;
+                arrayDiv.appendChild(numDiv);
+            });
+            
+            stepDiv.appendChild(arrayDiv);
+            return stepDiv;
+        }
+
+        function startSort() {
+            const array = getInputArray();
+            if (!array) return;
+            
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = '';
+            
+            steps = [];
+            quickSort([...array], 0, array.length - 1);
+            
+            steps.forEach((step, index) => {
+                const stepElement = renderStep(step, index);
+                stepsContainer.appendChild(stepElement);
+            });
+        }
+
+        function resetCalculator() {
+            const container = document.getElementById('arrayInputs');
+            container.innerHTML = '<input type="number" placeholder="#">';
+            
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = '';
+            
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = '';
+            
+            steps = [];
+        }
+
+        // Initialize with one input
+        resetCalculator();
+    </script>
+</body>
+</html>
