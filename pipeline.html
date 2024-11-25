@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5-Stage Pipelined Architecture Simulation</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; text-align: center; }
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         select, button { padding: 10px; font-size: 16px; margin: 10px 0; }
         .stage-container { margin-top: 20px; text-align: left; }
         .stage { margin-bottom: 10px; font-weight: bold; }
-        .active { color: green; font-weight: bold; }
-        .image-container { text-align: center; margin-top: 20px; }
+        .active { color: green; }
+        .pipeline-visual { display: flex; justify-content: space-between; margin-top: 30px; }
+        .pipeline-stage { width: 18%; text-align: center; padding: 10px; border: 2px solid #ccc; border-radius: 5px; }
+        .pipeline-stage.active { border-color: green; background-color: #e6ffe6; }
+        .arrow { align-self: center; font-size: 24px; color: #666; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h2>5-Stage Pipelined Architecture Simulation</h2>
-
     <label for="instruction">Select Instruction:</label>
     <select id="instruction">
         <option value="add">Add</option>
@@ -27,9 +28,7 @@
         <option value="sub">Subtract</option>
         <option value="mul">Multiply</option>
     </select>
-
     <button onclick="simulate()">Simulate Pipeline</button>
-
     <div class="stage-container">
         <div class="stage">Instruction Fetch (IF): <span id="ifStage"></span></div>
         <div class="stage">Operand Fetch (OF): <span id="ofStage"></span></div>
@@ -37,52 +36,52 @@
         <div class="stage">Memory (MEM): <span id="memStage"></span></div>
         <div class="stage">Write-back (WB): <span id="wbStage"></span></div>
     </div>
+    <div class="pipeline-visual">
+        <div id="ifVisual" class="pipeline-stage">IF</div>
+        <div class="arrow">→</div>
+        <div id="ofVisual" class="pipeline-stage">OF</div>
+        <div class="arrow">→</div>
+        <div id="exVisual" class="pipeline-stage">EX</div>
+        <div class="arrow">→</div>
+        <div id="memVisual" class="pipeline-stage">MEM</div>
+        <div class="arrow">→</div>
+        <div id="wbVisual" class="pipeline-stage">WB</div>
+    </div>
 </div>
-
-<div class="image-container">
-    <img id="pipelineImage" src="https://i.ibb.co/pXstFRH/2024-11-11-16-04-page-0001.jpg" alt="Pipeline" width="700">
-</div>
-
 <script>
     function simulate() {
         const instruction = document.getElementById("instruction").value;
-        const pipelineImage = document.getElementById("pipelineImage");
+        const stages = ["if", "of", "ex", "mem", "wb"];
+        
+        // Reset all stages
+        stages.forEach(stage => {
+            document.getElementById(stage + "Stage").innerText = "";
+            document.getElementById(stage + "Visual").classList.remove("active");
+        });
 
-        // Clear all stages
-        document.getElementById("ifStage").innerText = "";
-        document.getElementById("ofStage").innerText = "";
-        document.getElementById("exStage").innerText = "";
-        document.getElementById("memStage").innerText = "";
-        document.getElementById("wbStage").innerText = "";
-
-        // Set active stages and images based on selected instruction
+        // Set active stages based on selected instruction
         switch (instruction) {
             case "add":
             case "sub":
             case "mul":
-                document.getElementById("ifStage").innerText = "Active";
-                document.getElementById("ofStage").innerText = "Active";
-                document.getElementById("exStage").innerText = "Active";
-                document.getElementById("wbStage").innerText = "Active";
-                pipelineImage.src = "https://i.ibb.co/pXstFRH/2024-11-11-16-04-page-0001.jpg";
+                activateStages(["if", "of", "ex", "wb"]);
                 break;
             case "load":
-                document.getElementById("ifStage").innerText = "Active";
-                document.getElementById("exStage").innerText = "Active";
-                document.getElementById("memStage").innerText = "Active";
-                document.getElementById("wbStage").innerText = "Active";
-                pipelineImage.src = "https://i.ibb.co/47tPMtq/2024-11-11-16-04-page-0002.jpg";
+                activateStages(["if", "ex", "mem", "wb"]);
                 break;
             case "store":
-                document.getElementById("ifStage").innerText = "Active";
-                document.getElementById("ofStage").innerText = "Active";
-                document.getElementById("exStage").innerText = "Active";
-                document.getElementById("memStage").innerText = "Active";
-                pipelineImage.src = "https://i.ibb.co/M8DMQvZ/2024-11-11-16-04-page-0003.jpg";
+                activateStages(["if", "of", "ex", "mem"]);
                 break;
         }
     }
-</script>
 
+    function activateStages(activeStages) {
+        activeStages.forEach(stage => {
+            document.getElementById(stage + "Stage").innerText = "Active";
+            document.getElementById(stage + "Stage").classList.add("active");
+            document.getElementById(stage + "Visual").classList.add("active");
+        });
+    }
+</script>
 </body>
 </html>
