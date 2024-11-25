@@ -1,247 +1,197 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Map Converter</title>
     <style>
-        table { border-collapse: collapse; margin: 20px 0; }
-        th, td { border: 1px solid #333; padding: 10px; text-align: center; }
-        input[type="text"] { width: 30px; text-align: center; }
-        #resultTable { margin-top: 20px; display: none; }
+        .container {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .kmap {
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .kmap td {
+            border: 1px solid #333;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+        }
+        .kmap th {
+            padding: 5px;
+            font-weight: normal;
+        }
+        .cell {
+            cursor: pointer;
+            background: #fff;
+        }
+        .cell.active {
+            background: #007bff;
+            color: white;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h2>4x2 Karnaugh Map Calculator</h2>
+        <p>Click cells to toggle values (1/0). Variables: A, B (rows) and C (column)</p>
+        <table class="kmap">
+            <tr>
+                <th></th>
+                <th>C=0</th>
+                <th>C=1</th>
+            </tr>
+            <tr>
+                <th>AB=00</th>
+                <td class="cell" data-pos="0">0</td>
+                <td class="cell" data-pos="1">0</td>
+            </tr>
+            <tr>
+                <th>AB=01</th>
+                <td class="cell" data-pos="2">0</td>
+                <td class="cell" data-pos="3">0</td>
+            </tr>
+            <tr>
+                <th>AB=11</th>
+                <td class="cell" data-pos="4">0</td>
+                <td class="cell" data-pos="5">0</td>
+            </tr>
+            <tr>
+                <th>AB=10</th>
+                <td class="cell" data-pos="6">0</td>
+                <td class="cell" data-pos="7">0</td>
+            </tr>
+        </table>
+        <button onclick="calculateMinimal()">Generate Minimal Expression</button>
+        <div class="result" id="result">Minimal expression will appear here</div>
+    </div>
 
-<h2>2x4 K-Map Input</h2>
-<p>Enter 1s and 0s in each cell to represent the K-map, then click "Convert to 4x2".</p>
+    <script>
+        // Toggle cell values
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                cell.textContent = cell.textContent === '0' ? '1' : '0';
+                cell.classList.toggle('active');
+            });
+        });
 
-<p>Use this website for function and diagram: <a href="http://www.32x8.com/var4kmapx.html" target="_blank">http://www.32x8.com/var4kmapx.html</a></p>
+        function getTermFor(group) {
+            const terms = [];
+            const vars = ['A', 'B', 'C'];
+            const dontCares = new Set();
 
-<!-- 2x4 K-Map Table Structure -->
-<table id="originalTable2x4">
-    <tr>
-        <th></th>
-        <th>ab = 00</th>
-        <th>ab = 01</th>
-        <th>ab = 11</th>
-        <th>ab = 10</th>
-    </tr>
-    <tr>
-        <th>c = 0</th>
-        <td><input type="text" id="cell00" maxlength="1"></td>
-        <td><input type="text" id="cell01" maxlength="1"></td>
-        <td><input type="text" id="cell02" maxlength="1"></td>
-        <td><input type="text" id="cell03" maxlength="1"></td>
-    </tr>
-    <tr>
-        <th>c = 1</th>
-        <td><input type="text" id="cell10" maxlength="1"></td>
-        <td><input type="text" id="cell11" maxlength="1"></td>
-        <td><input type="text" id="cell12" maxlength="1"></td>
-        <td><input type="text" id="cell13" maxlength="1"></td>
-    </tr>
-</table>
+            for (let v = 0; v < 3; v++) {
+                let allZero = true;
+                let allOne = true;
+                
+                for (let pos of group) {
+                    const binary = pos.toString(2).padStart(3, '0');
+                    if (binary[v] === '1') allZero = false;
+                    if (binary[v] === '0') allOne = false;
+                }
 
-<button onclick="convertKMap()">Convert to 4x2</button>
-
-<h2>4x2 K-Map Output</h2>
-<table id="resultTable2x4" style="display: none;">
-    <tr>
-        <th></th>
-        <th>c = 0</th>
-        <th>c = 1</th>
-    </tr>
-    <tr>
-        <th>ab = 00</th>
-        <td id="result00"></td>
-        <td id="result10"></td>
-    </tr>
-    <tr>
-        <th>ab = 01</th>
-        <td id="result01"></td>
-        <td id="result11"></td>
-    </tr>
-    <tr>
-        <th>ab = 11</th>
-        <td id="result02"></td>
-        <td id="result12"></td>
-    </tr>
-    <tr>
-        <th>ab = 10</th>
-        <td id="result03"></td>
-        <td id="result13"></td>
-    </tr>
-</table>
-
-<h2>4x4 K-Map Input</h2>
-<p>Enter 1s and 0s in each cell to represent the K-map, then click "Reverse Rows and Columns".</p>
-
-<!-- Original 4x4 K-Map Table Structure -->
-<table id="originalTable4x4">
-    <tr>
-        <th></th>
-        <th>ab = 00</th>
-        <th>ab = 01</th>
-        <th>ab = 11</th>
-        <th>ab = 10</th>
-    </tr>
-    <tr>
-        <th>cd = 00</th>
-        <td><input type="text" id="cell0000" maxlength="1"></td>
-        <td><input type="text" id="cell0001" maxlength="1"></td>
-        <td><input type="text" id="cell0011" maxlength="1"></td>
-        <td><input type="text" id="cell0010" maxlength="1"></td>
-    </tr>
-    <tr>
-        <th>cd = 01</th>
-        <td><input type="text" id="cell0100" maxlength="1"></td>
-        <td><input type="text" id="cell0101" maxlength="1"></td>
-        <td><input type="text" id="cell0111" maxlength="1"></td>
-        <td><input type="text" id="cell0110" maxlength="1"></td>
-    </tr>
-    <tr>
-        <th>cd = 11</th>
-        <td><input type="text" id="cell1100" maxlength="1"></td>
-        <td><input type="text" id="cell1101" maxlength="1"></td>
-        <td><input type="text" id="cell1111" maxlength="1"></td>
-        <td><input type="text" id="cell1110" maxlength="1"></td>
-    </tr>
-    <tr>
-        <th>cd = 10</th>
-        <td><input type="text" id="cell1000" maxlength="1"></td>
-        <td><input type="text" id="cell1001" maxlength="1"></td>
-        <td><input type="text" id="cell1011" maxlength="1"></td>
-        <td><input type="text" id="cell1010" maxlength="1"></td>
-    </tr>
-</table>
-
-<button onclick="reverseRowsAndColumns()">Reverse Rows and Columns</button>
-
-<h2>Reversed 4x4 K-Map Output</h2>
-<table id="resultTable4x4" style="display: none;">
-    <tr>
-        <th></th>
-        <th>cd = 00</th>
-        <th>cd = 01</th>
-        <th>cd = 11</th>
-        <th>cd = 10</th>
-    </tr>
-    <tr>
-        <th>ab = 00</th>
-        <td id="result0000"></td>
-        <td id="result0100"></td>
-        <td id="result1100"></td>
-        <td id="result1000"></td>
-    </tr>
-    <tr>
-        <th>ab = 01</th>
-        <td id="result0001"></td>
-        <td id="result0101"></td>
-        <td id="result1101"></td>
-        <td id="result1001"></td>
-    </tr>
-    <tr>
-        <th>ab = 11</th>
-        <td id="result0011"></td>
-        <td id="result0111"></td>
-        <td id="result1111"></td>
-        <td id="result1011"></td>
-    </tr>
-    <tr>
-        <th>ab = 10</th>
-        <td id="result0010"></td>
-        <td id="result0110"></td>
-        <td id="result1110"></td>
-        <td id="result1010"></td>
-    </tr>
-</table>
-
-<script>
-    // 2x4 K-map to 4x2 converter
-    function convertKMap() {
-        const cell00 = document.getElementById("cell00").value;
-        const cell01 = document.getElementById("cell01").value;
-        const cell02 = document.getElementById("cell02").value;
-        const cell03 = document.getElementById("cell03").value;
-        const cell10 = document.getElementById("cell10").value;
-        const cell11 = document.getElementById("cell11").value;
-        const cell12 = document.getElementById("cell12").value;
-        const cell13 = document.getElementById("cell13").value;
-
-        const cells = [cell00, cell01, cell02, cell03, cell10, cell11, cell12, cell13];
-        for (let cell of cells) {
-            if (cell !== '0' && cell !== '1') {
-                alert("Please enter only 1s and 0s in each cell.");
-                return;
+                if (!allZero && !allOne) dontCares.add(v);
+                else if (!allZero) terms.push(vars[v]);
+                else if (!allOne) terms.push(vars[v] + "'");
             }
+            
+            return terms.join('');
         }
 
-        document.getElementById("result00").innerText = cell00;
-        document.getElementById("result01").innerText = cell01;
-        document.getElementById("result02").innerText = cell02;
-        document.getElementById("result03").innerText = cell03;
-        document.getElementById("result10").innerText = cell10;
-        document.getElementById("result11").innerText = cell11;
-        document.getElementById("result12").innerText = cell12;
-        document.getElementById("result13").innerText = cell13;
+        function findGroups(values) {
+            const groups = [];
+            const positions = [];
+            
+            // Get positions of 1s
+            values.forEach((val, idx) => {
+                if (val === 1) positions.push(idx);
+            });
 
-        document.getElementById("resultTable2x4").style.display = "table";
-    }
-
-    // 4x4 K-map reverse rows and columns
-    function reverseRowsAndColumns() {
-        const cell0000 = document.getElementById("cell0000").value;
-        const cell0001 = document.getElementById("cell0001").value;
-        const cell0011 = document.getElementById("cell0011").value;
-        const cell0010 = document.getElementById("cell0010").value;
-        const cell0100 = document.getElementById("cell0100").value;
-        const cell0101 = document.getElementById("cell0101").value;
-        const cell0111 = document.getElementById("cell0111").value;
-        const cell0110 = document.getElementById("cell0110").value;
-        const cell1100 = document.getElementById("cell1100").value;
-        const cell1101 = document.getElementById("cell1101").value;
-        const cell1111 = document.getElementById("cell1111").value;
-        const cell1110 = document.getElementById("cell1110").value;
-        const cell1000 = document.getElementById("cell1000").value;
-        const cell1001 = document.getElementById("cell1001").value;
-        const cell1011 = document.getElementById("cell1011").value;
-        const cell1010 = document.getElementById("cell1010").value;
-
-        const cells = [
-            cell0000, cell0001, cell0011, cell0010,
-            cell0100, cell0101, cell0111, cell0110,
-            cell1100, cell1101, cell1111, cell1110,
-            cell1000, cell1001, cell1011, cell1010
-        ];
-        for (let cell of cells) {
-            if (cell !== '0' && cell !== '1') {
-                alert("Please enter only 1s and 0s in each cell.");
-                return;
+            // Check for groups of 8
+            if (positions.length === 8) {
+                groups.push([0,1,2,3,4,5,6,7]);
+                return groups;
             }
+
+            // Check for groups of 4
+            const fourGroups = [
+                [0,1,2,3], [4,5,6,7], // rows
+                [0,2,4,6], [1,3,5,7]  // cols
+            ];
+
+            fourGroups.forEach(group => {
+                if (group.every(pos => values[pos] === 1)) {
+                    groups.push(group);
+                    group.forEach(pos => {
+                        const index = positions.indexOf(pos);
+                        if (index > -1) positions.splice(index, 1);
+                    });
+                }
+            });
+
+            // Check for groups of 2
+            const twoGroups = [
+                [0,1], [1,0],   // first row pairs
+                [2,3], [3,2],   // second row pairs
+                [4,5], [5,4],   // third row pairs
+                [6,7], [7,6],   // fourth row pairs
+                [0,2], [2,0],   // first column pairs
+                [1,3], [3,1],   // second column pairs
+                [4,6], [6,4],   // third column pairs
+                [5,7], [7,5]    // fourth column pairs
+            ];
+
+            twoGroups.forEach(group => {
+                if (group.every(pos => values[pos] === 1)) {
+                    const allPosInLargerGroup = group.every(pos => {
+                        return groups.some(g => g.includes(pos));
+                    });
+                    if (!allPosInLargerGroup) {
+                        groups.push(group);
+                        group.forEach(pos => {
+                            const index = positions.indexOf(pos);
+                            if (index > -1) positions.splice(index, 1);
+                        });
+                    }
+                }
+            });
+
+            // Add remaining single positions
+            positions.forEach(pos => {
+                groups.push([pos]);
+            });
+
+            return groups;
         }
 
-        // Transpose the 4x4 table (reverse rows and columns)
-        document.getElementById("result0000").innerText = cell0000;
-        document.getElementById("result0100").innerText = cell0100;
-        document.getElementById("result1100").innerText = cell1100;
-        document.getElementById("result1000").innerText = cell1000;
-        document.getElementById("result0001").innerText = cell0001;
-        document.getElementById("result0101").innerText = cell0101;
-        document.getElementById("result1101").innerText = cell1101;
-        document.getElementById("result1001").innerText = cell1001;
-        document.getElementById("result0011").innerText = cell0011;
-        document.getElementById("result0111").innerText = cell0111;
-        document.getElementById("result1111").innerText = cell1111;
-        document.getElementById("result1011").innerText = cell1011;
-        document.getElementById("result0010").innerText = cell0010;
-        document.getElementById("result0110").innerText = cell0110;
-        document.getElementById("result1110").innerText = cell1110;
-        document.getElementById("result1010").innerText = cell1010;
-
-        document.getElementById("resultTable4x4").style.display = "table";
-    }
-</script>
-
+        function calculateMinimal() {
+            const values = Array.from(document.querySelectorAll('.cell'))
+                .map(cell => parseInt(cell.textContent));
+            
+            const groups = findGroups(values);
+            let expression = groups.map(group => getTermFor(group)).filter(term => term).join(' + ');
+            
+            if (!expression) expression = '0';
+            document.getElementById('result').textContent = 'F = ' + expression;
+        }
+    </script>
 </body>
 </html>
