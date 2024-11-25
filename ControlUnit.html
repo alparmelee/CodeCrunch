@@ -11,20 +11,38 @@
             flex-direction: column;
             align-items: center;
             margin-top: 50px;
+            background-color: #f0f0f0;
         }
         #display {
             margin-top: 20px;
             text-align: center;
-        }
-        img {
             width: 80%;
-            height: auto;
             max-width: 800px;
         }
         #text-output {
             margin-top: 15px;
             font-size: 1.2em;
             color: #333;
+        }
+        .control-unit {
+            border: 2px solid #333;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        .component {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .active {
+            background-color: #e6ffe6;
+            border-color: #4CAF50;
+        }
+        .arrow {
+            font-size: 24px;
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -42,7 +60,7 @@
     </select>
 
     <div id="display">
-        <!-- Only one image and text output will be displayed here based on selection -->
+        <!-- Control Unit visual will be displayed here -->
     </div>
 
     <script>
@@ -53,27 +71,50 @@
             // Clear current content
             display.innerHTML = "";
 
+            let components = {
+                'Instruction Register': false,
+                'Program Counter': false,
+                'ALU': false,
+                'Memory Address Register': false,
+                'Memory Data Register': false,
+                'Accumulator': false
+            };
+
+            let description = "";
+
             if (operation === 'jump') {
-                display.innerHTML = `
-                    <img src="https://i.ibb.co/wzjNtZc/2024-11-11-20-58-page-0001.jpg" alt="Jump Operation">
-                    <div id="text-output">The JUMP operation sets the program counter to a new address, causing execution to continue from this location.</div>
-                `;
+                components['Instruction Register'] = true;
+                components['Program Counter'] = true;
+                description = "The JUMP operation sets the program counter to a new address, causing execution to continue from this location.";
             } else if (operation === 'load') {
-                display.innerHTML = `
-                    <img src="https://i.ibb.co/PZhpSCW/2024-11-11-20-58-page-0002.jpg" alt="Load Operation">
-                    <div id="text-output">The LOAD operation retrieves a value from a specified memory location and loads it into the accumulator.</div>
-                `;
+                components['Instruction Register'] = true;
+                components['Memory Address Register'] = true;
+                components['Memory Data Register'] = true;
+                components['Accumulator'] = true;
+                description = "The LOAD operation retrieves a value from a specified memory location and loads it into the accumulator.";
             } else if (operation === 'add_subtract') {
-                display.innerHTML = `
-                    <img src="https://i.ibb.co/PQ29Yv2/2024-11-11-20-58-page-0003.jpg" alt="Add/Subtract Operation">
-                    <div id="text-output">The ADD/SUBTRACT operation performs an arithmetic addition or subtraction on the accumulator and a memory value.</div>
-                `;
+                components['Instruction Register'] = true;
+                components['ALU'] = true;
+                components['Accumulator'] = true;
+                description = "The ADD/SUBTRACT operation performs an arithmetic addition or subtraction on the accumulator and a memory value.";
             } else if (operation === 'store') {
-                display.innerHTML = `
-                    <img src="https://i.ibb.co/M7CWNDf/2024-11-11-20-58-page-0004.jpg" alt="Store Operation">
-                    <div id="text-output">The STORE operation saves the current value of the accumulator into a specified memory address.</div>
-                `;
+                components['Instruction Register'] = true;
+                components['Memory Address Register'] = true;
+                components['Memory Data Register'] = true;
+                components['Accumulator'] = true;
+                description = "The STORE operation saves the current value of the accumulator into a specified memory address.";
             }
+
+            let html = '<div class="control-unit">';
+            for (let component in components) {
+                html += `<div class="component ${components[component] ? 'active' : ''}">${component}</div>`;
+                html += '<div class="arrow">↓</div>';
+            }
+            html = html.slice(0, -28); // Remove last arrow
+            html += '</div>';
+            html += `<div id="text-output">${description}</div>`;
+
+            display.innerHTML = html;
         }
     </script>
 
