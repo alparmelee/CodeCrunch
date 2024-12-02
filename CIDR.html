@@ -5,73 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIDR Subnet Calculator</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        label { margin-top: 10px; display: block; }
-        input { margin-top: 5px; padding: 8px; width: 100%; max-width: 300px; }
-        button { margin-top: 15px; padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        .result { margin-top: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .location-input {
+            margin-bottom: 10px;
+        }
+        #output {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-<h1>CIDR Subnet Calculator</h1>
-<form id="cidrForm">
-    <label for="hostsLocation1">Number of Hosts for Location 1:</label>
-    <input type="number" id="hostsLocation1" name="hostsLocation1" value="4000" required>
+    <h1>CIDR Subnet Calculator</h1>
 
-    <label for="hostsLocation2">Number of Hosts for Location 2:</label>
-    <input type="number" id="hostsLocation2" name="hostsLocation2" value="2000" required>
+    <label for="startingIp">Enter the starting IP address (e.g., 192.200.0.0):</label>
+    <input type="text" id="startingIp" placeholder="Starting IP address (e.g., 192.200.0.0)" value="192.200.0.0" />
 
-    <label for="ipLocation1">IP Address for Location 1:</label>
-    <input type="text" id="ipLocation1" name="ipLocation1" value="192.100.0.0" placeholder="e.g., 192.100.0.0" required>
+    <div id="locations">
+        <div class="location-input" id="location1">
+            <label for="hosts1">Enter the number of hosts for Location 1:</label>
+            <input type="number" id="hosts1" placeholder="Number of hosts for Location 1" />
+        </div>
+    </div>
 
-    <button type="button" onclick="calculateCIDR()">Calculate CIDR</button>
-</form>
+    <button onclick="addLocation()">Add Location</button>
+    <button onclick="calculateAllCIDR()">Calculate All CIDRs</button>
 
-<div class="result" id="result"></div>
+    <div id="output">
+        <h3>Results:</h3>
+        <div id="cidrResults"></div>
+    </div>
 
-<script>
-    function calculateCIDR() {
-        const hostsLocation1 = parseInt(document.getElementById('hostsLocation1').value);
-        const hostsLocation2 = parseInt(document.getElementById('hostsLocation2').value);
-        const ipLocation1 = document.getElementById('ipLocation1').value.trim();
-
-        if (isNaN(hostsLocation1) || isNaN(hostsLocation2) || !ipLocation1) {
-            alert("Please enter valid inputs.");
-            return;
-        }
-
-        function getCIDRForHosts(hosts) {
-            let subnetSize = 32;
-            while (Math.pow(2, 32 - subnetSize) - 2 < hosts) {
-                subnetSize--;
-            }
-            return subnetSize;
-        }
-
-        const cidrLocation1 = getCIDRForHosts(hostsLocation1);
-        const cidrLocation2 = getCIDRForHosts(hostsLocation2);
-
-        const ipToArray = ip => ip.split('.').map(Number);
-        const arrayToIp = arr => arr.join('.');
-
-        let ipLocation1Array = ipToArray(ipLocation1);
+    <script>
+        let locationCount = 1; // Starting with 1 location
         
-        // Correctly calculate Location 2 subnet start
-        let ipLocation2Array = [...ipLocation1Array];
-        ipLocation2Array[2] = 8;  // Explicitly set to 8
-        ipLocation2Array[3] = 0;  // Ensure last octet is 0
+        // Function to add a new location input field
+        function addLocation() {
+            locationCount++;
+            const locationDiv = document.createElement('div');
+            locationDiv.classList.add('location-input');
+            locationDiv.id = `location${locationCount}`;
+            locationDiv.innerHTML = `
+                <label for="hosts${locationCount}">Enter the number of hosts for Location ${locationCount}:</label>
+                <input type="number" id="hosts${locationCount}" placeholder="Number of hosts for Location ${locationCount}" />
+            `;
+            document.getElementById('locations').appendChild(locationDiv);
+        }
 
-        const subnetLocation1Str = arrayToIp(ipLocation1Array) + '/' + cidrLocation1;
-        const subnetLocation2Str = arrayToIp(ipLocation2Array) + '/' + cidrLocation2;
+        // Function to calculate the smallest power of 2 that can accommodate the number of hosts
+        function calculateSubnetBits(hosts) {
+            // Add 2 to account for network and broadcast addresses
+            return Math.ceil(Math.log2(hosts + 2));
+        }
 
-        document.getElementById('result').innerHTML = ` 
-            <h3>Results:</h3>
-            <p><strong>Location 1 CIDR Subnet:</strong> ${subnetLocation1Str}</p>
-            <p><strong>Location 2 CIDR Subnet:</strong> ${subnetLocation2Str}</p>
-        `;
-    }
-</script>
+        // Function to calculate CIDR for all locations
+        function calculateAllCIDR() {
+            let startIP = document.getElementById('startingIp').value.trim();
+            let outputHtml = '';
+            let currentIP = startIP.split(".").map(Number);
+
+            for (let i = 1; i <= locationCount; i++) {
+                const hosts = parseInt(document.getElementById(`hosts${i}`).value);
+                
+                if (isNaN(hosts) || hosts <= 0) {
+                    outputHtml += `<p>Please enter a valid number of hosts for Location ${i}.</p>`;
+                    continue;
+                }
+
+                // Calculate bits needed for this subnet
+                let bits = calculateSubnetBits(hosts);
+                
+                // Special handling for the second location to skip potential collisions
+                if (i === 2) {
+                    currentIP[2] = 32; // Move to 192.200.32.0
+                } else if (i > 2) {
+                    // For locations after the second, add an extra bit
+                    bits = Math.max(bits, calculateSubnetBits(hosts) + 1);
+                }
+
+                let mask = 32 - bits;
+                
+                // Calculate start IP
+                let startIPStr = currentIP.join(".");
+                
+                // Calculate the end IP
+                let endIPInt = ipStartToInt(currentIP) + (Math.pow(2, bits) - 1);
+                let endIP = intToIp(endIPInt);
+                let endIPStr = endIP.join(".");
+
+                // Create output for this location
+                outputHtml += `
+                    <p><strong>Location ${i}:</strong></p>
+                    <p>Start Address: ${startIPStr}</p>
+                    <p>End Address: ${endIPStr}</p>
+                    <hr />
+                `;
+
+                // Prepare next subnet's starting IP
+                currentIP = intToIp(endIPInt + 1);
+            }
+
+            // Display all results
+            document.getElementById('cidrResults').innerHTML = outputHtml;
+        }
+
+        // Convert IP to integer for easy calculation
+        function ipStartToInt(ipArr) {
+            return (ipArr[0] << 24) + (ipArr[1] << 16) + (ipArr[2] << 8) + ipArr[3];
+        }
+
+        // Convert integer back to IP address
+        function intToIp(int) {
+            return [
+                (int >>> 24) & 255,
+                (int >>> 16) & 255,
+                (int >>> 8) & 255,
+                int & 255
+            ];
+        }
+    </script>
 </body>
 </html>
 
