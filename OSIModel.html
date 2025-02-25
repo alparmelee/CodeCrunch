@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSI Model Interactive Diagram</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1000px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .osi-stack {
+      width: 300px;
+      flex-shrink: 0;
+    }
+    .layer {
+      padding: 15px;
+      margin-bottom: 2px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .layer:hover {
+      transform: translateX(5px);
+    }
+    .layer.active {
+      transform: translateX(15px);
+      font-weight: bold;
+    }
+    .layer-num {
+      font-weight: bold;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.5);
+    }
+    .info-panel {
+      flex: 1;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      min-width: 300px;
+      overflow: auto;
+    }
+    .info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .info-content {
+      margin-bottom: 20px;
+    }
+    .data-unit {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      border-left: 4px solid #4CAF50;
+    }
+    .visual-container {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+      width: 100%;
+    }
+    .visual-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    .data-visualization {
+      height: 120px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #f0f4f8;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .protocol-examples {
+      margin-top: 15px;
+      background: #e6f7ff;
+      padding: 10px 15px;
+      border-radius: 4px;
+    }
+    .protocol-examples ul {
+      margin: 5px 0;
+      padding-left: 20px;
+    }
+    
+    /* Colors for each layer */
+    .layer-7 { background-color: #FF9AA2; }
+    .layer-6 { background-color: #FFB7B2; }
+    .layer-5 { background-color: #FFDAC1; }
+    .layer-4 { background-color: #E2F0CB; }
+    .layer-3 { background-color: #B5EAD7; }
+    .layer-2 { background-color: #C7CEEA; }
+    .layer-1 { background-color: #F2D5F8; }
+  </style>
+</head>
+<body>
+  <h1>OSI Model Interactive Diagram</h1>
+  
+  <div class="container">
+    <div class="osi-stack">
+      <div class="layer layer-7" onclick="selectLayer(7)">
+        <span>Application Layer</span>
+        <span class="layer-num">7</span>
+      </div>
+      <div class="layer layer-6" onclick="selectLayer(6)">
+        <span>Presentation Layer</span>
+        <span class="layer-num">6</span>
+      </div>
+      <div class="layer layer-5" onclick="selectLayer(5)">
+        <span>Session Layer</span>
+        <span class="layer-num">5</span>
+      </div>
+      <div class="layer layer-4" onclick="selectLayer(4)">
+        <span>Transport Layer</span>
+        <span class="layer-num">4</span>
+      </div>
+      <div class="layer layer-3" onclick="selectLayer(3)">
+        <span>Network Layer</span>
+        <span class="layer-num">3</span>
+      </div>
+      <div class="layer layer-2" onclick="selectLayer(2)">
+        <span>Data Link Layer</span>
+        <span class="layer-num">2</span>
+      </div>
+      <div class="layer layer-1" onclick="selectLayer(1)">
+        <span>Physical Layer</span>
+        <span class="layer-num">1</span>
+      </div>
+    </div>
+    
+    <div class="info-panel" id="info-panel">
+      <div class="info-header">
+        <h2 id="layer-title">Select a Layer</h2>
+        <span id="data-unit-label"></span>
+      </div>
+      <div class="info-content" id="layer-description">
+        Click on any layer to see details about its function, data units, and protocols.
+      </div>
+      <div class="data-unit" id="data-unit-info" style="display: none;">
+        <h3>Data Unit: <span id="data-unit-name"></span></h3>
+        <p id="data-unit-description"></p>
+      </div>
+      <div class="protocol-examples" id="protocol-examples" style="display: none;">
+        <h3>Common Protocols:</h3>
+        <ul id="protocols-list"></ul>
+      </div>
+      <div class="visual-container">
+        <div class="visual-title">Data Encapsulation</div>
+        <div class="data-visualization" id="data-visualization">
+          <svg width="100%" height="100%" id="data-svg"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Layer information
+    const layerInfo = {
+      1: {
+        title: "Physical Layer (Layer 1)",
+        description: "The Physical Layer is responsible for the transmission and reception of raw bitstreams over a physical medium. It defines the electrical, mechanical, procedural, and functional specifications for activating, maintaining, and deactivating the physical link between communicating networks.",
+        dataUnit: {
+          name: "Bits",
+          description: "Raw streams of 1s and 0s are transmitted over the physical medium."
+        },
+        protocols: [
+          "Ethernet physical layer",
+          "USB",
+          "Bluetooth",
+          "DSL",
+          "IEEE 802.11 (Wi-Fi physical layer)"
+        ]
+      },
+      2: {
+        title: "Data Link Layer (Layer 2)",
+        description: "The Data Link Layer provides node-to-node data transfer—a link between two directly connected nodes. It detects and possibly corrects errors that may occur in the Physical layer. It defines the protocol to establish and terminate a connection between two physically connected devices.",
+        dataUnit: {
+          name: "Frames",
+          description: "Data is packaged into frames with headers containing physical addresses (MAC) and trailers with error checking information."
+        },
+        protocols: [
+          "Ethernet (IEEE 802.3)",
+          "Wi-Fi (IEEE 802.11)",
+          "Point-to-Point Protocol (PPP)",
+          "HDLC",
+          "ATM"
+        ]
+      },
+      3: {
+        title: "Network Layer (Layer 3)",
+        description: "The Network Layer provides the functional and procedural means of transferring variable length data sequences from a source host on one network to a destination host on a different network, while maintaining the quality of service. It performs network routing functions and might also perform fragmentation and reassembly.",
+        dataUnit: {
+          name: "Packets",
+          description: "Data is organized into packets containing logical addressing (IP) information for routing between different networks."
+        },
+        protocols: [
+          "IP (IPv4, IPv6)",
+          "ICMP",
+          "IGMP",
+          "IPsec",
+          "OSPF"
+        ]
+      },
+      4: {
+        title: "Transport Layer (Layer 4)",
+        description: "The Transport Layer provides end-to-end communication services for applications. It establishes process-to-process communications and provides reliable or unreliable data transfer, flow control, segmentation, and error control.",
+        dataUnit: {
+          name: "Segments",
+          description: "Data is divided into segments with port numbers identifying the sending and receiving applications."
+        },
+        protocols: [
+          "TCP",
+          "UDP",
+          "SCTP",
+          "DCCP",
+          "TLS/SSL"
+        ]
+      },
+      5: {
+        title: "Session Layer (Layer 5)",
+        description: "The Session Layer controls the dialogues (connections) between computers. It establishes, manages, and terminates connections between local and remote applications. It provides for full-duplex, half-duplex, or simplex operation, and establishes checkpointing, adjournment, termination, and restart procedures.",
+        dataUnit: {
+          name: "Data",
+          description: "Data at this layer maintains session information and may include checkpoints for recovery."
+        },
+        protocols: [
+          "NetBIOS",
+          "RPC",
+          "SOCKS",
+          "SQL",
+          "SSH"
+        ]
+      },
+      6: {
+        title: "Presentation Layer (Layer 6)",
+        description: "The Presentation Layer establishes a context between Application Layer entities. It transforms data into the form that the application accepts. This layer formats and encrypts data to be sent across a network, providing freedom from compatibility problems.",
+        dataUnit: {
+          name: "Data",
+          description: "Data is formatted, possibly encrypted, compressed, or otherwise transformed for presentation to the Application Layer."
+        },
+        protocols: [
+          "MIME",
+          "XDR",
+          "TLS/SSL",
+          "ASCII/EBCDIC conversion",
+          "JPEG, GIF, PNG (encoding formats)"
+        ]
+      },
+      7: {
+        title: "Application Layer (Layer 7)",
+        description: "The Application Layer is the OSI layer closest to the end user, which means both the OSI application layer and the user interact directly with the software application. This layer interacts with software applications that implement a communicating component.",
+        dataUnit: {
+          name: "Data",
+          description: "Raw user data in the form the application understands."
+        },
+        protocols: [
+          "HTTP/HTTPS",
+          "FTP",
+          "SMTP",
+          "DNS",
+          "DHCP",
+          "SSH",
+          "Telnet"
+        ]
+      }
+    };
+
+    // SVG visualization settings
+    const colors = {
+      1: "#F2D5F8", // Physical
+      2: "#C7CEEA", // Data Link
+      3: "#B5EAD7", // Network
+      4: "#E2F0CB", // Transport
+      5: "#FFDAC1", // Session
+      6: "#FFB7B2", // Presentation
+      7: "#FF9AA2"  // Application
+    };
+
+    // Initialize SVG
+    const svg = document.getElementById('data-svg');
+    svg.innerHTML = `
+      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="14px">
+        Select a layer to view data encapsulation
+      </text>
+    `;
+
+    function selectLayer(layerNum) {
+      // Remove active class from all layers
+      document.querySelectorAll('.layer').forEach(layer => {
+        layer.classList.remove('active');
+      });
+      
+      // Add active class to selected layer
+      document.querySelector(`.layer-${layerNum}`).classList.add('active');
+      
+      // Update info panel
+      const info = layerInfo[layerNum];
+      document.getElementById('layer-title').textContent = info.title;
+      document.getElementById('layer-description').textContent = info.description;
+      
+      // Update data unit info
+      const dataUnitInfo = document.getElementById('data-unit-info');
+      dataUnitInfo.style.display = 'block';
+      document.getElementById('data-unit-name').textContent = info.dataUnit.name;
+      document.getElementById('data-unit-description').textContent = info.dataUnit.description;
+      document.getElementById('data-unit-label').textContent = info.dataUnit.name;
+      
+      // Update protocols
+      const protocolsDiv = document.getElementById('protocol-examples');
+      protocolsDiv.style.display = 'block';
+      const protocolsList = document.getElementById('protocols-list');
+      protocolsList.innerHTML = '';
+      info.protocols.forEach(protocol => {
+        const li = document.createElement('li');
+        li.textContent = protocol;
+        protocolsList.appendChild(li);
+      });
+      
+      // Update visualization
+      updateVisualization(layerNum);
+    }
+
+    function updateVisualization(layerNum) {
+      const svg = document.getElementById('data-svg');
+      svg.innerHTML = '';
+      
+      const width = svg.clientWidth;
+      const height = svg.clientHeight;
+      const padding = 20;
+      const availableWidth = width - (padding * 2);
+      
+      // Draw data encapsulation
+      if (layerNum === 7) {
+        // Just raw data for Application layer
+        drawDataBlock(svg, padding, height/2 - 15, availableWidth, 30, colors[7], "Application Data");
+      } else if (layerNum === 6) {
+        // Presentation adds encoding
+        drawDataBlock(svg, padding + 10, height/2 - 20, availableWidth - 20, 40, colors[6], "Encoded/Encrypted Data");
+        drawDataBlock(svg, padding + 30, height/2 - 15, availableWidth - 60, 30, colors[7], "Application Data");
+      } else if (layerNum === 5) {
+        // Session adds session info
+        drawDataBlock(svg, padding, height/2 - 25, availableWidth, 50, colors[5], "Session Control");
+        drawDataBlock(svg, padding + 20, height/2 - 20, availableWidth - 40, 40, colors[6], "Encoded Data");
+        drawDataBlock(svg, padding + 40, height/2 - 15, availableWidth - 80, 30, colors[7], "Application Data");
+      } else if (layerNum === 4) {
+        // Transport adds segment header
+        drawDataBlock(svg, padding, height/2 - 30, 60, 60, colors[4], "TCP/UDP Header");
+        drawDataBlock(svg, padding + 60, height/2 - 30, availableWidth - 60, 60, colors[5], "Session Data");
+        // Inner layers
+        drawDataBlock(svg, padding + 70, height/2 - 25, availableWidth - 80, 50, colors[6], "Encoded Data");
+        drawDataBlock(svg, padding + 80, height/2 - 20, availableWidth - 100, 40, colors[7], "Application Data");
+      } else if (layerNum === 3) {
+        // Network adds packet header
+        drawDataBlock(svg, padding, height/2 - 35, 60, 70, colors[3], "IP Header");
+        drawDataBlock(svg, padding + 60, height/2 - 35, availableWidth - 60, 70, colors[4], "Segment");
+        // Inner layers
+        drawDataBlock(svg, padding + 70, height/2 - 30, 60, 60, colors[4], "TCP/UDP");
+        drawDataBlock(svg, padding + 130, height/2 - 30, availableWidth - 140, 60, colors[5], "Session Data");
+        drawDataBlock(svg, padding + 140, height/2 - 25, availableWidth - 160, 50, colors[6], "Encoded Data");
+        drawDataBlock(svg, padding + 150, height/2 - 20, availableWidth - 180, 40, colors[7], "App Data");
+      } else if (layerNum === 2) {
+        // Data Link adds frame header and trailer
+        drawDataBlock(svg, padding, height/2 - 40, 60, 80, colors[2], "MAC Header");
+        drawDataBlock(svg, padding + 60, height/2 - 40, availableWidth - 120, 80, colors[3], "Packet");
+        drawDataBlock(svg, padding + availableWidth - 60, height/2 - 40, 60, 80, colors[2], "FCS");
+        // Show packet contents as smaller blocks inside
+        drawDataBlock(svg, padding + 70, height/2 - 35, 50, 70, colors[3], "IP");
+        drawDataBlock(svg, padding + 120, height/2 - 35, availableWidth - 190, 70, colors[4], "Segment");
+      } else if (layerNum === 1) {
+        // Physical layer just shows bits
+        drawBitstream(svg, padding, height/2 - 10, availableWidth, 20);
+      }
+    }
+
+    function drawDataBlock(svg, x, y, width, height, color, label) {
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("x", x);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", width);
+      rect.setAttribute("height", height);
+      rect.setAttribute("fill", color);
+      rect.setAttribute("stroke", "#333");
+      rect.setAttribute("stroke-width", "1");
+      rect.setAttribute("rx", "3");
+      svg.appendChild(rect);
+      
+      if (width > 40) {
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", x + width/2);
+        text.setAttribute("y", y + height/2);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.setAttribute("font-size", Math.min(10, width/8) + "px");
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("fill", "#333");
+        text.textContent = label || "";
+        svg.appendChild(text);
+      }
+    }
+
+    function drawBitstream(svg, x, y, width, height) {
+      // Create bit background
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("x", x);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", width);
+      rect.setAttribute("height", height);
+      rect.setAttribute("fill", colors[1]);
+      rect.setAttribute("stroke", "#333");
+      rect.setAttribute("stroke-width", "1");
+      svg.appendChild(rect);
+      
+      // Create binary pattern
+      const binaryText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      binaryText.setAttribute("x", x + 10);
+      binaryText.setAttribute("y", y + height/2);
+      binaryText.setAttribute("dominant-baseline", "middle");
+      binaryText.setAttribute("font-family", "monospace");
+      binaryText.setAttribute("font-size", "12px");
+      binaryText.setAttribute("fill", "#333");
+      
+      // Generate random binary sequence
+      const binarySequence = generateBinarySequence(Math.floor(width / 10));
+      binaryText.textContent = binarySequence;
+      svg.appendChild(binaryText);
+      
+      // Add label
+      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      label.setAttribute("x", x + width/2);
+      label.setAttribute("y", y - 10);
+      label.setAttribute("text-anchor", "middle");
+      label.setAttribute("font-size", "10px");
+      label.setAttribute("fill", "#666");
+      label.textContent = "Physical Bitstream";
+      svg.appendChild(label);
+    }
+
+    function generateBinarySequence(length) {
+      let sequence = "";
+      for (let i = 0; i < length; i++) {
+        sequence += Math.round(Math.random()) ? "1" : "0";
+        if (i % 8 === 7 && i < length - 1) sequence += " ";
+      }
+      return sequence;
+    }
+
+    // Select Layer 7 by default
+    window.onload = function() {
+      selectLayer(7);
+    };
+  </script>
+</body>
+</html>

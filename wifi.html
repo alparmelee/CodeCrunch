@@ -1,0 +1,40 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Wireless Internet Visualizer</title> <style> body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; color: #333; } .container { max-width: 1200px; margin: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; } .box { background-color: #ffffff; border: 1px solid #e0e0e0; padding: 20px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.1); } .box:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); } .box h3 { margin-top: 0; color: #2c3e50; } .info { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; } .info.active { max-height: 500px; transition: max-height 0.5s ease-in; } .icon { font-size: 24px; margin-bottom: 10px; } h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; } </style> </head> <body> <h1>Wireless Internet Visualizer</h1> <div class="container" id="container"></div>
+    text
+    <script>
+        const topics = [
+            {id: 'wlan', title: 'WLANs', icon: '📡', info: 'LANs that transmit signals through the air via RF waves are known as WLANs.'},
+            {id: 'channels', title: 'Channels & Narrowband', icon: '📊', info: 'To allow multiple devices to share the same band, the band is subdivided into channels and further into narrowband channels.'},
+            {id: 'iot', title: 'Internet of Things (IoT)', icon: '🌐', info: 'The IoT is made up of any device that can be connected to the Internet.'},
+            {id: 'zigbee', title: 'ZigBee', icon: '🐝', info: 'ZigBee is a low-powered, battery-conserving wireless technology based on the 802.15.4 standard.'},
+            {id: 'zwave', title: 'Z-Wave', icon: '🌊', info: 'Z-Wave is a smart home protocol that provides signaling and control functions between devices.'},
+            {id: 'bluetooth', title: 'Bluetooth', icon: '🦷', info: 'Bluetooth operates in the 2.4–2.4835 GHz band and hops between frequencies to reduce interference.'},
+            {id: 'rfid', title: 'RFID', icon: '🏷️', info: 'RFID uses electromagnetic fields to store data on a small chip in an RFID tag.'},
+            {id: 'nfc', title: 'NFC', icon: '📱', info: 'NFC is a form of RFID that transfers data wirelessly over very short distances.'},
+            {id: 'infrared', title: 'Infrared (IR)', icon: '🔥', info: 'Infrared technology is used in IoT to collect data through various sensors.'},
+            {id: 'wifi', title: 'Wi-Fi', icon: '📶', info: 'Wi-Fi is a collection of wireless standards and their amendments, extensions, and corrections.'},
+            {id: 'mimo', title: 'MIMO & MU-MIMO', icon: '📡', info: 'MIMO and MU-MIMO access points can only be used at full capacity when client devices support them.'},
+            {id: 'auth', title: 'Authentication', icon: '🔐', info: 'Authentication compares a client\'s credentials with a database to enable login.'},
+            {id: 'wpa', title: 'WPA', icon: '🔒', info: 'WPA dynamically assigns every transmission its own key.'},
+            {id: 'wireless_security', title: 'Wireless Security', icon: '🛡️', info: 'Wireless transmissions are susceptible to eavesdropping.'}
+        ];
+    
+        const container = document.getElementById('container');
+    
+        topics.forEach(topic => {
+            const box = document.createElement('div');
+            box.className = 'box';
+            box.innerHTML = `
+                <div class="icon">${topic.icon}</div>
+                <h3>${topic.title}</h3>
+                <div class="info" id="${topic.id}">${topic.info}</div>
+            `;
+            box.addEventListener('click', () => toggleInfo(topic.id));
+            container.appendChild(box);
+        });
+    
+        function toggleInfo(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('active');
+        }
+    </script>
+    </body> </html>

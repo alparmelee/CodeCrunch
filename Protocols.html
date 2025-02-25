@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking Protocols & Routing Visualizer</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --secondary-dark: #27ae60;
+            --accent: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--dark);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 250px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .box-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .box-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .content-area {
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+        
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: var(--shadow);
+            display: none;
+            text-align: left;
+        }
+        
+        .simulator {
+            margin-top: 20px;
+            display: none;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            background-color: white;
+            box-shadow: var(--shadow);
+            text-align: left;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        
+        .output-text {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary);
+            margin-top: 10px;
+        }
+        
+        .protocol-header {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .animation-container {
+            height: 100px;
+            position: relative;
+            margin: 20px 0;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+        
+        .node {
+            width: 60px;
+            height: 60px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .packet {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            top: 40px;
+            transition: left 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <h1>Networking Protocols & Routing Visualizer</h1>
+    
+    <div class="container">
+        <div class="box" onclick="showInfo('tcp')">
+            <div class="box-icon">📊</div>
+            <div class="box-title">TCP/IP Protocol Suite</div>
+            <div>Connection-oriented reliable data transfer</div>
+        </div>
+        <div class="box" onclick="showInfo('udp')">
+            <div class="box-icon">🚀</div>
+            <div class="box-title">UDP Protocols</div>
+            <div>Fast, connectionless communication</div>
+        </div>
+        <div class="box" onclick="showInfo('icmp')">
+            <div class="box-icon">🔔</div>
+            <div class="box-title">ICMP & Error Reporting</div>
+            <div>Network diagnostics and alerts</div>
+        </div>
+        <div class="box" onclick="showInfo('arp')">
+            <div class="box-icon">🔍</div>
+            <div class="box-title">ARP & MAC Resolution</div>
+            <div>Linking IP and physical addresses</div>
+        </div>
+        <div class="box" onclick="showInfo('routing')">
+            <div class="box-icon">🛣️</div>
+            <div class="box-title">Routing & Path Selection</div>
+            <div>Finding optimal network paths</div>
+        </div>
+        <div class="box" onclick="showInfo('tools')">
+            <div class="box-icon">🛠️</div>
+            <div class="box-title">Networking Tools</div>
+            <div>Diagnostic utilities and commands</div>
+        </div>
+    </div>
+    
+    <div class="content-area">
+        <div id="output"></div>
+        <div id="simulator" class="simulator"></div>
+    </div>
+    
+    <script>
+        function showInfo(topic) {
+            const output = document.getElementById("output");
+            const simulator = document.getElementById("simulator");
+            let content = "";
+            let simContent = "";
+            
+            switch(topic) {
+                case 'tcp':
+                    content = `<h3 class="protocol-header">TCP/IP Protocol Suite</h3>
+                    <p>TCP/IP (Transmission Control Protocol/Internet Protocol) is the foundation of internet communications:</p>
+                    <ul>
+                        <li>Reliable, connection-oriented protocol</li>
+                        <li>Guarantees packet delivery through acknowledgments</li>
+                        <li>Handles packet sequencing and flow control</li>
+                        <li>Establishes connections through the three-way handshake</li>
+                    </ul>`;
+                    
+                    simContent = `<h4>TCP Handshake Simulation</h4>
+                    <div class="animation-container">
+                        <div class="node">Client</div>
+                        <div id="tcpPacket" class="packet" style="left: 70px;"></div>
+                        <div class="node">Server</div>
+                    </div>
+                    <button onclick="simulateTCP()">Start Handshake</button>
+                    <div id="tcpOutput" class="output-text"></div>`;
+                    break;
+                    
+                case 'udp':
+                    content = `<h3 class="protocol-header">UDP & Connectionless Protocols</h3>
+                    <p>UDP (User Datagram Protocol) offers:</p>
+                    <ul>
+                        <li>Connectionless communication without handshakes</li>
+                        <li>No guarantee of packet delivery or ordering</li>
+                        <li>Lower overhead and faster transmission</li>
+                        <li>Ideal for real-time applications like video streaming and gaming</li>
+                    </ul>`;
+                    
+                    simContent = `<h4>UDP Packet Simulation</h4>
+                    <div class="animation-container">
+                        <div class="node">Sender</div>
+                        <div id="udpPacket" class="packet" style="left: 70px;"></div>
+                        <div class="node">Receiver</div>
+                    </div>
+                    <button onclick="simulateUDP()">Send UDP Packet</button>
+                    <div id="udpOutput" class="output-text"></div>`;
+                    break;
+                    
+                case 'icmp':
+                    content = `<h3 class="protocol-header">ICMP & Error Reporting</h3>
+                    <p>Internet Control Message Protocol (ICMP) is used for:</p>
+                    <ul>
+                        <li>Network diagnostics and error reporting</li>
+                        <li>Ping operations to test connectivity</li>
+                        <li>Reporting unreachable destinations</li>
+                        <li>Path MTU discovery and Traceroute functionality</li>
+                    </ul>`;
+                    
+                    simContent = `<h4>ICMP Ping Simulation</h4>
+                    <div class="animation-container">
+                        <div class="node">Host</div>
+                        <div id="pingPacket" class="packet" style="left: 70px;"></div>
+                        <div class="node">Target</div>
+                    </div>
+                    <button onclick="simulatePing()">Send Ping Request</button>
+                    <div id="pingOutput" class="output-text"></div>`;
+                    break;
+                    
+                case 'arp':
+                    content = `<h3 class="protocol-header">ARP & MAC Resolution</h3>
+                    <p>Address Resolution Protocol (ARP) is responsible for:</p>
+                    <ul>
+                        <li>Mapping IP addresses to MAC addresses</li>
+                        <li>Maintaining local ARP cache tables</li>
+                        <li>Broadcasting requests to find unknown MAC addresses</li>
+                        <li>Enabling communication between network and link layers</li>
+                    </ul>`;
+                    
+                    simContent = `<h4>ARP Resolution Simulation</h4>
+                    <p>Enter an IP address to resolve its MAC address:</p>
+                    <input type="text" id="arpInput" placeholder="192.168.1.1">
+                    <button onclick="resolveARP()">Resolve MAC</button>
+                    <div id="arpOutput" class="output-text"></div>`;
+                    break;
+                    
+                case 'routing':
+                    content = `<h3 class="protocol-header">Routing & Path Selection</h3>
+                    <p>Network routing involves:</p>
+                    <ul>
+                        <li>Determining the best path for packets across networks</li>
+                        <li>Static routing (manually configured) vs. dynamic routing (algorithm-based)</li>
+                        <li>Protocols like OSPF, BGP, and RIP for exchanging routing information</li>
+                        <li>Metrics like hop count, bandwidth, and latency for path selection</li>
+                    </ul>`;
+                    
+                    simContent = `<h4>Dynamic Routing Simulation</h4>
+                    <div class="animation-container">
+                        <div class="node">Start</div>
+                        <div id="routePacket" class="packet" style="left: 70px;"></div>
+                        <div class="node">End</div>
+                    </div>
+                    <button onclick="simulateRouting()">Calculate Route</button>
+                    <div id="routingOutput" class="output-text"></div>`;
+                    break;
+                    
+                case 'tools':
+                    content = `<h3 class="protocol-header">Networking Tools</h3>
+                    <p>Essential tools for network diagnostics:</p>
+                    <ul>
+                        <li><strong>ping</strong> - Test connectivity to a host</li>
+                        <li><strong>ipconfig/ifconfig</strong> - Display network interface details</li>
+                        <li><strong>netstat</strong> - Show network connections and routing tables</li>
+                        <li><strong>tracert/traceroute</strong> - Trace the path to a destination</li>
+                        <li><strong>tcpdump/Wireshark</strong> - Capture and analyze network traffic</li>
+                    </ul>`;
+                    
+                    simContent = `<h4>Network Tools Simulation</h4>
+                    <select id="toolSelect">
+                        <option value="netstat">netstat</option>
+                        <option value="ping">ping</option>
+                        <option value="ipconfig">ipconfig</option>
+                        <option value="tracert">tracert</option>
+                    </select>
+                    <button onclick="runNetworkTool()">Run Tool</button>
+                    <div id="toolsOutput" class="output-text"></div>`;
+                    break;
+            }
+            
+            output.innerHTML = content;
+            output.style.display = "block";
+            simulator.innerHTML = simContent;
+            simulator.style.display = "block";
+            
+            // Scroll to the output area
+            output.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function simulateTCP() {
+            const packet = document.getElementById("tcpPacket");
+            const output = document.getElementById("tcpOutput");
+            
+            output.innerHTML = "Step 1: Client sends SYN";
+            packet.style.left = "280px";
+            
+            setTimeout(() => {
+                output.innerHTML = "Step 1: Client sends SYN<br>Step 2: Server responds with SYN-ACK";
+                packet.style.left = "70px";
+            }, 1500);
+            
+            setTimeout(() => {
+                output.innerHTML = "Step 1: Client sends SYN<br>Step 2: Server responds with SYN-ACK<br>Step 3: Client sends ACK - Connection established!";
+                packet.style.left = "280px";
+            }, 3000);
+        }
+        
+        function simulateUDP() {
+            const packet = document.getElementById("udpPacket");
+            const output = document.getElementById("udpOutput");
+            
+            output.innerHTML = "Sending UDP packet (no handshake required)";
+            packet.style.left = "280px";
+            
+            setTimeout(() => {
+                output.innerHTML = "UDP packet sent! No delivery confirmation.<br>This is why UDP is faster but less reliable than TCP.";
+            }, 1500);
+        }
+        
+        function simulatePing() {
+            const packet = document.getElementById("pingPacket");
+            const output = document.getElementById("pingOutput");
+            
+            // Send request
+            output.innerHTML = "Sending ICMP Echo Request (ping)";
+            packet.style.left = "280px";
+            
+            // Receive reply
+            setTimeout(() => {
+                output.innerHTML = "Sending ICMP Echo Request (ping)<br>Receiving ICMP Echo Reply";
+                packet.style.left = "70px";
+            }, 1500);
+            
+            // Show results
+            setTimeout(() => {
+                output.innerHTML = "Ping results:<br>Reply from target: time=32ms TTL=64<br>Reply from target: time=28ms TTL=64<br>Reply from target: time=31ms TTL=64<br>Reply from target: time=30ms TTL=64";
+            }, 3000);
+        }
+        
+        function resolveARP() {
+            const ip = document.getElementById("arpInput").value || "192.168.1.1";
+            const output = document.getElementById("arpOutput");
+            
+            output.innerHTML = "Broadcasting ARP request: Who has " + ip + "?";
+            
+            setTimeout(() => {
+                // Generate a random-looking MAC address for demonstration
+                const macParts = [];
+                for(let i = 0; i < 6; i++) {
+                    macParts.push(Math.floor(Math.random() * 256).toString(16).padStart(2, '0'));
+                }
+                const mac = macParts.join(':').toUpperCase();
+                
+                output.innerHTML = "Broadcasting ARP request: Who has " + ip + "?<br><br>" +
+                                  "Response received:<br>" +
+                                  ip + " is at " + mac + "<br><br>" +
+                                  "Entry added to ARP cache table.";
+            }, 1500);
+        }
+        
+        function simulateRouting() {
+            const packet = document.getElementById("routePacket");
+            const output = document.getElementById("routingOutput");
+            
+            output.innerHTML = "Calculating optimal route using OSPF...";
+            
+            // Animate packet moving forward
+            packet.style.left = "280px";
+            
+            setTimeout(() => {
+                output.innerHTML = "Calculating optimal route using OSPF...<br><br>" +
+                                  "Route determined with 3 hops:<br>" +
+                                  "192.168.1.1 → 10.0.0.1 → 172.16.0.1 → Destination<br><br>" +
+                                  "Metrics: Bandwidth: 100Mbps, Delay: 45ms";
+            }, 1500);
+        }
+        
+        function runNetworkTool() {
+            const tool = document.getElementById("toolSelect").value;
+            const output = document.getElementById("toolsOutput");
+            
+            output.innerHTML = `Running ${tool}...`;
+            
+            setTimeout(() => {
+                let result = "";
+                
+                switch(tool) {
+                    case 'netstat':
+                        result = "Active Connections:<br><br>" +
+                                "Proto  Local Address          Foreign Address        State<br>" +
+                                "TCP    192.168.1.5:50280      142.250.72.14:443      ESTABLISHED<br>" +
+                                "TCP    192.168.1.5:49665      13.107.42.16:443       TIME_WAIT<br>" +
+                                "TCP    127.0.0.1:49670        127.0.0.1:49671        ESTABLISHED";
+                        break;
+                    case 'ping':
+                        result = "Pinging 8.8.8.8 with 32 bytes of data:<br>" +
+                                "Reply from 8.8.8.8: bytes=32 time=28ms TTL=115<br>" +
+                                "Reply from 8.8.8.8: bytes=32 time=27ms TTL=115<br>" +
+                                "Reply from 8.8.8.8: bytes=32 time=29ms TTL=115<br>" +
+                                "Reply from 8.8.8.8: bytes=32 time=28ms TTL=115<br><br>" +
+                                "Ping statistics for 8.8.8.8:<br>" +
+                                "    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),<br>" +
+                                "Approximate round trip times in milli-seconds:<br>" +
+                                "    Minimum = 27ms, Maximum = 29ms, Average = 28ms";
+                        break;
+                    case 'ipconfig':
+                        result = "Windows IP Configuration<br><br>" +
+                                "Ethernet adapter Ethernet:<br>" +
+                                "   Connection-specific DNS Suffix  . : localdomain<br>" +
+                                "   IPv4 Address. . . . . . . . . . . : 192.168.1.5<br>" +
+                                "   Subnet Mask . . . . . . . . . . . : 255.255.255.0<br>" +
+                                "   Default Gateway . . . . . . . . . : 192.168.1.1";
+                        break;
+                    case 'tracert':
+                        result = "Tracing route to google.com [142.250.72.14]<br>" +
+                                "over a maximum of 30 hops:<br><br>" +
+                                "  1     1 ms     1 ms     1 ms  192.168.1.1<br>" +
+                                "  2    12 ms    11 ms    10 ms  10.220.13.1<br>" +
+                                "  3    13 ms    12 ms    12 ms  172.16.45.1<br>" +
+                                "  4    15 ms    14 ms    15 ms  core-router.isp.net<br>" +
+                                "  5    27 ms    26 ms    26 ms  142.250.72.14<br><br>" +
+                                "Trace complete.";
+                        break;
+                }
+                
+                output.innerHTML = result;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

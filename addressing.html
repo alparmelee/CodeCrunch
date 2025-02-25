@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking Addressing Visualizer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        .box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .box-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        .box h3 {
+            margin: 0 0 10px 0;
+            color: #2980b9;
+        }
+        #output {
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            display: none;
+            background-color: white;
+        }
+        .simulator {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f0f8ff;
+            text-align: left;
+            border: 1px solid #d1e6fa;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 5px;
+            width: 200px;
+        }
+        .visualization {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .mac-byte, .ip-octet {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin: 0 3px;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            font-family: monospace;
+        }
+        .ping-visual {
+            height: 60px;
+            position: relative;
+            margin: 20px 0;
+        }
+        .ping-line {
+            height: 2px;
+            background-color: #ddd;
+            width: 80%;
+            position: absolute;
+            top: 50%;
+            left: 10%;
+        }
+        .ping-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: absolute;
+            top: calc(50% - 5px);
+            animation: pingMove 1.5s infinite;
+        }
+        @keyframes pingMove {
+            0% { left: 10%; }
+            50% { left: 90%; }
+            100% { left: 10%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Networking Addressing Visualizer</h1>
+        <p>Explore fundamental networking concepts through interactive simulations</p>
+    </div>
+    
+    <div class="container">
+        <div class="box" onclick="showInfo('mac')">
+            <div class="box-icon">🔑</div>
+            <h3>MAC Address</h3>
+            <p>Hardware identification structure</p>
+        </div>
+        <div class="box" onclick="showInfo('ipv4')">
+            <div class="box-icon">🌐</div>
+            <h3>IPv4 Address</h3>
+            <p>Network addressing format</p>
+        </div>
+        <div class="box" onclick="showInfo('dhcp')">
+            <div class="box-icon">🔄</div>
+            <h3>DHCP Process</h3>
+            <p>Dynamic IP assignment</p>
+        </div>
+        <div class="box" onclick="showInfo('ports')">
+            <div class="box-icon">🚪</div>
+            <h3>Port Numbers</h3>
+            <p>Service communication channels</p>
+        </div>
+        <div class="box" onclick="showInfo('dns')">
+            <div class="box-icon">📖</div>
+            <h3>DNS Resolution</h3>
+            <p>Domain name to IP translation</p>
+        </div>
+        <div class="box" onclick="showInfo('troubleshooting')">
+            <div class="box-icon">🔧</div>
+            <h3>Troubleshooting</h3>
+            <p>Network diagnostic tools</p>
+        </div>
+    </div>
+    
+    <div id="output">
+        <h2 id="topic-title">Topic Information</h2>
+        <div id="topic-content"></div>
+        <div id="visualization" class="visualization"></div>
+        <div id="simulator" class="simulator"></div>
+    </div>
+    
+    <script>
+        function showInfo(topic) {
+            const output = document.getElementById("output");
+            const topicTitle = document.getElementById("topic-title");
+            const topicContent = document.getElementById("topic-content");
+            const visualization = document.getElementById("visualization");
+            const simulator = document.getElementById("simulator");
+            
+            // Clear previous content
+            topicContent.innerHTML = "";
+            visualization.innerHTML = "";
+            simulator.innerHTML = "";
+            
+            switch(topic) {
+                case 'mac':
+                    topicTitle.textContent = "MAC Address Structure";
+                    topicContent.innerHTML = "A MAC (Media Access Control) address is a unique identifier assigned to a network interface card (NIC). It consists of 48 bits, typically displayed in hexadecimal notation separated by colons. The first half identifies the manufacturer, while the second half is a unique device identifier.";
+                    
+                    visualization.innerHTML = `
+                        <div>
+                            <span class="mac-byte">00</span>
+                            <span class="mac-byte">1A</span>
+                            <span class="mac-byte">2B</span>
+                            <span>:</span>
+                            <span class="mac-byte" style="background-color: #2ecc71;">3C</span>
+                            <span class="mac-byte" style="background-color: #2ecc71;">4D</span>
+                            <span class="mac-byte" style="background-color: #2ecc71;">5E</span>
+                        </div>
+                    `;
+                    
+                    simulator.innerHTML = `
+                        <p>Generate a random MAC address:</p>
+                        <button onclick="generateMAC()">Generate MAC</button>
+                        <p id="macOutput"></p>
+                    `;
+                    break;
+                    
+                case 'ipv4':
+                    topicTitle.textContent = "IPv4 Address Breakdown";
+                    topicContent.innerHTML = "An IPv4 address is a 32-bit numeric address that identifies a device on a network. It consists of four octets (numbers 0-255) separated by dots. The address is divided into network and host portions, determined by the subnet mask.";
+                    
+                    visualization.innerHTML = `
+                        <div>
+                            <span class="ip-octet">192</span>
+                            <span>.</span>
+                            <span class="ip-octet">168</span>
+                            <span>.</span>
+                            <span class="ip-octet" style="background-color: #2ecc71;">1</span>
+                            <span>.</span>
+                            <span class="ip-octet" style="background-color: #2ecc71;">10</span>
+                        </div>
+                    `;
+                    
+                    simulator.innerHTML = `
+                        <p>Validate an IPv4 address:</p>
+                        <input type="text" id="ipv4Input" placeholder="e.g., 192.168.1.1">
+                        <button onclick="validateIPv4()">Validate</button>
+                        <p id="ipv4Output"></p>
+                    `;
+                    break;
+                    
+                case 'dhcp':
+                    topicTitle.textContent = "DHCP & Gateway Process";
+                    topicContent.innerHTML = "DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses and network settings to devices. The process involves four steps: Discover, Offer, Request, and Acknowledge. A gateway device connects your local network to external networks using NAT.";
+                    
+                    visualization.innerHTML = `
+                        <div style="text-align: center; margin: 20px 0;">
+                            <div style="display: inline-block; padding: 10px; border: 2px solid #3498db; border-radius: 6px;">Client</div>
+                            <div style="display: inline-block; width: 150px; height: 2px; background-color: #ddd; margin: 0 10px;"></div>
+                            <div style="display: inline-block; padding: 10px; border: 2px solid #2ecc71; border-radius: 6px;">DHCP Server</div>
+                        </div>
+                    `;
+                    
+                    simulator.innerHTML = `
+                        <p>Simulate DHCP IP allocation:</p>
+                        <button onclick="simulateDHCP()">Start DHCP Process</button>
+                        <p id="dhcpOutput"></p>
+                    `;
+                    break;
+                    
+                case 'ports':
+                    topicTitle.textContent = "Port Numbering";
+                    topicContent.innerHTML = "Port numbers identify specific services on a device. They range from 0 to 65535 and are divided into well-known ports (0-1023), registered ports (1024-49151), and dynamic ports (49152-65535). Common examples include HTTP (80), HTTPS (443), and SSH (22).";
+                    
+                    visualization.innerHTML = `
+                        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                            <div style="border: 2px solid #3498db; padding: 10px; border-radius: 6px; min-width: 80px;">Port 80<br>HTTP</div>
+                            <div style="border: 2px solid #3498db; padding: 10px; border-radius: 6px; min-width: 80px;">Port 443<br>HTTPS</div>
+                            <div style="border: 2px solid #3498db; padding: 10px; border-radius: 6px; min-width: 80px;">Port 22<br>SSH</div>
+                        </div>
+                    `;
+                    
+                    simulator.innerHTML = `
+                        <p>Check a well-known port:</p>
+                        <input type="text" id="portInput" placeholder="e.g., 80">
+                        <button onclick="checkPort()">Check</button>
+                        <p id="portOutput"></p>
+                    `;
+                    break;
+                    
+                case 'dns':
+                    topicTitle.textContent = "DNS & Name Resolution";
+                    topicContent.innerHTML = "DNS (Domain Name System) translates domain names into IP addresses. When you enter a website name, your computer queries DNS servers to find the corresponding IP address. This hierarchical system includes root servers, TLD servers, and authoritative name servers.";
+                    
+                    visualization.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <div style="padding: 10px; border: 2px solid #3498db; border-radius: 6px;">example.com</div>
+                            <div style="width: 50px; height: 2px; background-color: #ddd; margin: 0 10px;"></div>
+                            <div style="padding: 10px; border: 2px solid #2ecc71; border-radius: 6px;">192.0.2.1</div>
+                        </div>
+                    `;
+                    
+                    simulator.innerHTML = `
+                        <p>Resolve a domain name:</p>
+                        <input type="text" id="dnsInput" placeholder="e.g., example.com">
+                        <button onclick="resolveDNS()">Resolve</button>
+                        <p id="dnsOutput"></p>
+                    `;
+                    break;
+                    
+                case 'troubleshooting':
+                    topicTitle.textContent = "Troubleshooting Tools";
+                    topicContent.innerHTML = "Network troubleshooting tools help diagnose connectivity issues. Key tools include ping (tests connectivity), ipconfig/ifconfig (shows network settings), traceroute (shows network path), nslookup (checks DNS), and netstat (displays active connections).";
+                    
+                    visualization.innerHTML = `
+                        <div class="ping-visual">
+                            <div class="ping-line"></div>
+                            <div class="ping-dot"></div>
+                        </div>
+                    `;
+                    
+                    simulator.innerHTML = `
+                        <p>Simulate a ping test:</p>
+                        <input type="text" id="pingInput" placeholder="e.g., example.com">
+                        <button onclick="simulatePing()">Ping</button>
+                        <p id="pingOutput"></p>
+                    `;
+                    break;
+            }
+            
+            // Show the output container
+            output.style.display = "block";
+            // Scroll to the output
+            output.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function generateMAC() {
+            let mac = [...Array(6)].map(() => ('0' + (Math.random() * 256 | 0).toString(16)).slice(-2)).join(':');
+            document.getElementById("macOutput").innerHTML = `Generated MAC: <strong>${mac}</strong>`;
+        }
+        
+        function validateIPv4() {
+            let ipv4 = document.getElementById("ipv4Input").value;
+            let regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+            let isValid = regex.test(ipv4);
+            
+            if (isValid) {
+                // Check if each octet is between 0 and 255
+                let octets = ipv4.split('.');
+                isValid = octets.every(octet => parseInt(octet) >= 0 && parseInt(octet) <= 255);
+            }
+            
+            document.getElementById("ipv4Output").innerHTML = isValid ? 
+                `<span style="color: green;">✓ Valid IPv4 Address</span>` : 
+                `<span style="color: red;">✗ Invalid IPv4 Address</span>`;
+        }
+        
+        function simulateDHCP() {
+            let stages = ['Discover', 'Offer', 'Request', 'Acknowledge'];
+            let output = document.getElementById("dhcpOutput");
+            output.innerHTML = "Starting DHCP process...";
+            
+            let i = 0;
+            let timer = setInterval(() => {
+                if (i < stages.length) {
+                    output.innerHTML += `<br>Step ${i+1}: DHCP ${stages[i]}`;
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    let ip = "192.168.1." + (Math.floor(Math.random() * 100) + 1);
+                    output.innerHTML += `<br><strong>Completed! Assigned IP: ${ip}</strong>`;
+                }
+            }, 800);
+        }
+        
+        function checkPort() {
+            let port = document.getElementById("portInput").value;
+            let portNum = parseInt(port);
+            
+            let commonPorts = {
+                20: 'FTP Data',
+                21: 'FTP Control',
+                22: 'SSH',
+                23: 'Telnet',
+                25: 'SMTP',
+                53: 'DNS',
+                67: 'DHCP Server',
+                68: 'DHCP Client',
+                80: 'HTTP',
+                110: 'POP3',
+                143: 'IMAP',
+                443: 'HTTPS',
+                3306: 'MySQL',
+                3389: 'RDP'
+            };
+            
+            let result = "";
+            
+            if (isNaN(portNum) || portNum < 0 || portNum > 65535) {
+                result = "Invalid port. Port must be between 0 and 65535.";
+            } else if (commonPorts[portNum]) {
+                result = `Port ${portNum} is used for ${commonPorts[portNum]}`;
+            } else if (portNum < 1024) {
+                result = `Port ${portNum} is in the well-known port range (0-1023)`;
+            } else if (portNum < 49152) {
+                result = `Port ${portNum} is in the registered port range (1024-49151)`;
+            } else {
+                result = `Port ${portNum} is in the dynamic/private port range (49152-65535)`;
+            }
+            
+            document.getElementById("portOutput").innerHTML = result;
+        }
+        
+        function resolveDNS() {
+            let domain = document.getElementById("dnsInput").value;
+            
+            if (!domain) {
+                document.getElementById("dnsOutput").innerHTML = "Please enter a domain name";
+                return;
+            }
+            
+            document.getElementById("dnsOutput").innerHTML = "Resolving...";
+            
+            // Simulate DNS lookup delay
+            setTimeout(() => {
+                // Generate a random IP for demo purposes
+                let ip = [
+                    Math.floor(Math.random() * 223) + 1,  // Avoid 0, 224-255 (reserved ranges)
+                    Math.floor(Math.random() * 256),
+                    Math.floor(Math.random() * 256),
+                    Math.floor(Math.random() * 254) + 1   // Avoid 0, 255 (reserved)
+                ].join('.');
+                
+                document.getElementById("dnsOutput").innerHTML = `Domain: <strong>${domain}</strong><br>Resolved IP: <strong>${ip}</strong>`;
+            }, 1000);
+        }
+        
+        function simulatePing() {
+            let target = document.getElementById("pingInput").value || "example.com";
+            let output = document.getElementById("pingOutput");
+            
+            output.innerHTML = `Pinging ${target}...`;
+            
+            // Simulate 4 ping responses
+            let count = 0;
+            let timer = setInterval(() => {
+                if (count < 4) {
+                    let time = Math.floor(Math.random() * 100) + 10; // Random time between 10-110ms
+                    output.innerHTML += `<br>Reply from ${target}: time=${time}ms`;
+                    count++;
+                } else {
+                    clearInterval(timer);
+                    output.innerHTML += `<br><br>Ping statistics:<br>    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)`;
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>
