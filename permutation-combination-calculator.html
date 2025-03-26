@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Permutation & Combination Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+        .radio-group label {
+            display: inline-block;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Permutation & Combination Calculator</h1>
+        
+        <div class="input-group">
+            <label for="totalItems">Total Number of Items (n):</label>
+            <input type="number" id="totalItems" min="0" placeholder="Enter total number of items">
+        </div>
+        
+        <div class="input-group">
+            <label for="selectedItems">Number of Selected Items (r):</label>
+            <input type="number" id="selectedItems" min="0" placeholder="Enter number of selected items">
+        </div>
+        
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="calcType" value="permutation" checked>
+                Permutation (P)
+            </label>
+            <label>
+                <input type="radio" name="calcType" value="combination">
+                Combination (C)
+            </label>
+        </div>
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+// Factorial calculation function
+function factorial(n) {
+    if (n < 0) return undefined;
+    if (n === 0 || n === 1) return 1;
+    
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+// Permutation calculation
+function calculatePermutation(n, r) {
+    // Validate inputs
+    if (n < 0 || r < 0 || r > n) return undefined;
+    
+    // P(n,r) = n! / (n-r)!
+    return factorial(n) / factorial(n - r);
+}
+
+// Combination calculation
+function calculateCombination(n, r) {
+    // Validate inputs
+    if (n < 0 || r < 0 || r > n) return undefined;
+    
+    // C(n,r) = n! / (r! * (n-r)!)
+    return factorial(n) / (factorial(r) * factorial(n - r));
+}
+
+function calculate() {
+    const totalItems = parseInt(document.getElementById('totalItems').value);
+    const selectedItems = parseInt(document.getElementById('selectedItems').value);
+    const calcType = document.querySelector('input[name="calcType"]:checked').value;
+    const resultDiv = document.getElementById('result');
+
+    // Input validation
+    if (isNaN(totalItems) || isNaN(selectedItems)) {
+        resultDiv.innerHTML = '<p class="error">Please enter valid numbers</p>';
+        return;
+    }
+
+    if (totalItems < 0 || selectedItems < 0 || selectedItems > totalItems) {
+        resultDiv.innerHTML = '<p class="error">Invalid input. Ensure 0 ≤ r ≤ n</p>';
+        return;
+    }
+
+    let result;
+    let explanation = '';
+
+    if (calcType === 'permutation') {
+        result = calculatePermutation(totalItems, selectedItems);
+        explanation = `Permutation: P(${totalItems}, ${selectedItems}) = ${totalItems}! / (${totalItems} - ${selectedItems})!`;
+    } else {
+        result = calculateCombination(totalItems, selectedItems);
+        explanation = `Combination: C(${totalItems}, ${selectedItems}) = ${totalItems}! / (${selectedItems})! * (${totalItems} - ${selectedItems})!`;
+    }
+
+    // Check for extremely large numbers
+    if (result === Infinity || result > Number.MAX_SAFE_INTEGER) {
+        resultDiv.innerHTML = '<p class="error">Result too large to calculate</p>';
+        return;
+    }
+
+    resultDiv.innerHTML = `
+        <p>Result: ${result.toLocaleString()}</p>
+        <p><small>${explanation}</small></p>
+    `;
+}
+    </script>
+</body>
+</html>

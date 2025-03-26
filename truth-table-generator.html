@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logical Propositions Truth Table Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .truth-table-generator {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .input-section select, .input-section input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .operator-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .operator-buttons button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .operator-buttons button:hover {
+            background-color: #45a049;
+        }
+        #truthTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        #truthTable th, #truthTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        #truthTable th {
+            background-color: #f2f2f2;
+        }
+        .true-cell {
+            background-color: #e6ffe6;
+        }
+        .false-cell {
+            background-color: #ffe6e6;
+        }
+        #expressionDisplay {
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="truth-table-generator">
+        <h1>Logical Propositions Truth Table Generator</h1>
+        
+        <div id="expressionDisplay">Current Expression: </div>
+        
+        <div class="input-section">
+            <select id="propCount">
+                <option value="2">2 Propositions</option>
+                <option value="3">3 Propositions</option>
+            </select>
+        </div>
+        
+        <div class="operator-buttons">
+            <button onclick="addOperator('¬')">¬ (Negation)</button>
+            <button onclick="addOperator('∧')">∧ (AND)</button>
+            <button onclick="addOperator('∨')">∨ (OR)</button>
+            <button onclick="addOperator('→')">→ (Implication)</button>
+            <button onclick="addOperator('↔')">↔ (Equivalence)</button>
+            <button onclick="addOperator('⊕')">⊕ (XOR)</button>
+            <button onclick="addOperator('(')">( Parenthesis</button>
+            <button onclick="addOperator(')')"> ) Parenthesis</button>
+            <button onclick="clearExpression()">Clear</button>
+        </div>
+        
+        <div class="input-section">
+            <input type="text" id="logicalExpression" placeholder="Enter logical expression">
+            <button onclick="generateTruthTable()">Generate Truth Table</button>
+        </div>
+        
+        <div id="truthTableContainer"></div>
+    </div>
+
+    <script>
+class LogicEvaluator {
+    constructor() {
+        this.propositions = [];
+    }
+
+    // Negation
+    not(p) {
+        return !p;
+    }
+
+    // AND
+    and(p, q) {
+        return p && q;
+    }
+
+    // OR
+    or(p, q) {
+        return p || q;
+    }
+
+    // Implication (if p then q)
+    implies(p, q) {
+        return !p || q;
+    }
+
+    // Equivalence
+    equivalent(p, q) {
+        return p === q;
+    }
+
+    // XOR
+    xor(p, q) {
+        return p !== q;
+    }
+
+    // Evaluate a complex logical expression
+    evaluateExpression(expression, values) {
+        // Replace proposition letters with their actual boolean values
+        let substitutedExpression = expression;
+        const propLetters = ['P', 'Q', 'R'];
+        
+        propLetters.slice(0, values.length).forEach((letter, index) => {
+            substitutedExpression = substitutedExpression.replace(new RegExp(letter, 'g'), values[index]);
+        });
+
+        // Replace logical operators
+        substitutedExpression = substitutedExpression
+            .replace(/¬/g, '!')
+            .replace(/∧/g, '&&')
+            .replace(/∨/g, '||')
+            .replace(/→/g, '<=')
+            .replace(/↔/g, '===')
+            .replace(/⊕/g, '!==');
+
+        try {
+            // Use Function constructor to evaluate the expression safely
+            return new Function('return ' + substitutedExpression)();
+        } catch (error) {
+            console.error('Expression evaluation error:', error);
+            return null;
+        }
+    }
+
+    // Generate truth table data
+    generateTruthTableData(expression, propCount) {
+        const results = [];
+        const totalRows = Math.pow(2, propCount);
+
+        // Generate all possible truth value combinations
+        for (let i = 0; i < totalRows; i++) {
+            const values = [];
+            for (let j = 0; j < propCount; j++) {
+                values.push(Boolean((i >> j) & 1));
+            }
+
+            const result = this.evaluateExpression(expression, values);
+            results.push({
+                values: values,
+                result: result
+            });
+        }
+
+        return results;
+    }
+}
+
+const logicEvaluator = new LogicEvaluator();
+
+function addOperator(op) {
+    const expressionInput = document.getElementById('logicalExpression');
+    expressionInput.value += op;
+    updateExpressionDisplay(expressionInput.value);
+}
+
+function clearExpression() {
+    document.getElementById('logicalExpression').value = '';
+    document.getElementById('expressionDisplay').innerHTML = 'Current Expression: ';
+    document.getElementById('truthTableContainer').innerHTML = '';
+}
+
+function updateExpressionDisplay(expression) {
+    document.getElementById('expressionDisplay').innerHTML = `Current Expression: ${expression}`;
+}
+
+function generateTruthTable() {
+    const expression = document.getElementById('logicalExpression').value;
+    const propCount = parseInt(document.getElementById('propCount').value);
+
+    if (!expression) {
+        alert('Please enter a logical expression');
+        return;
+    }
+
+    // Validate expression uses only allowed characters
+    const validChars = /^[PQR¬∧∨→↔⊕()\s]+$/;
+    if (!validChars.test(expression)) {
+        alert('Invalid characters in expression. Use P, Q, R and logical operators.');
+        return;
+    }
+
+    // Generate truth table data
+    const data = logicEvaluator.generateTruthTableData(expression, propCount);
+
+    // Create truth table
+    const tableContainer = document.getElementById('truthTableContainer');
+    const table = document.createElement('table');
+    table.id = 'truthTable';
+
+    // Create table header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    
+    // Add proposition columns
+    const propLetters = ['P', 'Q', 'R'];
+    for (let i = 0; i < propCount; i++) {
+        const th = document.createElement('th');
+        th.textContent = propLetters[i];
+        headerRow.appendChild(th);
+    }
+
+    // Add expression column
+    const expressionTh = document.createElement('th');
+    expressionTh.textContent = expression;
+    headerRow.appendChild(expressionTh);
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Create table body
+    const tbody = document.createElement('tbody');
+    
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        
+        // Add proposition values
+        row.values.forEach(val => {
+            const td = document.createElement('td');
+            td.textContent = val ? 'T' : 'F';
+            td.classList.add(val ? 'true-cell' : 'false-cell');
+            tr.appendChild(td);
+        });
+
+        // Add result column
+        const resultTd = document.createElement('td');
+        resultTd.textContent = row.result ? 'T' : 'F';
+        resultTd.classList.add(row.result ? 'true-cell' : 'false-cell');
+        tr.appendChild(resultTd);
+
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    tableContainer.innerHTML = '';
+    tableContainer.appendChild(table);
+}
+    </script>
+</body>
+</html>

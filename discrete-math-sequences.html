@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discrete Math Sequence Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #sequence-selector, #result-container, #initial-conditions {
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #sequence-details {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        #initial-conditions {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Discrete Math Sequence Explorer</h1>
+    
+    <div id="sequence-selector" class="input-group">
+        <label for="sequence-type">Select Sequence:</label>
+        <select id="sequence-type">
+            <option value="arithmetic">Arithmetic Sequence</option>
+            <option value="geometric">Geometric Sequence</option>
+            <option value="fibonacci">Fibonacci Sequence</option>
+            <option value="triangular">Triangular Numbers</option>
+            <option value="power">Power Sequence (n²)</option>
+        </select>
+
+        <label for="definition-type">Definition Type:</label>
+        <select id="definition-type">
+            <option value="recursive">Recursive</option>
+            <option value="closed">Closed-Form</option>
+        </select>
+        
+        <label for="sequence-limit">Number of Terms:</label>
+        <input type="number" id="sequence-limit" min="1" max="20" value="10">
+    </div>
+
+    <div id="initial-conditions">
+        <h3>Initial Conditions</h3>
+        <div id="initial-condition-inputs">
+            <!-- Dynamic inputs will be inserted here -->
+        </div>
+    </div>
+
+    <div id="sequence-details">
+        <h3 id="sequence-name">Select a Sequence</h3>
+        <p id="sequence-formula">Formula will be displayed here</p>
+    </div>
+
+    <div id="result-container">
+        <table id="sequence-table">
+            <thead>
+                <tr>
+                    <th>n</th>
+                    <th>t(n)</th>
+                </tr>
+            </thead>
+            <tbody id="sequence-body">
+                <!-- Sequence terms will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sequence generation functions
+        const sequences = {
+            arithmetic: {
+                name: "Arithmetic Sequence",
+                recursiveFormula: "t(n) = t(n-1) + d",
+                closedFormula: "t(n) = a + (n-1)d",
+                initialConditions: [
+                    { name: 'First Term (a)', key: 'a', default: 2 },
+                    { name: 'Common Difference (d)', key: 'd', default: 3 }
+                ],
+                generateRecursive: (limit, a, d) => {
+                    const seq = [a];
+                    while (seq.length < limit) {
+                        seq.push(seq[seq.length-1] + d);
+                    }
+                    return seq;
+                },
+                generateClosed: (limit, a, d) => {
+                    return Array.from({length: limit}, (_, i) => a + i * d);
+                }
+            },
+            geometric: {
+                name: "Geometric Sequence",
+                recursiveFormula: "t(n) = t(n-1) * r",
+                closedFormula: "t(n) = a * r^(n-1)",
+                initialConditions: [
+                    { name: 'First Term (a)', key: 'a', default: 2 },
+                    { name: 'Common Ratio (r)', key: 'r', default: 2 }
+                ],
+                generateRecursive: (limit, a, r) => {
+                    const seq = [a];
+                    while (seq.length < limit) {
+                        seq.push(seq[seq.length-1] * r);
+                    }
+                    return seq;
+                },
+                generateClosed: (limit, a, r) => {
+                    return Array.from({length: limit}, (_, i) => a * Math.pow(r, i));
+                }
+            },
+            fibonacci: {
+                name: "Fibonacci Sequence",
+                recursiveFormula: "t(n) = t(n-1) + t(n-2)",
+                closedFormula: "Binet's Formula (Approximation)",
+                initialConditions: [
+                    { name: 'First Term', key: 't1', default: 1 },
+                    { name: 'Second Term', key: 't2', default: 1 }
+                ],
+                generateRecursive: (limit, t1, t2) => {
+                    const seq = [t1, t2];
+                    while (seq.length < limit) {
+                        seq.push(seq[seq.length-1] + seq[seq.length-2]);
+                    }
+                    return seq;
+                },
+                generateClosed: (limit, t1, t2) => {
+                    // Binet's formula (approximation)
+                    const phi = (1 + Math.sqrt(5)) / 2;
+                    return Array.from({length: limit}, (_, i) => 
+                        Math.round((Math.pow(phi, i) - Math.pow(-phi, -i)) / Math.sqrt(5))
+                    );
+                }
+            },
+            triangular: {
+                name: "Triangular Numbers",
+                recursiveFormula: "t(n) = t(n-1) + n",
+                closedFormula: "t(n) = n * (n + 1) / 2",
+                initialConditions: [
+                    { name: 'First Term', key: 't1', default: 1 }
+                ],
+                generateRecursive: (limit, t1) => {
+                    const seq = [t1];
+                    let lastTerm = t1;
+                    for (let i = 2; i <= limit; i++) {
+                        lastTerm += i;
+                        seq.push(lastTerm);
+                    }
+                    return seq;
+                },
+                generateClosed: (limit) => {
+                    return Array.from({length: limit}, (_, i) => (i+1) * (i+2) / 2);
+                }
+            },
+            power: {
+                name: "Power Sequence (n²)",
+                recursiveFormula: "t(n) = t(n-1) + (2n - 1)",
+                closedFormula: "t(n) = n²",
+                initialConditions: [
+                    { name: 'First Term', key: 't1', default: 1 }
+                ],
+                generateRecursive: (limit, t1) => {
+                    const seq = [t1];
+                    let lastTerm = t1;
+                    for (let i = 2; i <= limit; i++) {
+                        lastTerm += (2*i - 1);
+                        seq.push(lastTerm);
+                    }
+                    return seq;
+                },
+                generateClosed: (limit) => {
+                    return Array.from({length: limit}, (_, i) => Math.pow(i+1, 2));
+                }
+            }
+        };
+
+        // DOM Elements
+        const sequenceTypeSelect = document.getElementById('sequence-type');
+        const definitionTypeSelect = document.getElementById('definition-type');
+        const sequenceLimitInput = document.getElementById('sequence-limit');
+        const sequenceName = document.getElementById('sequence-name');
+        const sequenceFormula = document.getElementById('sequence-formula');
+        const sequenceBody = document.getElementById('sequence-body');
+        const initialConditionContainer = document.getElementById('initial-condition-inputs');
+
+        // Dynamically create initial condition inputs
+        function createInitialConditionInputs(sequence) {
+            // Clear previous inputs
+            initialConditionContainer.innerHTML = '';
+
+            // Create inputs for each initial condition
+            sequence.initialConditions.forEach(condition => {
+                const div = document.createElement('div');
+                div.className = 'input-group';
+                div.innerHTML = `
+                    <label for="${condition.key}">${condition.name}:</label>
+                    <input 
+                        type="number" 
+                        id="${condition.key}" 
+                        name="${condition.key}" 
+                        value="${condition.default}"
+                    >
+                `;
+                initialConditionContainer.appendChild(div);
+            });
+        }
+
+        // Update sequence display
+        function updateSequence() {
+            const selectedType = sequenceTypeSelect.value;
+            const definitionType = definitionTypeSelect.value;
+            const limit = parseInt(sequenceLimitInput.value);
+            const sequence = sequences[selectedType];
+            
+            // Update sequence details
+            sequenceName.textContent = sequence.name;
+            sequenceFormula.textContent = definitionType === 'recursive' 
+                ? sequence.recursiveFormula 
+                : sequence.closedFormula;
+
+            // Get initial conditions
+            const initialConditions = sequence.initialConditions.map(condition => {
+                const input = document.getElementById(condition.key);
+                return input ? parseFloat(input.value) : condition.default;
+            });
+
+            // Generate sequence
+            const sequenceTerms = definitionType === 'recursive'
+                ? sequence.generateRecursive(limit, ...initialConditions)
+                : sequence.generateClosed(limit, ...initialConditions);
+
+            // Clear previous table body
+            sequenceBody.innerHTML = '';
+
+            // Populate table
+            sequenceTerms.forEach((term, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${term}</td>
+                `;
+                sequenceBody.appendChild(row);
+            });
+        }
+
+        // Event Listeners
+        sequenceTypeSelect.addEventListener('change', () => {
+            const selectedType = sequenceTypeSelect.value;
+            createInitialConditionInputs(sequences[selectedType]);
+            updateSequence();
+        });
+        definitionTypeSelect.addEventListener('change', updateSequence);
+        sequenceLimitInput.addEventListener('input', updateSequence);
+
+        // Initial setup
+        createInitialConditionInputs(sequences['arithmetic']);
+        updateSequence();
+    </script>
+</body>
+</html>

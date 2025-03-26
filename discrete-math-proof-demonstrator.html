@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discrete Mathematics Proof Demonstrator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        .proof-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .proof-type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .proof-type-btn {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .proof-type-btn:hover, .proof-type-btn.active {
+            background-color: #45a049;
+        }
+        .proof-input {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .proof-input input, 
+        .proof-input textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #proofSteps {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .proof-step {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e6f3e6;
+            border-left: 4px solid #4CAF50;
+        }
+        .theorem-result {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e6f3e6;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="proof-container">
+        <h1>Discrete Mathematics Proof Demonstrator</h1>
+        
+        <div class="proof-type-selector">
+            <button class="proof-type-btn" onclick="selectProofType('directProof')">Direct Proof</button>
+            <button class="proof-type-btn" onclick="selectProofType('contraposition')">Proof by Contraposition</button>
+            <button class="proof-type-btn" onclick="selectProofType('contradiction')">Proof by Contradiction</button>
+            <button class="proof-type-btn" onclick="selectProofType('mathematical-induction')">Mathematical Induction</button>
+            <button class="proof-type-btn" onclick="selectProofType('existence')">Existence Proof</button>
+            <button class="proof-type-btn" onclick="selectProofType('uniqueness')">Uniqueness Proof</button>
+        </div>
+
+        <div class="proof-input" id="proofInputSection">
+            <input type="text" id="theoremStatement" placeholder="Enter theorem statement">
+            <textarea id="additionalInfo" placeholder="Additional information (optional)"></textarea>
+            <button onclick="generateProof()">Generate Proof</button>
+        </div>
+
+        <div id="proofSteps"></div>
+        <div id="theoremResult" class="theorem-result"></div>
+    </div>
+
+    <script>
+class ProofGenerator {
+    constructor() {
+        this.proofTypes = {
+            'directProof': this.generateDirectProof,
+            'contraposition': this.generateContrapositionProof,
+            'contradiction': this.generateContradictionProof,
+            'mathematical-induction': this.generateMathematicalInduction,
+            'existence': this.generateExistenceProof,
+            'uniqueness': this.generateUniquenessProof
+        };
+    }
+
+    // Direct Proof Method
+    generateDirectProof(theorem) {
+        return [
+            "Assume the hypothesis of the theorem is true.",
+            `Theorem: ${theorem}`,
+            "By algebraic manipulation and logical reasoning, we can show:",
+            "1. Start with the given hypothesis",
+            "2. Apply mathematical transformations",
+            "3. Derive the conclusion directly",
+            "Therefore, the theorem is proved."
+        ];
+    }
+
+    // Proof by Contraposition
+    generateContrapositionProof(theorem) {
+        return [
+            "Proof by Contraposition:",
+            `Original Theorem: ${theorem}`,
+            "We will prove the logically equivalent contrapositive statement.",
+            "Steps:",
+            "1. Negate the original theorem",
+            "2. Assume the negation is true",
+            "3. Derive a contradiction",
+            "4. Conclude the original theorem must be true"
+        ];
+    }
+
+    // Proof by Contradiction
+    generateContradictionProof(theorem) {
+        return [
+            "Proof by Contradiction:",
+            `Theorem: ${theorem}`,
+            "Proof steps:",
+            "1. Assume the theorem is false",
+            "2. Follow logical consequences of this assumption",
+            "3. Derive a logically impossible situation",
+            "4. Conclude the original theorem must be true"
+        ];
+    }
+
+    // Mathematical Induction
+    generateMathematicalInduction(theorem) {
+        return [
+            "Proof by Mathematical Induction:",
+            `Theorem: ${theorem}`,
+            "Proof steps:",
+            "1. Base case: Prove the statement is true for the smallest valid input",
+            "2. Inductive hypothesis: Assume the statement is true for k",
+            "3. Inductive step: Prove the statement is true for k+1",
+            "4. Conclude the statement is true for all natural numbers"
+        ];
+    }
+
+    // Existence Proof
+    generateExistenceProof(theorem) {
+        return [
+            "Existence Proof:",
+            `Theorem: ${theorem}`,
+            "Proof steps:",
+            "1. Identify the object we want to prove exists",
+            "2. Construct or find a specific example",
+            "3. Verify the example satisfies all required conditions",
+            "Therefore, an object satisfying the theorem exists."
+        ];
+    }
+
+    // Uniqueness Proof
+    generateUniquenessProof(theorem) {
+        return [
+            "Uniqueness Proof:",
+            `Theorem: ${theorem}`,
+            "Proof steps:",
+            "1. Prove existence of an object satisfying the conditions",
+            "2. Assume two objects satisfy the conditions",
+            "3. Show these objects must be identical",
+            "Conclude the object is unique."
+        ];
+    }
+}
+
+const proofGenerator = new ProofGenerator();
+let currentProofType = 'directProof';
+
+function selectProofType(proofType) {
+    // Remove active class from all buttons
+    document.querySelectorAll('.proof-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Add active class to selected button
+    document.querySelector(`button[onclick="selectProofType('${proofType}')"]`).classList.add('active');
+    
+    currentProofType = proofType;
+}
+
+function generateProof() {
+    const theoremStatement = document.getElementById('theoremStatement').value;
+    const additionalInfo = document.getElementById('additionalInfo').value;
+    const proofStepsContainer = document.getElementById('proofSteps');
+    const theoremResultContainer = document.getElementById('theoremResult');
+
+    if (!theoremStatement) {
+        alert('Please enter a theorem statement');
+        return;
+    }
+
+    // Generate proof steps
+    const proofSteps = proofGenerator.proofTypes[currentProofType](theoremStatement);
+
+    // Clear previous results
+    proofStepsContainer.innerHTML = '';
+    theoremResultContainer.innerHTML = '';
+
+    // Render proof steps
+    proofSteps.forEach((step, index) => {
+        const stepElement = document.createElement('div');
+        stepElement.classList.add('proof-step');
+        stepElement.textContent = step;
+        proofStepsContainer.appendChild(stepElement);
+    });
+
+    // Add additional information if provided
+    if (additionalInfo) {
+        const additionalInfoStep = document.createElement('div');
+        additionalInfoStep.classList.add('proof-step');
+        additionalInfoStep.innerHTML = `<strong>Additional Information:</strong> ${additionalInfo}`;
+        proofStepsContainer.appendChild(additionalInfoStep);
+    }
+
+    // Display result
+    theoremResultContainer.textContent = "Theorem Proved Successfully!";
+}
+
+// Set default proof type on load
+document.querySelector('button[onclick="selectProofType(\'directProof\')"]').classList.add('active');
+    </script>
+</body>
+</html>

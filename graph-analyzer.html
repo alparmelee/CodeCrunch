@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graph Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        #graph-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+        }
+        #results {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        #graph-visualization {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Graph Analyzer</h1>
+    
+    <div id="graph-input">
+        <input type="number" id="vertices" placeholder="Number of Vertices" min="1">
+        <input type="number" id="edges" placeholder="Number of Edges" min="0">
+        <button onclick="analyzeGraph()">Analyze Graph</button>
+    </div>
+
+    <div id="results"></div>
+    <div id="graph-visualization"></div>
+
+    <script>
+class Graph {
+    constructor(vertices, edges) {
+        this.vertices = vertices;
+        this.edges = edges;
+        this.adjacencyList = new Map();
+        this.generateRandomGraph();
+    }
+
+    generateRandomGraph() {
+        // Initialize adjacency list
+        for (let i = 0; i < this.vertices; i++) {
+            this.adjacencyList.set(i, []);
+        }
+
+        // Add random edges
+        let edgesAdded = 0;
+        while (edgesAdded < this.edges) {
+            const from = Math.floor(Math.random() * this.vertices);
+            const to = Math.floor(Math.random() * this.vertices);
+            
+            if (from !== to && !this.adjacencyList.get(from).includes(to)) {
+                this.adjacencyList.get(from).push(to);
+                this.adjacencyList.get(to).push(from);
+                edgesAdded++;
+            }
+        }
+    }
+
+    isConnected() {
+        const visited = new Set();
+        const startVertex = Array.from(this.adjacencyList.keys())[0];
+        this.dfs(startVertex, visited);
+        return visited.size === this.vertices;
+    }
+
+    dfs(vertex, visited) {
+        visited.add(vertex);
+        for (let neighbor of this.adjacencyList.get(vertex)) {
+            if (!visited.has(neighbor)) {
+                this.dfs(neighbor, visited);
+            }
+        }
+    }
+
+    isEulerCircuit() {
+        // Euler circuit requires all vertices to have even degree
+        return this.isConnected() && 
+               Array.from(this.adjacencyList.values()).every(edges => edges.length % 2 === 0);
+    }
+
+    isEulerTrail() {
+        // Euler trail allows exactly two vertices with odd degree
+        const oddDegreeVertices = Array.from(this.adjacencyList.values())
+            .filter(edges => edges.length % 2 !== 0);
+        return this.isConnected() && oddDegreeVertices.length === 2;
+    }
+
+    isTree() {
+        // A tree has exactly vertices - 1 edges and is connected
+        return this.edges === this.vertices - 1 && this.isConnected();
+    }
+
+    hasHamiltonCircuit() {
+        // Naive implementation: check if graph is complete and has >= 3 vertices
+        for (let vertex of this.adjacencyList.keys()) {
+            if (this.adjacencyList.get(vertex).length < this.vertices - 1) {
+                return false;
+            }
+        }
+        return this.vertices >= 3;
+    }
+
+    applyHandshakeLemma() {
+        // Calculate vertex degrees
+        const vertexDegrees = new Map();
+        for (let [vertex, neighbors] of this.adjacencyList.entries()) {
+            vertexDegrees.set(vertex, neighbors.length);
+        }
+
+        // Calculate total degree
+        const totalDegree = Array.from(vertexDegrees.values())
+            .reduce((sum, degree) => sum + degree, 0);
+
+        return {
+            vertexDegrees: vertexDegrees,
+            totalDegree: totalDegree,
+            // Each edge is counted twice (once for each endpoint)
+            expectedEdges: totalDegree / 2
+        };
+    }
+
+    analyze() {
+        const results = {
+            connected: this.isConnected(),
+            eulerCircuit: this.isEulerCircuit(),
+            eulerTrail: this.isEulerTrail(),
+            tree: this.isTree(),
+            hamiltonCircuit: this.hasHamiltonCircuit(),
+            handshakeLemma: this.applyHandshakeLemma()
+        };
+
+        return results;
+    }
+
+    visualize() {
+        const container = document.getElementById('graph-visualization');
+        container.innerHTML = '';
+        
+        // Create SVG element
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute('width', '400');
+        svg.setAttribute('height', '400');
+        
+        // Draw vertices in a circle
+        const radius = 150;
+        const centerX = 200;
+        const centerY = 200;
+
+        // Draw edges
+        for (let [from, neighbors] of this.adjacencyList.entries()) {
+            const fromAngle = (from / this.vertices) * (2 * Math.PI);
+            const fromX = centerX + radius * Math.cos(fromAngle);
+            const fromY = centerY + radius * Math.sin(fromAngle);
+
+            for (let to of neighbors) {
+                const toAngle = (to / this.vertices) * (2 * Math.PI);
+                const toX = centerX + radius * Math.cos(toAngle);
+                const toY = centerY + radius * Math.sin(toAngle);
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute('x1', fromX);
+                line.setAttribute('y1', fromY);
+                line.setAttribute('x2', toX);
+                line.setAttribute('y2', toY);
+                line.setAttribute('stroke', 'black');
+                svg.appendChild(line);
+            }
+        }
+
+        // Draw vertices
+        for (let i = 0; i < this.vertices; i++) {
+            const angle = (i / this.vertices) * (2 * Math.PI);
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', '10');
+            circle.setAttribute('fill', 'red');
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute('x', x);
+            text.setAttribute('y', y);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dy', '.3em');
+            text.setAttribute('fill', 'white');
+            text.textContent = i;
+
+            svg.appendChild(circle);
+            svg.appendChild(text);
+        }
+
+        container.appendChild(svg);
+    }
+}
+
+function analyzeGraph() {
+    const verticesInput = document.getElementById('vertices');
+    const edgesInput = document.getElementById('edges');
+    const resultsDiv = document.getElementById('results');
+
+    const vertices = parseInt(verticesInput.value);
+    const edges = parseInt(edgesInput.value);
+
+    // Validate input
+    if (isNaN(vertices) || vertices < 1) {
+        resultsDiv.innerHTML = 'Please enter a valid number of vertices (≥ 1)';
+        return;
+    }
+
+    if (isNaN(edges) || edges < 0 || edges > (vertices * (vertices - 1) / 2)) {
+        resultsDiv.innerHTML = 'Please enter a valid number of edges';
+        return;
+    }
+
+    const graph = new Graph(vertices, edges);
+    const results = graph.analyze();
+
+    let analysisHTML = '<h2>Graph Analysis</h2>';
+    analysisHTML += `<p>Vertices: ${vertices}, Edges: ${edges}</p>`;
+    analysisHTML += '<ul>';
+    
+    analysisHTML += `<li><strong>Connected Graph:</strong> ${results.connected 
+        ? 'Yes (All vertices can be reached from any other vertex)' 
+        : 'No (Some vertices are disconnected)'}</li>`;
+    
+    analysisHTML += `<li><strong>Euler Circuit:</strong> ${results.eulerCircuit 
+        ? 'Yes (Can traverse all edges exactly once, starting and ending at the same vertex)' 
+        : 'No (Not all vertices have even degree)'}</li>`;
+    
+    analysisHTML += `<li><strong>Euler Trail:</strong> ${results.eulerTrail 
+        ? 'Yes (Can traverse all edges exactly once, but may not start and end at the same vertex)' 
+        : 'No (More than two vertices have odd degree)'}</li>`;
+    
+    analysisHTML += `<li><strong>Tree:</strong> ${results.tree 
+        ? 'Yes (Connected graph with vertices - 1 edges, no cycles)' 
+        : 'No (Does not meet tree criteria)'}</li>`;
+    
+    analysisHTML += `<li><strong>Hamilton Circuit:</strong> ${results.hamiltonCircuit 
+        ? 'Yes (Can visit each vertex exactly once and return to start)' 
+        : 'No (Graph does not have complete connectivity)'}</li>`;
+    
+    // Handshake Lemma Analysis
+    const handshakeLemma = results.handshakeLemma;
+    analysisHTML += '<li><strong>Handshake Lemma Analysis:</strong><ul>';
+    analysisHTML += `<li>Total Degree: ${handshakeLemma.totalDegree}</li>`;
+    analysisHTML += `<li>Expected Number of Edges: ${handshakeLemma.expectedEdges}</li>`;
+    analysisHTML += '<li>Vertex Degrees:<ul>';
+    
+    for (let [vertex, degree] of handshakeLemma.vertexDegrees.entries()) {
+        analysisHTML += `<li>Vertex ${vertex}: ${degree} degree</li>`;
+    }
+    
+    analysisHTML += '</ul></li>';
+    analysisHTML += `<li>Verification: ${handshakeLemma.expectedEdges === edges 
+        ? 'Handshake Lemma Satisfied (Total degree is even)' 
+        : 'Handshake Lemma Not Satisfied'}</li>`;
+    analysisHTML += '</ul></li>';
+    
+    analysisHTML += '</ul>';
+
+    resultsDiv.innerHTML = analysisHTML;
+    graph.visualize();
+}
+    </script>
+</body>
+</html>
