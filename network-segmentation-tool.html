@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network Segmentation and VLAN Explorer</title>
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #4CAF50;
+            --background-light: #f4f4f4;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: var(--background-light);
+            color: #333;
+        }
+        .section {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        .subnet-calculator input, 
+        .vlan-configurator select {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s ease;
+        }
+        .subnet-calculator input:focus,
+        .vlan-configurator select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #1976D2;
+            transform: scale(1.05);
+        }
+        #subnet-result, 
+        #vlan-result {
+            background-color: #e7f3fe;
+            border-left: 6px solid var(--primary-color);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+        .network-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f1f1f1;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        .network-segment {
+            background-color: var(--white);
+            border: 2px solid var(--secondary-color);
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 150px;
+        }
+        .network-segment:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .network-segmentation-info ul {
+            display: flex;
+            justify-content: space-between;
+            padding: 0;
+            list-style-type: none;
+        }
+        .network-segmentation-info li {
+            background-color: #e7f3fe;
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .network-segmentation-info li:hover {
+            transform: translateY(-10px);
+        }
+        #ip-visualization {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            background-color: #f1f1f1;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .ip-block {
+            background-color: var(--white);
+            border: 2px solid var(--primary-color);
+            padding: 10px;
+            margin: 0 5px;
+            text-align: center;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Network Segmentation and VLAN Learning Tool</h1>
+
+    <div class="section subnet-calculator">
+        <h2>Subnet Calculator</h2>
+        <p>Calculate subnet details based on an IP address and subnet mask</p>
+        
+        <label>IP Address:</label>
+        <input type="text" id="ip-address" placeholder="e.g., 192.168.1.0">
+        
+        <label>Subnet Mask:</label>
+        <input type="text" id="subnet-mask" placeholder="e.g., 255.255.255.0">
+        
+        <button onclick="calculateSubnet()">Calculate Subnet</button>
+        
+        <div id="subnet-result"></div>
+        <div id="ip-visualization"></div>
+    </div>
+
+    <div class="section vlan-configurator">
+        <h2>VLAN Configuration Simulator</h2>
+        <p>Simulate VLAN segmentation</p>
+        
+        <label>Number of VLANs:</label>
+        <select id="vlan-count">
+            <option value="2">2 VLANs</option>
+            <option value="3">3 VLANs</option>
+            <option value="4">4 VLANs</option>
+        </select>
+        
+        <label>VLAN Purpose:</label>
+        <select id="vlan-type">
+            <option value="data">Data VLAN</option>
+            <option value="voice">Voice VLAN</option>
+            <option value="management">Management VLAN</option>
+        </select>
+        
+        <button onclick="configureVLAN()">Configure VLAN</button>
+        
+        <div id="vlan-result"></div>
+        <div id="network-diagram" class="network-diagram"></div>
+    </div>
+
+    <div class="section network-segmentation-info">
+        <h2>Network Segmentation Benefits</h2>
+        <ul>
+            <li>Enhanced Security: Isolate different network segments</li>
+            <li>Improved Performance: Reduce broadcast domain size</li>
+            <li>Simplified Troubleshooting: Easier to identify and resolve network issues</li>
+        </ul>
+    </div>
+
+    <script>
+        function calculateSubnet() {
+            const ipAddress = document.getElementById('ip-address').value;
+            const subnetMask = document.getElementById('subnet-mask').value;
+            const resultDiv = document.getElementById('subnet-result');
+            const visualDiv = document.getElementById('ip-visualization');
+
+            if (!ipAddress || !subnetMask) {
+                resultDiv.innerHTML = 'Please enter both IP address and subnet mask.';
+                return;
+            }
+
+            // Basic subnet calculation logic
+            const ipParts = ipAddress.split('.');
+            const maskParts = subnetMask.split('.');
+
+            const networkId = ipParts.map((part, index) => 
+                parseInt(part) & parseInt(maskParts[index])
+            ).join('.');
+
+            const hostBits = maskParts.map(part => 
+                (255 - parseInt(part))
+            );
+
+            const totalHosts = hostBits.reduce((a, b) => a * b, 1) - 2; // Subtract network and broadcast addresses
+
+            const broadcastAddress = ipParts.map((part, index) => 
+                parseInt(part) | (255 - parseInt(maskParts[index]))
+            ).join('.');
+
+            resultDiv.innerHTML = `
+                <strong>Network Details:</strong>
+                <p>Network ID: ${networkId}</p>
+                <p>Broadcast Address: ${broadcastAddress}</p>
+                <p>Total Usable Hosts: ${totalHosts}</p>
+                <p>First Host: ${networkId.split('.').slice(0, 3).concat([parseInt(networkId.split('.')[3]) + 1]).join('.')}</p>
+                <p>Last Host: ${broadcastAddress.split('.').slice(0, 3).concat([parseInt(broadcastAddress.split('.')[3]) - 1]).join('.')}</p>
+            `;
+
+            // IP Visualization
+            visualDiv.innerHTML = '';
+            ipParts.forEach((part, index) => {
+                const block = document.createElement('div');
+                block.className = 'ip-block';
+                block.innerHTML = `
+                    <strong>Octet ${index + 1}</strong>
+                    <p>${part}</p>
+                    <small>Mask: ${maskParts[index]}</small>
+                `;
+                visualDiv.appendChild(block);
+            });
+        }
+
+        function configureVLAN() {
+            const vlanCount = document.getElementById('vlan-count').value;
+            const vlanType = document.getElementById('vlan-type').value;
+            const resultDiv = document.getElementById('vlan-result');
+            const diagramDiv = document.getElementById('network-diagram');
+
+            resultDiv.innerHTML = `Configured ${vlanCount} ${vlanType.toUpperCase()} VLANs`;
+
+            // Create network diagram
+            diagramDiv.innerHTML = '';
+            for (let i = 1; i <= vlanCount; i++) {
+                const segment = document.createElement('div');
+                segment.className = 'network-segment';
+                segment.innerHTML = `
+                    <strong>VLAN ${i}</strong>
+                    <p>${vlanType.toUpperCase()} Network</p>
+                    <small>Segment: 192.168.${i}.0/24</small>
+                `;
+                diagramDiv.appendChild(segment);
+            }
+        }
+
+        // Initialize with some default calculations
+        calculateSubnet();
+        configureVLAN();
+    </script>
+</body>
+</html>
