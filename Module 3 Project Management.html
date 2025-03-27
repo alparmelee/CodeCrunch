@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HR & Project Management Definitions 📊</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .flashcard:hover {
+            transform: scale(1.03);
+        }
+        .term {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .definition {
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="🔍 Search HR and Project Management Definitions...">
+    </div>
+    <div id="flashcards-container"></div>
+
+    <script>
+        const flashcards = [
+            {
+                term: "Human Resource Management 👥",
+                definition: "Making the most effective use of the people involved with a project.",
+                emoji: "👥"
+            },
+            {
+                term: "Planning Human Resource Management 📝",
+                definition: "Identifying and documenting project roles, responsibilities, and reporting relationships.",
+                emoji: "📝"
+            },
+            {
+                term: "Acquiring the Project Team 🤝",
+                definition: "Assigning the appropriate type and number of people to work on projects at the appropriate times.",
+                emoji: "🤝"
+            },
+            {
+                term: "Developing the Project Team 🌱",
+                definition: "Building individual and group skills to enhance project performance.",
+                emoji: "🌱"
+            },
+            {
+                term: "Managing the Project Team 🏆",
+                definition: "Tracking performance, motivating members, resolving issues, and coordinating changes to enhance project performance.",
+                emoji: "🏆"
+            },
+            {
+                term: "Intrinsic Motivation 💡",
+                definition: "Causes people to participate in an activity for their own enjoyment.",
+                emoji: "💡"
+            },
+            {
+                term: "Extrinsic Motivation 🏅",
+                definition: "Causes people to do something for a reward or to avoid a penalty.",
+                emoji: "🏅"
+            },
+            {
+                term: "Maslow's Hierarchy of Needs 🧩",
+                definition: "Motivational theory with five levels: physiological, safety, social, esteem, and self-actualization.",
+                emoji: "🧩"
+            },
+            {
+                term: "Herzberg's Motivation-Hygiene Theory 📊",
+                definition: "Distinguishes between motivational factors (job satisfaction) and hygiene factors (dissatisfaction if absent).",
+                emoji: "📊"
+            },
+            {
+                term: "McClelland's Acquired-Needs Theory 🌟",
+                definition: "People develop needs (achievement, affiliation, power) over time through life experiences.",
+                emoji: "🌟"
+            },
+            {
+                term: "McGregor's Theory X 🚫",
+                definition: "Assumes workers dislike work and require coercion to meet objectives.",
+                emoji: "🚫"
+            },
+            {
+                term: "McGregor's Theory Y ✅",
+                definition: "Assumes work is as natural as play, and workers can be self-motivated.",
+                emoji: "✅"
+            },
+            {
+                term: "Authority 👑",
+                definition: "The legitimate hierarchical right to issue orders.",
+                emoji: "👑"
+            },
+            {
+                term: "Power 💪",
+                definition: "The potential ability to influence behavior to get people to do things they otherwise wouldn't.",
+                emoji: "💪"
+            },
+            {
+                term: "Responsibility Assignment Matrix (RAM) 📋",
+                definition: "Maps project work to responsible individuals.",
+                emoji: "📋"
+            },
+            {
+                term: "RACI Chart 🗂️",
+                definition: "Defines roles in projects as Responsible, Accountable, Consulted, and Informed.",
+                emoji: "🗂️"
+            },
+            {
+                term: "Resource Loading 📊",
+                definition: "The amount of individual resources required during specific periods.",
+                emoji: "📊"
+            },
+            {
+                term: "Resource Leveling 🔄",
+                definition: "Resolving resource conflicts by delaying tasks.",
+                emoji: "🔄"
+            },
+            {
+                term: "Tuckman Model 🚀",
+                definition: "Describes five stages of team development: forming, storming, norming, performing, and adjourning.",
+                emoji: "🚀"
+            },
+            {
+                term: "Conflict Management 🤼",
+                definition: "Includes confrontation, compromise, smoothing, withdrawal, and collaboration.",
+                emoji: "🤼"
+            },
+            {
+                term: "Communication Management Plan 📧",
+                definition: "Defines communication details such as format, content, recipients, and frequency.",
+                emoji: "📧"
+            },
+            {
+                term: "Push Communication 📨",
+                definition: "Sender delivers information to recipients (e.g., emails, reports).",
+                emoji: "📨"
+            },
+            {
+                term: "Pull Communication 📥",
+                definition: "Receivers retrieve the needed information (e.g., dashboards, repositories).",
+                emoji: "📥"
+            },
+            {
+                term: "Status Reports 📝",
+                definition: "Describe where the project stands at a specific point in time.",
+                emoji: "📝"
+            },
+            {
+                term: "Risk Management 🛡️",
+                definition: "Identifying, analyzing, and responding to risks throughout the project lifecycle.",
+                emoji: "🛡️"
+            },
+            {
+                term: "Risk Register 📑",
+                definition: "A document tracking identified risks, their impact, and response plans.",
+                emoji: "📑"
+            },
+            {
+                term: "Decision Tree Analysis 🌳",
+                definition: "A technique for selecting the best course of action in uncertain conditions.",
+                emoji: "🌳"
+            },
+            {
+                term: "Monte Carlo Analysis 🎲",
+                definition: "Uses simulations to predict project outcomes under different risk scenarios.",
+                emoji: "🎲"
+            },
+            {
+                term: "Negative Risk (Threats) ⚠️",
+                definition: "Risks that may hinder project success, managed by avoidance, mitigation, transference, or acceptance.",
+                emoji: "⚠️"
+            },
+            {
+                term: "Positive Risk (Opportunities) 🌈",
+                definition: "Risks that may benefit the project, managed by exploitation, enhancement, sharing, or acceptance.",
+                emoji: "🌈"
+            }
+        ];
+
+        const flashcardsContainer = document.getElementById('flashcards-container');
+        const searchInput = document.getElementById('search-input');
+
+        function renderFlashcards(cardsToShow) {
+            flashcardsContainer.innerHTML = '';
+            cardsToShow.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('flashcard');
+                cardElement.innerHTML = `
+                    <div class="term">${card.term}</div>
+                    <div class="definition">${card.definition}</div>
+                `;
+                flashcardsContainer.appendChild(cardElement);
+            });
+        }
+
+        function filterFlashcards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCards = flashcards.filter(card => 
+                card.term.toLowerCase().includes(searchTerm) || 
+                card.definition.toLowerCase().includes(searchTerm)
+            );
+            renderFlashcards(filteredCards);
+        }
+
+        // Initial render of all cards
+        renderFlashcards(flashcards);
+
+        // Add search functionality
+        searchInput.addEventListener('input', filterFlashcards);
+    </script>
+</body>
+</html>

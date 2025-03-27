@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Management Definitions 📚</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .flashcard:hover {
+            transform: scale(1.03);
+        }
+        .category {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        .term {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .definition {
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="🔍 Search Project Management Definitions...">
+    </div>
+    <div id="flashcards-container"></div>
+
+    <script>
+        const flashcards = [
+            // Scope & Deliverables
+            {
+                category: "Scope & Deliverables",
+                term: "Scope 🎯",
+                definition: "All the work involved in creating project products and the processes used to create them.",
+                emoji: "🎯"
+            },
+            {
+                category: "Scope & Deliverables",
+                term: "Deliverables 📦",
+                definition: "The tangible or intangible results of a project, such as reports, software, or infrastructure.",
+                emoji: "📦"
+            },
+            {
+                category: "Scope & Deliverables",
+                term: "Scope Baseline 📋",
+                definition: "The approved version of the project scope, WBS, and WBS dictionary, used for comparison.",
+                emoji: "📋"
+            },
+            {
+                category: "Scope & Deliverables",
+                term: "Scope Creep 🐌",
+                definition: "The uncontrolled expansion of project scope without adjustments to time, cost, and resources.",
+                emoji: "🐌"
+            },
+            {
+                category: "Scope & Deliverables",
+                term: "Work Breakdown Structure (WBS) 🧩",
+                definition: "A hierarchical decomposition of the project into manageable sections.",
+                emoji: "🧩"
+            },
+            // Scope & Schedule Management
+            {
+                category: "Scope & Schedule Management",
+                term: "Scope Management Plan 📝",
+                definition: "A document outlining how the project scope will be defined, verified, controlled, and communicated.",
+                emoji: "📝"
+            },
+            {
+                category: "Scope & Schedule Management",
+                term: "Validating Scope ✅",
+                definition: "The process of obtaining formal acceptance of deliverables by stakeholders.",
+                emoji: "✅"
+            },
+            {
+                category: "Scope & Schedule Management",
+                term: "Controlling Scope 🎛️",
+                definition: "Monitoring scope changes and managing adjustments to prevent scope creep.",
+                emoji: "🎛️"
+            },
+            {
+                category: "Scope & Schedule Management",
+                term: "Project Time Management ⏰",
+                definition: "Processes required to ensure the timely completion of a project.",
+                emoji: "⏰"
+            },
+            {
+                category: "Scope & Schedule Management",
+                term: "Schedule Baseline 📆",
+                definition: "The approved version of the schedule used to measure project progress.",
+                emoji: "📆"
+            },
+            // Activity & Scheduling Concepts
+            {
+                category: "Activity & Scheduling Concepts",
+                term: "Activity 🛠️",
+                definition: "A specific task that consumes time and resources within a project.",
+                emoji: "🛠️"
+            },
+            {
+                category: "Activity & Scheduling Concepts",
+                term: "Milestone 🚩",
+                definition: "A significant point in a project schedule with no duration but marks major progress.",
+                emoji: "🚩"
+            },
+            {
+                category: "Activity & Scheduling Concepts",
+                term: "Network Diagram 🕸️",
+                definition: "A graphical representation of activity sequencing in a project.",
+                emoji: "🕸️"
+            },
+            {
+                category: "Activity & Scheduling Concepts",
+                term: "Critical Path Method (CPM) 🔬",
+                definition: "A technique for determining the longest sequence of dependent tasks to estimate total project duration.",
+                emoji: "🔬"
+            },
+            {
+                category: "Activity & Scheduling Concepts",
+                term: "Gantt Chart 📊",
+                definition: "A bar chart that visually represents a project schedule over time.",
+                emoji: "📊"
+            },
+            // Resource & Cost Management
+            {
+                category: "Resource & Cost Management",
+                term: "Resource Breakdown Structure (RBS) 📋",
+                definition: "A hierarchical structure of project resources categorized by type.",
+                emoji: "📋"
+            },
+            {
+                category: "Resource & Cost Management",
+                term: "Effort 💪",
+                definition: "The total work hours required to complete an activity.",
+                emoji: "💪"
+            },
+            {
+                category: "Resource & Cost Management",
+                term: "Direct Costs 💰",
+                definition: "Costs directly related to project execution, such as salaries and materials.",
+                emoji: "💰"
+            },
+            {
+                category: "Resource & Cost Management",
+                term: "Tangible Benefits 📈",
+                definition: "Benefits that can be quantified financially, such as increased revenue.",
+                emoji: "📈"
+            },
+            {
+                category: "Resource & Cost Management",
+                term: "Intangible Benefits 🌟",
+                definition: "Benefits that cannot be directly measured in financial terms, such as customer satisfaction.",
+                emoji: "🌟"
+            },
+            // Dependencies & Risk Management
+            {
+                category: "Dependencies & Risk Management",
+                term: "Dependency 🔗",
+                definition: "The relationship between two project tasks where one depends on another.",
+                emoji: "🔗"
+            },
+            {
+                category: "Dependencies & Risk Management",
+                term: "Mandatory Dependency 🔒",
+                definition: "A required relationship, such as coding needing to be completed before testing.",
+                emoji: "🔒"
+            },
+            {
+                category: "Dependencies & Risk Management",
+                term: "Discretionary Dependency 🤝",
+                definition: "A preferred sequence based on best practices.",
+                emoji: "🤝"
+            },
+            {
+                category: "Dependencies & Risk Management",
+                term: "Risk Management Plan 🛡️",
+                definition: "A document outlining how project risks will be identified, assessed, and managed.",
+                emoji: "🛡️"
+            },
+            {
+                category: "Dependencies & Risk Management",
+                term: "Change Control 🔄",
+                definition: "A formal process for managing project modifications.",
+                emoji: "🔄"
+            },
+            // Budgeting & Cost Control
+            {
+                category: "Budgeting & Cost Control",
+                term: "Cost Baseline 📊",
+                definition: "The approved, time-phased budget for a project.",
+                emoji: "📊"
+            },
+            {
+                category: "Budgeting & Cost Control",
+                term: "Cost Overrun 📈",
+                definition: "When actual costs exceed estimated costs.",
+                emoji: "📈"
+            },
+            {
+                category: "Budgeting & Cost Control",
+                term: "Earned Value Management (EVM) 💡",
+                definition: "A technique to measure project performance in terms of scope, schedule, and cost.",
+                emoji: "💡"
+            },
+            {
+                category: "Budgeting & Cost Control",
+                term: "Return on Investment (ROI) 💰",
+                definition: "A financial metric evaluating the profitability of a project.",
+                emoji: "💰"
+            },
+            {
+                category: "Budgeting & Cost Control",
+                term: "Controlling Costs 🧮",
+                definition: "The process of tracking and managing budget adjustments.",
+                emoji: "🧮"
+            }
+        ];
+
+        const flashcardsContainer = document.getElementById('flashcards-container');
+        const searchInput = document.getElementById('search-input');
+
+        function renderFlashcards(cardsToShow) {
+            flashcardsContainer.innerHTML = '';
+            cardsToShow.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('flashcard');
+                cardElement.innerHTML = `
+                    <div class="category">${card.category}</div>
+                    <div class="term">${card.term}</div>
+                    <div class="definition">${card.definition}</div>
+                `;
+                flashcardsContainer.appendChild(cardElement);
+            });
+        }
+
+        function filterFlashcards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCards = flashcards.filter(card => 
+                card.term.toLowerCase().includes(searchTerm) || 
+                card.definition.toLowerCase().includes(searchTerm) ||
+                card.category.toLowerCase().includes(searchTerm)
+            );
+            renderFlashcards(filteredCards);
+        }
+
+        // Initial render of all cards
+        renderFlashcards(flashcards);
+
+        // Add search functionality
+        searchInput.addEventListener('input', filterFlashcards);
+    </script>
+</body>
+</html>

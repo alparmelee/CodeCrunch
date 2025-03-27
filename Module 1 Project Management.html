@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Management Flashcards 📚</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .flashcard:hover {
+            transform: scale(1.03);
+        }
+        .term {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .definition {
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="🔍 Search Project Management Terms...">
+    </div>
+    <div id="flashcards-container"></div>
+
+    <script>
+        const flashcards = [
+            {
+                term: "Project Sponsor 💼",
+                definition: "The person who provides direction and funding for a project.",
+                emoji: "💼"
+            },
+            {
+                term: "Project 🚀",
+                definition: "A temporary endeavor undertaken to create a unique product, service, or result, ending when objectives are met or terminated.",
+                emoji: "🚀"
+            },
+            {
+                term: "Quality Management ✅",
+                definition: "Ensures that the project will satisfy stated or implied needs.",
+                emoji: "✅"
+            },
+            {
+                term: "System Analysis 🔍",
+                definition: "A problem-solving approach that defines a system's scope, components, and constraints.",
+                emoji: "🔍"
+            },
+            {
+                term: "Symbolic Frame 🎭",
+                definition: "Focuses on the meaning of events rather than what actually happened.",
+                emoji: "🎭"
+            },
+            {
+                term: "Executing (Process Group) 🛠️",
+                definition: "Involves acquiring and developing the project team, managing quality assurance, distributing information, and conducting procurements.",
+                emoji: "🛠️"
+            },
+            {
+                term: "Planning (Process Group) 📋",
+                definition: "The process group where most project management activities occur.",
+                emoji: "📋"
+            },
+            {
+                term: "Integrated Change Control 🔄",
+                definition: "Identifying, evaluating, and managing changes throughout a project's lifecycle.",
+                emoji: "🔄"
+            },
+            {
+                term: "Project Charter 📜",
+                definition: "A document recognizing the existence of a project and providing direction on objectives and management.",
+                emoji: "📜"
+            },
+            {
+                term: "Triple Constraint ⚖️",
+                definition: "The three key project constraints: time, cost, and scope.",
+                emoji: "⚖️"
+            },
+            {
+                term: "Project Stakeholders 👥",
+                definition: "People involved in or affected by project activities, including sponsors, managers, teams, and customers.",
+                emoji: "👥"
+            },
+            {
+                term: "Project Management Knowledge Areas 📚",
+                definition: "Includes scope, time, cost, quality, integration, HR, communications, risk, procurement, and stakeholder management.",
+                emoji: "📚"
+            },
+            {
+                term: "Scope Management 🎯",
+                definition: "Defining and managing all required work to complete the project successfully.",
+                emoji: "🎯"
+            },
+            {
+                term: "Time Management ⏰",
+                definition: "Estimating project duration, developing schedules, and ensuring timely completion.",
+                emoji: "⏰"
+            },
+            {
+                term: "Cost Management 💰",
+                definition: "Preparing and managing a project budget.",
+                emoji: "💰"
+            },
+            {
+                term: "Risk Management 🛡️",
+                definition: "Identifying, analyzing, and responding to risks in a project.",
+                emoji: "🛡️"
+            },
+            {
+                term: "Procurement Management 📦",
+                definition: "Acquiring goods and services for the project from external sources.",
+                emoji: "📦"
+            },
+            {
+                term: "Stakeholder Management 🤝",
+                definition: "Identifying and managing stakeholder engagement throughout the project.",
+                emoji: "🤝"
+            },
+            {
+                term: "Project Management Office (PMO) 🏢",
+                definition: "An organizational group responsible for coordinating project management functions.",
+                emoji: "🏢"
+            },
+            {
+                term: "Project Management Institute (PMI) 🎓",
+                definition: "A professional society for project managers, offering certifications like PMP.",
+                emoji: "🎓"
+            },
+            {
+                term: "Systems Thinking 🧩",
+                definition: "A holistic and analytical approach to solving complex problems.",
+                emoji: "🧩"
+            },
+            {
+                term: "Organizational Culture 🌐",
+                definition: "A set of shared assumptions, values, and behaviors within an organization.",
+                emoji: "🌐"
+            },
+            {
+                term: "Functional Organization 📊",
+                definition: "A structure where employees are grouped by specialized functions such as marketing or HR.",
+                emoji: "📊"
+            },
+            {
+                term: "Matrix Organization 🔗",
+                definition: "A structure where employees report to multiple managers for specific projects and functional roles.",
+                emoji: "🔗"
+            },
+            {
+                term: "Project Life Cycle 🔁",
+                definition: "Defines project phases, deliverables, responsibilities, and management processes.",
+                emoji: "🔁"
+            },
+            {
+                term: "Predictive Life Cycle 🔮",
+                definition: "A project approach where scope, schedule, and cost are clearly defined in advance.",
+                emoji: "🔮"
+            },
+            {
+                term: "Systems Development Life Cycle (SDLC) 💻",
+                definition: "The phases involved in developing and maintaining information systems.",
+                emoji: "💻"
+            },
+            {
+                term: "Waterfall Model 🌊",
+                definition: "A linear SDLC approach with sequential phases: analysis, design, construction, testing, and support.",
+                emoji: "🌊"
+            },
+            {
+                term: "Scrum 🏉",
+                definition: "A leading agile development methodology emphasizing cross-functional teamwork and iterative progress.",
+                emoji: "🏉"
+            },
+            {
+                term: "Monitoring and Controlling 📊",
+                definition: "Measures project progress, identifies deviations, and implements corrective actions.",
+                emoji: "📊"
+            }
+        ];
+
+        const flashcardsContainer = document.getElementById('flashcards-container');
+        const searchInput = document.getElementById('search-input');
+
+        function renderFlashcards(cardsToShow) {
+            flashcardsContainer.innerHTML = '';
+            cardsToShow.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('flashcard');
+                cardElement.innerHTML = `
+                    <div class="term">${card.term}</div>
+                    <div class="definition">${card.definition}</div>
+                `;
+                flashcardsContainer.appendChild(cardElement);
+            });
+        }
+
+        function filterFlashcards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCards = flashcards.filter(card => 
+                card.term.toLowerCase().includes(searchTerm) || 
+                card.definition.toLowerCase().includes(searchTerm)
+            );
+            renderFlashcards(filteredCards);
+        }
+
+        // Initial render of all cards
+        renderFlashcards(flashcards);
+
+        // Add search functionality
+        searchInput.addEventListener('input', filterFlashcards);
+    </script>
+</body>
+</html>
