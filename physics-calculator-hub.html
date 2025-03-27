@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physics Calculator Hub</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .hub {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .category {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .category h2 {
+            color: #3498db;
+            border-bottom: 1px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .calculator-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .calculator-link {
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            display: block;
+            font-weight: bold;
+        }
+        .calculator-link:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="hub">
+        <h1>🧮 Physics Calculator Hub</h1>
+        
+        <div class="category">
+            <h2>Physics 1: Mechanics</h2>
+            <div class="calculator-links">
+                <a href="kinematic-calculator.html" class="calculator-link">Kinematic Calculator</a>
+                <a href="newtons-law-calculator.html" class="calculator-link">Newton's Law Calculator</a>
+                <a href="rotational-circular-motion-calculator.html" class="calculator-link">Rotational & Circular Motion</a>
+                <a href="work-energy-momentum-calculator.html" class="calculator-link">Work, Energy & Momentum</a>
+            </div>
+        </div>
+        
+        <div class="category">
+            <h2>Physics 2: Electricity, Magnetism & Waves</h2>
+            <div class="calculator-links">
+                <a href="electrostatics-calculator.html" class="calculator-link">Electrostatics Calculator</a>
+                <a href="circuits-calculator.html" class="calculator-link">Circuits Calculator</a>
+                <a href="magnetism-calculator.html" class="calculator-link">Magnetism Calculator</a>
+                <a href="waves-and-optics-calculator.html" class="calculator-link">Waves and Optics</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

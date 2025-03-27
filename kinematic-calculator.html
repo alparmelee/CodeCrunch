@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kinematic Equation Solver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #666;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Kinematic Equation Solver</h1>
+        <label for="x">Displacement (x) [m]</label>
+        <input type="number" id="x" placeholder="Optional">
+        
+        <label for="vf">Final Velocity (vf) [m/s]</label>
+        <input type="number" id="vf" placeholder="Optional">
+        
+        <label for="vi">Initial Velocity (vi) [m/s]</label>
+        <input type="number" id="vi" placeholder="Optional">
+        
+        <label for="a">Acceleration (a) [m/s²]</label>
+        <input type="number" id="a" placeholder="Optional">
+        
+        <label for="t">Time (t) [s]</label>
+        <input type="number" id="t" placeholder="Optional">
+        
+        <button onclick="solveKinematicEquation()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function solveKinematicEquation() {
+            // Get input values, converting empty strings to null
+            const x = parseFloat(document.getElementById('x').value) || null;
+            const vf = parseFloat(document.getElementById('vf').value) || null;
+            const vi = parseFloat(document.getElementById('vi').value) || null;
+            const a = parseFloat(document.getElementById('a').value) || null;
+            const t = parseFloat(document.getElementById('t').value) || null;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = ''; // Clear previous results
+
+            // Solve with specific given variables
+            try {
+                // Case: vf, a, t are known - solve for vi and x
+                if (vf !== null && a !== null && t !== null && vi === null && x === null) {
+                    const calculatedVi = vf - a * t;
+                    const calculatedX = calculatedVi * t + 0.5 * a * t * t;
+                    
+                    resultDiv.innerHTML = `Calculated Results:
+Initial Velocity (vi): ${calculatedVi.toFixed(2)} m/s
+Displacement (x): ${calculatedX.toFixed(2)} m
+
+Equations Used:
+1. vf = vi + a*t
+2. x = vi*t + 0.5*a*t²`;
+                }
+                // More general solving logic can be added here for other variable combinations
+                else {
+                    resultDiv.innerHTML = 'Unable to solve with the given variables. Ensure correct combination of known values.';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = 'Error solving equation. Check your inputs.';
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

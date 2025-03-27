@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Newton's Second Law Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🔬 Newton's Second Law Calculator</h1>
+        
+        <div>
+            <label>Mass (m) [kg]</label>
+            <input type="number" id="mass" placeholder="Enter mass">
+            
+            <label>Acceleration (a) [m/s²]</label>
+            <input type="number" id="acceleration" placeholder="Enter acceleration">
+            
+            <div class="formula-display">Formula: F = ma</div>
+            
+            <button onclick="calculate()">Calculate Net Force</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                const mass = parseFloat(document.getElementById('mass').value);
+                const acceleration = parseFloat(document.getElementById('acceleration').value);
+                
+                if (isNaN(mass) || isNaN(acceleration)) {
+                    throw new Error('Invalid input');
+                }
+                
+                const force = mass * acceleration;
+                
+                const result = `🔹 Newton's Second Law Calculation
+Mass (m): ${mass} kg
+Acceleration (a): ${acceleration} m/s²
+Net Force (F): ${force.toFixed(2)} N
+
+🧮 Calculation: F = ma
+   ${mass} * ${acceleration} = ${force.toFixed(2)} N`;
+                
+                resultDiv.innerHTML = result;
+            } catch (error) {
+                resultDiv.innerHTML = '❌ Error: Please check your inputs carefully.';
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

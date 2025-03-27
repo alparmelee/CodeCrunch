@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Electrostatics Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>⚡ Electrostatics & Electric Fields Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="coulombs-law">Coulomb's Law</option>
+                <option value="electric-field">Electric Field Calculation</option>
+                <option value="gauss-law">Gauss's Law</option>
+                <option value="charge-density">Charge Density</option>
+                <option value="capacitance">Capacitance</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            <!-- Dynamic inputs will be inserted here -->
+        </div>
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Constants
+        const COULOMB_CONSTANT = 8.99e9; // N·m²/C²
+        const EPSILON_0 = 8.854e-12; // F/m (Permittivity of free space)
+
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            const calculatorConfigs = {
+                'coulombs-law': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Charge 1 (q1) [C]</label>
+                            <input type="number" id="charge1" placeholder="Enter first charge">
+                        </div>
+                        <div>
+                            <label>Charge 2 (q2) [C]</label>
+                            <input type="number" id="charge2" placeholder="Enter second charge">
+                        </div>
+                        <div>
+                            <label>Distance (r) [m]</label>
+                            <input type="number" id="distance" placeholder="Enter distance">
+                        </div>
+                    </div>
+                    <div class="formula-display">Formula: F = k * (q1 * q2) / r²</div>
+                    <div class="info-box">
+                        Coulomb's Law calculates the electrostatic force between two point charges.
+                        k = 8.99 × 10⁹ N·m²/C²
+                    </div>
+                `,
+                'electric-field': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Point Charge (Q) [C]</label>
+                            <input type="number" id="charge" placeholder="Enter charge">
+                        </div>
+                        <div>
+                            <label>Distance from Charge (r) [m]</label>
+                            <input type="number" id="distance" placeholder="Enter distance">
+                        </div>
+                        <div>
+                            <label>Field Calculation Type</label>
+                            <select id="fieldType">
+                                <option value="point">Point Charge</option>
+                                <option value="line">Infinite Line Charge</option>
+                                <option value="plane">Infinite Charged Plane</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formula-display">Formula: E = k * Q / r²</div>
+                    <div class="info-box">
+                        Calculates electric field strength at a given distance from a charge.
+                    </div>
+                `,
+                'gauss-law': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Total Enclosed Charge (Q) [C]</label>
+                            <input type="number" id="charge" placeholder="Enter total charge">
+                        </div>
+                        <div>
+                            <label>Gaussian Surface Type</label>
+                            <select id="surfaceType">
+                                <option value="sphere">Spherical Surface</option>
+                                <option value="cylinder">Cylindrical Surface</option>
+                                <option value="cube">Cubic Surface</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Surface Radius/Side Length [m]</label>
+                            <input type="number" id="radius" placeholder="Enter radius/side length">
+                        </div>
+                    </div>
+                    <div class="formula-display">Formula: ∮ E · dA = Q / ε₀</div>
+                    <div class="info-box">
+                        Gauss's Law relates enclosed charge to electric flux through a closed surface.
+                        ε₀ = 8.854 × 10⁻¹² F/m (Permittivity of free space)
+                    </div>
+                `,
+                'charge-density': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Total Charge (Q) [C]</label>
+                            <input type="number" id="charge" placeholder="Enter total charge">
+                        </div>
+                        <div>
+                            <label>Volume/Length/Area</label>
+                            <input type="number" id="volume" placeholder="Enter volume/length/area">
+                        </div>
+                        <div>
+                            <label>Density Type</label>
+                            <select id="densityType">
+                                <option value="volume">Volume Charge Density (ρ)</option>
+                                <option value="surface">Surface Charge Density (σ)</option>
+                                <option value="linear">Linear Charge Density (λ)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formula-display">Formula: ρ = Q / V, σ = Q / A, λ = Q / L</div>
+                    <div class="info-box">
+                        Calculates charge distribution per unit volume, area, or length.
+                    </div>
+                `,
+                'capacitance': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Plate Separation (d) [m]</label>
+                            <input type="number" id="separation" placeholder="Enter plate separation">
+                        </div>
+                        <div>
+                            <label>Plate Area (A) [m²]</label>
+                            <input type="number" id="area" placeholder="Enter plate area">
+                        </div>
+                        <div>
+                            <label>Dielectric Material</label>
+                            <select id="dielectric">
+                                <option value="vacuum">Vacuum (ε₀)</option>
+                                <option value="air">Air (1.0006)</option>
+                                <option value="glass">Glass (7.0)</option>
+                                <option value="mica">Mica (5.0)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="formula-display">Formula: C = (ε * A) / d</div>
+                    <div class="info-box">
+                        Calculates capacitance of a parallel plate capacitor.
+                        Dielectric constant modifies permittivity.
+                    </div>
+                `
+            };
+
+            inputsDiv.innerHTML = calculatorConfigs[type];
+        }
+
+        function calculate() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let result = '';
+
+            try {
+                switch(type) {
+                    case 'coulombs-law':
+                        const q1 = parseFloat(document.getElementById('charge1').value);
+                        const q2 = parseFloat(document.getElementById('charge2').value);
+                        const r = parseFloat(document.getElementById('distance').value);
+                        
+                        const force = COULOMB_CONSTANT * (Math.abs(q1 * q2) / (r * r));
+                        const forceDirection = q1 * q2 > 0 ? 'Repulsive' : 'Attractive';
+                        
+                        result = `⚡ Coulomb's Law Calculation
+Charge 1 (q1): ${q1} C
+Charge 2 (q2): ${q2} C
+Distance (r): ${r} m
+
+Electrostatic Force: ${force.toFixed(2)} N
+Force Type: ${forceDirection}
+
+🧮 Calculation: F = k * (q1 * q2) / r²
+   (${COULOMB_CONSTANT}) * (${q1} * ${q2}) / (${r}²) = ${force.toFixed(2)} N`;
+                        break;
+
+                    case 'electric-field':
+                        const charge = parseFloat(document.getElementById('charge').value);
+                        const distance = parseFloat(document.getElementById('distance').value);
+                        const fieldType = document.getElementById('fieldType').value;
+                        
+                        let electricField, explanation;
+                        switch(fieldType) {
+                            case 'point':
+                                electricField = COULOMB_CONSTANT * charge / (distance * distance);
+                                explanation = 'Point Charge Electric Field';
+                                break;
+                            case 'line':
+                                electricField = (2 * COULOMB_CONSTANT * charge) / (distance);
+                                explanation = 'Infinite Line Charge Electric Field';
+                                break;
+                            case 'plane':
+                                electricField = charge / (2 * EPSILON_0);
+                                explanation = 'Infinite Charged Plane Electric Field';
+                                break;
+                        }
+                        
+                        result = `🔋 Electric Field Calculation
+Charge (Q): ${charge} C
+Distance (r): ${distance} m
+Field Type: ${explanation}
+
+Electric Field Strength: ${electricField.toFixed(2)} N/C`;
+                        break;
+
+                    case 'gauss-law':
+                        const gaussCharge = parseFloat(document.getElementById('charge').value);
+                        const surfaceType = document.getElementById('surfaceType').value;
+                        const radius = parseFloat(document.getElementById('radius').value);
+                        
+                        const electricFlux = gaussCharge / EPSILON_0;
+                        
+                        result = `🌐 Gauss's Law Calculation
+Total Enclosed Charge (Q): ${gaussCharge} C
+Surface Type: ${surfaceType.charAt(0).toUpperCase() + surfaceType.slice(1)}
+Radius/Side Length: ${radius} m
+
+Electric Flux: ${electricFlux.toFixed(2)} N·m²/C
+
+🧮 Calculation: Φ = Q / ε₀
+   ${gaussCharge} / (${EPSILON_0}) = ${electricFlux.toFixed(2)} N·m²/C`;
+                        break;
+
+                    case 'charge-density':
+                        const densityCharge = parseFloat(document.getElementById('charge').value);
+                        const volume = parseFloat(document.getElementById('volume').value);
+                        const densityType = document.getElementById('densityType').value;
+                        
+                        let density;
+                        switch(densityType) {
+                            case 'volume':
+                                density = densityCharge / volume;
+                                break;
+                            case 'surface':
+                                density = densityCharge / volume;
+                                break;
+                            case 'linear':
+                                density = densityCharge / volume;
+                                break;
+                        }
+                        
+                        result = `⚛️ Charge Density Calculation
+Total Charge (Q): ${densityCharge} C
+${densityType.charAt(0).toUpperCase() + densityType.slice(1)} Dimension: ${volume} ${
+                            densityType === 'volume' ? 'm³' : 
+                            densityType === 'surface' ? 'm²' : 'm'
+                        }
+
+Charge Density: ${density.toFixed(4)} ${
+                            densityType === 'volume' ? 'C/m³' : 
+                            densityType === 'surface' ? 'C/m²' : 'C/m'
+                        }`;
+                        break;
+
+                    case 'capacitance':
+                        const separation = parseFloat(document.getElementById('separation').value);
+                        const area = parseFloat(document.getElementById('area').value);
+                        const dielectric = document.getElementById('dielectric').value;
+                        
+                        let dielectricConstant;
+                        switch(dielectric) {
+                            case 'vacuum': dielectricConstant = 1; break;
+                            case 'air': dielectricConstant = 1.0006; break;
+                            case 'glass': dielectricConstant = 7.0; break;
+                            case 'mica': dielectricConstant = 5.0; break;
+                        }
+                        
+                        const capacitance = (dielectricConstant * EPSILON_0 * area) / separation;
+                        
+                        result = `🔋 Capacitance Calculation
+Plate Separation (d): ${separation} m
+Plate Area (A): ${area} m²
+Dielectric: ${dielectric.charAt(0).toUpperCase() + dielectric.slice(1)}
+Dielectric Constant: ${dielectricConstant}
+
+Capacitance: ${capacitance.toFixed(4)} F
+
+🧮 Calculation: C = (ε * ε₀ * A) / d
+   (${dielectricConstant} * ${EPSILON_0} * ${area}) / ${separation} = ${capacitance.toFixed(4)} F`;
+                        break;
+                }
+                
+                resultDiv.innerHTML = result;
+            } catch (error) {
+                resultDiv.innerHTML = '❌ Error: Please check your inputs carefully.';
+                console.error(error);
+            }
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+</body>
+</html>

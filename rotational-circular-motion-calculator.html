@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rotational & Circular Motion Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🌀 Rotational & Circular Motion</h1>
+        
+        <label>Select Calculation Type</label>
+        <select id="calculationType" onchange="updateCalculator()">
+            <option value="circular-motion">Circular Motion</option>
+            <option value="rotational-dynamics">Rotational Dynamics</option>
+        </select>
+        
+        <div id="dynamicInputs">
+            <!-- Dynamic inputs will be inserted here -->
+        </div>
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            const calculatorConfigs = {
+                'circular-motion': `
+                    <div>
+                        <label>Mass (m) [kg]</label>
+                        <input type="number" id="mass" placeholder="Enter mass">
+                        
+                        <label>Velocity (v) [m/s]</label>
+                        <input type="number" id="velocity" placeholder="Enter velocity">
+                        
+                        <label>Radius (r) [m]</label>
+                        <input type="number" id="radius" placeholder="Enter radius">
+                    </div>
+                    <div class="formula-display">Formula: F = mv²/r (Centripetal Force)</div>
+                `,
+                'rotational-dynamics': `
+                    <div>
+                        <label>Moment of Inertia (I) [kg·m²]</label>
+                        <input type="number" id="momentOfInertia" placeholder="Enter moment of inertia">
+                        
+                        <label>Angular Acceleration (α) [rad/s²]</label>
+                        <input type="number" id="angularAcceleration" placeholder="Enter angular acceleration">
+                        
+                        <label>Torque (τ) [N·m]</label>
+                        <input type="number" id="torque" placeholder="Enter torque">
+                    </div>
+                    <div class="formula-display">Formula: τ = I * α</div>
+                `
+            };
+
+            inputsDiv.innerHTML = calculatorConfigs[type];
+        }
+
+        function calculate() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let result = '';
+
+            try {
+                switch(type) {
+                    case 'circular-motion':
+                        const circMass = parseFloat(document.getElementById('mass').value);
+                        const velocity = parseFloat(document.getElementById('velocity').value);
+                        const radius = parseFloat(document.getElementById('radius').value);
+                        
+                        const centripetalForce = (circMass * velocity * velocity) / radius;
+                        
+                        result = `🌀 Circular Motion Calculation
+Mass (m): ${circMass} kg
+Velocity (v): ${velocity} m/s
+Radius (r): ${radius} m
+
+Centripetal Force: ${centripetalForce.toFixed(2)} N
+
+🧮 Calculation: F = mv²/r
+   (${circMass} * ${velocity}²) / ${radius} = ${centripetalForce.toFixed(2)} N`;
+                        break;
+
+                    case 'rotational-dynamics':
+                        const momentOfInertia = parseFloat(document.getElementById('momentOfInertia').value);
+                        const angularAcceleration = parseFloat(document.getElementById('angularAcceleration').value);
+                        const torque = parseFloat(document.getElementById('torque').value);
+                        
+                        const calculatedTorque = momentOfInertia * angularAcceleration;
+                        
+                        result = `🔄 Rotational Dynamics Calculation
+Moment of Inertia (I): ${momentOfInertia} kg·m²
+Angular Acceleration (α): ${angularAcceleration} rad/s²
+Torque (τ): ${calculatedTorque.toFixed(2)} N·m
+
+🧮 Calculation: τ = I * α
+   ${momentOfInertia} * ${angularAcceleration} = ${calculatedTorque.toFixed(2)} N·m`;
+                        break;
+                }
+                
+                resultDiv.innerHTML = result;
+            } catch (error) {
+                resultDiv.innerHTML = '❌ Error: Please check your inputs carefully.';
+                console.error(error);
+            }
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+</body>
+</html>

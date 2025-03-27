@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Electrical Circuits Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .circuit-diagram {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🔌 Electrical Circuits Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="ohms-law">Ohm's Law</option>
+                <option value="power">Power Calculation</option>
+                <option value="series-resistance">Series Resistance</option>
+                <option value="parallel-resistance">Parallel Resistance</option>
+                <option value="capacitive-reactance">Capacitive Reactance</option>
+                <option value="inductive-reactance">Inductive Reactance</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            <!-- Dynamic inputs will be inserted here -->
+        </div>
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            const calculatorConfigs = {
+                'ohms-law': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Known Value</label>
+                            <select id="knownType">
+                                <option value="voltage">Voltage (V)</option>
+                                <option value="current">Current (I)</option>
+                                <option value="resistance">Resistance (R)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Known Value Magnitude</label>
+                            <input type="number" id="knownValue" placeholder="Enter known value">
+                        </div>
+                        <div>
+                            <label>Other Required Values</label>
+                            <input type="number" id="otherValue1" placeholder="Optional secondary value">
+                        </div>
+                    </div>
+                    <div class="circuit-diagram">
+                        V = I * R  |  I = V / R  |  R = V / I
+                    </div>
+                    <div class="formula-display">Ohm's Law: Voltage = Current * Resistance</div>
+                    <div class="info-box">
+                        Calculate any electrical parameter using the fundamental relationship between voltage, current, and resistance.
+                    </div>
+                `,
+                'power': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Calculation Method</label>
+                            <select id="powerMethod">
+                                <option value="vi">Voltage * Current</option>
+                                <option value="i2r">Current² * Resistance</option>
+                                <option value="v2r">Voltage² / Resistance</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>First Value</label>
+                            <input type="number" id="powerValue1" placeholder="Enter first value">
+                        </div>
+                        <div>
+                            <label>Second Value (if needed)</label>
+                            <input type="number" id="powerValue2" placeholder="Enter second value">
+                        </div>
+                    </div>
+                    <div class="circuit-diagram">
+                        P = V * I  |  P = I² * R  |  P = V² / R
+                    </div>
+                    <div class="formula-display">Power = Voltage * Current</div>
+                    <div class="info-box">
+                        Calculate electrical power using different input methods and formulas.
+                    </div>
+                `,
+                'series-resistance': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Resistor 1 (R1) [Ω]</label>
+                            <input type="number" id="resistance1" placeholder="Enter first resistance">
+                        </div>
+                        <div>
+                            <label>Resistor 2 (R2) [Ω]</label>
+                            <input type="number" id="resistance2" placeholder="Enter second resistance">
+                        </div>
+                        <div>
+                            <label>Additional Resistors (Optional)</label>
+                            <input type="number" id="resistance3" placeholder="Enter third resistance">
+                        </div>
+                    </div>
+                    <div class="circuit-diagram">
+                        R_total = R1 + R2 + R3 + ...
+                    </div>
+                    <div class="formula-display">Total Series Resistance = Sum of Individual Resistances</div>
+                    <div class="info-box">
+                        In a series circuit, total resistance is the sum of all individual resistances.
+                    </div>
+                `,
+                'parallel-resistance': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Resistor 1 (R1) [Ω]</label>
+                            <input type="number" id="resistance1" placeholder="Enter first resistance">
+                        </div>
+                        <div>
+                            <label>Resistor 2 (R2) [Ω]</label>
+                            <input type="number" id="resistance2" placeholder="Enter second resistance">
+                        </div>
+                        <div>
+                            <label>Additional Resistors (Optional)</label>
+                            <input type="number" id="resistance3" placeholder="Enter third resistance">
+                        </div>
+                    </div>
+                    <div class="circuit-diagram">
+                        1/R_total = 1/R1 + 1/R2 + 1/R3 + ...
+                    </div>
+                    <div class="formula-display">Parallel Resistance = 1 / (1/R1 + 1/R2 + 1/R3 + ...)</div>
+                    <div class="info-box">
+                        In a parallel circuit, total resistance is calculated by the reciprocal of resistances.
+                    </div>
+                `,
+                'capacitive-reactance': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Frequency (f) [Hz]</label>
+                            <input type="number" id="frequency" placeholder="Enter frequency">
+                        </div>
+                        <div>
+                            <label>Capacitance (C) [F]</label>
+                            <input type="number" id="capacitance" placeholder="Enter capacitance">
+                        </div>
+                    </div>
+                    <div class="circuit-diagram">
+                        X_c = 1 / (2 * π * f * C)
+                    </div>
+                    <div class="formula-display">Capacitive Reactance = 1 / (2π * Frequency * Capacitance)</div>
+                    <div class="info-box">
+                        Calculates opposition to alternating current in a capacitor based on frequency.
+                    </div>
+                `,
+                'inductive-reactance': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Frequency (f) [Hz]</label>
+                            <input type="number" id="frequency" placeholder="Enter frequency">
+                        </div>
+                        <div>
+                            <label>Inductance (L) [H]</label>
+                            <input type="number" id="inductance" placeholder="Enter inductance">
+                        </div>
+                    </div>
+                    <div class="circuit-diagram">
+                        X_L = 2 * π * f * L
+                    </div>
+                    <div class="formula-display">Inductive Reactance = 2π * Frequency * Inductance</div>
+                    <div class="info-box">
+                        Calculates opposition to alternating current in an inductor based on frequency.
+                    </div>
+                `
+            };
+
+            inputsDiv.innerHTML = calculatorConfigs[type];
+        }
+
+        function calculate() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let result = '';
+
+            try {
+                switch(type) {
+                    case 'ohms-law':
+                        const knownType = document.getElementById('knownType').value;
+                        const knownValue = parseFloat(document.getElementById('knownValue').value);
+                        const otherValue = parseFloat(document.getElementById('otherValue1').value || 0);
+
+                        let voltage, current, resistance;
+                        switch(knownType) {
+                            case 'voltage':
+                                voltage = knownValue;
+                                resistance = otherValue || voltage / (otherValue || 1);
+                                current = voltage / resistance;
+                                break;
+                            case 'current':
+                                current = knownValue;
+                                resistance = otherValue || 1;
+                                voltage = current * resistance;
+                                break;
+                            case 'resistance':
+                                resistance = knownValue;
+                                current = otherValue || 1;
+                                voltage = current * resistance;
+                                break;
+                        }
+
+                        result = `⚡ Ohm's Law Calculation
+Calculation Method: ${knownType.toUpperCase()}
+
+Voltage (V): ${voltage.toFixed(2)} V
+Current (I): ${current.toFixed(2)} A
+Resistance (R): ${resistance.toFixed(2)} Ω
+
+🔌 Ohm's Law: V = I * R
+   ${voltage.toFixed(2)} = ${current.toFixed(2)} * ${resistance.toFixed(2)}`;
+                        break;
+
+                    case 'power':
+                        const powerMethod = document.getElementById('powerMethod').value;
+                        const powerValue1 = parseFloat(document.getElementById('powerValue1').value);
+                        const powerValue2 = parseFloat(document.getElementById('powerValue2').value || 0);
+
+                        let power;
+                        switch(powerMethod) {
+                            case 'vi':
+                                power = powerValue1 * powerValue2;
+                                break;
+                            case 'i2r':
+                                power = powerValue1 * powerValue1 * powerValue2;
+                                break;
+                            case 'v2r':
+                                power = (powerValue1 * powerValue1) / powerValue2;
+                                break;
+                        }
+
+                        result = `💡 Power Calculation
+Method: ${
+    powerMethod === 'vi' ? 'Voltage * Current' :
+    powerMethod === 'i2r' ? 'Current² * Resistance' :
+    'Voltage² / Resistance'
+}
+
+Power (P): ${power.toFixed(2)} W
+Input Values: ${powerValue1.toFixed(2)}, ${powerValue2.toFixed(2)}
+
+🔋 Power Formula: P = V * I or I² * R or V² / R
+   ${power.toFixed(2)} = ${powerValue1.toFixed(2)} * ${powerValue2.toFixed(2)}`;
+                        break;
+
+                    case 'series-resistance':
+                        const r1 = parseFloat(document.getElementById('resistance1').value);
+                        const r2 = parseFloat(document.getElementById('resistance2').value);
+                        const r3 = parseFloat(document.getElementById('resistance3').value || 0);
+
+                        const totalSeriesResistance = r1 + r2 + r3;
+
+                        result = `🔗 Series Resistance Calculation
+Resistor 1: ${r1.toFixed(2)} Ω
+Resistor 2: ${r2.toFixed(2)} Ω
+Resistor 3: ${r3.toFixed(2)} Ω
+
+Total Series Resistance: ${totalSeriesResistance.toFixed(2)} Ω
+
+🧮 Calculation: R_total = R1 + R2 + R3
+   ${totalSeriesResistance.toFixed(2)} = ${r1.toFixed(2)} + ${r2.toFixed(2)} + ${r3.toFixed(2)}`;
+                        break;
+
+                    case 'parallel-resistance':
+                        const pr1 = parseFloat(document.getElementById('resistance1').value);
+                        const pr2 = parseFloat(document.getElementById('resistance2').value);
+                        const pr3 = parseFloat(document.getElementById('resistance3').value || 0);
+
+                        const totalParallelResistance = 1 / ((1/pr1) + (1/pr2) + (pr3 ? 1/pr3 : 0));
+
+                        result = `🔀 Parallel Resistance Calculation
+Resistor 1: ${pr1.toFixed(2)} Ω
+Resistor 2: ${pr2.toFixed(2)} Ω
+Resistor 3: ${pr3.toFixed(2)} Ω
+
+Total Parallel Resistance: ${totalParallelResistance.toFixed(2)} Ω
+
+🧮 Calculation: 1/R_total = 1/R1 + 1/R2 + 1/R3
+   1/${totalParallelResistance.toFixed(2)} = 1/${pr1.toFixed(2)} + 1/${pr2.toFixed(2)} + 1/${pr3.toFixed(2)}`;
+                        break;
+
+                    case 'capacitive-reactance':
+                        const frequency = parseFloat(document.getElementById('frequency').value);
+                        const capacitance = parseFloat(document.getElementById('capacitance').value);
+
+                        const capacitiveReactance = 1 / (2 * Math.PI * frequency * capacitance);
+
+                        result = `⚡ Capacitive Reactance Calculation
+Frequency: ${frequency.toFixed(2)} Hz
+Capacitance: ${capacitance.toFixed(6)} F
+
+Capacitive Reactance (X_c): ${capacitiveReactance.toFixed(2)} Ω
+
+🧮 Calculation: X_c = 1 / (2π * f * C)
+   ${capacitiveReactance.toFixed(2)} = 1 / (2π * ${frequency.toFixed(2)} * ${capacitance.toFixed(6)})`;
+                        break;
+
+                    case 'inductive-reactance':
+                        const indFrequency = parseFloat(document.getElementById('frequency').value);
+                        const inductance = parseFloat(document.getElementById('inductance').value);
+
+                        const inductiveReactance = 2 * Math.PI * indFrequency * inductance;
+
+                        result = `🌀 Inductive Reactance Calculation
+Frequency: ${indFrequency.toFixed(2)} Hz
+Inductance: ${inductance.toFixed(6)} H
+
+Inductive Reactance (X_L): ${inductiveReactance.toFixed(2)} Ω
+
+🧮 Calculation: X_L = 2π * f * L
+   ${inductiveReactance.toFixed(2)} = 2π * ${indFrequency.toFixed(2)} * ${inductance.toFixed(6)}`;
+                        break;
+                }
+                
+                resultDiv.innerHTML = result;
+            } catch (error) {
+                resultDiv.innerHTML = '❌ Error: Please check your inputs carefully.';
+                console.error(error);
+            }
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+</body>
+</html>

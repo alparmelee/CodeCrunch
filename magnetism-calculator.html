@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Magnetism & Electromagnetic Induction Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🧲 Magnetism & Electromagnetic Induction Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="magnetic-field">Magnetic Field Strength</option>
+                <option value="lorentz-force">Lorentz Force</option>
+                <option value="magnetic-flux">Magnetic Flux</option>
+                <option value="faradays-law">Faraday's Law of Induction</option>
+                <option value="amperes-law">Ampère's Law</option>
+                <option value="magnetic-moment">Magnetic Moment</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            <!-- Dynamic inputs will be inserted here -->
+        </div>
+        
+        <button onclick="calculate()">Calculate</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Magnetic constants
+        const PERMEABILITY_0 = 4 * Math.PI * 1e-7; // H/m (Magnetic permeability of free space)
+
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            const calculatorConfigs = {
+                'magnetic-field': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Calculation Method</label>
+                            <select id="magneticFieldMethod">
+                                <option value="straight-wire">Straight Wire</option>
+                                <option value="current-loop">Current Loop</option>
+                                <option value="solenoid">Solenoid</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Current (I) [A]</label>
+                            <input type="number" id="current" placeholder="Enter current">
+                        </div>
+                        <div>
+                            <label>Distance/Radius [m]</label>
+                            <input type="number" id="distance" placeholder="Enter distance or radius">
+                        </div>
+                        <div>
+                            <label>Number of Turns (for Solenoid)</label>
+                            <input type="number" id="turns" placeholder="Enter number of turns">
+                        </div>
+                    </div>
+                    <div class="formula-display">B = (μ₀ * I) / (2π * r)</div>
+                    <div class="info-box">
+                        Calculate magnetic field strength using different geometries.
+                    </div>
+                `,
+                'lorentz-force': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Charge (q) [C]</label>
+                            <input type="number" id="charge" placeholder="Enter charge">
+                        </div>
+                        <div>
+                            <label>Velocity (v) [m/s]</label>
+                            <input type="number" id="velocity" placeholder="Enter velocity">
+                        </div>
+                        <div>
+                            <label>Magnetic Field (B) [T]</label>
+                            <input type="number" id="magneticField" placeholder="Enter magnetic field strength">
+                        </div>
+                        <div>
+                            <label>Angle (θ) [degrees]</label>
+                            <input type="number" id="angle" placeholder="Angle between v and B">
+                        </div>
+                    </div>
+                    <div class="formula-display">F = q * v * B * sin(θ)</div>
+                    <div class="info-box">
+                        Calculate the force on a moving charged particle in a magnetic field.
+                    </div>
+                `,
+                'magnetic-flux': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Magnetic Field (B) [T]</label>
+                            <input type="number" id="magneticField" placeholder="Enter magnetic field">
+                        </div>
+                        <div>
+                            <label>Surface Area (A) [m²]</label>
+                            <input type="number" id="area" placeholder="Enter surface area">
+                        </div>
+                        <div>
+                            <label>Angle (θ) [degrees]</label>
+                            <input type="number" id="angle" placeholder="Angle between B and normal">
+                        </div>
+                    </div>
+                    <div class="formula-display">Φ = B * A * cos(θ)</div>
+                    <div class="info-box">
+                        Calculate magnetic flux through a surface.
+                    </div>
+                `,
+                'faradays-law': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Change in Magnetic Flux (ΔΦ) [Wb]</label>
+                            <input type="number" id="fluxChange" placeholder="Enter flux change">
+                        </div>
+                        <div>
+                            <label>Time Interval (Δt) [s]</label>
+                            <input type="number" id="timeInterval" placeholder="Enter time interval">
+                        </div>
+                        <div>
+                            <label>Number of Turns</label>
+                            <input type="number" id="turns" placeholder="Enter number of turns">
+                        </div>
+                    </div>
+                    <div class="formula-display">ε = -N * (ΔΦ / Δt)</div>
+                    <div class="info-box">
+                        Calculate induced electromotive force (EMF) in a coil.
+                    </div>
+                `,
+                'amperes-law': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Total Enclosed Current (I) [A]</label>
+                            <input type="number" id="current" placeholder="Enter total enclosed current">
+                        </div>
+                        <div>
+                            <label>Path Length (L) [m]</label>
+                            <input type="number" id="pathLength" placeholder="Enter path length">
+                        </div>
+                    </div>
+                    <div class="formula-display">∮B · dl = μ₀ * I_enclosed</div>
+                    <div class="info-box">
+                        Calculate magnetic field around a current-carrying conductor.
+                    </div>
+                `,
+                'magnetic-moment': `
+                    <div class="additional-inputs">
+                        <div>
+                            <label>Current (I) [A]</label>
+                            <input type="number" id="current" placeholder="Enter current">
+                        </div>
+                        <div>
+                            <label>Area (A) [m²]</label>
+                            <input type="number" id="area" placeholder="Enter loop area">
+                        </div>
+                        <div>
+                            <label>Number of Turns</label>
+                            <input type="number" id="turns" placeholder="Enter number of turns">
+                        </div>
+                    </div>
+                    <div class="formula-display">m = I * A * N</div>
+                    <div class="info-box">
+                        Calculate magnetic moment of a current loop.
+                    </div>
+                `
+            };
+
+            inputsDiv.innerHTML = calculatorConfigs[type];
+        }
+
+        function calculate() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let result = '';
+
+            try {
+                switch(type) {
+                    case 'magnetic-field':
+                        const fieldMethod = document.getElementById('magneticFieldMethod').value;
+                        const current = parseFloat(document.getElementById('current').value);
+                        const distance = parseFloat(document.getElementById('distance').value);
+                        const turns = parseFloat(document.getElementById('turns').value || 1);
+
+                        let magneticField;
+                        switch(fieldMethod) {
+                            case 'straight-wire':
+                                magneticField = (PERMEABILITY_0 * current) / (2 * Math.PI * distance);
+                                break;
+                            case 'current-loop':
+                                magneticField = (PERMEABILITY_0 * current) / (2 * distance);
+                                break;
+                            case 'solenoid':
+                                magneticField = PERMEABILITY_0 * current * turns / distance;
+                                break;
+                        }
+
+                        result = `🧲 Magnetic Field Calculation
+Method: ${fieldMethod.replace('-', ' ').toUpperCase()}
+Current (I): ${current.toFixed(2)} A
+Distance/Radius: ${distance.toFixed(3)} m
+Turns: ${turns}
+
+Magnetic Field Strength (B): ${magneticField.toFixed(4)} T
+
+🔬 Calculation: B = (μ₀ * I) / (2π * r)
+   ${magneticField.toFixed(4)} = (${PERMEABILITY_0.toExponential(2)} * ${current.toFixed(2)}) / (2π * ${distance.toFixed(3)})`;
+                        break;
+
+                    case 'lorentz-force':
+                        const charge = parseFloat(document.getElementById('charge').value);
+                        const velocity = parseFloat(document.getElementById('velocity').value);
+                        const magneticFieldStrength = parseFloat(document.getElementById('magneticField').value);
+                        const angle = parseFloat(document.getElementById('angle').value);
+
+                        const lorentzForce = charge * velocity * magneticFieldStrength * Math.sin(angle * Math.PI / 180);
+
+                        result = `⚡ Lorentz Force Calculation
+Charge (q): ${charge.toFixed(2)} C
+Velocity (v): ${velocity.toFixed(2)} m/s
+Magnetic Field (B): ${magneticFieldStrength.toFixed(4)} T
+Angle (θ): ${angle.toFixed(2)}°
+
+Lorentz Force (F): ${lorentzForce.toFixed(4)} N
+
+🔬 Calculation: F = q * v * B * sin(θ)
+   ${lorentzForce.toFixed(4)} = ${charge.toFixed(2)} * ${velocity.toFixed(2)} * ${magneticFieldStrength.toFixed(4)} * sin(${angle.toFixed(2)}°)`;
+                        break;
+
+                    case 'magnetic-flux':
+                        const bField = parseFloat(document.getElementById('magneticField').value);
+                        const area = parseFloat(document.getElementById('area').value);
+                        const fluxAngle = parseFloat(document.getElementById('angle').value);
+
+                        const magneticFlux = bField * area * Math.cos(fluxAngle * Math.PI / 180);
+
+                        result = `🌊 Magnetic Flux Calculation
+Magnetic Field (B): ${bField.toFixed(4)} T
+Surface Area (A): ${area.toFixed(4)} m²
+Angle (θ): ${fluxAngle.toFixed(2)}°
+
+Magnetic Flux (Φ): ${magneticFlux.toFixed(4)} Wb (Weber)
+
+🔬 Calculation: Φ = B * A * cos(θ)
+   ${magneticFlux.toFixed(4)} = ${bField.toFixed(4)} * ${area.toFixed(4)} * cos(${fluxAngle.toFixed(2)}°)`;
+                        break;
+
+                    case 'faradays-law':
+                        const fluxChange = parseFloat(document.getElementById('fluxChange').value);
+                        const timeInterval = parseFloat(document.getElementById('timeInterval').value);
+                        const coilTurns = parseFloat(document.getElementById('turns').value);
+
+                        const inducedEMF = -coilTurns * (fluxChange / timeInterval);
+
+                        result = `⚡ Faraday's Law of Induction
+Flux Change (ΔΦ): ${fluxChange.toFixed(4)} Wb
+Time Interval (Δt): ${timeInterval.toFixed(4)} s
+Number of Turns (N): ${coilTurns}
+
+Induced EMF (ε): ${inducedEMF.toFixed(4)} V
+
+🔬 Calculation: ε = -N * (ΔΦ / Δt)
+   ${inducedEMF.toFixed(4)} = -${coilTurns} * (${fluxChange.toFixed(4)} / ${timeInterval.toFixed(4)})`;
+                        break;
+
+                    case 'amperes-law':
+                        const totalCurrent = parseFloat(document.getElementById('current').value);
+                        const pathLength = parseFloat(document.getElementById('pathLength').value);
+
+                        const circularMagneticField = (PERMEABILITY_0 * totalCurrent) / pathLength;
+
+                        result = `🌀 Ampère's Law Calculation
+Total Enclosed Current (I): ${totalCurrent.toFixed(2)} A
+Path Length: ${pathLength.toFixed(4)} m
+
+Magnetic Field (B): ${circularMagneticField.toFixed(4)} T
+
+🔬 Calculation: ∮B · dl = μ₀ * I
+   B = (μ₀ * I) / L
+   ${circularMagneticField.toFixed(4)} = (${PERMEABILITY_0.toExponential(2)} * ${totalCurrent.toFixed(2)}) / ${pathLength.toFixed(4)}`;
+                        break;
+
+                    case 'magnetic-moment':
+                        const currentMoment = parseFloat(document.getElementById('current').value);
+                        const momentArea = parseFloat(document.getElementById('area').value);
+                        const momentTurns = parseFloat(document.getElementById('turns').value);
+
+                        const magneticMoment = currentMoment * momentArea * momentTurns;
+
+                        result = `🌟 Magnetic Moment Calculation
+Current (I): ${currentMoment.toFixed(2)} A
+Area (A): ${momentArea.toFixed(4)} m²
+Number of Turns: ${momentTurns}
+
+Magnetic Moment (m): ${magneticMoment.toFixed(4)} A·m²
+
+🔬 Calculation: m = I * A * N
+   ${magneticMoment.toFixed(4)} = ${currentMoment.toFixed(2)} * ${momentArea.toFixed(4)} * ${momentTurns}`;
+                        break;
+                }
+                
+                resultDiv.innerHTML = result;
+            } catch (error) {
+                resultDiv.innerHTML = '❌ Error: Please check your inputs carefully.';
+                console.error(error);
+            }
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+</body>
+</html>
