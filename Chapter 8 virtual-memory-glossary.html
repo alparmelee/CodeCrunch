@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🖥️ Virtual Memory Management Glossary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        #search-container {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .term-card:hover {
+            transform: scale(1.02);
+        }
+        .term-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .term-definition {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .emoji {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search virtual memory concepts...">
+        </div>
+        <div id="terms-container"></div>
+    </div>
+
+    <script>
+        const terms = [
+            {
+                term: "Virtual Memory",
+                definition: "A storage allocation scheme where secondary memory is addressed as though it were part of main memory. This technique allows computers to run larger programs than physical memory by using disk space as an extension of RAM.",
+                emoji: "💾"
+            },
+            {
+                term: "Page Fault",
+                definition: "An event triggered when a process attempts to access a page not currently in main memory. When a page fault occurs, the operating system must retrieve the required page from secondary storage into physical memory.",
+                emoji: "❗"
+            },
+            {
+                term: "Paging",
+                definition: "A memory management technique that eliminates external fragmentation and allows efficient use of main memory. It divides memory into fixed-size blocks called pages, which can be loaded and unloaded independently.",
+                emoji: "📄"
+            },
+            {
+                term: "Segmentation",
+                definition: "A method that allows a programmer to view memory as multiple address spaces. Each segment represents a different type of program component, such as code, data, or stack, with its own protection and sharing properties.",
+                emoji: "🧩"
+            },
+            {
+                term: "Thrashing",
+                definition: "A condition where excessive swapping of pages causes system performance to degrade significantly. This occurs when the system spends more time managing page transfers than executing actual program instructions.",
+                emoji: "🌪️"
+            },
+            {
+                term: "Translation Lookaside Buffer (TLB)",
+                definition: "A high-speed cache for page table entries to reduce memory access time. The TLB stores recently used virtual-to-physical address translations, allowing faster memory lookups and improving system performance.",
+                emoji: "🚀"
+            },
+            {
+                term: "Least Recently Used (LRU) Policy",
+                definition: "A page replacement strategy that removes the page that has not been referenced for the longest time. This approach assumes that pages not used recently are less likely to be used in the near future.",
+                emoji: "⏰"
+            },
+            {
+                term: "Demand Paging",
+                definition: "A technique where a page is loaded into memory only when it is referenced. This approach reduces initial loading time and conserves memory by bringing pages into RAM only when they are actually needed.",
+                emoji: "🔍"
+            },
+            {
+                term: "Fetch Policy",
+                definition: "Determines when a page should be brought into main memory. Different fetch policies can optimize system performance based on anticipated program behavior and memory usage patterns.",
+                emoji: "📥"
+            },
+            {
+                term: "Address Space",
+                definition: "The range of memory addresses available to a process. Each process has its own virtual address space, which is mapped to physical memory by the operating system, providing isolation and protection between processes.",
+                emoji: "🗺️"
+            }
+        ];
+
+        const termsContainer = document.getElementById('terms-container');
+        const searchInput = document.getElementById('search-input');
+
+        function createTermCard(term) {
+            const card = document.createElement('div');
+            card.classList.add('term-card');
+            card.innerHTML = `
+                <div class="term-title">
+                    <span class="emoji">${term.emoji}</span>
+                    ${term.term}
+                </div>
+                <div class="term-definition">${term.definition}</div>
+            `;
+            return card;
+        }
+
+        function renderTerms(filteredTerms) {
+            termsContainer.innerHTML = '';
+            filteredTerms.forEach(term => {
+                termsContainer.appendChild(createTermCard(term));
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredTerms = terms.filter(term => 
+                term.term.toLowerCase().includes(searchTerm) || 
+                term.definition.toLowerCase().includes(searchTerm)
+            );
+            renderTerms(filteredTerms);
+        });
+
+        // Initial render
+        renderTerms(terms);
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🔒 Deadlocks & Process Synchronization Glossary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        #search-container {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .term-card:hover {
+            transform: scale(1.02);
+        }
+        .term-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .term-definition {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .emoji {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search deadlock and synchronization concepts...">
+        </div>
+        <div id="terms-container"></div>
+    </div>
+
+    <script>
+        const terms = [
+            {
+                term: "Deadlock",
+                definition: "A state where a set of processes is permanently blocked, each waiting for an event that can only be triggered by another blocked process in the set. This creates a circular dependency that prevents any process from proceeding, effectively freezing the system's progress.",
+                emoji: "🚧"
+            },
+            {
+                term: "Mutual Exclusion",
+                definition: "A condition where only one process may use a resource at a time, preventing simultaneous access. This mechanism ensures that critical resources are not corrupted by concurrent access, but can also be a potential source of deadlocks if not carefully managed.",
+                emoji: "🔒"
+            },
+            {
+                term: "Circular Wait",
+                definition: "A deadlock condition where a closed chain of processes exists, each holding a resource needed by the next process in the chain. This creates a cyclic dependency that prevents any process from releasing its resources and moving forward.",
+                emoji: "🔄"
+            },
+            {
+                term: "Hold and Wait",
+                definition: "A deadlock condition where processes hold allocated resources while waiting for additional resources. In this scenario, a process maintains its current resources and simultaneously requests new ones, which can lead to potential system-wide resource starvation.",
+                emoji: "✋"
+            },
+            {
+                term: "Deadlock Prevention",
+                definition: "A strategy that designs a system to exclude the possibility of deadlock by enforcing resource allocation constraints. This approach proactively eliminates one or more necessary conditions for deadlock to occur, such as preventing circular wait or limiting resource holding.",
+                emoji: "🛡️"
+            },
+            {
+                term: "Banker's Algorithm",
+                definition: "A deadlock avoidance technique that ensures resource allocation never leads to an unsafe state. It works by simulating resource allocation and checking if the system can complete all processes without entering a deadlock, using a safety algorithm to predict potential resource conflicts.",
+                emoji: "🏦"
+            }
+        ];
+
+        const termsContainer = document.getElementById('terms-container');
+        const searchInput = document.getElementById('search-input');
+
+        function createTermCard(term) {
+            const card = document.createElement('div');
+            card.classList.add('term-card');
+            card.innerHTML = `
+                <div class="term-title">
+                    <span class="emoji">${term.emoji}</span>
+                    ${term.term}
+                </div>
+                <div class="term-definition">${term.definition}</div>
+            `;
+            return card;
+        }
+
+        function renderTerms(filteredTerms) {
+            termsContainer.innerHTML = '';
+            filteredTerms.forEach(term => {
+                termsContainer.appendChild(createTermCard(term));
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredTerms = terms.filter(term => 
+                term.term.toLowerCase().includes(searchTerm) || 
+                term.definition.toLowerCase().includes(searchTerm)
+            );
+            renderTerms(filteredTerms);
+        });
+
+        // Initial render
+        renderTerms(terms);
+    </script>
+</body>
+</html>

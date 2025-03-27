@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>💾 Memory Management Techniques Glossary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        #search-container {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .term-card:hover {
+            transform: scale(1.02);
+        }
+        .term-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .term-definition {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .emoji {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search memory management concepts...">
+        </div>
+        <div id="terms-container"></div>
+    </div>
+
+    <script>
+        const terms = [
+            {
+                term: "Fixed Partitioning",
+                definition: "A memory management technique where main memory is divided into static, predetermined partitions at system generation time. Each partition has a fixed size, and processes are allocated to these partitions, which can lead to inefficient memory utilization due to internal fragmentation.",
+                emoji: "🧱"
+            },
+            {
+                term: "Paging",
+                definition: "A memory management technique that divides main memory into equal-sized frames and processes into pages of the same size. This approach allows non-contiguous memory allocation, improving memory utilization by enabling processes to be stored in scattered memory locations.",
+                emoji: "📄"
+            },
+            {
+                term: "Segmentation",
+                definition: "A memory management scheme where a process is divided into variable-sized segments that do not need to be contiguous in memory. Each segment represents a logical unit like code, data, or stack, providing a more flexible approach to memory allocation compared to fixed partitioning.",
+                emoji: "🧩"
+            },
+            {
+                term: "External Fragmentation",
+                definition: "A phenomenon where free memory is fragmented into small, non-contiguous blocks, reducing overall memory utilization. This occurs when memory allocations and deallocations create gaps between memory blocks that are too small to be used effectively.",
+                emoji: "🕳️"
+            },
+            {
+                term: "Internal Fragmentation",
+                definition: "Wasted space within a memory block due to allocation of a fixed partition larger than the actual space needed by a process. This occurs when a process is allocated more memory than it requires, leaving unused space within the allocated memory block.",
+                emoji: "📦"
+            },
+            {
+                term: "Memory Management",
+                definition: "The operating system function responsible for dynamically subdividing memory to accommodate multiple processes. This includes allocation, protection, sharing, and ensuring efficient use of main memory resources.",
+                emoji: "🧠"
+            },
+            {
+                term: "Logical Address",
+                definition: "A memory reference independent of physical memory assignment, requiring translation to a physical address. Logical addresses provide a layer of abstraction that allows processes to operate without directly dealing with physical memory locations.",
+                emoji: "🗺️"
+            },
+            {
+                term: "Page Table",
+                definition: "A data structure that stores the frame location for each page of a process, facilitating address translation between logical and physical memory. Page tables are crucial in paging systems for mapping virtual memory addresses to actual physical memory locations.",
+                emoji: "📋"
+            },
+            {
+                term: "Buddy System",
+                definition: "A memory allocation scheme that splits memory into partitions of power-of-two sizes to efficiently manage memory usage. When a memory request is made, the system allocates the smallest power-of-two block that can accommodate the request, reducing fragmentation.",
+                emoji: "🤝"
+            },
+            {
+                term: "Buffer Overflow",
+                definition: "A security vulnerability where a process writes data beyond the allocated buffer, potentially overwriting adjacent memory. This can lead to system crashes, data corruption, or provide an opportunity for malicious code execution.",
+                emoji: "💥"
+            }
+        ];
+
+        const termsContainer = document.getElementById('terms-container');
+        const searchInput = document.getElementById('search-input');
+
+        function createTermCard(term) {
+            const card = document.createElement('div');
+            card.classList.add('term-card');
+            card.innerHTML = `
+                <div class="term-title">
+                    <span class="emoji">${term.emoji}</span>
+                    ${term.term}
+                </div>
+                <div class="term-definition">${term.definition}</div>
+            `;
+            return card;
+        }
+
+        function renderTerms(filteredTerms) {
+            termsContainer.innerHTML = '';
+            filteredTerms.forEach(term => {
+                termsContainer.appendChild(createTermCard(term));
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredTerms = terms.filter(term => 
+                term.term.toLowerCase().includes(searchTerm) || 
+                term.definition.toLowerCase().includes(searchTerm)
+            );
+            renderTerms(filteredTerms);
+        });
+
+        // Initial render
+        renderTerms(terms);
+    </script>
+</body>
+</html>
