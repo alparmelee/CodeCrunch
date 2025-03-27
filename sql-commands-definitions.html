@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SQL Commands Reference 💻</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        .flashcard:hover {
+            transform: scale(1.03);
+        }
+        .term {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            word-wrap: break-word;
+        }
+        .definition {
+            font-size: 14px;
+            color: #666;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="🔍 Search SQL Commands...">
+    </div>
+    <div id="flashcards-container"></div>
+
+    <script>
+        const flashcards = [
+            {
+                term: "CREATE Salesman Table 🏗️",
+                definition: "CREATE TABLE Salesman (Salesman_ID NUMBER(5) NOT NULL, S_Name VARCHAR2(30) NOT NULL, S_City VARCHAR2(30), S_Commission DECIMAL(5,2), CONSTRAINT Salesman_T PRIMARY KEY (Salesman_ID));",
+                category: "Table Creation"
+            },
+            {
+                term: "ADD Customer Email Column 📧",
+                definition: "ALTER TABLE Customer ADD COLUMN Cust_Email VARCHAR2(30);",
+                category: "Table Modification"
+            },
+            {
+                term: "DROP Customer Table ❌",
+                definition: "DROP TABLE Custome;",
+                category: "Table Deletion"
+            },
+            {
+                term: "INSERT Customer Record 📝",
+                definition: "INSERT INTO Customer VALUES (3002, 'Nick Rimando', 'NY', 100, 'nrimando@email.com');",
+                category: "Data Insertion"
+            },
+            {
+                term: "DELETE All Customer Rows 🗑️",
+                definition: "DELETE * FROM Customer;",
+                category: "Data Deletion"
+            },
+            {
+                term: "DELETE Customers by Salesman 🚫",
+                definition: "DELETE FROM Customer WHERE Salesman_ID = 5001;",
+                category: "Conditional Deletion"
+            },
+            {
+                term: "UPDATE Product Price 💰",
+                definition: "UPDATE Product_T SET ProductStandardPrice = 775 WHERE Product_ID = 7;",
+                category: "Data Update"
+            },
+            {
+                term: "UPDATE Salesman Commission 💼",
+                definition: "UPDATE Salesman SET S_Commission = .24 WHERE S_Name = 'Pit Alex';",
+                category: "Data Update"
+            },
+            {
+                term: "SELECT Customer IDs and Names 👥",
+                definition: "SELECT Cust_ID, Cust_Name FROM Customer;",
+                category: "Data Retrieval"
+            },
+            {
+                term: "SELECT Salesman Order Details 📋",
+                definition: "SELECT Order.Salesman_ID, S_Name, Ord_Date, Ord_No, Purch_Amt FROM Salesman, Order;",
+                category: "Data Retrieval"
+            },
+            {
+                term: "SELECT All Customer Information 📊",
+                definition: "SELECT * FROM Customer;",
+                category: "Data Retrieval"
+            },
+            {
+                term: "SELECT Distinct Customer Cities 🏙️",
+                definition: "SELECT DISTINCT C_City FROM Customer;",
+                category: "Data Retrieval"
+            },
+            {
+                term: "SELECT Sum of Numbers 🧮",
+                definition: "SELECT (82+15) AS Sum;",
+                category: "Calculation"
+            },
+            {
+                term: "SELECT Customers with Grade 200 📈",
+                definition: "SELECT * FROM Customer WHERE Grade = 200;",
+                category: "Conditional Retrieval"
+            },
+            {
+                term: "SELECT Products Under $275 💲",
+                definition: "SELECT Product_Desc, Product_Price FROM Product WHERE Product_Price < 275;",
+                category: "Conditional Retrieval"
+            },
+            {
+                term: "CREATE INDEX 🔍",
+                definition: "CREATE INDEX indexname_IDX ON tablename(column);",
+                category: "Index Management"
+            },
+            {
+                term: "DROP INDEX ❌",
+                definition: "DROP INDEX indexname;",
+                category: "Index Management"
+            }
+        ];
+
+        const flashcardsContainer = document.getElementById('flashcards-container');
+        const searchInput = document.getElementById('search-input');
+
+        function renderFlashcards(cardsToShow) {
+            flashcardsContainer.innerHTML = '';
+            cardsToShow.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('flashcard');
+                cardElement.innerHTML = `
+                    <div class="term">${card.term}</div>
+                    <div class="definition">${card.definition}</div>
+                `;
+                flashcardsContainer.appendChild(cardElement);
+            });
+        }
+
+        function filterFlashcards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCards = flashcards.filter(card => 
+                card.term.toLowerCase().includes(searchTerm) || 
+                card.definition.toLowerCase().includes(searchTerm) ||
+                card.category.toLowerCase().includes(searchTerm)
+            );
+            renderFlashcards(filteredCards);
+        }
+
+        // Initial render of all cards
+        renderFlashcards(flashcards);
+
+        // Add search functionality
+        searchInput.addEventListener('input', filterFlashcards);
+    </script>
+</body>
+</html>

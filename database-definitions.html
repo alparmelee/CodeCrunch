@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database & Systems Development Definitions 💾</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        #flashcards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .flashcard {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .flashcard:hover {
+            transform: scale(1.03);
+        }
+        .term {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .definition {
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="🔍 Search Database and Systems Development Definitions...">
+    </div>
+    <div id="flashcards-container"></div>
+
+    <script>
+        const flashcards = [
+            {
+                term: "Database 💾",
+                definition: "An organized collection of logically related data.",
+                emoji: "💾"
+            },
+            {
+                term: "Legacy Systems 🕰️",
+                definition: "Older systems that often contain data of poor quality.",
+                emoji: "🕰️"
+            },
+            {
+                term: "Program-Data Dependence 🔗",
+                definition: "Caused by file descriptors being stored in each application.",
+                emoji: "🔗"
+            },
+            {
+                term: "File Processing Systems 📁",
+                definition: "Often lead to unplanned duplicate data files.",
+                emoji: "📁"
+            },
+            {
+                term: "Relation 🔀",
+                definition: "A file in a relational database that includes common fields to establish relationships.",
+                emoji: "🔀"
+            },
+            {
+                term: "User View 👀",
+                definition: "Often developed by identifying a form or report that a user needs regularly.",
+                emoji: "👀"
+            },
+            {
+                term: "Data Model 📊",
+                definition: "A graphical system used to capture the nature and relationships among data.",
+                emoji: "📊"
+            },
+            {
+                term: "Metadata 📝",
+                definition: "Data that describe the properties of other data.",
+                emoji: "📝"
+            },
+            {
+                term: "Entity 🏷️",
+                definition: "A person, place, object, event, or concept that an organization wants to track.",
+                emoji: "🏷️"
+            },
+            {
+                term: "Relationships 🔗",
+                definition: "Established between entities in a well-structured database to enable data retrieval.",
+                emoji: "🔗"
+            },
+            {
+                term: "Database Management System (DBMS) 💻",
+                definition: "Software that manages databases; excludes providing an integrated development environment.",
+                emoji: "💻"
+            },
+            {
+                term: "Repository 🗃️",
+                definition: "A central location storing data descriptions in a database system.",
+                emoji: "🗃️"
+            },
+            {
+                term: "Constraint 🚧",
+                definition: "A rule that database users cannot violate.",
+                emoji: "🚧"
+            },
+            {
+                term: "Three-Schema Architecture 🏗️",
+                definition: "Includes internal, conceptual, and external schemas.",
+                emoji: "🏗️"
+            },
+            {
+                term: "Prototyping 🧩",
+                definition: "A popular rapid application development (RAD) method.",
+                emoji: "🧩"
+            },
+            {
+                term: "Analysis Phase 🔍",
+                definition: "The SDLC phase where the detailed conceptual data model is created.",
+                emoji: "🔍"
+            },
+            {
+                term: "Systems Development Life Cycle (SDLC) 🔄",
+                definition: "The traditional methodology for developing, maintaining, and replacing information systems.",
+                emoji: "🔄"
+            },
+            {
+                term: "Enterprise Data Modeling 🌐",
+                definition: "The first step in database development, establishing the scope of databases.",
+                emoji: "🌐"
+            },
+            {
+                term: "Workgroup Database 🖥️",
+                definition: "Stored on a central server.",
+                emoji: "🖥️"
+            },
+            {
+                term: "E. F. Codd 👨‍💻",
+                definition: "Developed the relational model in the 1970s.",
+                emoji: "👨‍💻"
+            },
+            {
+                term: "Entity-Relationship Model (E-R Model) 📈",
+                definition: "The logical representation of an organization's data.",
+                emoji: "📈"
+            },
+            {
+                term: "Strong Entity 💪",
+                definition: "An entity that exists independently of other entity types.",
+                emoji: "💪"
+            },
+            {
+                term: "Weak Entity 🤝",
+                definition: "An entity whose existence depends on another entity type.",
+                emoji: "🤝"
+            },
+            {
+                term: "Identifying Relationship 🔍",
+                definition: "The relationship between a weak entity and its owner.",
+                emoji: "🔍"
+            },
+            {
+                term: "Attribute 🏷️",
+                definition: "A property or characteristic of an entity type.",
+                emoji: "🏷️"
+            },
+            {
+                term: "Required Attribute ❗",
+                definition: "An attribute that must have a value for every entity instance.",
+                emoji: "❗"
+            },
+            {
+                term: "Composite Attribute 🧩",
+                definition: "An attribute that can be broken down into smaller parts.",
+                emoji: "🧩"
+            },
+            {
+                term: "Degree of a Relationship 📏",
+                definition: "The number of entity types that participate in a relationship.",
+                emoji: "📏"
+            },
+            {
+                term: "Unary Relationship 🔄",
+                definition: "A relationship between instances of a single entity type.",
+                emoji: "🔄"
+            },
+            {
+                term: "Ternary Relationship 🔀",
+                definition: "A simultaneous relationship among three entity types.",
+                emoji: "🔀"
+            }
+        ];
+
+        const flashcardsContainer = document.getElementById('flashcards-container');
+        const searchInput = document.getElementById('search-input');
+
+        function renderFlashcards(cardsToShow) {
+            flashcardsContainer.innerHTML = '';
+            cardsToShow.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('flashcard');
+                cardElement.innerHTML = `
+                    <div class="term">${card.term}</div>
+                    <div class="definition">${card.definition}</div>
+                `;
+                flashcardsContainer.appendChild(cardElement);
+            });
+        }
+
+        function filterFlashcards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCards = flashcards.filter(card => 
+                card.term.toLowerCase().includes(searchTerm) || 
+                card.definition.toLowerCase().includes(searchTerm)
+            );
+            renderFlashcards(filteredCards);
+        }
+
+        // Initial render of all cards
+        renderFlashcards(flashcards);
+
+        // Add search functionality
+        searchInput.addEventListener('input', filterFlashcards);
+    </script>
+</body>
+</html>
