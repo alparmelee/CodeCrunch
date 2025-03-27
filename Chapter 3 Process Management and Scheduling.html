@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🖥️ OS Concepts Glossary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        #search-container {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .term-card:hover {
+            transform: scale(1.02);
+        }
+        .term-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .term-definition {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .emoji {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search OS concepts...">
+        </div>
+        <div id="terms-container"></div>
+    </div>
+
+    <script>
+        const terms = [
+            {
+                term: "The OS (Operating System)",
+                definition: "The operating system (OS) is system software that manages computer hardware and software resources and provides common services for computer programs. It acts as an intermediary between users and the computer hardware, facilitating tasks such as process management, memory management, file system management, and device control.",
+                emoji: "🖥️"
+            },
+            {
+                term: "Suspend/Block",
+                definition: "Suspending or blocking a process means temporarily halting its execution. This can occur for various reasons, such as waiting for I/O operations to complete or waiting for a particular event. The process will remain in this state until the condition for suspension is resolved.",
+                emoji: "⏸️"
+            },
+            {
+                term: "Program Code",
+                definition: "Program code refers to the set of instructions written in a programming language that the CPU executes. It includes both the high-level source code and the compiled machine code that runs on the computer hardware.",
+                emoji: "💻"
+            },
+            {
+                term: "Files Table",
+                definition: "The files table is a data structure used by the operating system to keep track of all the files open in the system. It contains information such as file descriptors, file locations, and file status, allowing the OS to manage and access files efficiently.",
+                emoji: "📋"
+            },
+            {
+                term: "Process Control Block (PCB)",
+                definition: "The Process Control Block (PCB) is a data structure used by the operating system to store all the information about a process. This includes the process state, program counter, CPU registers, memory management information, accounting information, and I/O status. The PCB is essential for context switching between processes.",
+                emoji: "📦"
+            },
+            {
+                term: "Hardware Dependent",
+                definition: "Hardware dependent refers to software or functions that are specifically designed to work with particular hardware components. This means they may not be portable or functional on different hardware without modifications.",
+                emoji: "🔧"
+            },
+            {
+                term: "Process Spawning",
+                definition: "Process spawning refers to the creation of a new process by an existing process. The parent process uses system calls to create a child process, which can run concurrently with the parent. This is often used in multitasking operating systems.",
+                emoji: "🐣"
+            },
+            {
+                term: "Round Robin",
+                definition: "Round Robin is a CPU scheduling algorithm used in time-sharing systems. Each process is assigned a fixed time slice or quantum during which it can execute. After the time slice expires, the process is moved to the back of the queue, and the next process is given CPU time. This ensures fair allocation of CPU time among processes.",
+                emoji: "🔄"
+            },
+            {
+                term: "Ready State",
+                definition: "The ready state is a state in which a process is prepared to execute when given CPU time but is currently not executing because another process is running. The process resides in the ready queue, waiting for its turn to use the CPU.",
+                emoji: "🟢"
+            },
+            {
+                term: "Memory Tables",
+                definition: "Memory tables are data structures used by the operating system to manage memory allocation and usage. They keep track of which parts of memory are in use, which are free, and how memory is allocated to processes. This helps in efficient memory management and prevents memory leaks.",
+                emoji: "🧩"
+            },
+            {
+                term: "Time Slice",
+                definition: "A time slice, also known as a quantum, is a small unit of time allocated to a process in a time-sharing system. It determines how long a process can run before the CPU is given to another process. Time slices ensure that all processes get a fair share of CPU time.",
+                emoji: "⏱️"
+            },
+            {
+                term: "Register",
+                definition: "A register is a small, fast storage location within the CPU used to hold temporary data and instructions. Registers are used for quick data manipulation and are crucial for the CPU's operation, including arithmetic operations, memory addresses, and control information.",
+                emoji: "🗃️"
+            },
+            {
+                term: "Terminate",
+                definition: "Terminate refers to the ending of a process. When a process completes its execution or is forcefully stopped, it moves to the terminated state, and its resources are released back to the system.",
+                emoji: "❌"
+            },
+            {
+                term: "Analyze",
+                definition: "In the context of operating systems, analyze refers to examining and interpreting various system metrics and data to understand system performance, identify bottlenecks, and optimize resource usage. This can involve analyzing CPU usage, memory utilization, disk I/O, and other system activities.",
+                emoji: "🔍"
+            }
+        ];
+
+        const termsContainer = document.getElementById('terms-container');
+        const searchInput = document.getElementById('search-input');
+
+        function createTermCard(term) {
+            const card = document.createElement('div');
+            card.classList.add('term-card');
+            card.innerHTML = `
+                <div class="term-title">
+                    <span class="emoji">${term.emoji}</span>
+                    ${term.term}
+                </div>
+                <div class="term-definition">${term.definition}</div>
+            `;
+            return card;
+        }
+
+        function renderTerms(filteredTerms) {
+            termsContainer.innerHTML = '';
+            filteredTerms.forEach(term => {
+                termsContainer.appendChild(createTermCard(term));
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredTerms = terms.filter(term => 
+                term.term.toLowerCase().includes(searchTerm) || 
+                term.definition.toLowerCase().includes(searchTerm)
+            );
+            renderTerms(filteredTerms);
+        });
+
+        // Initial render
+        renderTerms(terms);
+    </script>
+</body>
+</html>
