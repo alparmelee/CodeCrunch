@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Definitions Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 250px;
+        }
+        
+        .category-selection {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button.active {
+            background-color: #2c3e50;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+        
+        .card p {
+            margin-top: 10px;
+        }
+        
+        .category-label {
+            display: inline-block;
+            font-size: 12px;
+            background-color: #e7f4ff;
+            color: #3498db;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Network Definitions</h1>
+            <p>From "Network Performance and Recovery" (Chapter 11)</p>
+        </header>
+        
+        <div class="controls">
+            <input type="text" id="search" placeholder="Search definitions...">
+            <div class="category-selection">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="monitoring">Monitoring</button>
+                <button class="category-btn" data-category="performance">Performance</button>
+                <button class="category-btn" data-category="availability">Availability</button>
+                <button class="category-btn" data-category="backup">Backup & Storage</button>
+                <button class="category-btn" data-category="recovery">Disaster Recovery</button>
+            </div>
+        </div>
+        
+        <div class="grid" id="definitions-grid">
+            <!-- Cards will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Definition data organized by category
+        const definitions = [
+            // Monitoring Category
+            {
+                term: "Network Management",
+                definition: "Assess, monitor, and maintain all network aspects, including controlling user access to resources, checking for hardware faults, ensuring optimized QoS, and maintaining records of network assets.",
+                category: "monitoring"
+            },
+            {
+                term: "Network Monitor",
+                definition: "Tool that continually monitors network traffic that a single device encounters.",
+                category: "monitoring"
+            },
+            {
+                term: "Protocol Analyzer",
+                definition: "Tool that can monitor traffic at a specific interface between a server or client and the network, and can monitor traffic patterns throughout a particular network.",
+                category: "monitoring"
+            },
+            {
+                term: "Port Mirroring",
+                definition: "All traffic sent to any port on a switch can be sent to a mirrored port, which can be connected to a computer running monitoring software.",
+                category: "monitoring"
+            },
+            {
+                term: "In-line Monitoring",
+                definition: "Installing a device, called a network TAP (test access point) or packet sniffer, in line with network traffic.",
+                category: "monitoring"
+            },
+            {
+                term: "Log",
+                definition: "Contains recorded conditions recognized by operating system.",
+                category: "monitoring"
+            },
+            {
+                term: "Event Log",
+                definition: "Windows-based computer log containing monitored device information.",
+                category: "monitoring"
+            },
+            {
+                term: "Syslog",
+                definition: "Standard for generating, storing, and processing messages about events on Linux or UNIX.",
+                category: "monitoring"
+            },
+            {
+                term: "NMS (Network Management System)",
+                definition: "Collects data from multiple managed devices at regular intervals in a process called polling.",
+                category: "monitoring"
+            },
+            {
+                term: "MIB (Management Information Base)",
+                definition: "Contains managed devices definition and data, designed in a top-down, hierarchical tree structure.",
+                category: "monitoring"
+            },
+            {
+                term: "SNMP (Simple Network Management Protocol)",
+                definition: "Used to communicate managed device information as part of the TCP/IP suite.",
+                category: "monitoring"
+            },
+            
+            // Performance Category
+            {
+                term: "Baseline",
+                definition: "Report of network's current operation state, including measurements like network backbone utilization rate, number of users logged on, error statistics, etc.",
+                category: "performance"
+            },
+            {
+                term: "Traffic Shaping (Packet Shaping)",
+                definition: "Manipulating packet, data stream, and connection characteristics to manage type and amount of traffic traversing network.",
+                category: "performance"
+            },
+            {
+                term: "Traffic Policing",
+                definition: "Limiting traffic volume flowing in and out of interface during specified time period or limiting momentary throughput rate for an interface.",
+                category: "performance"
+            },
+            {
+                term: "Traffic Prioritization",
+                definition: "Treating more important traffic preferentially based on characteristics like protocol, IP address, user group, or VLAN tag.",
+                category: "performance"
+            },
+            {
+                term: "QoS (Quality of Service)",
+                definition: "A group of techniques for adjusting the priority a network assigns to various types of transmissions.",
+                category: "performance"
+            },
+            {
+                term: "DiffServ (Differentiated Service)",
+                definition: "Addresses QoS issues through traffic prioritization at Layer 3, using the DiffServ field in IPv4 or Traffic Class field in IPv6.",
+                category: "performance"
+            },
+            {
+                term: "EF (Expedited Forwarding)",
+                definition: "Data stream assigned minimum departure rate to circumvent delays.",
+                category: "performance"
+            },
+            {
+                term: "AF (Assured Forwarding)",
+                definition: "Data streams assigned different router resource levels, prioritizing data handling but without guarantee of on-time, in-sequence packet arrival.",
+                category: "performance"
+            },
+            {
+                term: "CoS (Class of Service)",
+                definition: "Refers to techniques performed at Layer 2 on Ethernet frames, most often used to route Ethernet traffic between VLANs.",
+                category: "performance"
+            },
+            {
+                term: "Priority Code Point (PCP)",
+                definition: "A 3-bit field in the frame header of a frame that has been tagged (addressed to a specific VLAN), set to one of eight levels ranging from 0 to 7.",
+                category: "performance"
+            },
+            
+            // Availability Category
+            {
+                term: "Availability",
+                definition: "How consistently and reliably a file or system can be accessed.",
+                category: "availability"
+            },
+            {
+                term: "HA (High Availability)",
+                definition: "Refers to a system that functions reliably nearly all the time.",
+                category: "availability"
+            },
+            {
+                term: "Uptime",
+                definition: "Measure of time functioning normally between failures.",
+                category: "availability"
+            },
+            {
+                term: "Fault Tolerance",
+                definition: "Capacity for system to continue performing despite unexpected hardware or software malfunction.",
+                category: "availability"
+            },
+            {
+                term: "Failure",
+                definition: "Deviation from specified system performance level given time period.",
+                category: "availability"
+            },
+            {
+                term: "Fault",
+                definition: "Malfunction of one system component that can result in failure.",
+                category: "availability"
+            },
+            {
+                term: "MTBF (Mean Time Between Failures)",
+                definition: "Average amount of time that will pass for devices exactly like this one before the next failure is expected to occur.",
+                category: "availability"
+            },
+            {
+                term: "MTTR (Mean Time To Repair)",
+                definition: "Average amount of time required to repair the device.",
+                category: "availability"
+            },
+            {
+                term: "Redundancy",
+                definition: "Using two or more of the same item, service, or connection filling the same role on the network so if one fails, the other takes over.",
+                category: "availability"
+            },
+            {
+                term: "Automatic Failover",
+                definition: "The ability to immediately assume the duties of an identical component in case of failure.",
+                category: "availability"
+            },
+            {
+                term: "Hot-swappable",
+                definition: "Refers to identical components that can be changed while a machine is running.",
+                category: "availability"
+            },
+            {
+                term: "Hot Spare",
+                definition: "Duplicate component that is already installed in a device and can assume function in case the original component fails.",
+                category: "availability"
+            },
+            {
+                term: "Cold Spare",
+                definition: "Duplicate component that is not installed, but can be installed in case of a failure.",
+                category: "availability"
+            },
+            {
+                term: "Link Aggregation (Port Aggregation)",
+                definition: "Combination of multiple network interfaces to act as one logical interface, providing increased throughput and automatic failover.",
+                category: "availability"
+            },
+            {
+                term: "Load Balancing",
+                definition: "Traffic distribution over multiple components or links to optimize performance and fault tolerance.",
+                category: "availability"
+            },
+            {
+                term: "LACP (Link Aggregation Control Protocol)",
+                definition: "Dynamically coordinates communications between hosts on aggregated connections.",
+                category: "availability"
+            },
+            {
+                term: "Load Balancer",
+                definition: "A dedicated device that distributes traffic among multiple computers.",
+                category: "availability"
+            },
+            {
+                term: "Clustering",
+                definition: "The technique of grouping multiple devices so they appear as a single device, usually accompanying load balancing.",
+                category: "availability"
+            },
+            {
+                term: "VIP (Virtual IP Address)",
+                definition: "Used to represent an entire cluster of devices.",
+                category: "availability"
+            },
+            {
+                term: "CARP (Common Address Redundancy Protocol)",
+                definition: "Allows a pool of computers or interfaces to share one or more IP addresses. The pool is known as a redundancy group.",
+                category: "availability"
+            },
+            {
+                term: "Distributed Switching",
+                definition: "Centralizes control of VMs, simplifies network operations, and minimizes chances for configuration errors.",
+                category: "availability"
+            },
+            
+            // Backup & Storage Category
+            {
+                term: "Backup",
+                definition: "Copies of data or program files created for archiving and safekeeping.",
+                category: "backup"
+            },
+            {
+                term: "Snapshot",
+                definition: "A frequently saved, incremental backup of the data's state at a specific point in time.",
+                category: "backup"
+            },
+            {
+                term: "NAS (Network Attached Storage)",
+                definition: "A specialized storage device or group of storage devices that provides centralized fault tolerant data storage for a network.",
+                category: "backup"
+            },
+            {
+                term: "RAID (Redundant Array of Independent Disks)",
+                definition: "A technology that combines multiple disk drive components into a logical unit for data redundancy or performance improvement.",
+                category: "backup"
+            },
+            {
+                term: "RAID 0",
+                definition: "Data is striped/written across multiple disks for improved performance but no redundancy.",
+                category: "backup"
+            },
+            {
+                term: "RAID 1",
+                definition: "Data is mirrored/duplicated on multiple disks for redundancy.",
+                category: "backup"
+            },
+            {
+                term: "RAID 5",
+                definition: "Data is striped across three or more drives and parity information is added to the data for redundancy.",
+                category: "backup"
+            },
+            {
+                term: "RAID 10",
+                definition: "Data is mirrored within each pair of disks (uses four or more disks) and then striped to multiple pairs of disks.",
+                category: "backup"
+            },
+            {
+                term: "SAN (Storage Area Network)",
+                definition: "A network of storage devices that communicate directly with each other and with other networks, using a type of architecture similar to mesh topology.",
+                category: "backup"
+            },
+            {
+                term: "FC (Fibre Channel)",
+                definition: "A technology used in SANs for high-speed data transfer.",
+                category: "backup"
+            },
+            {
+                term: "FCoE (Fibre Channel over Ethernet)",
+                definition: "A technology used in SANs that encapsulates Fibre Channel frames over Ethernet networks.",
+                category: "backup"
+            },
+            {
+                term: "iSCSI (Internet SCSI)",
+                definition: "A technology used in SANs that allows SCSI commands to be sent over IP networks.",
+                category: "backup"
+            },
+            {
+                term: "IB (InfiniBand)",
+                definition: "A computer networking communications standard used in SANs for high-performance computing.",
+                category: "backup"
+            },
+            {
+                term: "UPS (Uninterruptible Power Supply)",
+                definition: "A battery-operated power source directly attached to devices and to a power supply that prevents undesired fluctuations of power.",
+                category: "backup"
+            },
+            {
+                term: "Standby UPS",
+                definition: "Provides continuous voltage to a device by switching to the battery when it detects a loss of power from the wall outlet.",
+                category: "backup"
+            },
+            {
+                term: "Online UPS",
+                definition: "Uses the AC power from the wall outlet to continuously charge its battery, while providing power to the device through its battery.",
+                category: "backup"
+            },
+            
+            // Disaster Recovery Category
+            {
+                term: "Incident",
+                definition: "Any event that has adverse effects on a network's availability or resources, could be a security breach, infection, or an environmental issue.",
+                category: "recovery"
+            },
+            {
+                term: "Disaster",
+                definition: "An extreme type of incident involving a network outage that affects more than a single system.",
+                category: "recovery"
+            },
+            {
+                term: "Incident Response Policies",
+                definition: "Specifically define the characteristics of an event that qualifies as a formal incident and the steps that should be followed.",
+                category: "recovery"
+            },
+            {
+                term: "Disaster Recovery",
+                definition: "Process of restoring critical functionality and data affecting more than a single system or a limited group of users.",
+                category: "recovery"
+            },
+            {
+                term: "Business Continuity",
+                definition: "Ability to continue doing business with the least amount of interruption.",
+                category: "recovery"
+            },
+            {
+                term: "Cold Site",
+                definition: "Components necessary to rebuild network exist but are not appropriately configured, updated, or connected.",
+                category: "recovery"
+            },
+            {
+                term: "Warm Site",
+                definition: "Components necessary to rebuild network exist with some appropriately configured, updated, and connected.",
+                category: "recovery"
+            },
+            {
+                term: "Hot Site",
+                definition: "Components exist and match network's current state, all appropriately configured, updated, and connected.",
+                category: "recovery"
+            },
+            {
+                term: "Data Preservation",
+                definition: "Process of collecting data in such a way that it can be presented in a court of law.",
+                category: "recovery"
+            },
+            {
+                term: "Chain of Custody",
+                definition: "Documentation of who has handled evidence and data, ensuring its integrity for legal proceedings.",
+                category: "recovery"
+            }
+        ];
+
+        // Function to create a card for each definition
+        function createCard(def) {
+            return `
+                <div class="card" data-category="${def.category}">
+                    <span class="category-label">${getCategoryName(def.category)}</span>
+                    <h3>${def.term}</h3>
+                    <p>${def.definition}</p>
+                </div>
+            `;
+        }
+
+        // Function to get friendly category name
+        function getCategoryName(category) {
+            const names = {
+                'monitoring': 'Monitoring Tools',
+                'performance': 'Performance Management',
+                'availability': 'Availability & Fault Tolerance',
+                'backup': 'Backup & Storage',
+                'recovery': 'Disaster Recovery'
+            };
+            return names[category] || category;
+        }
+
+        // Function to render all cards
+        function renderCards(filteredDefs = null) {
+            const grid = document.getElementById('definitions-grid');
+            const defsToRender = filteredDefs || definitions;
+            
+            if (defsToRender.length === 0) {
+                grid.innerHTML = '<div class="no-results">No definitions found matching your search.</div>';
+                return;
+            }
+            
+            grid.innerHTML = defsToRender.map(createCard).join('');
+        }
+
+        // Initialize the grid with all definitions
+        renderCards();
+
+        // Filter by category
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active button
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                const searchText = document.getElementById('search').value.toLowerCase();
+                
+                // Filter by both category and search text
+                let filtered;
+                if (category === 'all') {
+                    filtered = definitions.filter(def => 
+                        def.term.toLowerCase().includes(searchText) || 
+                        def.definition.toLowerCase().includes(searchText)
+                    );
+                } else {
+                    filtered = definitions.filter(def => 
+                        def.category === category && 
+                        (def.term.toLowerCase().includes(searchText) || 
+                         def.definition.toLowerCase().includes(searchText))
+                    );
+                }
+                
+                renderCards(filtered);
+            });
+        });
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            let filtered;
+            if (activeCategory === 'all') {
+                filtered = definitions.filter(def => 
+                    def.term.toLowerCase().includes(searchText) || 
+                    def.definition.toLowerCase().includes(searchText)
+                );
+            } else {
+                filtered = definitions.filter(def => 
+                    def.category === activeCategory && 
+                    (def.term.toLowerCase().includes(searchText) || 
+                     def.definition.toLowerCase().includes(searchText))
+                );
+            }
+            
+            renderCards(filtered);
+        });
+    </script>
+</body>
+</html>

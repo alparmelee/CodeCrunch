@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 10: Security Network Designs - Study Tool</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      background-color: #e0e0e0;
+      border-radius: 5px 5px 0 0;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    .tab.active {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .content {
+      display: none;
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .content.active {
+      display: block;
+    }
+    
+    .definition-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+    
+    .definition-card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .definition-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .definition-term {
+      font-weight: bold;
+      color: #2980b9;
+      margin-bottom: 5px;
+      font-size: 1.1em;
+    }
+    
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .option {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .option:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .option.selected {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .option.correct {
+      background-color: #2ecc71;
+      color: white;
+    }
+    
+    .option.incorrect {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .quiz-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #2980b9;
+    }
+    
+    button:disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+    
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f9ff;
+      border-radius: 5px;
+      display: none;
+    }
+    
+    .search-container {
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    
+    .category-filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 5px 10px;
+      background-color: #eee;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    
+    .filter-btn.active {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    #flashcards-container {
+      perspective: 1000px;
+      margin-top: 20px;
+    }
+    
+    .flashcard {
+      width: 100%;
+      height: 200px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      margin-bottom: 20px;
+    }
+    
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .flashcard-front {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2em;
+      text-align: center;
+    }
+    
+    .flashcard-back {
+      background-color: white;
+      transform: rotateY(180deg);
+      text-align: center;
+    }
+    
+    .flashcard-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chapter 10: Security Network Designs</h1>
+  <p>An interactive study tool to help you master network security concepts and definitions.</p>
+  
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" data-tab="definitions">Definitions Grid</button>
+      <button class="tab" data-tab="flashcards">Flashcards</button>
+      <button class="tab" data-tab="quiz">Quiz</button>
+    </div>
+    
+    <div id="definitions" class="content active">
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search for definitions...">
+      </div>
+      
+      <div class="category-filter">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="network-architecture">Network Architecture</button>
+        <button class="filter-btn" data-category="security-devices">Security Devices</button>
+        <button class="filter-btn" data-category="protocols">Protocols</button>
+        <button class="filter-btn" data-category="zones">Security Zones</button>
+        <button class="filter-btn" data-category="attack-defenses">Attack Defenses</button>
+      </div>
+      
+      <div class="definition-grid" id="def-grid">
+        <!-- Definitions will be loaded dynamically -->
+      </div>
+    </div>
+    
+    <div id="flashcards" class="content">
+      <div class="category-filter">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="network-architecture">Network Architecture</button>
+        <button class="filter-btn" data-category="security-devices">Security Devices</button>
+        <button class="filter-btn" data-category="protocols">Protocols</button>
+        <button class="filter-btn" data-category="zones">Security Zones</button>
+        <button class="filter-btn" data-category="attack-defenses">Attack Defenses</button>
+      </div>
+      
+      <div id="flashcards-container">
+        <div class="flashcard">
+          <div class="flashcard-front">
+            <p>Term will appear here</p>
+          </div>
+          <div class="flashcard-back">
+            <p>Definition will appear here</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flashcard-controls">
+        <button id="prev-card" disabled>Previous</button>
+        <button id="flip-card">Flip Card</button>
+        <button id="next-card">Next</button>
+      </div>
+    </div>
+    
+    <div id="quiz" class="content">
+      <div class="quiz-container">
+        <div id="quiz-progress">Question 1 of 10</div>
+        <div id="question-container">
+          <!-- Questions will be loaded dynamically -->
+        </div>
+        
+        <div class="quiz-controls">
+          <button id="prev-question" disabled>Previous</button>
+          <button id="next-question">Next</button>
+          <button id="submit-quiz" style="display:none;">Submit Quiz</button>
+        </div>
+        
+        <div class="results" id="quiz-results">
+          <h3>Quiz Results</h3>
+          <p>Your score: <span id="score">0</span> out of <span id="total">10</span></p>
+          <div id="result-breakdown"></div>
+          <button id="restart-quiz">Restart Quiz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Network security definitions
+    const definitions = [
+      {
+        term: "DMZ (Demilitarized Zone)",
+        definition: "A network area that sits between a trusted internal network and an untrusted external network, usually the internet, providing a layer of security.",
+        category: "zones"
+      },
+      {
+        term: "Firewall",
+        definition: "A network security device that monitors and filters incoming and outgoing network traffic based on predetermined security rules.",
+        category: "security-devices"
+      },
+      {
+        term: "IDS (Intrusion Detection System)",
+        definition: "A system that monitors network traffic for suspicious activity and issues alerts when such activity is discovered.",
+        category: "security-devices"
+      },
+      {
+        term: "IPS (Intrusion Prevention System)",
+        definition: "A network security application that monitors network traffic for malicious activities and can take automated actions to prevent attacks.",
+        category: "security-devices"
+      },
+      {
+        term: "VPN (Virtual Private Network)",
+        definition: "A secure connection established over a public infrastructure that provides remote access to a private network through encrypted tunnels.",
+        category: "network-architecture"
+      },
+      {
+        term: "VLAN (Virtual Local Area Network)",
+        definition: "A custom network created from one or more LANs, allowing networks to be segmented logically without relying on physical connections.",
+        category: "network-architecture"
+      },
+      {
+        term: "NAT (Network Address Translation)",
+        definition: "The process of modifying IP address information while in transit, typically used to allow multiple devices to access the internet through a single public IP address.",
+        category: "protocols"
+      },
+      {
+        term: "PAT (Port Address Translation)",
+        definition: "A form of NAT that translates multiple private IP addresses to a single public IP address by using different ports.",
+        category: "protocols"
+      },
+      {
+        term: "Proxy Server",
+        definition: "An intermediary server between client devices and the internet that can provide additional functionality, security, and privacy.",
+        category: "security-devices"
+      },
+      {
+        term: "Bastion Host",
+        definition: "A specially designated computer designed to withstand attacks and provide access to a private network from an external network.",
+        category: "security-devices"
+      },
+      {
+        term: "Network Segmentation",
+        definition: "The practice of dividing a computer network into subnetworks to improve security and performance.",
+        category: "network-architecture"
+      },
+      {
+        term: "Defense in Depth",
+        definition: "A cybersecurity strategy that employs multiple layers of security controls throughout a system to protect assets even if one layer is compromised.",
+        category: "attack-defenses"
+      },
+      {
+        term: "Zero Trust Network",
+        definition: "A security concept based on the principle of 'never trust, always verify,' which requires strict identity verification for every person and device accessing resources.",
+        category: "network-architecture"
+      },
+      {
+        term: "Honeypot",
+        definition: "A decoy computer system intended to attract cyberattacks to study attacker behavior or divert attention from legitimate targets.",
+        category: "attack-defenses"
+      },
+      {
+        term: "ACL (Access Control List)",
+        definition: "A set of rules that grants or denies specific permissions for users or system processes.",
+        category: "security-devices"
+      },
+      {
+        term: "NGFW (Next-Generation Firewall)",
+        definition: "A firewall that combines traditional firewall capabilities with other network device filtering functions, such as application inspection and IPS.",
+        category: "security-devices"
+      },
+      {
+        term: "SDN (Software-Defined Networking)",
+        definition: "An approach to network management that enables dynamic, programmatically efficient network configuration to improve performance and monitoring.",
+        category: "network-architecture"
+      },
+      {
+        term: "IPsec (Internet Protocol Security)",
+        definition: "A protocol suite for securing IP communications by authenticating and encrypting each IP packet in a data stream.",
+        category: "protocols"
+      },
+      {
+        term: "SSL/TLS (Secure Sockets Layer/Transport Layer Security)",
+        definition: "Cryptographic protocols designed to provide communications security over a computer network.",
+        category: "protocols"
+      },
+      {
+        term: "WAF (Web Application Firewall)",
+        definition: "A firewall that monitors, filters, and blocks HTTP traffic to and from a web application, protecting against attacks such as cross-site scripting and SQL injection.",
+        category: "security-devices"
+      },
+      {
+        term: "Intranet",
+        definition: "A private network accessible only to an organization's staff, often used for internal communication and sharing resources.",
+        category: "zones"
+      },
+      {
+        term: "Extranet",
+        definition: "A controlled private network that allows access to partners, vendors, suppliers, or other authorized users outside of the organization.",
+        category: "zones"
+      },
+      {
+        term: "Subnet",
+        definition: "A logical subdivision of an IP network that allows for more efficient routing and improved security.",
+        category: "network-architecture"
+      },
+      {
+        term: "SIEM (Security Information and Event Management)",
+        definition: "A system that collects and analyzes log data to monitor critical activities in an organization's IT environment and provide real-time analysis of security alerts.",
+        category: "security-devices"
+      },
+      {
+        term: "Air Gap",
+        definition: "A security measure where a computer or network is physically isolated from unsecured networks to prevent unauthorized access.",
+        category: "network-architecture"
+      },
+      {
+        term: "Data Diode",
+        definition: "A network device that allows data to travel in only one direction, enhancing security by preventing data exfiltration.",
+        category: "security-devices"
+      },
+      {
+        term: "Jump Server",
+        definition: "A hardened and monitored server that provides access to a secure zone in a network, typically used for system administration.",
+        category: "security-devices"
+      },
+      {
+        term: "Microsegmentation",
+        definition: "A security technique that divides the data center into distinct security segments down to the individual workload level for greater attack protection.",
+        category: "network-architecture"
+      },
+      {
+        term: "DDoS Mitigation",
+        definition: "Techniques used to resist distributed denial-of-service attacks that aim to make an online service unavailable by overwhelming it with traffic.",
+        category: "attack-defenses"
+      },
+      {
+        term: "SNORT",
+        definition: "An open-source network intrusion detection and prevention system capable of performing real-time traffic analysis and packet logging.",
+        category: "security-devices"
+      }
+    ];
+    
+    // Quiz questions
+    const quizQuestions = [
+      {
+        question: "What is a DMZ in network security?",
+        options: [
+          "A zone where no military operations are allowed",
+          "A network area that sits between a trusted internal network and an untrusted external network",
+          "A system for detecting malware in downloads",
+          "A security protocol for wireless networks"
+        ],
+        correctAnswer: 1
+      },
+      {
+        question: "Which security concept operates on the principle of 'never trust, always verify'?",
+        options: [
+          "Defense in Depth",
+          "Least Privilege",
+          "Zero Trust Network",
+          "Air Gap Security"
+        ],
+        correctAnswer: 2
+      },
+      {
+        question: "What primary function does a firewall serve in a network?",
+        options: [
+          "Encrypts all network traffic",
+          "Monitors and filters incoming and outgoing network traffic based on predetermined security rules",
+          "Provides remote access to the internal network",
+          "Accelerates network performance"
+        ],
+        correctAnswer: 1
+      },
+      {
+        question: "What is the difference between an IDS and an IPS?",
+        options: [
+          "An IDS only detects suspicious activity while an IPS can also take action to prevent attacks",
+          "An IDS is hardware-based while an IPS is software-based",
+          "An IDS is for external networks while an IPS is for internal networks",
+          "There is no difference; they are two terms for the same system"
+        ],
+        correctAnswer: 0
+      },
+      {
+        question: "What is network segmentation and why is it important?",
+        options: [
+          "Dividing a network into physical segments to increase speed",
+          "Dividing a network into subnetworks to improve security and performance",
+          "Disconnecting parts of a network during maintenance",
+          "Isolating compromised sections of a network after an attack"
+        ],
+        correctAnswer: 1
+      },
+      {
+        question: "What is a honeypot in network security?",
+        options: [
+          "A sweet reward given to security professionals who identify vulnerabilities",
+          "A decoy computer system intended to attract cyberattacks",
+          "A security tool that identifies sweet spots in network defenses",
+          "A centralized repository for collected security logs"
+        ],
+        correctAnswer: 1
+      },
+      {
+        question: "What does PAT stand for in networking?",
+        options: [
+          "Protocol Address Translation",
+          "Port Authentication Technology",
+          "Port Address Translation",
+          "Packet Analysis Tool"
+        ],
+        correctAnswer: 2
+      },
+      {
+        question: "What is a bastion host?",
+        options: [
+          "A server specifically designed to withstand attacks and provide access to a private network",
+          "The primary domain controller in a Windows environment",
+          "A host that controls all routing within a network",
+          "A backup server that takes over when the main server fails"
+        ],
+        correctAnswer: 0
+      },
+      {
+        question: "Which of the following best describes the concept of Defense in Depth?",
+        options: [
+          "Using the most powerful firewall available",
+          "Employing multiple layers of security controls throughout a system",
+          "Putting all security resources at the network perimeter",
+          "Training employees extensively on security procedures"
+        ],
+        correctAnswer: 1
+      },
+      {
+        question: "What is the primary purpose of an air gap in network security?",
+        options: [
+          "To provide cooling for network equipment",
+          "To physically isolate a computer or network from unsecured networks",
+          "To create a buffer between different network zones",
+          "To increase the distance between wireless access points"
+        ],
+        correctAnswer: 1
+      }
+    ];
+    
+    // Tab switching functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Hide all content
+        document.querySelectorAll('.content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Show corresponding content
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Initialize definitions grid
+    function initDefinitionsGrid() {
+      const grid = document.getElementById('def-grid');
+      grid.innerHTML = '';
+      
+      definitions.forEach(def => {
+        const card = document.createElement('div');
+        card.className = `definition-card ${def.category}`;
+        card.innerHTML = `
+          <div class="definition-term">${def.term}</div>
+          <div class="definition-description">${def.definition}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+    
+    // Search functionality
+    document.querySelector('.search-input').addEventListener('input', (e) => {
+      const searchText = e.target.value.toLowerCase();
+      document.querySelectorAll('.definition-card').forEach(card => {
+        const term = card.querySelector('.definition-term').textContent.toLowerCase();
+        const definition = card.querySelector('.definition-description').textContent.toLowerCase();
+        
+        if (term.includes(searchText) || definition.includes(searchText)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    
+    // Category filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filter cards
+        document.querySelectorAll('.definition-card').forEach(card => {
+          if (category === 'all' || card.classList.contains(category)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // Flashcards functionality
+    let currentCardIndex = 0;
+    let filteredFlashcards = [...definitions];
+    
+    function updateFlashcard() {
+      if (filteredFlashcards.length === 0) {
+        document.querySelector('.flashcard-front p').textContent = "No cards match the selected filter";
+        document.querySelector('.flashcard-back p').textContent = "Please select a different category";
+        document.getElementById('next-card').disabled = true;
+        document.getElementById('prev-card').disabled = true;
+        return;
+      }
+      
+      const flashcard = document.querySelector('.flashcard');
+      flashcard.classList.remove('flipped');
+      
+      document.querySelector('.flashcard-front p').textContent = filteredFlashcards[currentCardIndex].term;
+      document.querySelector('.flashcard-back p').textContent = filteredFlashcards[currentCardIndex].definition;
+      
+      // Update buttons
+      document.getElementById('prev-card').disabled = currentCardIndex === 0;
+      document.getElementById('next-card').disabled = currentCardIndex === filteredFlashcards.length - 1;
+    }
+    
+    document.getElementById('flip-card').addEventListener('click', () => {
+      document.querySelector('.flashcard').classList.toggle('flipped');
+    });
+    
+    document.getElementById('next-card').addEventListener('click', () => {
+      if (currentCardIndex < filteredFlashcards.length - 1) {
+        currentCardIndex++;
+        updateFlashcard();
+      }
+    });
+    
+    document.getElementById('prev-card').addEventListener('click', () => {
+      if (currentCardIndex > 0) {
+        currentCardIndex--;
+        updateFlashcard();
+      }
+    });
+    
+    // Filter flashcards by category
+    document.querySelectorAll('#flashcards .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        
+        // Update active button
+        document.querySelectorAll('#flashcards .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filter flashcards
+        if (category === 'all') {
+          filteredFlashcards = [...definitions];
+        } else {
+          filteredFlashcards = definitions.filter(def => def.category === category);
+        }
+        
+        currentCardIndex = 0;
+        updateFlashcard();
+      });
+    });
+    
+    // Quiz functionality
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(quizQuestions.length).fill(null);
+    
+    function loadQuestion() {
+      const questionContainer = document.getElementById('question-container');
+      const question = quizQuestions[currentQuestionIndex];
+      
+      // Update progress
+      document.getElementById('quiz-progress').textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+      
+      // Create question HTML
+      questionContainer.innerHTML = `
+        <div class="question">
+          <h3>${question.question}</h3>
+          <div class="options">
+            ${question.options.map((option, index) => `
+              <div class="option ${userAnswers[currentQuestionIndex] === index ? 'selected' : ''}" data-index="${index}">
+                ${option}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      // Add click event to options
+      questionContainer.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', () => {
+          questionContainer.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          userAnswers[currentQuestionIndex] = parseInt(option.getAttribute('data-index'));
+        });
+      });
+      
+      // Update buttons
+      document.getElementById('prev-question').disabled = currentQuestionIndex === 0;
+      document.getElementById('next-question').style.display = currentQuestionIndex === quizQuestions.length - 1 ? 'none' : 'block';
+      document.getElementById('submit-quiz').style.display = currentQuestionIndex === quizQuestions.length - 1 ? 'block' : 'none';
+    }
+    
+    document.getElementById('next-question').addEventListener('click', () => {
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      }
+    });
+    
+    document.getElementById('prev-question').addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    });
+    
+    document.getElementById('submit-quiz').addEventListener('click', () => {
+      // Calculate score
+      let score = 0;
+      userAnswers.forEach((answer, index) => {
+        if (answer === quizQuestions[index].correctAnswer) {
+          score++;
+        }
+      });
+      
+      // Display results
+      document.getElementById('score').textContent = score;
+      document.getElementById('total').textContent = quizQuestions.length;
+      document.getElementById('quiz-results').style.display = 'block';
+      
+      // Generate result breakdown
+      const breakdownContainer = document.getElementById('result-breakdown');
+      breakdownContainer.innerHTML = '';
+      
+      quizQuestions.forEach((question, index) => {
+        const isCorrect = userAnswers[index] === question.correctAnswer;
+        const breakdownItem = document.createElement('div');
+        breakdownItem.className = isCorrect ? 'correct-answer' : 'wrong-answer';
+        breakdownItem.innerHTML = `
+          <p><strong>Question ${index + 1}:</strong> ${question.question}</p>
+          <p>Your answer: ${userAnswers[index] !== null ? question.options[userAnswers[index]] : 'Not answered'}</p>
+          <p>Correct answer: ${question.options[question.correctAnswer]}</p>
+        `;
+        breakdownContainer.appendChild(breakdownItem);
+      });
+    });
+    
+    document.getElementById('restart-quiz').addEventListener('click', () => {
+      currentQuestionIndex = 0;
+      userAnswers = new Array(quizQuestions.length).fill(null);
+      document.getElementById('quiz-results').style.display = 'none';
+      loadQuestion();
+    });
+    
+    // Initialize the study tool
+    window.addEventListener('DOMContentLoaded', () => {
+      initDefinitionsGrid();
+      updateFlashcard();
+      loadQuestion();
+    });
+  </script>
+</body>
+</html>
