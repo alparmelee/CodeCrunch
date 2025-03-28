@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Function Definitions in Different Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .function-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .function-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .function-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Function Definitions in Different Programming Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="function-types">
+            <button class="function-btn" data-type="basic">Basic Function</button>
+            <button class="function-btn" data-type="parameters">Function with Parameters</button>
+            <button class="function-btn" data-type="return">Function with Return</button>
+            <button class="function-btn" data-type="lambda">Lambda/Anonymous Function</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and function type to see its definition!</pre>
+    </div>
+
+    <script>
+        const functionDefinitions = {
+            python: {
+                basic: '# Basic function definition\ndef greet():\n    print("Hello, World!")\n\n# Calling the function\ngreet()',
+                parameters: '# Function with parameters\ndef welcome(name, age):\n    print(f"Hello {name}, you are {age} years old")\n\n# Calling the function\nwelcome("Alice", 30)',
+                return: '# Function with return value\ndef add_numbers(a, b):\n    return a + b\n\n# Calling and using return\nresult = add_numbers(5, 3)\nprint(result)  # Outputs: 8',
+                lambda: '# Lambda (anonymous) function\nadd = lambda x, y: x + y\nprint(add(3, 4))  # Outputs: 7\n\n# Using lambda with built-in functions\nnumbers = [1, 2, 3, 4, 5]\nsquared = list(map(lambda x: x**2, numbers))'
+            },
+            lua: {
+                basic: '-- Basic function definition\nfunction greet()\n    print("Hello, World!")\nend\n\n-- Calling the function\ngreet()',
+                parameters: '-- Function with parameters\nfunction welcome(name, age)\n    print(string.format("Hello %s, you are %d years old", name, age))\nend\n\n-- Calling the function\nwelcome("Alice", 30)',
+                return: '-- Function with return value\nfunction add_numbers(a, b)\n    return a + b\nend\n\n-- Calling and using return\nresult = add_numbers(5, 3)\nprint(result)  -- Outputs: 8',
+                lambda: '-- Lua uses function literals\nadd = function(x, y)\n    return x + y\nend\nprint(add(3, 4))  -- Outputs: 7'
+            },
+            ruby: {
+                basic: '# Basic method definition\ndef greet\n    puts "Hello, World!"\nend\n\n# Calling the method\ngreet',
+                parameters: '# Method with parameters\ndef welcome(name, age)\n    puts "Hello #{name}, you are #{age} years old"\nend\n\n# Calling the method\nwelcome("Alice", 30)',
+                return: '# Method with return value\ndef add_numbers(a, b)\n    a + b  # Last expression is automatically returned\nend\n\n# Calling and using return\nresult = add_numbers(5, 3)\nputs result  # Outputs: 8',
+                lambda: '# Lambda/Proc in Ruby\nadd = ->(x, y) { x + y }\nputs add.call(3, 4)  # Outputs: 7\n\n# Using lambda with enumerable\nnumbers = [1, 2, 3, 4, 5]\nsquared = numbers.map { |x| x**2 }'
+            },
+            javascript: {
+                basic: '// Function declaration\nfunction greet() {\n    console.log("Hello, World!");\n}\n\n// Calling the function\ngreet();',
+                parameters: '// Function with parameters\nfunction welcome(name, age) {\n    console.log(`Hello ${name}, you are ${age} years old`);\n}\n\n// Calling the function\nwelcome("Alice", 30);',
+                return: '// Function with return value\nfunction addNumbers(a, b) {\n    return a + b;\n}\n\n// Calling and using return\nconst result = addNumbers(5, 3);\nconsole.log(result);  // Outputs: 8',
+                lambda: '// Arrow function (lambda-like)\nconst add = (x, y) => x + y;\nconsole.log(add(3, 4));  // Outputs: 7\n\n// Using with map\nconst numbers = [1, 2, 3, 4, 5];\nconst squared = numbers.map(x => x**2);'
+            },
+            php: {
+                basic: '<?php\n// Basic function definition\nfunction greet() {\n    echo "Hello, World!";\n}\n\n// Calling the function\ngreet();',
+                parameters: '<?php\n// Function with parameters\nfunction welcome($name, $age) {\n    echo "Hello $name, you are $age years old";\n}\n\n// Calling the function\nwelcome("Alice", 30);',
+                return: '<?php\n// Function with return value\nfunction addNumbers($a, $b) {\n    return $a + $b;\n}\n\n// Calling and using return\n$result = addNumbers(5, 3);\necho $result;  // Outputs: 8',
+                lambda: '<?php\n// Anonymous function (closure)\n$add = function($x, $y) {\n    return $x + $y;\n};\necho $add(3, 4);  // Outputs: 7'
+            },
+            c: {
+                basic: '// Basic function definition\nvoid greet() {\n    printf("Hello, World!\\n");\n}\n\n// Calling the function\nint main() {\n    greet();\n    return 0;\n}',
+                parameters: '// Function with parameters\nvoid welcome(char* name, int age) {\n    printf("Hello %s, you are %d years old\\n", name, age);\n}\n\n// Calling the function\nint main() {\n    welcome("Alice", 30);\n    return 0;\n}',
+                return: '// Function with return value\nint addNumbers(int a, int b) {\n    return a + b;\n}\n\n// Calling and using return\nint main() {\n    int result = addNumbers(5, 3);\n    printf("%d\\n", result);  // Outputs: 8\n    return 0;\n}',
+                lambda: '// C does not have built-in lambda functions\n// Function pointers can be used similarly\nint (*add)(int, int);\nadd = addNumbers;  // Function pointer usage'
+            },
+            cpp: {
+                basic: '// Basic function definition\nvoid greet() {\n    std::cout << "Hello, World!" << std::endl;\n}\n\n// Calling the function\nint main() {\n    greet();\n    return 0;\n}',
+                parameters: '// Function with parameters\nvoid welcome(std::string name, int age) {\n    std::cout << "Hello " << name << ", you are " << age << " years old" << std::endl;\n}\n\n// Calling the function\nint main() {\n    welcome("Alice", 30);\n    return 0;\n}',
+                return: '// Function with return value\nint addNumbers(int a, int b) {\n    return a + b;\n}\n\n// Calling and using return\nint main() {\n    int result = addNumbers(5, 3);\n    std::cout << result << std::endl;  // Outputs: 8\n    return 0;\n}',
+                lambda: '// C++11 lambda functions\nauto add = [](int x, int y) { return x + y; };\nstd::cout << add(3, 4) << std::endl;  // Outputs: 7'
+            },
+            csharp: {
+                basic: '// Basic method definition\nstatic void Greet() {\n    Console.WriteLine("Hello, World!");\n}\n\n// Calling the method\nstatic void Main() {\n    Greet();\n}',
+                parameters: '// Method with parameters\nstatic void Welcome(string name, int age) {\n    Console.WriteLine($"Hello {name}, you are {age} years old");\n}\n\n// Calling the method\nstatic void Main() {\n    Welcome("Alice", 30);\n}',
+                return: '// Method with return value\nstatic int AddNumbers(int a, int b) {\n    return a + b;\n}\n\n// Calling and using return\nstatic void Main() {\n    int result = AddNumbers(5, 3);\n    Console.WriteLine(result);  // Outputs: 8\n}',
+                lambda: '// Lambda expression\nvar add = (int x, int y) => x + y;\nConsole.WriteLine(add(3, 4));  // Outputs: 7'
+            },
+            java: {
+                basic: '// Basic method definition\npublic void greet() {\n    System.out.println("Hello, World!");\n}\n\n// Calling the method\npublic static void main(String[] args) {\n    greet();\n}',
+                parameters: '// Method with parameters\npublic void welcome(String name, int age) {\n    System.out.println("Hello " + name + ", you are " + age + " years old");\n}\n\n// Calling the method\npublic static void main(String[] args) {\n    welcome("Alice", 30);\n}',
+                return: '// Method with return value\npublic int addNumbers(int a, int b) {\n    return a + b;\n}\n\n// Calling and using return\npublic static void main(String[] args) {\n    int result = addNumbers(5, 3);\n    System.out.println(result);  // Outputs: 8\n}',
+                lambda: '// Java 8+ lambda expression\nBiFunction<Integer, Integer, Integer> add = (x, y) -> x + y;\nSystem.out.println(add.apply(3, 4));  // Outputs: 7'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const functionButtons = document.querySelectorAll('.function-btn');
+
+        let currentLanguage = '';
+        let currentFunctionType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        functionButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentFunctionType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentFunctionType) {
+                codeDisplay.textContent = functionDefinitions[currentLanguage][currentFunctionType];
+            } else {
+                codeDisplay.textContent = 'Select a language and function type to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>

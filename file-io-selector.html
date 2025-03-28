@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File I/O in Different Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .file-io-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .file-io-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .file-io-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File I/O Operations in Different Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="file-io-types">
+            <button class="file-io-btn" data-type="read-text-file">Read Text File</button>
+            <button class="file-io-btn" data-type="write-text-file">Write Text File</button>
+            <button class="file-io-btn" data-type="append-file">Append to File</button>
+            <button class="file-io-btn" data-type="read-csv">Read CSV File</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and file I/O operation to see its definition!</pre>
+    </div>
+
+    <script>
+        const fileIoStatements = {
+            python: {
+                'read-text-file': '# Reading a text file\nwith open("example.txt", "r") as file:\n    content = file.read()  # Read entire file\n    print(content)\n\n# Read line by line\nwith open("example.txt", "r") as file:\n    for line in file:\n        print(line.strip())',
+                'write-text-file': '# Writing to a text file\nwith open("output.txt", "w") as file:\n    file.write("Hello, World!\\n")\n    file.write("This is a text file.")',
+                'append-file': '# Appending to a file\nwith open("log.txt", "a") as file:\n    file.write("New log entry\\n")\n    file.write("Timestamp: 2024-03-28\\n")',
+                'read-csv': '# Reading a CSV file\nimport csv\n\nwith open("data.csv", "r") as file:\n    csv_reader = csv.reader(file)\n    for row in csv_reader:\n        print(row)  # Each row is a list'
+            },
+            lua: {
+                'read-text-file': '-- Reading a text file\nlocal file = io.open("example.txt", "r")\nif file then\n    local content = file:read("*all")  -- Read entire file\n    print(content)\n    file:close()\nend\n\n-- Read line by line\nfor line in io.lines("example.txt") do\n    print(line)\nend',
+                'write-text-file': '-- Writing to a text file\nlocal file = io.open("output.txt", "w")\nif file then\n    file:write("Hello, World!\\n")\n    file:write("This is a text file.")\n    file:close()\nend',
+                'append-file': '-- Appending to a file\nlocal file = io.open("log.txt", "a")\nif file then\n    file:write("New log entry\\n")\n    file:write("Timestamp: 2024-03-28\\n")\n    file:close()\nend',
+                'read-csv': '-- Reading a CSV file (manual parsing)\nlocal file = io.open("data.csv", "r")\nif file then\n    for line in file:lines() do\n        -- Simple CSV parsing\n        for value in line:gmatch("[^,]+") do\n            print(value)\n        end\n    end\n    file:close()\nend'
+            },
+            ruby: {
+                'read-text-file': '# Reading a text file\n# Method 1: Read entire file\ncontent = File.read("example.txt")\nputs content\n\n# Method 2: Read line by line\nFile.readlines("example.txt").each do |line|\n    puts line.strip\nend',
+                'write-text-file': '# Writing to a text file\nFile.write("output.txt", "Hello, World!\\n")\nFile.write("output.txt", "This is a text file.", mode: "a")',
+                'append-file': '# Appending to a file\nFile.open("log.txt", "a") do |file|\n    file.puts "New log entry"\n    file.puts "Timestamp: 2024-03-28"\nend',
+                'read-csv': '# Reading a CSV file\nrequire "csv"\n\nCSV.foreach("data.csv") do |row|\n    puts row.inspect  # Each row is an array\nend'
+            },
+            javascript: {
+                'read-text-file': '// Node.js file reading\nconst fs = require("fs");\n\n// Read entire file\nfs.readFile("example.txt", "utf8", (err, data) => {\n    if (err) {\n        console.error("Error reading file");\n        return;\n    }\n    console.log(data);\n});\n\n// Synchronous read\nconst content = fs.readFileSync("example.txt", "utf8");',
+                'write-text-file': '// Node.js file writing\nconst fs = require("fs");\n\n// Write to file\nfs.writeFile("output.txt", "Hello, World!\\n", (err) => {\n    if (err) {\n        console.error("Error writing file");\n    }\n});\n\n// Synchronous write\nfs.writeFileSync("output.txt", "This is a text file.");',
+                'append-file': '// Appending to a file\nconst fs = require("fs");\n\nfs.appendFile("log.txt", "New log entry\\n", (err) => {\n    if (err) {\n        console.error("Error appending to file");\n    }\n});\n\n// Synchronous append\nfs.appendFileSync("log.txt", "Timestamp: 2024-03-28\\n");',
+                'read-csv': '// Reading CSV with csv-parse library\nconst fs = require("fs");\nconst parse = require("csv-parse");\n\nfs.readFile("data.csv", "utf8", (err, fileContent) => {\n    parse(fileContent, (err, records) => {\n        records.forEach(row => {\n            console.log(row);\n        });\n    });\n});'
+            },
+            php: {
+                'read-text-file': '<?php\n// Reading a text file\n// Method 1: Read entire file\n$content = file_get_contents("example.txt");\necho $content;\n\n// Method 2: Read line by line\n$file = fopen("example.txt", "r");\nwhile (!feof($file)) {\n    $line = fgets($file);\n    echo $line;\n}\nfclose($file);',
+                'write-text-file': '<?php\n// Writing to a text file\nfile_put_contents("output.txt", "Hello, World!\\n");\n\n// Open file for writing\n$file = fopen("output.txt", "w");\nfwrite($file, "This is a text file.");\nfclose($file);',
+                'append-file': '<?php\n// Appending to a file\nfile_put_contents("log.txt", "New log entry\\n", FILE_APPEND);\n\n// Alternative method\n$file = fopen("log.txt", "a");\nfwrite($file, "Timestamp: 2024-03-28\\n");\nfclose($file);',
+                'read-csv': '<?php\n// Reading CSV file\n$file = fopen("data.csv", "r");\nwhile (($data = fgetcsv($file)) !== FALSE) {\n    print_r($data);  // Each row as an array\n}\nfclose($file);'
+            },
+            c: {
+                'read-text-file': '// Reading a text file\n#include <stdio.h>\n\nint main() {\n    FILE *file = fopen("example.txt", "r");\n    if (file == NULL) {\n        printf("Error opening file\\n");\n        return 1;\n    }\n\n    char buffer[256];\n    // Read line by line\n    while (fgets(buffer, sizeof(buffer), file)) {\n        printf("%s", buffer);\n    }\n\n    fclose(file);\n    return 0;\n}',
+                'write-text-file': '// Writing to a text file\n#include <stdio.h>\n\nint main() {\n    FILE *file = fopen("output.txt", "w");\n    if (file == NULL) {\n        printf("Error opening file\\n");\n        return 1;\n    }\n\n    fprintf(file, "Hello, World!\\n");\n    fprintf(file, "This is a text file.");\n\n    fclose(file);\n    return 0;\n}',
+                'append-file': '// Appending to a file\n#include <stdio.h>\n\nint main() {\n    FILE *file = fopen("log.txt", "a");\n    if (file == NULL) {\n        printf("Error opening file\\n");\n        return 1;\n    }\n\n    fprintf(file, "New log entry\\n");\n    fprintf(file, "Timestamp: 2024-03-28\\n");\n\n    fclose(file);\n    return 0;\n}',
+                'read-csv': '// Reading CSV file (manual parsing)\n#include <stdio.h>\n#include <string.h>\n\nint main() {\n    FILE *file = fopen("data.csv", "r");\n    if (file == NULL) {\n        printf("Error opening file\\n");\n        return 1;\n    }\n\n    char buffer[256];\n    while (fgets(buffer, sizeof(buffer), file)) {\n        char *token = strtok(buffer, ",");\n        while (token != NULL) {\n            printf("%s ", token);\n            token = strtok(NULL, ",");\n        }\n        printf("\\n");\n    }\n\n    fclose(file);\n    return 0;\n}'
+            },
+            cpp: {
+                'read-text-file': '// Reading a text file\n#include <fstream>\n#include <iostream>\n#include <string>\n\nint main() {\n    std::ifstream file("example.txt");\n    if (!file.is_open()) {\n        std::cerr << "Error opening file" << std::endl;\n        return 1;\n    }\n\n    std::string line;\n    while (std::getline(file, line)) {\n        std::cout << line << std::endl;\n    }\n\n    file.close();\n    return 0;\n}',
+                'write-text-file': '// Writing to a text file\n#include <fstream>\n#include <iostream>\n\nint main() {\n    std::ofstream file("output.txt");\n    if (!file.is_open()) {\n        std::cerr << "Error opening file" << std::endl;\n        return 1;\n    }\n\n    file << "Hello, World!\\n";\n    file << "This is a text file.";\n\n    file.close();\n    return 0;\n}',
+                'append-file': '// Appending to a file\n#include <fstream>\n#include <iostream>\n\nint main() {\n    std::ofstream file("log.txt", std::ios::app);\n    if (!file.is_open()) {\n        std::cerr << "Error opening file" << std::endl;\n        return 1;\n    }\n\n    file << "New log entry\\n";\n    file << "Timestamp: 2024-03-28\\n";\n\n    file.close();\n    return 0;\n}',
+                'read-csv': '// Reading CSV file (basic parsing)\n#include <fstream>\n#include <iostream>\n#include <sstream>\n#include <string>\n\nint main() {\n    std::ifstream file("data.csv");\n    if (!file.is_open()) {\n        std::cerr << "Error opening file" << std::endl;\n        return 1;\n    }\n\n    std::string line;\n    while (std::getline(file, line)) {\n        std::istringstream ss(line);\n        std::string cell;\n        while (std::getline(ss, cell, \',\')) {\n            std::cout << cell << " ";\n        }\n        std::cout << std::endl;\n    }\n\n    file.close();\n    return 0;\n}'
+            },
+            csharp: {
+                'read-text-file': '// Reading a text file\nusing System;\nusing System.IO;\n\nclass Program {\n    static void Main() {\n        try {\n            // Read entire file\n            string content = File.ReadAllText("example.txt");\n            Console.WriteLine(content);\n\n            // Read line by line\n            string[] lines = File.ReadAllLines("example.txt");\n            foreach (string line in lines) {\n                Console.WriteLine(line);\n            }\n        } catch (Exception e) {\n            Console.WriteLine($"Error: {e.Message}");\n        }\n}',
+                'write-text-file': '// Writing to a text file\nusing System;\nusing System.IO;\n\nclass Program {\n    static void Main() {\n        try {\n            // Write entire content\n            File.WriteAllText("output.txt", "Hello, World!\\n");\n\n            // Write multiple lines\n            string[] lines = {\n                "This is a text file.",\n                "Multiple lines example"\n            };\n            File.WriteAllLines("output.txt", lines);\n        } catch (Exception e) {\n            Console.WriteLine($"Error: {e.Message}");\n        }\n}',
+                'append-file': '// Appending to a file\nusing System;\nusing System.IO;\n\nclass Program {\n    static void Main() {\n        try {\n            File.AppendAllText("log.txt", "New log entry\\n");\n            File.AppendAllText("log.txt", "Timestamp: 2024-03-28\\n");\n        } catch (Exception e) {\n            Console.WriteLine($"Error: {e.Message}");\n        }\n}',
+                'read-csv': '// Reading CSV file\nusing System;\nusing System.IO;\nusing System.Linq;\n\nclass Program {\n    static void Main() {\n        try {\n            string[] lines = File.ReadAllLines("data.csv");\n            foreach (string line in lines) {\n                string[] values = line.Split(\',\');\n                Console.WriteLine(string.Join(" ", values));\n            }\n        } catch (Exception e) {\n            Console.WriteLine($"Error: {e.Message}");\n        }\n}'
+            },
+            java: {
+                'read-text-file': '// Reading a text file\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class FileReadExample {\n    public static void main(String[] args) {\n        try {\n            // Read entire file\n            String content = new String(Files.readAllBytes(Paths.get("example.txt")));\n            System.out.println(content);\n\n            // Read line by line\n            Files.lines(Paths.get("example.txt"))\n                .forEach(System.out::println);\n        } catch (Exception e) {\n            System.out.println("Error reading file: " + e.getMessage());\n        }\n    }\n}',
+                'write-text-file': '// Writing to a text file\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class FileWriteExample {\n    public static void main(String[] args) {\n        try {\n            // Write entire content\n            Files.write(Paths.get("output.txt"), "Hello, World!\\n".getBytes());\n\n            // Write multiple lines\n            Files.write(Paths.get("output.txt"), \n                Arrays.asList("This is a text file.", "Multiple lines example"));\n        } catch (Exception e) {\n            System.out.println("Error writing file: " + e.getMessage());\n        }\n    }\n}',
+                'append-file': '// Appending to a file\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.nio.file.StandardOpenOption;\n\npublic class FileAppendExample {\n    public static void main(String[] args) {\n        try {\n            Files.write(Paths.get("log.txt"), \n                "New log entry\\n".getBytes(), \n                StandardOpenOption.CREATE, \n                StandardOpenOption.APPEND);\n\n            Files.write(Paths.get("log.txt"), \n                "Timestamp: 2024-03-28\\n".getBytes(), \n                StandardOpenOption.APPEND);\n        } catch (Exception e) {\n            System.out.println("Error appending to file: " + e.getMessage());\n        }\n    }\n}',
+                'read-csv': '// Reading CSV file\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class CSVReadExample {\n    public static void main(String[] args) {\n        try {\n            Files.lines(Paths.get("data.csv"))\n                .map(line -> line.split(","))\n                .forEach(values -> {\n                    for (String value : values) {\n                        System.out.print(value + " ");\n                    }\n                    System.out.println();\n                });\n        } catch (Exception e) {\n            System.out.println("Error reading CSV: " + e.getMessage());\n        }\n    }\n}'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const fileIoButtons = document.querySelectorAll('.file-io-btn');
+
+        let currentLanguage = '';
+        let currentFileIoType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        fileIoButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentFileIoType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentFileIoType) {
+                codeDisplay.textContent = fileIoStatements[currentLanguage][currentFileIoType];
+            } else {
+                codeDisplay.textContent = 'Select a language and file I/O operation to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>

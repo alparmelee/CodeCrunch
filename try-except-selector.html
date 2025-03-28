@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try/Except in Different Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .exception-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .exception-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .exception-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Try/Except Error Handling in Different Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="exception-types">
+            <button class="exception-btn" data-type="basic-try-catch">Basic Try/Catch</button>
+            <button class="exception-btn" data-type="multiple-exceptions">Multiple Exceptions</button>
+            <button class="exception-btn" data-type="finally-block">Finally Block</button>
+            <button class="exception-btn" data-type="custom-exception">Custom Exception</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and exception type to see its definition!</pre>
+    </div>
+
+    <script>
+        const exceptionStatements = {
+            python: {
+                'basic-try-catch': '# Basic try/except\ntry:\n    result = 10 / 0  # Raises ZeroDivisionError\nexcept ZeroDivisionError:\n    print("Cannot divide by zero!")',
+                'multiple-exceptions': '# Handling multiple exceptions\ntry:\n    value = int("not a number")  # Raises ValueError\n    result = 10 / 0  # Raises ZeroDivisionError\nexcept ValueError:\n    print("Invalid number conversion")\nexcept ZeroDivisionError:\n    print("Cannot divide by zero")\nexcept Exception as e:\n    print(f"Unexpected error: {e}")',
+                'finally-block': '# Try/except with finally\ntry:\n    file = open("example.txt", "r")\n    # File operations\nexcept FileNotFoundError:\n    print("File not found")\nfinally:\n    file.close()  # Always executed',
+                'custom-exception': '# Custom exception\nclass CustomError(Exception):\n    pass\n\ntry:\n    raise CustomError("Something went wrong")\nexcept CustomError as e:\n    print(f"Caught custom error: {e}")'
+            },
+            lua: {
+                'basic-try-catch': '-- Lua uses pcall for error handling\nlocal status, result = pcall(function()\n    return 10 / 0  -- Attempts division by zero\nend)\n\nif not status then\n    print("Error occurred: " .. result)\nend',
+                'multiple-exceptions': '-- Lua uses pcall and error checking\nlocal function riskyOperation()\n    error("Something went wrong")\nend\n\nlocal status, result = pcall(riskyOperation)\nif not status then\n    print("Caught error: " .. result)\nend',
+                'finally-block': '-- Lua doesn\'t have a direct finally equivalent\nlocal file\nlocal status, result = pcall(function()\n    file = io.open("example.txt", "r")\n    -- File operations\nend)\n\n-- Manual cleanup\nif file then\n    file:close()\nend',
+                'custom-exception': '-- Lua doesn\'t have built-in custom exceptions\nlocal function raiseCustomError()\n    error("Custom error message")\nend\n\nlocal status, result = pcall(raiseCustomError)\nif not status then\n    print("Caught custom error: " .. result)\nend'
+            },
+            ruby: {
+                'basic-try-catch': '# Basic begin/rescue\nbegin\n    result = 10 / 0  # Raises ZeroDivisionError\nrescue ZeroDivisionError\n    puts "Cannot divide by zero!"\nend',
+                'multiple-exceptions': '# Handling multiple exceptions\nbegin\n    value = Integer("not a number")  # Raises ArgumentError\n    result = 10 / 0  # Raises ZeroDivisionError\nrescue ArgumentError\n    puts "Invalid number conversion"\nrescue ZeroDivisionError\n    puts "Cannot divide by zero"\nrescue => e\n    puts "Unexpected error: #{e.message}"\nend',
+                'finally-block': '# Try with ensure block\nbegin\n    file = File.open("example.txt", "r")\n    # File operations\nrescue Errno::ENOENT\n    puts "File not found"\nensure\n    file.close if file\nend',
+                'custom-exception': '# Custom exception\nclass CustomError < StandardError\nend\n\nbegin\n    raise CustomError, "Something went wrong"\nrescue CustomError => e\n    puts "Caught custom error: #{e.message}"\nend'
+            },
+            javascript: {
+                'basic-try-catch': '// Basic try/catch\ntry {\n    const result = 10 / 0;  // Creates Infinity\n    throw new Error("Division by zero");\n} catch (error) {\n    console.log("Error occurred: " + error.message);\n}',
+                'multiple-exceptions': '// Handling multiple exceptions\ntry {\n    const value = parseInt("not a number");\n    if (isNaN(value)) {\n        throw new TypeError("Invalid number");\n    }\n    const result = 10 / 0;\n} catch (error) {\n    if (error instanceof TypeError) {\n        console.log("Number conversion error");\n    } else if (error.message === "Division by zero") {\n        console.log("Cannot divide by zero");\n    } else {\n        console.log("Unexpected error: " + error.message);\n    }\n}',
+                'finally-block': '// Try/catch with finally\ntry {\n    const file = openFile("example.txt");\n    // File operations\n} catch (error) {\n    console.log("File error: " + error.message);\n} finally {\n    closeFile(file);  // Always executed\n}',
+                'custom-exception': '// Custom exception\nclass CustomError extends Error {\n    constructor(message) {\n        super(message);\n        this.name = "CustomError";\n    }\n}\n\ntry {\n    throw new CustomError("Something went wrong");\n} catch (error) {\n    if (error instanceof CustomError) {\n        console.log("Caught custom error: " + error.message);\n    }\n}'
+            },
+            php: {
+                'basic-try-catch': '<?php\n// Basic try/catch\ntry {\n    $result = 10 / 0;  // Throws DivisionByZeroError\n} catch (DivisionByZeroError $e) {\n    echo "Cannot divide by zero!";\n}',
+                'multiple-exceptions': '<?php\n// Handling multiple exceptions\ntry {\n    $value = intval("not a number");\n    $result = 10 / 0;\n} catch (TypeError $e) {\n    echo "Number conversion error";\n} catch (DivisionByZeroError $e) {\n    echo "Cannot divide by zero";\n} catch (Exception $e) {\n    echo "Unexpected error: " . $e->getMessage();\n}',
+                'finally-block': '<?php\n// Try with finally\ntry {\n    $file = fopen("example.txt", "r");\n    // File operations\n} catch (Exception $e) {\n    echo "File error: " . $e->getMessage();\n} finally {\n    fclose($file);  // Always executed\n}',
+                'custom-exception': '<?php\n// Custom exception\nclass CustomException extends Exception {}\n\ntry {\n    throw new CustomException("Something went wrong");\n} catch (CustomException $e) {\n    echo "Caught custom error: " . $e->getMessage();\n}'
+            },
+            c: {
+                'basic-try-catch': '// C uses setjmp/longjmp for error handling\n#include <setjmp.h>\n\njmp_buf errorHandler;\n\nint main() {\n    if (setjmp(errorHandler) != 0) {\n        printf("Error occurred\\n");\n        return 1;\n    }\n    // Simulated error\n    longjmp(errorHandler, 1);\n    return 0;\n}',
+                'multiple-exceptions': '// C doesn\'t have native exception handling\n// Manual error code checking\nint divideNumbers(int a, int b) {\n    if (b == 0) {\n        return -1;  // Error code\n    }\n    return a / b;\n}\n\nint main() {\n    int result = divideNumbers(10, 0);\n    if (result == -1) {\n        printf("Division by zero error\\n");\n    }\n    return 0;\n}',
+                'finally-block': '// C manual resource management\nFILE *file = NULL;\ntry {\n    file = fopen("example.txt", "r");\n    if (!file) {\n        // Handle file open error\n        goto cleanup;\n    }\n    // File operations\ncleanup:\n    if (file) {\n        fclose(file);  // Always close\n    }\n    return 0;\n}',
+                'custom-exception': '// C uses error codes and structs\ntypedef struct {\n    int code;\n    char *message;\n} CustomError;\n\nint performOperation() {\n    CustomError err = { 1, "Something went wrong" };\n    // Simulated error\n    return err.code;\n}'
+            },
+            cpp: {
+                'basic-try-catch': '// C++ try/catch\ntry {\n    throw std::runtime_error("Something went wrong");\n} catch (const std::exception& e) {\n    std::cout << "Caught error: " << e.what() << std::endl;\n}',
+                'multiple-exceptions': '// Handling multiple exceptions\ntry {\n    int value = std::stoi("not a number");\n    double result = 10.0 / 0.0;\n} catch (const std::invalid_argument& e) {\n    std::cout << "Number conversion error" << std::endl;\n} catch (const std::runtime_error& e) {\n    std::cout << "Runtime error: " << e.what() << std::endl;\n} catch (...) {\n    std::cout << "Unexpected error" << std::endl;\n}',
+                'finally-block': '// C++ resource management with RAII\nclass FileHandler {\npublic:\n    FileHandler(const std::string& filename) {\n        file.open(filename);\n    }\n    ~FileHandler() {\n        if (file.is_open()) {\n            file.close();\n        }\n    }\nprivate:\n    std::fstream file;\n};',
+                'custom-exception': '// Custom exception in C++\nclass CustomException : public std::exception {\npublic:\n    const char* what() const noexcept override {\n        return "Custom error occurred";\n    }\n};\n\ntry {\n    throw CustomException();\n} catch (const CustomException& e) {\n    std::cout << "Caught: " << e.what() << std::endl;\n}'
+            },
+            csharp: {
+                'basic-try-catch': '// Basic try/catch\ntry {\n    int result = 10 / 0;  // Throws DivideByZeroException\n} catch (DivideByZeroException e) {\n    Console.WriteLine("Cannot divide by zero!");\n}',
+                'multiple-exceptions': '// Handling multiple exceptions\ntry {\n    int value = int.Parse("not a number");\n    int result = 10 / 0;\n} catch (FormatException e) {\n    Console.WriteLine("Number conversion error");\n} catch (DivideByZeroException e) {\n    Console.WriteLine("Cannot divide by zero");\n} catch (Exception e) {\n    Console.WriteLine($"Unexpected error: {e.Message}");\n}',
+                'finally-block': '// Try with finally\ntry {\n    StreamReader file = new StreamReader("example.txt");\n    // File operations\n} catch (FileNotFoundException e) {\n    Console.WriteLine("File not found");\n} finally {\n    file?.Close();  // Always executed\n}',
+                'custom-exception': '// Custom exception\npublic class CustomException : Exception {\n    public CustomException(string message) : base(message) {}\n}\n\ntry {\n    throw new CustomException("Something went wrong");\n} catch (CustomException e) {\n    Console.WriteLine($"Caught custom error: {e.Message}");\n}'
+            },
+            java: {
+                'basic-try-catch': '// Basic try/catch\ntry {\n    int result = 10 / 0;  // Throws ArithmeticException\n} catch (ArithmeticException e) {\n    System.out.println("Cannot divide by zero!");\n}',
+                'multiple-exceptions': '// Handling multiple exceptions\ntry {\n    int value = Integer.parseInt("not a number");\n    int result = 10 / 0;\n} catch (NumberFormatException e) {\n    System.out.println("Number conversion error");\n} catch (ArithmeticException e) {\n    System.out.println("Cannot divide by zero");\n} catch (Exception e) {\n    System.out.println("Unexpected error: " + e.getMessage());\n}',
+                'finally-block': '// Try with finally\ntry {\n    FileReader file = new FileReader("example.txt");\n    // File operations\n} catch (FileNotFoundException e) {\n    System.out.println("File not found");\n} finally {\n    file.close();  // Always executed\n}',
+                'custom-exception': '// Custom exception\npublic class CustomException extends Exception {\n    public CustomException(String message) {\n        super(message);\n    }\n}\n\ntry {\n    throw new CustomException("Something went wrong");\n} catch (CustomException e) {\n    System.out.println("Caught custom error: " + e.getMessage());\n}'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const exceptionButtons = document.querySelectorAll('.exception-btn');
+
+        let currentLanguage = '';
+        let currentExceptionType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        exceptionButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentExceptionType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentExceptionType) {
+                codeDisplay.textContent = exceptionStatements[currentLanguage][currentExceptionType];
+            } else {
+                codeDisplay.textContent = 'Select a language and exception type to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>

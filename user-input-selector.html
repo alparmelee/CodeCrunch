@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Input in Different Programming Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .input-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .input-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .input-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Input Methods in Different Programming Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="input-types">
+            <button class="input-btn" data-type="string">String Input</button>
+            <button class="input-btn" data-type="integer">Integer Input</button>
+            <button class="input-btn" data-type="console">Console Input</button>
+            <button class="input-btn" data-type="dialog">Dialog Input</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and input type to see its method!</pre>
+    </div>
+
+    <script>
+        const userInputMethods = {
+            python: {
+                string: '# Method 1: Using input()\nname = input("Enter your name: ")\n\n# Method 2: With type conversion\nage = int(input("Enter your age: "))',
+                integer: 'age = int(input("Enter your age: "))\nprint(f"You are {age} years old")',
+                console: '# Input with input()\nuser_input = input("Enter something: ")\nprint("You entered:", user_input)',
+                dialog: '# Python typically uses input() for console\n# For GUI, use tkinter\nimport tkinter as tk\nfrom tkinter import simpledialog\n\nroot = tk.Tk()\nroot.withdraw()\nname = simpledialog.askstring("Input", "Enter your name:")'
+            },
+            lua: {
+                string: '-- Using io.read()\nprint("Enter your name: ")\nname = io.read()\n\n-- Reading a number\nprint("Enter your age: ")\nage = tonumber(io.read())',
+                integer: 'print("Enter your age: ")\nage = tonumber(io.read())\nprint("You are " .. age .. " years old")',
+                console: '-- Basic input\nprint("Enter something: ")\nuser_input = io.read()\nprint("You entered: " .. user_input)',
+                dialog: '-- Lua typically uses console input\n-- For GUI, you would need an external library\nprint("Lua primarily uses console input")'
+            },
+            ruby: {
+                string: '# Using gets.chomp\nprint "Enter your name: "\nname = gets.chomp\n\n# With type conversion\nprint "Enter your age: "\nage = gets.chomp.to_i',
+                integer: 'print "Enter your age: "\nage = gets.chomp.to_i\nputs "You are #{age} years old"',
+                console: '# Input method\nprint "Enter something: "\nuser_input = gets.chomp\nputs "You entered: #{user_input}"',
+                dialog: '# Ruby console input\n# For GUI, use libraries like Shoes or Tk\nrequire "tk"\nroot = TkRoot.new\nname = TkDialog.new.ask("Enter your name")'
+            },
+            javascript: {
+                string: '// Browser-based prompt\nlet name = prompt("Enter your name:");\n\n// Node.js console input\nconst readline = require("readline");\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout\n});\nrl.question("Enter your name: ", (name) => {\n    console.log(`Hello, ${name}`);\n    rl.close();\n});',
+                integer: '// Browser prompt\nlet age = parseInt(prompt("Enter your age:"));\n\n// Node.js input\nrl.question("Enter your age: ", (age) => {\n    console.log(`You are ${age} years old`);\n    rl.close();\n});',
+                console: '// Browser alert/prompt\nlet userInput = prompt("Enter something:");\nconsole.log("You entered:", userInput);',
+                dialog: '// Browser-based\nlet name = prompt("Enter your name:");\n// For desktop apps, use Electron\nconst { dialog } = require("electron");'
+            },
+            php: {
+                string: '<?php\n// Using readline\n$name = readline("Enter your name: ");\n\n// Using fgets\necho "Enter your age: ";\n$age = trim(fgets(STDIN));',
+                integer: '<?php\necho "Enter your age: ";\n$age = (int)trim(fgets(STDIN));\necho "You are $age years old";',
+                console: '<?php\n// Console input\necho "Enter something: ";\n$userInput = trim(fgets(STDIN));\necho "You entered: $userInput";',
+                dialog: '<?php\n// PHP typically uses console input\n// For web: use HTML forms\n// For desktop: use framework-specific methods'
+            },
+            c: {
+                string: '// Using scanf\nchar name[50];\nprintf("Enter your name: ");\nscanf("%49s", name);\n\n// Using fgets\nchar input[50];\nfgets(input, sizeof(input), stdin);',
+                integer: '// Integer input\nint age;\nprintf("Enter your age: ");\nscanf("%d", &age);\nprintf("You are %d years old", age);',
+                console: '// Console input methods\nchar buffer[100];\nprintf("Enter something: ");\nfgets(buffer, sizeof(buffer), stdin);\nprintf("You entered: %s", buffer);',
+                dialog: '// C typically uses console input\n// GUI requires external libraries like GTK'
+            },
+            cpp: {
+                string: '// Using cin\nstring name;\ncout << "Enter your name: ";\ngetline(cin, name);\n\n// Alternative input methods\nchar input[50];\ncin.getline(input, 50);',
+                integer: '// Integer input\nint age;\ncout << "Enter your age: ";\ncin >> age;\ncout << "You are " << age << " years old";',
+                console: '// Console input\nstring userInput;\ncout << "Enter something: ";\ngetline(cin, userInput);\ncout << "You entered: " << userInput;',
+                dialog: '// C++ console input\n// For GUI: use Qt or wxWidgets libraries'
+            },
+            csharp: {
+                string: '// Console input\nConsole.Write("Enter your name: ");\nstring name = Console.ReadLine();\n\n// With parsing\nConsole.Write("Enter your age: ");\nint age = int.Parse(Console.ReadLine());',
+                integer: '// Integer input\nConsole.Write("Enter your age: ");\nint age = int.Parse(Console.ReadLine());\nConsole.WriteLine($"You are {age} years old");',
+                console: '// Console input method\nConsole.Write("Enter something: ");\nstring userInput = Console.ReadLine();\nConsole.WriteLine($"You entered: {userInput}");',
+                dialog: '// Windows Forms dialog\nusing System.Windows.Forms;\nstring name = Interaction.InputBox("Enter your name", "Input");'
+            },
+            java: {
+                string: '// Using Scanner\nScanner scanner = new Scanner(System.in);\nSystem.out.print("Enter your name: ");\nString name = scanner.nextLine();\n\n// Using BufferedReader\nBufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\nString input = reader.readLine();',
+                integer: '// Integer input\nScanner scanner = new Scanner(System.in);\nSystem.out.print("Enter your age: ");\nint age = scanner.nextInt();\nSystem.out.println("You are " + age + " years old");',
+                console: '// Console input methods\nScanner scanner = new Scanner(System.in);\nSystem.out.print("Enter something: ");\nString userInput = scanner.nextLine();\nSystem.out.println("You entered: " + userInput);',
+                dialog: '// Swing dialog input\nString name = JOptionPane.showInputDialog("Enter your name");'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const inputButtons = document.querySelectorAll('.input-btn');
+
+        let currentLanguage = '';
+        let currentInputType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        inputButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentInputType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentInputType) {
+                codeDisplay.textContent = userInputMethods[currentLanguage][currentInputType];
+            } else {
+                codeDisplay.textContent = 'Select a language and input type to see its method!';
+            }
+        }
+    </script>
+</body>
+</html>

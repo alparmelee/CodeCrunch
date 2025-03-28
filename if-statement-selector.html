@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>If Statements in Different Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .if-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .if-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .if-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>If Statements in Different Programming Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="if-types">
+            <button class="if-btn" data-type="basic">Basic If</button>
+            <button class="if-btn" data-type="if-else">If-Else</button>
+            <button class="if-btn" data-type="if-elif-else">If-Elif-Else</button>
+            <button class="if-btn" data-type="nested">Nested If</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and if statement type to see its definition!</pre>
+    </div>
+
+    <script>
+        const ifStatements = {
+            python: {
+                basic: '# Basic if statement\nage = 20\nif age >= 18:\n    print("You are an adult")',
+                'if-else': '# If-else statement\nage = 15\nif age >= 18:\n    print("You are an adult")\nelse:\n    print("You are a minor")',
+                'if-elif-else': '# If-elif-else statement\nscore = 75\nif score >= 90:\n    print("A grade")\nelif score >= 80:\n    print("B grade")\nelif score >= 70:\n    print("C grade")\nelse:\n    print("Fail")',
+                nested: '# Nested if statements\nage = 20\nmoney = 1000\nif age >= 18:\n    if money > 500:\n        print("You can buy a ticket")\n    else:\n        print("Not enough money")'
+            },
+            lua: {
+                basic: '-- Basic if statement\nage = 20\nif age >= 18 then\n    print("You are an adult")\nend',
+                'if-else': '-- If-else statement\nage = 15\nif age >= 18 then\n    print("You are an adult")\nelse\n    print("You are a minor")\nend',
+                'if-elif-else': '-- If-elseif-else statement\nscore = 75\nif score >= 90 then\n    print("A grade")\nelseif score >= 80 then\n    print("B grade")\nelseif score >= 70 then\n    print("C grade")\nelse\n    print("Fail")\nend',
+                nested: '-- Nested if statements\nage = 20\nmoney = 1000\nif age >= 18 then\n    if money > 500 then\n        print("You can buy a ticket")\n    else\n        print("Not enough money")\n    end\nend'
+            },
+            ruby: {
+                basic: '# Basic if statement\nage = 20\nif age >= 18\n    puts "You are an adult"\nend',
+                'if-else': '# If-else statement\nage = 15\nif age >= 18\n    puts "You are an adult"\nelse\n    puts "You are a minor"\nend',
+                'if-elif-else': '# If-elsif-else statement\nscore = 75\nif score >= 90\n    puts "A grade"\nelsif score >= 80\n    puts "B grade"\nelsif score >= 70\n    puts "C grade"\nelse\n    puts "Fail"\nend',
+                nested: '# Nested if statements\nage = 20\nmoney = 1000\nif age >= 18\n    if money > 500\n        puts "You can buy a ticket"\n    else\n        puts "Not enough money"\n    end\nend'
+            },
+            javascript: {
+                basic: '// Basic if statement\nlet age = 20;\nif (age >= 18) {\n    console.log("You are an adult");\n}',
+                'if-else': '// If-else statement\nlet age = 15;\nif (age >= 18) {\n    console.log("You are an adult");\n} else {\n    console.log("You are a minor");\n}',
+                'if-elif-else': '// If-else if-else statement\nlet score = 75;\nif (score >= 90) {\n    console.log("A grade");\n} else if (score >= 80) {\n    console.log("B grade");\n} else if (score >= 70) {\n    console.log("C grade");\n} else {\n    console.log("Fail");\n}',
+                nested: '// Nested if statements\nlet age = 20;\nlet money = 1000;\nif (age >= 18) {\n    if (money > 500) {\n        console.log("You can buy a ticket");\n    } else {\n        console.log("Not enough money");\n    }\n}'
+            },
+            php: {
+                basic: '<?php\n// Basic if statement\n$age = 20;\nif ($age >= 18) {\n    echo "You are an adult";\n}',
+                'if-else': '<?php\n// If-else statement\n$age = 15;\nif ($age >= 18) {\n    echo "You are an adult";\n} else {\n    echo "You are a minor";\n}',
+                'if-elif-else': '<?php\n// If-elseif-else statement\n$score = 75;\nif ($score >= 90) {\n    echo "A grade";\n} elseif ($score >= 80) {\n    echo "B grade";\n} elseif ($score >= 70) {\n    echo "C grade";\n} else {\n    echo "Fail";\n}',
+                nested: '<?php\n// Nested if statements\n$age = 20;\n$money = 1000;\nif ($age >= 18) {\n    if ($money > 500) {\n        echo "You can buy a ticket";\n    } else {\n        echo "Not enough money";\n    }\n}'
+            },
+            c: {
+                basic: '// Basic if statement\nint age = 20;\nif (age >= 18) {\n    printf("You are an adult\\n");\n}',
+                'if-else': '// If-else statement\nint age = 15;\nif (age >= 18) {\n    printf("You are an adult\\n");\n} else {\n    printf("You are a minor\\n");\n}',
+                'if-elif-else': '// If-else if-else statement\nint score = 75;\nif (score >= 90) {\n    printf("A grade\\n");\n} else if (score >= 80) {\n    printf("B grade\\n");\n} else if (score >= 70) {\n    printf("C grade\\n");\n} else {\n    printf("Fail\\n");\n}',
+                nested: '// Nested if statements\nint age = 20;\nint money = 1000;\nif (age >= 18) {\n    if (money > 500) {\n        printf("You can buy a ticket\\n");\n    } else {\n        printf("Not enough money\\n");\n    }\n}'
+            },
+            cpp: {
+                basic: '// Basic if statement\nint age = 20;\nif (age >= 18) {\n    std::cout << "You are an adult" << std::endl;\n}',
+                'if-else': '// If-else statement\nint age = 15;\nif (age >= 18) {\n    std::cout << "You are an adult" << std::endl;\n} else {\n    std::cout << "You are a minor" << std::endl;\n}',
+                'if-elif-else': '// If-else if-else statement\nint score = 75;\nif (score >= 90) {\n    std::cout << "A grade" << std::endl;\n} else if (score >= 80) {\n    std::cout << "B grade" << std::endl;\n} else if (score >= 70) {\n    std::cout << "C grade" << std::endl;\n} else {\n    std::cout << "Fail" << std::endl;\n}',
+                nested: '// Nested if statements\nint age = 20;\nint money = 1000;\nif (age >= 18) {\n    if (money > 500) {\n        std::cout << "You can buy a ticket" << std::endl;\n    } else {\n        std::cout << "Not enough money" << std::endl;\n    }\n}'
+            },
+            csharp: {
+                basic: '// Basic if statement\nint age = 20;\nif (age >= 18) {\n    Console.WriteLine("You are an adult");\n}',
+                'if-else': '// If-else statement\nint age = 15;\nif (age >= 18) {\n    Console.WriteLine("You are an adult");\n} else {\n    Console.WriteLine("You are a minor");\n}',
+                'if-elif-else': '// If-else if-else statement\nint score = 75;\nif (score >= 90) {\n    Console.WriteLine("A grade");\n} else if (score >= 80) {\n    Console.WriteLine("B grade");\n} else if (score >= 70) {\n    Console.WriteLine("C grade");\n} else {\n    Console.WriteLine("Fail");\n}',
+                nested: '// Nested if statements\nint age = 20;\nint money = 1000;\nif (age >= 18) {\n    if (money > 500) {\n        Console.WriteLine("You can buy a ticket");\n    } else {\n        Console.WriteLine("Not enough money");\n    }\n}'
+            },
+            java: {
+                basic: '// Basic if statement\nint age = 20;\nif (age >= 18) {\n    System.out.println("You are an adult");\n}',
+                'if-else': '// If-else statement\nint age = 15;\nif (age >= 18) {\n    System.out.println("You are an adult");\n} else {\n    System.out.println("You are a minor");\n}',
+                'if-elif-else': '// If-else if-else statement\nint score = 75;\nif (score >= 90) {\n    System.out.println("A grade");\n} else if (score >= 80) {\n    System.out.println("B grade");\n} else if (score >= 70) {\n    System.out.println("C grade");\n} else {\n    System.out.println("Fail");\n}',
+                nested: '// Nested if statements\nint age = 20;\nint money = 1000;\nif (age >= 18) {\n    if (money > 500) {\n        System.out.println("You can buy a ticket");\n    } else {\n        System.out.println("Not enough money");\n    }\n}'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const ifButtons = document.querySelectorAll('.if-btn');
+
+        let currentLanguage = '';
+        let currentIfType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        ifButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentIfType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentIfType) {
+                codeDisplay.textContent = ifStatements[currentLanguage][currentIfType];
+            } else {
+                codeDisplay.textContent = 'Select a language and if statement type to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>

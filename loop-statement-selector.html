@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loops in Different Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .loop-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .loop-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .loop-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Loops in Different Programming Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="loop-types">
+            <button class="loop-btn" data-type="for-loop">For Loop</button>
+            <button class="loop-btn" data-type="while-loop">While Loop</button>
+            <button class="loop-btn" data-type="do-while-loop">Do-While Loop</button>
+            <button class="loop-btn" data-type="foreach-loop">Foreach/Iteration Loop</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and loop type to see its definition!</pre>
+    </div>
+
+    <script>
+        const loopStatements = {
+            python: {
+                'for-loop': '# For loop with range\nfor i in range(5):\n    print(f"Iteration {i}")',
+                'while-loop': '# While loop\ncounter = 0\nwhile counter < 5:\n    print(f"Counter: {counter}")\n    counter += 1',
+                'do-while-loop': '# Python doesn\'t have do-while, but can simulate:\ncounter = 0\nwhile True:\n    print(f"Counter: {counter}")\n    counter += 1\n    if counter >= 5:\n        break',
+                'foreach-loop': '# Iterating over a list\nfruits = ["apple", "banana", "cherry"]\nfor fruit in fruits:\n    print(fruit)'
+            },
+            lua: {
+                'for-loop': '-- For loop\nfor i = 1, 5 do\n    print("Iteration " .. i)\nend',
+                'while-loop': '-- While loop\nlocal counter = 0\nwhile counter < 5 do\n    print("Counter: " .. counter)\n    counter = counter + 1\nend',
+                'do-while-loop': '-- Do-while simulation\nlocal counter = 0\nrepeat\n    print("Counter: " .. counter)\n    counter = counter + 1\nuntil counter >= 5',
+                'foreach-loop': '-- Iterating over a table\nlocal fruits = {"apple", "banana", "cherry"}\nfor _, fruit in ipairs(fruits) do\n    print(fruit)\nend'
+            },
+            ruby: {
+                'for-loop': '# For loop\n5.times do |i|\n    puts "Iteration #{i}"\nend',
+                'while-loop': '# While loop\ncounter = 0\nwhile counter < 5\n    puts "Counter: #{counter}"\n    counter += 1\nend',
+                'do-while-loop': '# Do-while simulation\ncounter = 0\nbegin\n    puts "Counter: #{counter}"\n    counter += 1\nend while counter < 5',
+                'foreach-loop': '# Iterating over an array\nfruits = ["apple", "banana", "cherry"]\nfruits.each do |fruit|\n    puts fruit\nend'
+            },
+            javascript: {
+                'for-loop': '// Standard for loop\nfor (let i = 0; i < 5; i++) {\n    console.log(`Iteration ${i}`);\n}',
+                'while-loop': '// While loop\nlet counter = 0;\nwhile (counter < 5) {\n    console.log(`Counter: ${counter}`);\n    counter++;\n}',
+                'do-while-loop': '// Do-while loop\nlet counter = 0;\ndo {\n    console.log(`Counter: ${counter}`);\n    counter++;\n} while (counter < 5);',
+                'foreach-loop': '// Iterating over an array\nconst fruits = ["apple", "banana", "cherry"];\nfruits.forEach(fruit => {\n    console.log(fruit);\n});'
+            },
+            php: {
+                'for-loop': '<?php\n// For loop\nfor ($i = 0; $i < 5; $i++) {\n    echo "Iteration $i\\n";\n}',
+                'while-loop': '<?php\n// While loop\n$counter = 0;\nwhile ($counter < 5) {\n    echo "Counter: $counter\\n";\n    $counter++;\n}',
+                'do-while-loop': '<?php\n// Do-while loop\n$counter = 0;\ndo {\n    echo "Counter: $counter\\n";\n    $counter++;\n} while ($counter < 5);',
+                'foreach-loop': '<?php\n// Iterating over an array\n$fruits = ["apple", "banana", "cherry"];\nforeach ($fruits as $fruit) {\n    echo "$fruit\\n";\n}'
+            },
+            c: {
+                'for-loop': '// Standard for loop\nfor (int i = 0; i < 5; i++) {\n    printf("Iteration %d\\n", i);\n}',
+                'while-loop': '// While loop\nint counter = 0;\nwhile (counter < 5) {\n    printf("Counter: %d\\n", counter);\n    counter++;\n}',
+                'do-while-loop': '// Do-while loop\nint counter = 0;\ndo {\n    printf("Counter: %d\\n", counter);\n    counter++;\n} while (counter < 5);',
+                'foreach-loop': '// C doesn\'t have built-in foreach\n// Manual iteration over an array\nchar *fruits[] = {"apple", "banana", "cherry"};\nfor (int i = 0; i < 3; i++) {\n    printf("%s\\n", fruits[i]);\n}'
+            },
+            cpp: {
+                'for-loop': '// Standard for loop\nfor (int i = 0; i < 5; i++) {\n    std::cout << "Iteration " << i << std::endl;\n}',
+                'while-loop': '// While loop\nint counter = 0;\nwhile (counter < 5) {\n    std::cout << "Counter: " << counter << std::endl;\n    counter++;\n}',
+                'do-while-loop': '// Do-while loop\nint counter = 0;\ndo {\n    std::cout << "Counter: " << counter << std::endl;\n    counter++;\n} while (counter < 5);',
+                'foreach-loop': '// C++11 range-based for loop\nstd::vector<std::string> fruits = {"apple", "banana", "cherry"};\nfor (const auto& fruit : fruits) {\n    std::cout << fruit << std::endl;\n}'
+            },
+            csharp: {
+                'for-loop': '// Standard for loop\nfor (int i = 0; i < 5; i++) {\n    Console.WriteLine($"Iteration {i}");\n}',
+                'while-loop': '// While loop\nint counter = 0;\nwhile (counter < 5) {\n    Console.WriteLine($"Counter: {counter}");\n    counter++;\n}',
+                'do-while-loop': '// Do-while loop\nint counter = 0;\ndo {\n    Console.WriteLine($"Counter: {counter}");\n    counter++;\n} while (counter < 5);',
+                'foreach-loop': '// Foreach loop\nstring[] fruits = {"apple", "banana", "cherry"};\nforeach (string fruit in fruits) {\n    Console.WriteLine(fruit);\n}'
+            },
+            java: {
+                'for-loop': '// Standard for loop\nfor (int i = 0; i < 5; i++) {\n    System.out.println("Iteration " + i);\n}',
+                'while-loop': '// While loop\nint counter = 0;\nwhile (counter < 5) {\n    System.out.println("Counter: " + counter);\n    counter++;\n}',
+                'do-while-loop': '// Do-while loop\nint counter = 0;\ndo {\n    System.out.println("Counter: " + counter);\n    counter++;\n} while (counter < 5);',
+                'foreach-loop': '// Enhanced for loop\nString[] fruits = {"apple", "banana", "cherry"};\nfor (String fruit : fruits) {\n    System.out.println(fruit);\n}'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const loopButtons = document.querySelectorAll('.loop-btn');
+
+        let currentLanguage = '';
+        let currentLoopType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        loopButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentLoopType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentLoopType) {
+                codeDisplay.textContent = loopStatements[currentLanguage][currentLoopType];
+            } else {
+                codeDisplay.textContent = 'Select a language and loop type to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>

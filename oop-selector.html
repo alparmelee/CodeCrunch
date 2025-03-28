@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classes & Objects in Different Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .oop-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .oop-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .oop-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Classes & Objects in Different Programming Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C (Struct + Function)</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="oop-types">
+            <button class="oop-btn" data-type="class-definition">Class Definition</button>
+            <button class="oop-btn" data-type="constructor">Constructor</button>
+            <button class="oop-btn" data-type="inheritance">Inheritance</button>
+            <button class="oop-btn" data-type="encapsulation">Encapsulation</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and OOP concept to see its definition!</pre>
+    </div>
+
+    <script>
+        const oopStatements = {
+            python: {
+                'class-definition': '# Defining a simple class\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n    \n    def introduce(self):\n        print(f"Hi, I\'m {self.name}, {self.age} years old")\n\n# Creating an object\nperson = Person("Alice", 30)\nperson.introduce()',
+                'constructor': '# Constructor with default and custom parameters\nclass Car:\n    def __init__(self, make, model, year=2024):\n        self.make = make\n        self.model = model\n        self.year = year\n    \n    def display_info(self):\n        print(f"{self.year} {self.make} {self.model}")\n\n# Creating objects\ncar1 = Car("Toyota", "Camry")\ncar2 = Car("Tesla", "Model 3", 2023)',
+                'inheritance': '# Base class\nclass Animal:\n    def __init__(self, name):\n        self.name = name\n    \n    def speak(self):\n        print("Some sound")\n\n# Derived class\nclass Dog(Animal):\n    def speak(self):\n        print(f"{self.name} says Woof!")\n\n# Using inheritance\nmy_dog = Dog("Buddy")\nmy_dog.speak()',
+                'encapsulation': '# Private attributes and methods\nclass BankAccount:\n    def __init__(self, balance):\n        self.__balance = balance  # Private attribute\n    \n    def deposit(self, amount):\n        if amount > 0:\n            self.__balance += amount\n    \n    def get_balance(self):\n        return self.__balance\n\naccount = BankAccount(1000)\naccount.deposit(500)\nprint(account.get_balance())  # Accessing balance through method'
+            },
+            lua: {
+                'class-definition': '-- Simple class using metatables\nPerson = {}\nPerson.__index = Person\n\nfunction Person.new(name, age)\n    local self = setmetatable({}, Person)\n    self.name = name\n    self.age = age\n    return self\nend\n\nfunction Person:introduce()\n    print(string.format("Hi, I\'m %s, %d years old", self.name, self.age))\nend\n\n-- Creating an object\nlocal person = Person.new("Alice", 30)\nperson:introduce()',
+                'constructor': '-- Constructor with default parameters\nCar = {}\nCar.__index = Car\n\nfunction Car.new(make, model, year)\n    local self = setmetatable({}, Car)\n    self.make = make\n    self.model = model\n    self.year = year or 2024\n    return self\nend\n\nfunction Car:display_info()\n    print(string.format("%d %s %s", self.year, self.make, self.model))\nend\n\n-- Creating objects\nlocal car1 = Car.new("Toyota", "Camry")\nlocal car2 = Car.new("Tesla", "Model 3", 2023)',
+                'inheritance': '-- Base class\nAnimal = {}\nAnimal.__index = Animal\n\nfunction Animal.new(name)\n    local self = setmetatable({}, Animal)\n    self.name = name\n    return self\nend\n\nfunction Animal:speak()\n    print("Some sound")\nend\n\n-- Derived class\nDog = {}\nsetmetatable(Dog, {__index = Animal})\nDog.__index = Dog\n\nfunction Dog.new(name)\n    local self = Animal.new(name)\n    setmetatable(self, Dog)\n    return self\nend\n\nfunction Dog:speak()\n    print(self.name .. " says Woof!")\nend\n\n-- Using inheritance\nlocal my_dog = Dog.new("Buddy")\nmy_dog:speak()',
+                'encapsulation': '-- Simulating private attributes\nBankAccount = {}\nBankAccount.__index = BankAccount\n\nfunction BankAccount.new(balance)\n    local self = setmetatable({}, BankAccount)\n    local _balance = balance  -- Local variable acts as private\n    \n    function self.deposit(amount)\n        if amount > 0 then\n            _balance = _balance + amount\n        end\n    end\n    \n    function self.get_balance()\n        return _balance\n    end\n    \n    return self\nend\n\n-- Creating and using bank account\nlocal account = BankAccount.new(1000)\naccount.deposit(500)\nprint(account.get_balance())  -- Accessing balance through method'
+            },
+            ruby: {
+                'class-definition': '# Defining a simple class\nclass Person\n    def initialize(name, age)\n        @name = name  # Instance variable\n        @age = age\n    end\n    \n    def introduce\n        puts "Hi, I\'m #{@name}, #{@age} years old"\n    end\nend\n\n# Creating an object\nperson = Person.new("Alice", 30)\nperson.introduce',
+                'constructor': '# Constructor with default parameters\nclass Car\n    def initialize(make, model, year = 2024)\n        @make = make\n        @model = model\n        @year = year\n    end\n    \n    def display_info\n        puts "#{@year} #{@make} #{@model}"\n    end\nend\n\n# Creating objects\ncar1 = Car.new("Toyota", "Camry")\ncar2 = Car.new("Tesla", "Model 3", 2023)',
+                'inheritance': '# Base class\nclass Animal\n    def initialize(name)\n        @name = name\n    end\n    \n    def speak\n        puts "Some sound"\n    end\nend\n\n# Derived class\nclass Dog < Animal\n    def speak\n        puts "#{@name} says Woof!"\n    end\nend\n\n# Using inheritance\nmy_dog = Dog.new("Buddy")\nmy_dog.speak',
+                'encapsulation': '# Private methods and attributes\nclass BankAccount\n    def initialize(balance)\n        @balance = balance  # Protected attribute\n    end\n    \n    def deposit(amount)\n        @balance += amount if amount > 0\n    end\n    \n    def get_balance\n        @balance\n    end\n    \n    private\n    \n    def validate_amount(amount)\n        amount > 0\n    end\nend\n\naccount = BankAccount.new(1000)\naccount.deposit(500)\nputs account.get_balance'
+            },
+            javascript: {
+                'class-definition': '// ES6 Class Definition\nclass Person {\n    constructor(name, age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    introduce() {\n        console.log(`Hi, I\'m ${this.name}, ${this.age} years old`);\n    }\n}\n\n// Creating an object\nconst person = new Person("Alice", 30);\nperson.introduce();',
+                'constructor': '// Constructor with default parameters\nclass Car {\n    constructor(make, model, year = 2024) {\n        this.make = make;\n        this.model = model;\n        this.year = year;\n    }\n    \n    displayInfo() {\n        console.log(`${this.year} ${this.make} ${this.model}`);\n    }\n}\n\n// Creating objects\nconst car1 = new Car("Toyota", "Camry");\nconst car2 = new Car("Tesla", "Model 3", 2023);',
+                'inheritance': '// Base class\nclass Animal {\n    constructor(name) {\n        this.name = name;\n    }\n    \n    speak() {\n        console.log("Some sound");\n    }\n}\n\n// Derived class\nclass Dog extends Animal {\n    speak() {\n        console.log(`${this.name} says Woof!`);\n    }\n}\n\n// Using inheritance\nconst myDog = new Dog("Buddy");\nmyDog.speak();',
+                'encapsulation': '// Private fields (modern JS)\nclass BankAccount {\n    #balance;  // Private field\n    \n    constructor(initialBalance) {\n        this.#balance = initialBalance;\n    }\n    \n    deposit(amount) {\n        if (this.#validateAmount(amount)) {\n            this.#balance += amount;\n        }\n    }\n    \n    getBalance() {\n        return this.#balance;\n    }\n    \n    #validateAmount(amount) {  // Private method\n        return amount > 0;\n    }\n}\n\nconst account = new BankAccount(1000);\naccount.deposit(500);\nconsole.log(account.getBalance());'
+            },
+            php: {
+                'class-definition': '<?php\n// Defining a simple class\nclass Person {\n    private $name;\n    private $age;\n    \n    public function __construct($name, $age) {\n        $this->name = $name;\n        $this->age = $age;\n    }\n    \n    public function introduce() {\n        echo "Hi, I\'m {$this->name}, {$this->age} years old";\n    }\n}\n\n// Creating an object\n$person = new Person("Alice", 30);\n$person->introduce();',
+                'constructor': '<?php\n// Constructor with default parameters\nclass Car {\n    private $make;\n    private $model;\n    private $year;\n    \n    public function __construct($make, $model, $year = 2024) {\n        $this->make = $make;\n        $this->model = $model;\n        $this->year = $year;\n    }\n    \n    public function displayInfo() {\n        echo "{$this->year} {$this->make} {$this->model}";\n    }\n}\n\n// Creating objects\n$car1 = new Car("Toyota", "Camry");\n$car2 = new Car("Tesla", "Model 3", 2023);',
+                'inheritance': '<?php\n// Base class\nclass Animal {\n    protected $name;\n    \n    public function __construct($name) {\n        $this->name = $name;\n    }\n    \n    public function speak() {\n        echo "Some sound";\n    }\n}\n\n// Derived class\nclass Dog extends Animal {\n    public function speak() {\n        echo "{$this->name} says Woof!";\n    }\n}\n\n// Using inheritance\n$myDog = new Dog("Buddy");\n$myDog->speak();',
+                'encapsulation': '<?php\n// Encapsulation with getters and setters\nclass BankAccount {\n    private $balance;\n    \n    public function __construct($initialBalance) {\n        $this->balance = $initialBalance;\n    }\n    \n    public function deposit($amount) {\n        if ($this->validateAmount($amount)) {\n            $this->balance += $amount;\n        }\n    }\n    \n    public function getBalance() {\n        return $this->balance;\n    }\n    \n    private function validateAmount($amount) {\n        return $amount > 0;\n    }\n}\n\n$account = new BankAccount(1000);\n$account->deposit(500);\necho $account->getBalance();'
+            },
+            c: {
+                'class-definition': '// Simulating classes with structs and functions in C\n#include <stdio.h>\n#include <string.h>\n\n// Struct to represent object state\nstruct Person {\n    char name[50];\n    int age;\n};\n\n// "Method" to initialize Person\nvoid person_init(struct Person *p, const char *name, int age) {\n    strcpy(p->name, name);\n    p->age = age;\n}\n\n// "Method" to introduce\nvoid person_introduce(struct Person *p) {\n    printf("Hi, I\'m %s, %d years old\\n", p->name, p->age);\n}\n\nint main() {\n    struct Person person;\n    person_init(&person, "Alice", 30);\n    person_introduce(&person);\n    return 0;\n}',
+                'constructor': '// Constructor-like initialization\n#include <stdio.h>\n#include <string.h>\n\nstruct Car {\n    char make[50];\n    char model[50];\n    int year;\n};\n\nvoid car_init(struct Car *c, const char *make, \n              const char *model, int year) {\n    strcpy(c->make, make);\n    strcpy(c->model, model);\n    c->year = year ? year : 2024;\n}\n\nvoid car_display_info(struct Car *c) {\n    printf("%d %s %s\\n", c->year, c->make, c->model);\n}\n\nint main() {\n    struct Car car1, car2;\n    car_init(&car1, "Toyota", "Camry", 0);\n    car_init(&car2, "Tesla", "Model 3", 2023);\n    car_display_info(&car1);\n    car_display_info(&car2);\n    return 0;\n}',
+                'inheritance': '// Simulating inheritance with composition\n#include <stdio.h>\n#include <string.h>\n\nstruct Animal {\n    char name[50];\n};\n\nstruct Dog {\n    struct Animal base;  // Composition\n};\n\nvoid animal_init(struct Animal *a, const char *name) {\n    strcpy(a->name, name);\n}\n\nvoid animal_speak(struct Animal *a) {\n    printf("Some sound\\n");\n}\n\nvoid dog_speak(struct Dog *d) {\n    printf("%s says Woof!\\n", d->base.name);\n}\n\nint main() {\n    struct Dog my_dog;\n    animal_init(&my_dog.base, "Buddy");\n    dog_speak(&my_dog);\n    return 0;\n}',
+                'encapsulation': '// Encapsulation through opaque pointers and private structs\n#include <stdio.h>\n#include <stdlib.h>\n\n// Opaque pointer to private implementation\nstruct BankAccount;\n\n// Constructor\nstruct BankAccount* bank_account_create(double initial_balance);\n\n// Methods\nvoid bank_account_deposit(struct BankAccount *account, double amount);\ndouble bank_account_get_balance(struct BankAccount *account);\n\n// Destructor\nvoid bank_account_destroy(struct BankAccount *account);\n\n// Actual implementation would be in a .c file\nint main() {\n    struct BankAccount *account = bank_account_create(1000);\n    bank_account_deposit(account, 500);\n    printf("Balance: %.2f\\n", bank_account_get_balance(account));\n    bank_account_destroy(account);\n    return 0;\n}'
+            },
+            cpp: {
+                'class-definition': '// C++ Class Definition\n#include <iostream>\n#include <string>\n\nclass Person {\nprivate:\n    std::string name;\n    int age;\n\npublic:\n    Person(std::string n, int a) : name(n), age(a) {}\n    \n    void introduce() {\n        std::cout << "Hi, I\'m " << name << ", " \n                  << age << " years old" << std::endl;\n    }\n};\n\nint main() {\n    Person person("Alice", 30);\n    person.introduce();\n    return 0;\n}',
+                'constructor': '// Constructor with Default Parameters\n#include <iostream>\n#include <string>\n\nclass Car {\nprivate:\n    std::string make;\n    std::string model;\n    int year;\n\npublic:\n    Car(std::string m, std::string mod, int y = 2024) :\n        make(m), model(mod), year(y) {}\n    \n    void displayInfo() {\n        std::cout << year << " " << make \n                  << " " << model << std::endl;\n    }\n};\n\nint main() {\n    Car car1("Toyota", "Camry");\n    Car car2("Tesla", "Model 3", 2023);\n    car1.displayInfo();\n    car2.displayInfo();\n    return 0;\n}',
+                'inheritance': '// Inheritance in C++\n#include <iostream>\n#include <string>\n\nclass Animal {\nprotected:\n    std::string name;\n\npublic:\n    Animal(std::string n) : name(n) {}\n    \n    virtual void speak() {\n        std::cout << "Some sound" << std::endl;\n    }\n};\n\nclass Dog : public Animal {\npublic:\n    Dog(std::string n) : Animal(n) {}\n    \n    void speak() override {\n        std::cout << name << " says Woof!" << std::endl;\n    }\n};\n\nint main() {\n    Dog myDog("Buddy");\n    myDog.speak();\n    return 0;\n}',
+                'encapsulation': '// Encapsulation in C++\n#include <iostream>\n#include <stdexcept>\n\nclass BankAccount {\nprivate:\n    double balance;\n    \n    bool validateAmount(double amount) {\n        return amount > 0;\n    }\n\npublic:\n    BankAccount(double initialBalance) : balance(initialBalance) {}\n    \n    void deposit(double amount) {\n        if (validateAmount(amount)) {\n            balance += amount;\n        } else {\n            throw std::invalid_argument("Invalid deposit amount");\n        }\n    }\n    \n    double getBalance() const {\n        return balance;\n    }\n};\n\nint main() {\n    BankAccount account(1000);\n    account.deposit(500);\n    std::cout << "Balance: " << account.getBalance() << std::endl;\n    return 0;\n}'
+            },
+            csharp: {
+                'class-definition': '// C# Class Definition\nusing System;\n\nclass Person {\n    private string name;\n    private int age;\n    \n    public Person(string name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    public void Introduce() {\n        Console.WriteLine($"Hi, I\'m {name}, {age} years old");\n    }\n}\n\nclass Program {\n    static void Main() {\n        Person person = new Person("Alice", 30);\n        person.Introduce();\n    }\n}',
+                'constructor': '// Constructor with Optional Parameters\nusing System;\n\nclass Car {\n    private string make;\n    private string model;\n    private int year;\n    \n    public Car(string make, string model, int year = 2024) {\n        this.make = make;\n        this.model = model;\n        this.year = year;\n    }\n    \n    public void DisplayInfo() {\n        Console.WriteLine($"{year} {make} {model}");\n    }\n}\n\nclass Program {\n    static void Main() {\n        Car car1 = new Car("Toyota", "Camry");\n        Car car2 = new Car("Tesla", "Model 3", 2023);\n        car1.DisplayInfo();\n        car2.DisplayInfo();\n    }\n}',
+                'inheritance': '// Inheritance in C#\nusing System;\n\nclass Animal {\n    protected string name;\n    \n    public Animal(string name) {\n        this.name = name;\n    }\n    \n    public virtual void Speak() {\n        Console.WriteLine("Some sound");\n    }\n}\n\nclass Dog : Animal {\n    public Dog(string name) : base(name) {}\n    \n    public override void Speak() {\n        Console.WriteLine($"{name} says Woof!");\n    }\n}\n\nclass Program {\n    static void Main() {\n        Dog myDog = new Dog("Buddy");\n        myDog.Speak();\n    }\n}',
+                'encapsulation': '// Encapsulation with Properties\nusing System;\n\nclass BankAccount {\n    private decimal balance;\n    \n    public BankAccount(decimal initialBalance) {\n        Balance = initialBalance;\n    }\n    \n    public decimal Balance {\n        get { return balance; }\n        private set {\n            if (value >= 0) balance = value;\n        }\n    }\n    \n    public void Deposit(decimal amount) {\n        if (ValidateAmount(amount)) {\n            Balance += amount;\n        }\n    }\n    \n    private bool ValidateAmount(decimal amount) {\n        return amount > 0;\n    }\n}\n\nclass Program {\n    static void Main() {\n        BankAccount account = new BankAccount(1000);\n        account.Deposit(500);\n        Console.WriteLine($"Balance: {account.Balance}");\n    }\n}'
+            },
+            java: {
+                'class-definition': '// Java Class Definition\npublic class Person {\n    private String name;\n    private int age;\n    \n    public Person(String name, int age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    public void introduce() {\n        System.out.println("Hi, I\'m " + name + ", " + age + " years old");\n    }\n    \n    public static void main(String[] args) {\n        Person person = new Person("Alice", 30);\n        person.introduce();\n    }\n}',
+                'constructor': '// Constructor with Default Value\npublic class Car {\n    private String make;\n    private String model;\n    private int year;\n    \n    public Car(String make, String model) {\n        this(make, model, 2024);\n    }\n    \n    public Car(String make, String model, int year) {\n        this.make = make;\n        this.model = model;\n        this.year = year;\n    }\n    \n    public void displayInfo() {\n        System.out.println(year + " " + make + " " + model);\n    }\n    \n    public static void main(String[] args) {\n        Car car1 = new Car("Toyota", "Camry");\n        Car car2 = new Car("Tesla", "Model 3", 2023);\n        car1.displayInfo();\n        car2.displayInfo();\n    }\n}',
+                'inheritance': '// Inheritance in Java\npublic class Animal {\n    protected String name;\n    \n    public Animal(String name) {\n        this.name = name;\n    }\n    \n    public void speak() {\n        System.out.println("Some sound");\n    }\n}\n\npublic class Dog extends Animal {\n    public Dog(String name) {\n        super(name);\n    }\n    \n    @Override\n    public void speak() {\n        System.out.println(name + " says Woof!");\n    }\n    \n    public static void main(String[] args) {\n        Dog myDog = new Dog("Buddy");\n        myDog.speak();\n    }\n}',
+                'encapsulation': '// Encapsulation with Getters and Setters\npublic class BankAccount {\n    private double balance;\n    \n    public BankAccount(double initialBalance) {\n        this.balance = initialBalance;\n    }\n    \n    public void deposit(double amount) {\n        if (validateAmount(amount)) {\n            this.balance += amount;\n        }\n    }\n    \n    public double getBalance() {\n        return balance;\n    }\n    \n    private boolean validateAmount(double amount) {\n        return amount > 0;\n    }\n    \n    public static void main(String[] args) {\n        BankAccount account = new BankAccount(1000);\n        account.deposit(500);\n        System.out.println("Balance: " + account.getBalance());\n    }\n}'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const oopButtons = document.querySelectorAll('.oop-btn');
+
+        let currentLanguage = '';
+        let currentOopType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        oopButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentOopType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentOopType) {
+                codeDisplay.textContent = oopStatements[currentLanguage][currentOopType];
+            } else {
+                codeDisplay.textContent = 'Select a language and OOP concept to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Variable Definitions Across Languages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .variables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .variable-btn {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .variable-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Variable Definitions in Different Programming Languages</h1>
+        <select id="languageSelector">
+            <option value="">Select a Programming Language</option>
+            <option value="python">Python</option>
+            <option value="lua">Lua</option>
+            <option value="ruby">Ruby</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="java">Java</option>
+        </select>
+
+        <div class="variables">
+            <button class="variable-btn" data-type="string">String Variables</button>
+            <button class="variable-btn" data-type="int">Integer Variables</button>
+            <button class="variable-btn" data-type="float">Float Variables</button>
+            <button class="variable-btn" data-type="boolean">Boolean Variables</button>
+            <button class="variable-btn" data-type="list">List/Array Variables</button>
+        </div>
+
+        <pre id="codeDisplay">Select a language and variable type to see its definition!</pre>
+    </div>
+
+    <script>
+        const variableDefinitions = {
+            python: {
+                string: 'name = "Tom"\ngreeting = \'Hello\'',
+                int: 'age = 25\ncount = 5',
+                float: 'height = 5.9\npi = 3.14159',
+                boolean: 'is_student = True\nis_working = False',
+                list: 'fruits = ["apple", "banana", "cherry"]\nnumbers = [1, 2, 3, 4, 5]'
+            },
+            lua: {
+                string: 'name = "Tom"\ngreeting = \'Hello\'',
+                int: 'age = 25\ncount = 5',
+                float: 'height = 5.9\npi = 3.14159',
+                boolean: 'is_student = true\nis_working = false',
+                list: 'fruits = {"apple", "banana", "cherry"}\nnumbers = {1, 2, 3, 4, 5}'
+            },
+            ruby: {
+                string: 'name = "Tom"\ngreeting = \'Hello\'',
+                int: 'age = 25\ncount = 5',
+                float: 'height = 5.9\npi = 3.14159',
+                boolean: 'is_student = true\nis_working = false',
+                list: 'fruits = ["apple", "banana", "cherry"]\nnumbers = [1, 2, 3, 4, 5]'
+            },
+            javascript: {
+                string: 'let name = "Tom";\nconst greeting = \'Hello\';',
+                int: 'let age = 25;\nconst count = 5;',
+                float: 'let height = 5.9;\nconst pi = 3.14159;',
+                boolean: 'let isStudent = true;\nconst isWorking = false;',
+                list: 'let fruits = ["apple", "banana", "cherry"];\nconst numbers = [1, 2, 3, 4, 5];'
+            },
+            php: {
+                string: '$name = "Tom";\n$greeting = \'Hello\';',
+                int: '$age = 25;\n$count = 5;',
+                float: '$height = 5.9;\n$pi = 3.14159;',
+                boolean: '$is_student = true;\n$is_working = false;',
+                list: '$fruits = ["apple", "banana", "cherry"];\n$numbers = [1, 2, 3, 4, 5];'
+            },
+            c: {
+                string: 'char name[] = "Tom";\nchar greeting[] = "Hello";',
+                int: 'int age = 25;\nint count = 5;',
+                float: 'float height = 5.9;\nfloat pi = 3.14159;',
+                boolean: 'bool is_student = true;\nbool is_working = false;',
+                list: 'int numbers[] = {1, 2, 3, 4, 5};\nchar *fruits[] = {"apple", "banana", "cherry"};'
+            },
+            cpp: {
+                string: 'std::string name = "Tom";\nstd::string greeting = "Hello";',
+                int: 'int age = 25;\nint count = 5;',
+                float: 'float height = 5.9;\nfloat pi = 3.14159;',
+                boolean: 'bool is_student = true;\nbool is_working = false;',
+                list: 'std::vector<int> numbers = {1, 2, 3, 4, 5};\nstd::vector<std::string> fruits = {"apple", "banana", "cherry"};'
+            },
+            csharp: {
+                string: 'string name = "Tom";\nstring greeting = "Hello";',
+                int: 'int age = 25;\nint count = 5;',
+                float: 'float height = 5.9f;\nfloat pi = 3.14159f;',
+                boolean: 'bool isStudent = true;\nbool isWorking = false;',
+                list: 'List<int> numbers = new List<int> {1, 2, 3, 4, 5};\nList<string> fruits = new List<string> {"apple", "banana", "cherry"};'
+            },
+            java: {
+                string: 'String name = "Tom";\nString greeting = "Hello";',
+                int: 'int age = 25;\nint count = 5;',
+                float: 'float height = 5.9f;\nfloat pi = 3.14159f;',
+                boolean: 'boolean isStudent = true;\nboolean isWorking = false;',
+                list: 'List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);\nList<String> fruits = Arrays.asList("apple", "banana", "cherry");'
+            }
+        };
+
+        const languageSelector = document.getElementById('languageSelector');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const variableButtons = document.querySelectorAll('.variable-btn');
+
+        let currentLanguage = '';
+        let currentVariableType = '';
+
+        languageSelector.addEventListener('change', (event) => {
+            currentLanguage = event.target.value;
+            updateCodeDisplay();
+        });
+
+        variableButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                currentVariableType = event.target.dataset.type;
+                updateCodeDisplay();
+            });
+        });
+
+        function updateCodeDisplay() {
+            if (currentLanguage && currentVariableType) {
+                codeDisplay.textContent = variableDefinitions[currentLanguage][currentVariableType];
+            } else {
+                codeDisplay.textContent = 'Select a language and variable type to see its definition!';
+            }
+        }
+    </script>
+</body>
+</html>
