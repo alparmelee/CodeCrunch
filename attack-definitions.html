@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber Attack Types Explained</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .attack-selector {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #attack-definition {
+            background-color: #f9f9f9;
+            border-left: 5px solid #4a90e2;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .emoji {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Cyber Attack Types Explained 🛡️</h1>
+        
+        <select class="attack-selector" id="attackSelector">
+            <option value="">Select an Attack Type</option>
+            <option value="replay">Replay Attack</option>
+            <option value="dos">Denial of Service (DoS) Attack</option>
+            <option value="mitm">Man-in-the-Middle (MitM) Attack</option>
+            <option value="overflow">Buffer Overflow Attack</option>
+        </select>
+
+        <div id="attack-definition"></div>
+    </div>
+
+    <script>
+        const attackDefinitions = {
+            replay: {
+                emoji: '🔁',
+                title: 'Replay Attack',
+                definition: 'A replay attack occurs when a malicious actor captures a valid data transmission and then retransmits it to impersonate the original sender. For example, an attacker might intercept a user\'s authentication credentials or a network packet and replay it to gain unauthorized access.',
+                example: 'Imagine an attacker capturing a secure login token and reusing it to access a system without the original user\'s knowledge.',
+                prevention: 'Prevention techniques include using unique session tokens, timestamps, nonces (one-time numbers), and cryptographic protocols that invalidate reused credentials.'
+            },
+            dos: {
+                emoji: '🌊',
+                title: 'Denial of Service (DoS) Attack',
+                definition: 'A Denial of Service attack aims to make a computer, network, or service unavailable by overwhelming it with a flood of internet traffic. When multiple compromised systems are used, it becomes a Distributed Denial of Service (DDoS) attack.',
+                example: 'A botnet of thousands of infected computers simultaneously sending requests to a website, causing it to crash or become unresponsive.',
+                prevention: 'Mitigation strategies include traffic filtering, using content delivery networks (CDNs), implementing rate limiting, and employing specialized DDoS protection services.'
+            },
+            mitm: {
+                emoji: '🕴️',
+                title: 'Man-in-the-Middle (MitM) Attack',
+                definition: 'A Man-in-the-Middle attack occurs when an attacker secretly intercepts and potentially alters the communication between two parties without their knowledge. The attacker can eavesdrop, steal information, or inject malicious content.',
+                example: 'An attacker positioning themselves between a user and a bank\'s website, capturing login credentials or financial transactions.',
+                prevention: 'Protect against MitM attacks by using end-to-end encryption (HTTPS), validating SSL/TLS certificates, and using secure communication protocols.'
+            },
+            overflow: {
+                emoji: '💥',
+                title: 'Buffer Overflow Attack',
+                definition: 'A buffer overflow occurs when a program writes more data to a buffer (a temporary data storage area) than it can hold. This can cause the excess data to overwrite adjacent memory locations, potentially allowing an attacker to execute arbitrary code or crash the system.',
+                example: 'Sending more input data to a program than its allocated memory buffer can handle, causing unexpected behavior or security vulnerabilities.',
+                prevention: 'Prevent buffer overflows by using programming languages with built-in memory safety, implementing bounds checking, using stack canaries, and employing non-executable memory protections.'
+            }
+        };
+
+        const attackSelector = document.getElementById('attackSelector');
+        const attackDefinition = document.getElementById('attack-definition');
+
+        attackSelector.addEventListener('change', (e) => {
+            const selectedAttack = e.target.value;
+            if (selectedAttack) {
+                const attack = attackDefinitions[selectedAttack];
+                attackDefinition.innerHTML = `
+                    <div class="emoji">${attack.emoji}</div>
+                    <h2>${attack.title}</h2>
+                    <h3>Definition</h3>
+                    <p>${attack.definition}</p>
+                    <h3>Example</h3>
+                    <p>${attack.example}</p>
+                    <h3>Prevention</h3>
+                    <p>${attack.prevention}</p>
+                `;
+            } else {
+                attackDefinition.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

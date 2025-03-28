@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Privacy Functions in Cybersecurity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .privacy-selector {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #privacy-definition {
+            background-color: #f9f9f9;
+            border-left: 5px solid #4a90e2;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .emoji {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕵️ Privacy Functions Explained 🛡️</h1>
+        
+        <select class="privacy-selector" id="privacySelector">
+            <option value="">Select a Privacy Function</option>
+            <option value="encryption">Data Encryption</option>
+            <option value="anonymity">Anonymity Techniques</option>
+            <option value="access-control">Access Control</option>
+            <option value="data-minimization">Data Minimization</option>
+        </select>
+
+        <div id="privacy-definition"></div>
+    </div>
+
+    <script>
+        const privacyDefinitions = {
+            'encryption': {
+                emoji: '🔐',
+                title: 'Data Encryption',
+                definition: 'Data encryption is a privacy function that transforms readable data into an encoded format that can only be accessed or decrypted by authorized parties with the correct encryption key.',
+                types: [
+                    'Symmetric encryption: Uses the same key for encryption and decryption',
+                    'Asymmetric encryption: Uses different keys for encryption and decryption',
+                    'End-to-end encryption: Ensures data remains encrypted during entire transmission'
+                ],
+                example: 'When you make an online banking transaction, your financial information is encrypted to prevent unauthorized access during transmission.',
+                importance: 'Protects sensitive information from unauthorized access, ensuring confidentiality of personal and business data across various communication channels.'
+            },
+            'anonymity': {
+                emoji: '👤',
+                title: 'Anonymity Techniques',
+                definition: 'Anonymity functions are privacy measures designed to mask a user\'s true identity, location, and online activities, preventing tracking and maintaining user privacy.',
+                methods: [
+                    'Proxy servers: Intermediary servers that hide original IP address',
+                    'VPN (Virtual Private Network): Encrypts internet connection and masks IP',
+                    'Tor network: Routing traffic through multiple servers to anonymize origin'
+                ],
+                example: 'Journalists in restrictive regions use anonymity tools to protect their identity while reporting sensitive information.',
+                importance: 'Protects individual privacy, prevents unauthorized tracking, and enables free expression in environments with potential surveillance.'
+            },
+            'access-control': {
+                emoji: '🚪',
+                title: 'Access Control',
+                definition: 'Access control is a privacy function that manages and restricts who can view, use, or modify specific resources or information within a system.',
+                types: [
+                    'Role-Based Access Control (RBAC): Permissions based on user roles',
+                    'Attribute-Based Access Control (ABAC): Permissions based on user, resource, and environmental attributes',
+                    'Mandatory Access Control (MAC): Strict hierarchical access restrictions'
+                ],
+                example: 'In a hospital, different staff members have varying levels of access to patient records based on their role and responsibilities.',
+                importance: 'Prevents unauthorized data access, protects sensitive information, and ensures that users can only interact with resources appropriate to their role.'
+            },
+            'data-minimization': {
+                emoji: '📊',
+                title: 'Data Minimization',
+                definition: 'Data minimization is a privacy principle that involves collecting and retaining only the minimum amount of personal data necessary to accomplish a specific purpose.',
+                principles: [
+                    'Collect only essential information',
+                    'Retain data only for required duration',
+                    'Limit data processing to specific, explicit purposes'
+                ],
+                example: 'An online survey that only requests necessary demographic information instead of collecting extensive personal details.',
+                importance: 'Reduces risk of data breaches, complies with privacy regulations like GDPR, and respects individual privacy by limiting unnecessary data collection.'
+            }
+        };
+
+        const privacySelector = document.getElementById('privacySelector');
+        const privacyDefinition = document.getElementById('privacy-definition');
+
+        privacySelector.addEventListener('change', (e) => {
+            const selectedFunction = e.target.value;
+            if (selectedFunction) {
+                const privacyFunc = privacyDefinitions[selectedFunction];
+                privacyDefinition.innerHTML = `
+                    <div class="emoji">${privacyFunc.emoji}</div>
+                    <h2>${privacyFunc.title}</h2>
+                    <h3>Definition</h3>
+                    <p>${privacyFunc.definition}</p>
+                    
+                    <h3>Key Methods/Types</h3>
+                    <ul>
+                        ${(privacyFunc.types || privacyFunc.methods || privacyFunc.principles)
+                            .map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>Example</h3>
+                    <p>${privacyFunc.example}</p>
+                    
+                    <h3>Importance</h3>
+                    <p>${privacyFunc.importance}</p>
+                `;
+            } else {
+                privacyDefinition.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>System Monitoring in Cybersecurity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .monitoring-selector {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #monitoring-definition {
+            background-color: #f9f9f9;
+            border-left: 5px solid #4a90e2;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .emoji {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 System Monitoring Explained 🛡️</h1>
+        
+        <select class="monitoring-selector" id="monitoringSelector">
+            <option value="">Select a Monitoring Concept</option>
+            <option value="ids">Intrusion Detection Systems (IDS)</option>
+            <option value="ips">Intrusion Prevention Systems (IPS)</option>
+            <option value="siem">Security Information and Event Management (SIEM)</option>
+            <option value="incident-response">Incident Response</option>
+        </select>
+
+        <div id="monitoring-definition"></div>
+    </div>
+
+    <script>
+        const monitoringDefinitions = {
+            'ids': {
+                emoji: '🚨',
+                title: 'Intrusion Detection Systems (IDS)',
+                definition: 'An Intrusion Detection System (IDS) is a security tool that monitors network or system activities for signs of malicious or suspicious behavior, logging and alerting administrators about potential security breaches.',
+                types: [
+                    'Network-based IDS (NIDS): Monitors network traffic',
+                    'Host-based IDS (HIDS): Monitors individual device activities',
+                    'Signature-based IDS: Detects known attack patterns',
+                    'Anomaly-based IDS: Identifies deviations from normal behavior'
+                ],
+                example: 'An IDS detecting multiple failed login attempts from an unfamiliar IP address and generating an alert to the security team.',
+                importance: 'Provides early warning of potential security threats, helps in proactive threat detection, and supports forensic analysis after security incidents.'
+            },
+            'ips': {
+                emoji: '🛡️',
+                title: 'Intrusion Prevention Systems (IPS)',
+                definition: 'An Intrusion Prevention System (IPS) is an advanced security tool that not only detects potential security threats but also actively blocks or prevents them in real-time.',
+                capabilities: [
+                    'Automatic blocking of malicious traffic',
+                    'Real-time threat mitigation',
+                    'Configuration of preventive rules',
+                    'Integration with firewall and other security systems'
+                ],
+                example: 'Automatically blocking an IP address attempting multiple unauthorized access attempts or stopping a potential DDoS attack.',
+                importance: 'Provides immediate protection against detected threats, reduces response time, and minimizes potential damage from cyber attacks.'
+            },
+            'siem': {
+                emoji: '📊',
+                title: 'Security Information and Event Management (SIEM)',
+                definition: 'SIEM is a comprehensive security management approach that combines Security Information Management (SIM) and Security Event Management (SEM) to provide real-time analysis of security alerts and log data.',
+                features: [
+                    'Centralized log collection from multiple sources',
+                    'Real-time monitoring and correlation of security events',
+                    'Advanced threat detection and analytics',
+                    'Compliance reporting and forensic investigation support'
+                ],
+                example: 'Correlating login events across multiple systems to identify a potential coordinated attack or insider threat.',
+                importance: 'Provides holistic security visibility, helps in identifying complex, multi-stage attacks, and supports regulatory compliance efforts.'
+            },
+            'incident-response': {
+                emoji: '🚒',
+                title: 'Incident Response',
+                definition: 'Incident response is a structured approach to handling and managing the aftermath of a security breach or cyberattack, with the goal of minimizing damage and recovery time.',
+                steps: [
+                    'Preparation: Developing response plans and resources',
+                    'Identification: Detecting and confirming a security incident',
+                    'Containment: Limiting the spread and impact of the incident',
+                    'Eradication: Removing the threat from the environment',
+                    'Recovery: Restoring systems and operations',
+                    'Lessons Learned: Analyzing the incident to prevent future occurrences'
+                ],
+                example: 'Discovering a malware infection, isolating affected systems, removing the malware, and implementing preventive measures to avoid similar incidents.',
+                importance: 'Enables organizations to effectively manage and mitigate the impact of security incidents, reduce potential damage, and improve overall security posture.'
+            }
+        };
+
+        const monitoringSelector = document.getElementById('monitoringSelector');
+        const monitoringDefinition = document.getElementById('monitoring-definition');
+
+        monitoringSelector.addEventListener('change', (e) => {
+            const selectedConcept = e.target.value;
+            if (selectedConcept) {
+                const monitoringFunc = monitoringDefinitions[selectedConcept];
+                monitoringDefinition.innerHTML = `
+                    <div class="emoji">${monitoringFunc.emoji}</div>
+                    <h2>${monitoringFunc.title}</h2>
+                    <h3>Definition</h3>
+                    <p>${monitoringFunc.definition}</p>
+                    
+                    <h3>Key Types/Features</h3>
+                    <ul>
+                        ${(monitoringFunc.types || monitoringFunc.capabilities || monitoringFunc.features || monitoringFunc.steps)
+                            .map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>Example</h3>
+                    <p>${monitoringFunc.example}</p>
+                    
+                    <h3>Importance</h3>
+                    <p>${monitoringFunc.importance}</p>
+                `;
+            } else {
+                monitoringDefinition.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>
