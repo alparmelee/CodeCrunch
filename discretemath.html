@@ -35,6 +35,15 @@
         }
 
         .module {
+            margin-bottom: 30px;
+        }
+
+        .module h2 {
+            font-size: 28px;
+            color: #8e44ad;
+        }
+
+        .module-links {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 25px;
@@ -42,7 +51,7 @@
             justify-content: center;
         }
 
-        .module a {
+        .module-links a {
             display: block;
             padding: 15px 20px;
             background-color: #9b59b6;
@@ -58,7 +67,7 @@
             transform: perspective(500px) translateZ(0);
         }
 
-        .module a::before {
+        .module-links a::before {
             content: '';
             position: absolute;
             top: 0;
@@ -69,13 +78,13 @@
             transition: all 0.6s ease;
         }
 
-        .module a:hover {
+        .module-links a:hover {
             background-color: #8e44ad;
             transform: scale(1.05) perspective(500px) translateZ(20px);
             box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
 
-        .module a:hover::before {
+        .module-links a:hover::before {
             left: 100%;
         }
 
@@ -84,19 +93,19 @@
                 font-size: 32px;
             }
 
-            .module {
+            .module-links {
                 grid-template-columns: 1fr 1fr;
                 gap: 15px;
             }
 
-            .module a {
+            .module-links a {
                 font-size: 16px;
                 padding: 12px 15px;
             }
         }
 
         @media (max-width: 480px) {
-            .module {
+            .module-links {
                 grid-template-columns: 1fr;
             }
         }
@@ -104,12 +113,30 @@
 </head>
 <body>
     <h1>Discrete Mathematics</h1>
+    
     <div class="module">
-        <a href="discrete-math-sequences.html">Sequences</a>
-        <a href="discrete-math-proof-demonstrator.html">Proof Demonstrator</a>
-        <a href="truth-table-generator.html">Truth Table Generator</a>
-        <a href="permutation-combination-calculator.html">Permutation & Combination Calculator</a>
-        <a href="graph-analyzer.html">Graph Analyzer</a>
+        <h2>Module 1: Proofs and Logic</h2>
+        <div class="module-links">
+            <a href="discrete-math-proof-demonstrator.html">Proof Demonstrator</a>
+            <a href="truth-table-generator.html">Truth Table Generator</a>
+        </div>
+    </div>
+
+    <div class="module">
+        <h2>Module 2: Graphs and Permutations/Combinations</h2>
+        <div class="module-links">
+            <a href="graph-analyzer.html">Graph Analyzer</a>
+            <a href="permutation-combination-calculator.html">Permutation & Combination Calculator</a>
+        </div>
+    </div>
+
+    <div class="module">
+        <h2>Module 3: Sequences</h2>
+        <div class="module-links">
+            <a href="recursive-sequence-calculator.html">Sequences</a>
+            <a href="sequence-solver-simplified.html">Arithmetic and Geometric Sequence</a>
+        </div>
     </div>
 </body>
 </html>
+
