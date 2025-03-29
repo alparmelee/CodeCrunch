@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Math Sequence Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .calculator {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #eee;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        input, button, select {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        #sequenceInput, #formulaInput, #recursiveFormula, #initialTerms {
+            width: 100%;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+        }
+        
+        .steps {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .formula {
+            font-family: monospace;
+            padding: 5px;
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .term {
+            padding: 6px 10px;
+            background: #e8f4fc;
+            border-radius: 4px;
+            margin: 3px;
+            display: inline-block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .error {
+            color: #e74c3c;
+            padding: 10px;
+            background: #fadbd8;
+            border-radius: 4px;
+        }
+
+        .info-box {
+            padding: 10px;
+            margin: 10px 0;
+            background: #d5f5e3;
+            border-left: 4px solid #2ecc71;
+            border-radius: 4px;
+        }
+
+        .base-case {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .base-case input {
+            width: 60px;
+            margin-right: 10px;
+        }
+
+        .base-case label {
+            font-weight: normal;
+            margin-right: 10px;
+        }
+
+        .base-case button {
+            padding: 5px;
+            margin-left: auto;
+        }
+
+        #baseTermsContainer {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Discrete Math Sequence Calculator</h1>
+    <div class="calculator">
+        <div class="tabs">
+            <div class="tab active" data-tab="sequence-to-formula">Sequence to Formula</div>
+            <div class="tab" data-tab="formula-to-sequence">Formula to Sequence</div>
+            <div class="tab" data-tab="recursive-sequence">Recursive Sequence</div>
+        </div>
+        
+        <div class="tab-content active" id="sequence-to-formula">
+            <div class="input-group">
+                <label for="sequenceInput">Enter sequence terms (comma separated):</label>
+                <input type="text" id="sequenceInput" placeholder="Ex: 1, 3, 5, 7, 9" />
+                <p>Enter the first few terms of the sequence (at least 3-5 terms for better results)</p>
+            </div>
+            <button id="findFormulaBtn">Find Formula</button>
+            <div id="sequenceResult" class="result" style="display:none;">
+                <h3>Formula Result:</h3>
+                <div id="formulaOutput"></div>
+                <div class="steps">
+                    <h3>How It Was Derived:</h3>
+                    <div id="derivationSteps"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="formula-to-sequence">
+            <div class="input-group">
+                <label for="formulaInput">Enter formula (use 'n' as the variable):</label>
+                <input type="text" id="formulaInput" placeholder="Ex: 2*n + 1" />
+            </div>
+            <div class="input-group">
+                <label for="termsCount">Number of terms:</label>
+                <input type="number" id="termsCount" value="5" min="1" max="20" />
+                <label for="startIndex">Starting index:</label>
+                <input type="number" id="startIndex" value="1" min="0" />
+            </div>
+            <button id="generateSequenceBtn">Generate Sequence</button>
+            <div id="formulaResult" class="result" style="display:none;">
+                <h3>Sequence Result:</h3>
+                <div id="sequenceOutput"></div>
+                <div class="steps">
+                    <h3>How It Was Generated:</h3>
+                    <div id="generationSteps"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="recursive-sequence">
+            <div class="info-box">
+                <p>Recursive sequences are defined in terms of previous terms.</p>
+                <p>Example: Fibonacci sequence where a<sub>n</sub> = a<sub>n-1</sub> + a<sub>n-2</sub> with a<sub>1</sub> = 1, a<sub>2</sub> = 1</p>
+            </div>
+            <div class="input-group">
+                <label for="recursiveFormula">Enter recursive formula (use previous terms like a[n-1], a[n-2]):</label>
+                <input type="text" id="recursiveFormula" placeholder="Ex: a[n-1] + a[n-2]" />
+            </div>
+            <div class="input-group">
+                <label>Initial terms (base cases):</label>
+                <div id="baseTermsContainer">
+                    <div class="base-case">
+                        <label>a<sub>1</sub> =</label>
+                        <input type="number" class="baseTerm" data-index="1" value="1" />
+                    </div>
+                </div>
+                <button id="addBaseTermBtn">Add Another Base Term</button>
+            </div>
+            <div class="input-group">
+                <label for="recursiveTermsCount">Number of terms to generate:</label>
+                <input type="number" id="recursiveTermsCount" value="10" min="1" max="50" />
+            </div>
+            <button id="generateRecursiveBtn">Generate Sequence</button>
+            <div id="recursiveResult" class="result" style="display:none;">
+                <h3>Recursive Sequence:</h3>
+                <div id="recursiveOutput"></div>
+                <div class="steps">
+                    <h3>Calculation Steps:</h3>
+                    <div id="recursiveSteps"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Sequence to Formula functionality
+        document.getElementById('findFormulaBtn').addEventListener('click', findFormula);
+        
+        function findFormula() {
+            const sequenceInput = document.getElementById('sequenceInput').value;
+            const sequence = sequenceInput.split(',').map(term => parseFloat(term.trim()));
+            
+            if (sequence.length < 3 || sequence.some(isNaN)) {
+                showError('Please enter at least 3 valid numbers separated by commas.');
+                return;
+            }
+            
+            // Try to identify the sequence pattern
+            let result = null;
+            
+            // Try arithmetic sequence
+            const diff = [];
+            for (let i = 1; i < sequence.length; i++) {
+                diff.push(sequence[i] - sequence[i-1]);
+            }
+            
+            const isArithmetic = diff.every(d => Math.abs(d - diff[0]) < 0.0001);
+            
+            if (isArithmetic) {
+                const a1 = sequence[0];
+                const d = diff[0];
+                let formula = formatArithmeticFormula(a1, d);
+                
+                const steps = `
+                    <p>First differences: ${diff.map(d => `<span class="term">${d}</span>`).join('')}</p>
+                    <p>This is an arithmetic sequence with first term a₁ = ${a1} and common difference d = ${d}.</p>
+                    <p>Formula: a<sub>n</sub> = a₁ + (n-1)d = ${a1} + (n-1) × ${d}</p>
+                    <p>Simplified: a<sub>n</sub> = ${formula}</p>
+                `;
+                
+                result = {
+                    formula: formula,
+                    method: 'Arithmetic Sequence',
+                    steps: steps,
+                    recursive: `a<sub>n</sub> = a<sub>n-1</sub> + ${d} (with a<sub>1</sub> = ${a1})`
+                };
+            }
+            
+            // Try geometric sequence if not arithmetic
+            if (!result) {
+                const ratio = [];
+                let validRatio = true;
+                
+                for (let i = 1; i < sequence.length; i++) {
+                    if (sequence[i-1] === 0) {
+                        validRatio = false;
+                        break;
+                    }
+                    ratio.push(sequence[i] / sequence[i-1]);
+                }
+                
+                if (validRatio && ratio.every(r => Math.abs(r - ratio[0]) < 0.0001)) {
+                    const a1 = sequence[0];
+                    const r = ratio[0];
+                    
+                    let formula = `${a1} × ${r}^(n-1)`;
+                    
+                    const steps = `
+                        <p>Ratios: ${ratio.map(r => `<span class="term">${r.toFixed(4)}</span>`).join('')}</p>
+                        <p>This is a geometric sequence with first term a₁ = ${a1} and common ratio r = ${r}.</p>
+                        <p>Formula: a<sub>n</sub> = a₁ × r^(n-1) = ${formula}</p>
+                    `;
+                    
+                    result = {
+                        formula: formula,
+                        method: 'Geometric Sequence',
+                        steps: steps,
+                        recursive: `a<sub>n</sub> = a<sub>n-1</sub> × ${r} (with a<sub>1</sub> = ${a1})`
+                    };
+                }
+            }
+            
+            // Try quadratic sequence if not arithmetic or geometric
+            if (!result) {
+                const secondDiff = [];
+                for (let i = 1; i < diff.length; i++) {
+                    secondDiff.push(diff[i] - diff[i-1]);
+                }
+                
+                if (secondDiff.length > 0 && secondDiff.every(d => Math.abs(d - secondDiff[0]) < 0.0001)) {
+                    const a = secondDiff[0] / 2;
+                    const b = diff[0] - a * 3;
+                    const c = sequence[0] - a - b;
+                    
+                    let formula = formatQuadraticFormula(a, b, c);
+                    
+                    const steps = `
+                        <p>First differences: ${diff.map(d => `<span class="term">${d}</span>`).join('')}</p>
+                        <p>Second differences: ${secondDiff.map(d => `<span class="term">${d}</span>`).join('')}</p>
+                        <p>This is a quadratic sequence with constant second difference ${secondDiff[0]}.</p>
+                        <p>Using a = ${a}, b = ${b}, c = ${c}</p>
+                        <p>Formula: a<sub>n</sub> = an² + bn + c = ${formula}</p>
+                    `;
+                    
+                    result = {
+                        formula: formula,
+                        method: 'Quadratic Sequence',
+                        steps: steps,
+                        recursive: `a<sub>n</sub> = 2a<sub>n-1</sub> - a<sub>n-2</sub> + ${secondDiff[0]} (with a<sub>1</sub> = ${sequence[0]}, a<sub>2</sub> = ${sequence[1]})`
+                    };
+                }
+            }
+
+            // Check for Fibonacci-like sequences (linear homogeneous recurrence relation)
+            if (!result && sequence.length >= 5) {
+                // Try a<sub>n</sub> = a<sub>n-1</sub> + a<sub>n-2</sub>
+                let isFibonacci = true;
+                for (let i = 2; i < sequence.length; i++) {
+                    if (Math.abs(sequence[i] - (sequence[i-1] + sequence[i-2])) > 0.0001) {
+                        isFibonacci = false;
+                        break;
+                    }
+                }
+
+                if (isFibonacci) {
+                    result = {
+                        formula: "Complex closed form (Binet's formula available for true Fibonacci)",
+                        method: 'Fibonacci-like Sequence',
+                        steps: `<p>Verified that a<sub>n</sub> = a<sub>n-1</sub> + a<sub>n-2</sub> for all terms in the sequence.</p>`,
+                        recursive: `a<sub>n</sub> = a<sub>n-1</sub> + a<sub>n-2</sub> (with a<sub>1</sub> = ${sequence[0]}, a<sub>2</sub> = ${sequence[1]})`
+                    };
+                }
+            }
+            
+            // Display the result
+            const resultDiv = document.getElementById('sequenceResult');
+            resultDiv.style.display = 'block';
+            
+            if (result) {
+                document.getElementById('formulaOutput').innerHTML = `
+                    <p>The sequence appears to be a <strong>${result.method}</strong>.</p>
+                    <p>Closed form: <span class="formula">a<sub>n</sub> = ${result.formula}</span></p>
+                    <p>Recursive form: <span class="formula">${result.recursive}</span></p>
+                `;
+                document.getElementById('derivationSteps').innerHTML = result.steps;
+            } else {
+                document.getElementById('formulaOutput').innerHTML = `
+                    <p>Could not identify a simple closed form for this sequence.</p>
+                    <p>Try entering more terms or check if this is a more complex sequence.</p>
+                `;
+                document.getElementById('derivationSteps').innerHTML = 'No pattern was identified among the common sequence types.';
+            }
+        }
+        
+        function formatArithmeticFormula(a1, d) {
+            const constant = a1 - d;
+            if (constant === 0) {
+                return d === 1 ? 'n' : `${d}n`;
+            } else {
+                const sign = constant > 0 ? '+' : '';
+                return `${d === 1 ? '' : d}n ${sign} ${constant}`;
+            }
+        }
+        
+        function formatQuadraticFormula(a, b, c) {
+            let formula = '';
+            
+            if (a !== 0) {
+                if (a === 1) formula += 'n²';
+                else if (a === -1) formula += '-n²';
+                else formula += `${a}n²`;
+            }
+            
+            if (b !== 0) {
+                if (b > 0 && formula !== '') formula += ' + ';
+                else if (b < 0) formula += ' - ';
+                
+                if (Math.abs(b) === 1) formula += 'n';
+                else formula += `${Math.abs(b)}n`;
+            }
+            
+            if (c !== 0) {
+                if (c > 0 && formula !== '') formula += ' + ';
+                else if (c < 0) formula += ' - ';
+                else if (formula === '') formula += '0';
+                
+                formula += `${Math.abs(c)}`;
+            } else if (formula === '') {
+                formula = '0';
+            }
+            
+            return formula;
+        }
+        
+        // Formula to Sequence functionality
+        document.getElementById('generateSequenceBtn').addEventListener('click', generateSequence);
+        
+        function generateSequence() {
+            const formulaInput = document.getElementById('formulaInput').value;
+            const termsCount = parseInt(document.getElementById('termsCount').value);
+            const startIndex = parseInt(document.getElementById('startIndex').value);
+            
+            if (!formulaInput.trim()) {
+                showError('Please enter a formula.');
+                return;
+            }
+            
+            try {
+                const sequence = [];
+                const calculationSteps = [];
+                
+                // Replace n^2 with n**2 for JavaScript compatibility
+                let jsFormula = formulaInput.replace(/n\^(\d+)/g, 'n**$1').replace(/\^/g, '**');
+                
+                for (let i = 0; i < termsCount; i++) {
+                    const n = startIndex + i;
+                    // Use new Function to safely evaluate the formula
+                    const evalFormula = new Function('n', `return ${jsFormula};`);
+                    const result = evalFormula(n);
+                    sequence.push(result);
+                    
+                    // Record calculation steps
+                    calculationSteps.push(`a<sub>${n}</sub> = ${jsFormula.replace(/n/g, n)} = ${result}`);
+                }
+                
+                const resultDiv = document.getElementById('formulaResult');
+                resultDiv.style.display = 'block';
+                
+                document.getElementById('sequenceOutput').innerHTML = `
+                    <p>The first ${termsCount} terms (starting at n = ${startIndex}):</p>
+                    <div>${sequence.map((term, i) => `<span class="term">a<sub>${startIndex + i}</sub> = ${term}</span>`).join('')}</div>
+                `;
+                
+                document.getElementById('generationSteps').innerHTML = `
+                    <p>Using the formula: a<sub>n</sub> = ${formulaInput}</p>
+                    <p>Substituting values for n:</p>
+                    <ul>${calculationSteps.map(step => `<li>${step}</li>`).join('')}</ul>
+                `;
+                
+            } catch (error) {
+                showError('Error evaluating the formula. Please check the syntax.');
+                console.error(error);
+            }
+        }
+
+        // Recursive Sequence functionality
+        document.getElementById('addBaseTermBtn').addEventListener('click', addBaseTerm);
+        document.getElementById('generateRecursiveBtn').addEventListener('click', generateRecursiveSequence);
+
+        function addBaseTerm() {
+            const container = document.getElementById('baseTermsContainer');
+            const baseTerms = container.querySelectorAll('.baseTerm');
+            const newIndex = baseTerms.length + 1;
+            
+            const newBaseCase = document.createElement('div');
+            newBaseCase.className = 'base-case';
+            newBaseCase.innerHTML = `
+                <label>a<sub>${newIndex}</sub> =</label>
+                <input type="number" class="baseTerm" data-index="${newIndex}" value="1" />
+                <button class="removeBaseBtn">×</button>
+            `;
+            
+            container.appendChild(newBaseCase);
+            
+            // Add event listener to the remove button
+            newBaseCase.querySelector('.removeBaseBtn').addEventListener('click', function() {
+                newBaseCase.remove();
+                // Update indices of remaining base terms
+                updateBaseTermIndices();
+            });
+        }
+
+        function updateBaseTermIndices() {
+            const container = document.getElementById('baseTermsContainer');
+            const baseCases = container.querySelectorAll('.base-case');
+            
+            baseCases.forEach((baseCase, index) => {
+                const newIndex = index + 1;
+                baseCase.querySelector('label').innerHTML = `a<sub>${newIndex}</sub> =`;
+                baseCase.querySelector('.baseTerm').dataset.index = newIndex;
+            });
+        }
+
+        function generateRecursiveSequence() {
+            const recursiveFormula = document.getElementById('recursiveFormula').value;
+            const termsCount = parseInt(document.getElementById('recursiveTermsCount').value);
+            
+            if (!recursiveFormula.trim()) {
+                showError('Please enter a recursive formula.');
+                return;
+            }
+            
+            // Get base terms
+            const baseTermInputs = document.querySelectorAll('.baseTerm');
+            if (baseTermInputs.length === 0) {
+                showError('Please add at least one base term.');
+                return;
+            }
+            
+            const baseTerms = {};
+            baseTermInputs.forEach(input => {
+                const index = parseInt(input.dataset.index);
+                const value = parseFloat(input.value);
+                if (isNaN(value)) {
+                    showError(`Invalid value for a${index}.`);
+                    return;
+                }
+                baseTerms[index] = value;
+            });
+            
+            try {
+                // Generate the sequence
+                const sequence = [];
+                const steps = [];
+                
+                // Add base terms to the sequence
+                for (let i = 1; i <= Object.keys(baseTerms).length; i++) {
+                    sequence.push(baseTerms[i]);
+                    steps.push(`a<sub>${i}</sub> = ${baseTerms[i]} (base case)`);
+                }
+                
+                // Convert the recursive formula to a JavaScript function
+                // Replace a[n-1] with appropriate array access
+                let jsFormula = recursiveFormula
+                    .replace(/a\[n-(\d+)\]/g, (match, offset) => {
+                        return `sequence[n-${offset}-1]`;
+                    })
+                    .replace(/\^/g, '**');
+                
+                // Calculate remaining terms
+                for (let i = Object.keys(baseTerms).length; i < termsCount; i++) {
+                    const n = i + 1; // 1-indexed
+                    const evalRecursive = new Function('sequence', 'n', `return ${jsFormula};`);
+                    
+                    try {
+                        const result = evalRecursive(sequence, n);
+                        sequence.push(result);
+                        
+                        // Create a more readable version of the calculation for display
+                        let readableStep = recursiveFormula;
+                        for (let j = 1; j <= i; j++) {
+                            readableStep = readableStep.replace(
+                                new RegExp(`a\\[n-${j}\\]`, 'g'), 
+                                sequence[n-j-1]
+                            );
+                        }
+                        steps.push(`a<sub>${n}</sub> = ${readableStep} = ${result}`);
+                    } catch (error) {
+                        showError(`Error calculating term a${n}: ${error.message}`);
+                        console.error(error);
+                        break;
+                    }
+                }
+                
+                // Display the results
+                const resultDiv = document.getElementById('recursiveResult');
+                resultDiv.style.display = 'block';
+                
+                document.getElementById('recursiveOutput').innerHTML = `
+                    <p>The first ${termsCount} terms of the recursive sequence:</p>
+                    <div>${sequence.map((term, i) => `<span class="term">a<sub>${i+1}</sub> = ${term}</span>`).join('')}</div>
+                `;
+                
+                document.getElementById('recursiveSteps').innerHTML = `
+                    <p>Using the recursive formula: a<sub>n</sub> = ${recursiveFormula}</p>
+                    <p>With base case(s): ${Object.entries(baseTerms).map(([k, v]) => `a<sub>${k}</sub> = ${v}`).join(', ')}</p>
+                    <ul>${steps.map(step => `<li>${step}</li>`).join('')}</ul>
+                `;
+                
+            } catch (error) {
+                showError('Error evaluating the recursive formula. Please check the syntax.');
+                console.error(error);
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            
+            const calculatorDiv = document.querySelector('.calculator');
+            // Remove any existing error messages
+            const existingError = document.querySelector('.error');
+            if (existingError) existingError.remove();
+            
+            calculatorDiv.appendChild(errorDiv);
+            
+            // Remove the error after 5 seconds
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
