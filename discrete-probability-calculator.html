@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Probability Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Discrete Probability Calculator</h1>
+    <div class="container">
+        <label for="distribution">Select Distribution:</label>
+        <select id="distribution">
+            <option value="binomial">Binomial</option>
+            <option value="poisson">Poisson</option>
+            <option value="geometric">Geometric</option>
+        </select>
+
+        <div id="inputs">
+            <!-- Inputs will be dynamically added here -->
+        </div>
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        const inputsDiv = document.getElementById('inputs');
+        const resultDiv = document.getElementById('result');
+        const distributionSelect = document.getElementById('distribution');
+
+        distributionSelect.addEventListener('change', updateInputs);
+
+        function updateInputs() {
+            const distribution = distributionSelect.value;
+            inputsDiv.innerHTML = '';
+
+            if (distribution === 'binomial') {
+                inputsDiv.innerHTML = `
+                    <label for="n">Number of Trials (n):</label>
+                    <input type="number" id="n" min="0" required>
+                    <label for="p">Probability of Success (p):</label>
+                    <input type="number" id="p" step="0.01" min="0" max="1" required>
+                    <label for="x">Number of Successes (x):</label>
+                    <input type="number" id="x" min="0" required>
+                `;
+            } else if (distribution === 'poisson') {
+                inputsDiv.innerHTML = `
+                    <label for="lambda">Mean (λ):</label>
+                    <input type="number" id="lambda" step="0.01" min="0" required>
+                    <label for="x">Number of Events (x):</label>
+                    <input type="number" id="x" min="0" required>
+                `;
+            } else if (distribution === 'geometric') {
+                inputsDiv.innerHTML = `
+                    <label for="p">Probability of Success (p):</label>
+                    <input type="number" id="p" step="0.01" min="0" max="1" required>
+                    <label for="x">Number of Trials (x):</label>
+                    <input type="number" id="x" min="1" required>
+                `;
+            }
+        }
+
+        function calculate() {
+            const distribution = distributionSelect.value;
+            let result = '';
+
+            if (distribution === 'binomial') {
+                const n = parseInt(document.getElementById('n').value);
+                const p = parseFloat(document.getElementById('p').value);
+                const x = parseInt(document.getElementById('x').value);
+                result = binomial(n, p, x);
+            } else if (distribution === 'poisson') {
+                const lambda = parseFloat(document.getElementById('lambda').value);
+                const x = parseInt(document.getElementById('x').value);
+                result = poisson(lambda, x);
+            } else if (distribution === 'geometric') {
+                const p = parseFloat(document.getElementById('p').value);
+                const x = parseInt(document.getElementById('x').value);
+                result = geometric(p, x);
+            }
+
+            resultDiv.innerHTML = `<strong>Result:</strong> ${result}`;
+        }
+
+        function binomial(n, p, x) {
+            function factorial(num) {
+                return num <= 1 ? 1 : num * factorial(num - 1);
+            }
+            const combination = factorial(n) / (factorial(x) * factorial(n - x));
+            return (combination * Math.pow(p, x) * Math.pow(1 - p, n - x)).toFixed(4);
+        }
+
+        function poisson(lambda, x) {
+            function factorial(num) {
+                return num <= 1 ? 1 : num * factorial(num - 1);
+            }
+            return ((Math.pow(lambda, x) * Math.exp(-lambda)) / factorial(x)).toFixed(4);
+        }
+
+        function geometric(p, x) {
+            return ((1 - p) ** (x - 1) * p).toFixed(4);
+        }
+
+        // Initialize inputs for the default distribution
+        updateInputs();
+    </script>
+</body>
+</html>

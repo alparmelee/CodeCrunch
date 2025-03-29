@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Linear Regression Calculator</title>
+  <style>
+    body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.5; }
+    .container { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    h1, h2 { color: #2c3e50; }
+    textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+    button { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+    th { background: #f2f2f2; }
+    td:first-child { text-align: left; }
+    .plot { height: 300px; border: 1px solid #ddd; margin: 15px 0; position: relative; }
+    .plot-point { position: absolute; width: 8px; height: 8px; background: red; border-radius: 50%; transform: translate(-4px, -4px); }
+    .regression-line { position: absolute; height: 2px; background: blue; }
+    .summary { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+    .metric { background: white; border: 1px solid #ddd; padding: 10px; border-radius: 4px; flex: 1; min-width: 120px; text-align: center; }
+    .value { font-size: 20px; font-weight: bold; color: #3498db; margin: 5px 0; }
+    input { width: 100%; padding: 5px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Linear Regression Calculator</h1>
+  
+  <div class="container">
+    <h2>Data Input</h2>
+    <p>Format: x,y (one pair per line)</p>
+    <textarea id="data-input">1,2
+2,3
+3,5
+4,4
+5,6</textarea>
+    <button onclick="calculateRegression()">Calculate</button>
+  </div>
+  
+  <div id="results" style="display:none;">
+    <div class="container">
+      <h2>Regression Results</h2>
+      <div class="plot" id="plot"></div>
+      
+      <div class="summary">
+        <div class="metric">
+          <h3>R²</h3>
+          <div class="value" id="r-squared">-</div>
+        </div>
+        <div class="metric">
+          <h3>Correlation</h3>
+          <div class="value" id="correlation">-</div>
+        </div>
+        <div class="metric">
+          <h3>Std Error</h3>
+          <div class="value" id="std-error">-</div>
+        </div>
+      </div>
+      
+      <h3>Regression Equation: <span id="equation">Y = mX + b</span></h3>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Coefficient</th>
+            <th>Value</th>
+            <th>Std Error</th>
+            <th>t-statistic</th>
+            <th>p-value</th>
+          </tr>
+        </thead>
+        <tbody id="coefficients">
+          <tr>
+            <td>Intercept (b)</td>
+            <td>-</td><td>-</td><td>-</td><td>-</td>
+          </tr>
+          <tr>
+            <td>Slope (m)</td>
+            <td>-</td><td>-</td><td>-</td><td>-</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>Prediction</h3>
+      <label>X value: <input type="number" id="predict-x"></label>
+      <button onclick="predict()">Predict Y</button>
+      <p id="prediction-result"></p>
+    </div>
+  </div>
+  
+  <script>
+    let regression = {};
+    
+    function calculateRegression() {
+      // Parse data
+      const input = document.getElementById('data-input').value;
+      const lines = input.trim().split('\n');
+      const data = lines.map(line => {
+        const parts = line.trim().split(',');
+        return { x: parseFloat(parts[0]), y: parseFloat(parts[1]) };
+      }).filter(point => !isNaN(point.x) && !isNaN(point.y));
+      
+      if (data.length < 2) {
+        alert('Please enter at least 2 valid data points');
+        return;
+      }
+      
+      // Calculate means
+      const n = data.length;
+      const meanX = data.reduce((sum, p) => sum + p.x, 0) / n;
+      const meanY = data.reduce((sum, p) => sum + p.y, 0) / n;
+      
+      // Calculate slope and intercept
+      let numerator = 0, denominator = 0;
+      for (const point of data) {
+        numerator += (point.x - meanX) * (point.y - meanY);
+        denominator += Math.pow(point.x - meanX, 2);
+      }
+      
+      const slope = numerator / denominator;
+      const intercept = meanY - slope * meanX;
+      
+      // Calculate statistics
+      let SSR = 0, SST = 0, SSE = 0;
+      for (const point of data) {
+        const predicted = slope * point.x + intercept;
+        SSR += Math.pow(predicted - meanY, 2);
+        SST += Math.pow(point.y - meanY, 2);
+        SSE += Math.pow(point.y - predicted, 2);
+      }
+      
+      const rSquared = SSR / SST;
+      const correlation = Math.sqrt(rSquared) * (slope > 0 ? 1 : -1);
+      const stdError = Math.sqrt(SSE / (n - 2));
+      
+      // Calculate coefficient statistics
+      const slopeStdError = stdError / Math.sqrt(denominator);
+      const interceptStdError = stdError * Math.sqrt(1/n + Math.pow(meanX, 2)/denominator);
+      
+      const slopeTStat = slope / slopeStdError;
+      const interceptTStat = intercept / interceptStdError;
+      
+      // Simplified p-value calculation
+      function tPValue(t, df) {
+        const x = Math.abs(t);
+        return 2 * (1 - (x / Math.sqrt(x*x + df)));
+      }
+      
+      const slopePValue = tPValue(slopeTStat, n-2);
+      const interceptPValue = tPValue(interceptTStat, n-2);
+      
+      // Update UI
+      document.getElementById('r-squared').textContent = rSquared.toFixed(4);
+      document.getElementById('correlation').textContent = correlation.toFixed(4);
+      document.getElementById('std-error').textContent = stdError.toFixed(4);
+      document.getElementById('equation').textContent = 
+        `Y = ${slope.toFixed(4)}X ${intercept >= 0 ? '+' : ''} ${intercept.toFixed(4)}`;
+      
+      document.getElementById('coefficients').innerHTML = `
+        <tr>
+          <td>Intercept (b)</td>
+          <td>${intercept.toFixed(4)}</td>
+          <td>${interceptStdError.toFixed(4)}</td>
+          <td>${interceptTStat.toFixed(4)}</td>
+          <td>${interceptPValue.toFixed(4)}</td>
+        </tr>
+        <tr>
+          <td>Slope (m)</td>
+          <td>${slope.toFixed(4)}</td>
+          <td>${slopeStdError.toFixed(4)}</td>
+          <td>${slopeTStat.toFixed(4)}</td>
+          <td>${slopePValue.toFixed(4)}</td>
+        </tr>
+      `;
+      
+      // Create plot
+      const plot = document.getElementById('plot');
+      plot.innerHTML = '';
+      
+      // Find min/max values
+      const minX = Math.min(...data.map(p => p.x));
+      const maxX = Math.max(...data.map(p => p.x));
+      const minY = Math.min(...data.map(p => p.y));
+      const maxY = Math.max(...data.map(p => p.y));
+      
+      const paddingX = (maxX - minX) * 0.1;
+      const paddingY = (maxY - minY) * 0.1;
+      const plotMinX = minX - paddingX;
+      const plotMaxX = maxX + paddingX;
+      const plotMinY = minY - paddingY;
+      const plotMaxY = maxY + paddingY;
+      
+      const plotWidth = plot.clientWidth;
+      const plotHeight = plot.clientHeight;
+      
+      // Scale function to convert data coordinates to plot coordinates
+      const scaleX = x => (x - plotMinX) / (plotMaxX - plotMinX) * plotWidth;
+      const scaleY = y => plotHeight - (y - plotMinY) / (plotMaxY - plotMinY) * plotHeight;
+      
+      // Add data points
+      for (const point of data) {
+        const dot = document.createElement('div');
+        dot.className = 'plot-point';
+        dot.style.left = scaleX(point.x) + 'px';
+        dot.style.top = scaleY(point.y) + 'px';
+        plot.appendChild(dot);
+      }
+      
+      // Add regression line
+      const lineStartX = plotMinX;
+      const lineStartY = slope * lineStartX + intercept;
+      const lineEndX = plotMaxX;
+      const lineEndY = slope * lineEndX + intercept;
+      
+      const line = document.createElement('div');
+      line.className = 'regression-line';
+      
+      // Calculate position and dimensions
+      const x1 = scaleX(lineStartX);
+      const y1 = scaleY(lineStartY);
+      const x2 = scaleX(lineEndX);
+      const y2 = scaleY(lineEndY);
+      
+      const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+      const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+      
+      line.style.width = length + 'px';
+      line.style.left = x1 + 'px';
+      line.style.top = y1 + 'px';
+      line.style.transform = `rotate(${angle}deg)`;
+      line.style.transformOrigin = '0 0';
+      
+      plot.appendChild(line);
+      
+      // Save regression data
+      regression = { slope, intercept };
+      
+      // Show results
+      document.getElementById('results').style.display = 'block';
+    }
+    
+    function predict() {
+      if (!regression.slope) {
+        alert('Please calculate regression first');
+        return;
+      }
+      
+      const x = parseFloat(document.getElementById('predict-x').value);
+      if (isNaN(x)) {
+        alert('Please enter a valid number');
+        return;
+      }
+      
+      const predicted = regression.slope * x + regression.intercept;
+      document.getElementById('prediction-result').textContent = 
+        `Predicted Y for X = ${x}: ${predicted.toFixed(4)}`;
+    }
+  </script>
+</body>
+</html>

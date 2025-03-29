@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .calculator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .calculator {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .calculator h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .result p {
+            margin: 5px 0;
+        }
+        
+        .explanation {
+            background-color: #ebf5fb;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .concept {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .concept h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .formula {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .matrix-input {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .matrix-cell {
+            padding: 5px;
+        }
+        
+        .matrix-label {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Probability Calculator</h1>
+    
+    <div class="concept">
+        <h2>Introduction to Probability</h2>
+        <p>Probability is a measure of the likelihood that an event will occur. It is quantified as a number between 0 and 1 (where 0 indicates impossibility and 1 indicates certainty).</p>
+        
+        <h3>Key Terms</h3>
+        <ul>
+            <li><strong>Sample Space (Ω):</strong> The set of all possible outcomes of an experiment.</li>
+            <li><strong>Event:</strong> A subset of the sample space.</li>
+            <li><strong>Probability of an Event P(A):</strong> The likelihood of event A occurring.</li>
+        </ul>
+        
+        <h3>Basic Probability Rules</h3>
+        <div class="formula">
+            <p>1. For any event A: 0 ≤ P(A) ≤ 1</p>
+            <p>2. For the entire sample space Ω: P(Ω) = 1</p>
+            <p>3. For any event A: P(A') = 1 - P(A) where A' is the complement of A</p>
+            <p>4. For mutually exclusive events A and B: P(A ∪ B) = P(A) + P(B)</p>
+            <p>5. For any events A and B: P(A ∪ B) = P(A) + P(B) - P(A ∩ B)</p>
+        </div>
+    </div>
+    
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('basicProb')">Basic Probability</div>
+            <div class="tab" onclick="openTab('conditionalProb')">Conditional Probability</div>
+            <div class="tab" onclick="openTab('independence')">Independence</div>
+            <div class="tab" onclick="openTab('bayesTheorem')">Bayes' Theorem</div>
+        </div>
+        
+        <div id="basicProb" class="tab-content active">
+            <h2>Basic Probability Calculator</h2>
+            <p>Calculate simple probabilities based on given information.</p>
+            
+            <div class="calculator">
+                <h3>Simple Probability</h3>
+                <div class="form-group">
+                    <label for="favorable">Number of favorable outcomes:</label>
+                    <input type="number" id="favorable" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="total">Total number of possible outcomes:</label>
+                    <input type="number" id="total" min="1">
+                </div>
+                <button onclick="calculateSimpleProb()">Calculate</button>
+                
+                <div id="simpleResult" class="result" style="display: none;">
+                    <p><strong>Probability: </strong><span id="simpleProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="simplePercent"></span>%</p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>Formula:</h4>
+                    <p>P(A) = Number of favorable outcomes / Total number of possible outcomes</p>
+                </div>
+            </div>
+            
+            <div class="calculator">
+                <h3>Complement Rule</h3>
+                <div class="form-group">
+                    <label for="probEvent">Probability of event P(A):</label>
+                    <input type="number" id="probEvent" min="0" max="1" step="0.01">
+                </div>
+                <button onclick="calculateComplement()">Calculate P(A')</button>
+                
+                <div id="complementResult" class="result" style="display: none;">
+                    <p><strong>Probability of complement P(A'): </strong><span id="complementProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="complementPercent"></span>%</p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>Formula:</h4>
+                    <p>P(A') = 1 - P(A)</p>
+                    <p>Where A' is the complement of event A (all outcomes not in A)</p>
+                </div>
+            </div>
+            
+            <div class="calculator">
+                <h3>Addition Rule</h3>
+                <div class="form-group">
+                    <label for="probA">Probability of event A - P(A):</label>
+                    <input type="number" id="probA" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="probB">Probability of event B - P(B):</label>
+                    <input type="number" id="probB" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="probIntersect">Probability of both A and B - P(A ∩ B):</label>
+                    <input type="number" id="probIntersect" min="0" max="1" step="0.01">
+                </div>
+                <button onclick="calculateAddition()">Calculate P(A ∪ B)</button>
+                
+                <div id="additionResult" class="result" style="display: none;">
+                    <p><strong>Probability of A or B - P(A ∪ B): </strong><span id="additionProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="additionPercent"></span>%</p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>Formula:</h4>
+                    <p>P(A ∪ B) = P(A) + P(B) - P(A ∩ B)</p>
+                    <p>For mutually exclusive events (where P(A ∩ B) = 0): P(A ∪ B) = P(A) + P(B)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="conditionalProb" class="tab-content">
+            <h2>Conditional Probability</h2>
+            <p>Calculate the probability of an event given that another event has occurred.</p>
+            
+            <div class="calculator">
+                <h3>Conditional Probability Calculator</h3>
+                <div class="form-group">
+                    <label for="probAandB">Probability of both A and B - P(A ∩ B):</label>
+                    <input type="number" id="probAandB" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="probBcond">Probability of event B - P(B):</label>
+                    <input type="number" id="probBcond" min="0" max="1" step="0.01">
+                </div>
+                <button onclick="calculateConditional()">Calculate P(A|B)</button>
+                
+                <div id="conditionalResult" class="result" style="display: none;">
+                    <p><strong>Conditional Probability P(A|B): </strong><span id="conditionalProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="conditionalPercent"></span>%</p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>Formula:</h4>
+                    <p>P(A|B) = P(A ∩ B) / P(B)</p>
+                    <p>The probability of event A occurring given that event B has occurred.</p>
+                </div>
+            </div>
+            
+            <div class="calculator">
+                <h3>Contingency Table Calculator</h3>
+                <p>Enter values for a 2×2 contingency table to calculate probabilities:</p>
+                
+                <div class="matrix-input">
+                    <div class="matrix-cell">
+                        <div class="matrix-label">A ∩ B</div>
+                        <input type="number" id="cell00" min="0" placeholder="Count">
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-label">A' ∩ B</div>
+                        <input type="number" id="cell01" min="0" placeholder="Count">
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-label">A ∩ B'</div>
+                        <input type="number" id="cell10" min="0" placeholder="Count">
+                    </div>
+                    <div class="matrix-cell">
+                        <div class="matrix-label">A' ∩ B'</div>
+                        <input type="number" id="cell11" min="0" placeholder="Count">
+                    </div>
+                </div>
+                
+                <button onclick="calculateFromTable()">Calculate Probabilities</button>
+                
+                <div id="tableResult" class="result" style="display: none;">
+                    <p><strong>P(A): </strong><span id="tablePA"></span></p>
+                    <p><strong>P(B): </strong><span id="tablePB"></span></p>
+                    <p><strong>P(A ∩ B): </strong><span id="tablePAandB"></span></p>
+                    <p><strong>P(A|B): </strong><span id="tablePAgivenB"></span></p>
+                    <p><strong>P(B|A): </strong><span id="tablePBgivenA"></span></p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>How it works:</h4>
+                    <p>The contingency table represents counts of outcomes for two events A and B.</p>
+                    <p>The calculator uses these counts to compute various probabilities.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="independence" class="tab-content">
+            <h2>Independence Testing</h2>
+            <p>Test whether two events are independent based on their probabilities.</p>
+            
+            <div class="calculator">
+                <h3>Independence Checker</h3>
+                <div class="form-group">
+                    <label for="indepProbA">Probability of event A - P(A):</label>
+                    <input type="number" id="indepProbA" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="indepProbB">Probability of event B - P(B):</label>
+                    <input type="number" id="indepProbB" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="indepProbAandB">Probability of both A and B - P(A ∩ B):</label>
+                    <input type="number" id="indepProbAandB" min="0" max="1" step="0.01">
+                </div>
+                <button onclick="checkIndependence()">Check Independence</button>
+                
+                <div id="independenceResult" class="result" style="display: none;">
+                    <p><strong>Expected P(A ∩ B) if independent: </strong><span id="expectedJoint"></span></p>
+                    <p><strong>Actual P(A ∩ B): </strong><span id="actualJoint"></span></p>
+                    <p><strong>Conclusion: </strong><span id="independenceConclusion"></span></p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>Independence Criteria:</h4>
+                    <p>Two events A and B are independent if and only if:</p>
+                    <p>P(A ∩ B) = P(A) × P(B)</p>
+                    <p>Alternatively, events are independent if:</p>
+                    <p>P(A|B) = P(A) or P(B|A) = P(B)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="bayesTheorem" class="tab-content">
+            <h2>Bayes' Theorem Calculator</h2>
+            <p>Calculate posterior probabilities using Bayes' Theorem.</p>
+            
+            <div class="calculator">
+                <h3>Bayes' Theorem</h3>
+                <div class="form-group">
+                    <label for="priorA">Prior probability P(A):</label>
+                    <input type="number" id="priorA" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="likelihoodB_A">Likelihood P(B|A):</label>
+                    <input type="number" id="likelihoodB_A" min="0" max="1" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="likelihoodB_notA">Likelihood P(B|A'):</label>
+                    <input type="number" id="likelihoodB_notA" min="0" max="1" step="0.01">
+                </div>
+                <button onclick="calculateBayes()">Calculate P(A|B)</button>
+                
+                <div id="bayesResult" class="result" style="display: none;">
+                    <p><strong>Posterior probability P(A|B): </strong><span id="posteriorProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="bayesPercent"></span>%</p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>Bayes' Theorem Formula:</h4>
+                    <p>P(A|B) = [P(B|A) × P(A)] / P(B)</p>
+                    <p>Where P(B) = P(B|A) × P(A) + P(B|A') × P(A')</p>
+                    <p>This theorem allows updating prior beliefs (P(A)) based on new evidence (B).</p>
+                </div>
+            </div>
+            
+            <div class="calculator">
+                <h3>Medical Test Example</h3>
+                <p>A classic application of Bayes' Theorem is in medical testing.</p>
+                
+                <div class="form-group">
+                    <label for="prevalence">Disease prevalence (prior probability):</label>
+                    <input type="number" id="prevalence" min="0" max="1" step="0.001" value="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="sensitivity">Test sensitivity (P(positive|disease)):</label>
+                    <input type="number" id="sensitivity" min="0" max="1" step="0.01" value="0.95">
+                </div>
+                <div class="form-group">
+                    <label for="specificity">Test specificity (P(negative|no disease)):</label>
+                    <input type="number" id="specificity" min="0" max="1" step="0.01" value="0.90">
+                </div>
+                <button onclick="calculateMedicalTest()">Calculate Probability</button>
+                
+                <div id="medicalResult" class="result" style="display: none;">
+                    <p><strong>Probability of disease given positive test P(D|+): </strong><span id="positiveTestProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="positiveTestPercent"></span>%</p>
+                    <p><strong>Probability of disease given negative test P(D|-): </strong><span id="negativeTestProb"></span></p>
+                    <p><strong>Percentage: </strong><span id="negativeTestPercent"></span>%</p>
+                </div>
+                
+                <div class="explanation">
+                    <h4>How this works:</h4>
+                    <p>For positive test result: P(D|+) = [P(+|D) × P(D)] / [P(+|D) × P(D) + P(+|D') × P(D')]</p>
+                    <p>Where P(+|D') = 1 - specificity</p>
+                    <p>This explains the "base rate fallacy" - why a positive test for a rare disease may still indicate a low probability of having the disease.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab functionality
+        function openTab(tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+        
+        // Basic Probability Calculators
+        function calculateSimpleProb() {
+            const favorable = parseFloat(document.getElementById("favorable").value);
+            const total = parseFloat(document.getElementById("total").value);
+            
+            if (isNaN(favorable) || isNaN(total) || total <= 0) {
+                alert("Please enter valid numbers");
+                return;
+            }
+            
+            if (favorable > total) {
+                alert("Favorable outcomes cannot exceed total outcomes");
+                return;
+            }
+            
+            const probability = favorable / total;
+            
+            document.getElementById("simpleProb").textContent = probability.toFixed(4);
+            document.getElementById("simplePercent").textContent = (probability * 100).toFixed(2);
+            document.getElementById("simpleResult").style.display = "block";
+        }
+        
+        function calculateComplement() {
+            const probability = parseFloat(document.getElementById("probEvent").value);
+            
+            if (isNaN(probability) || probability < 0 || probability > 1) {
+                alert("Please enter a valid probability between 0 and 1");
+                return;
+            }
+            
+            const complement = 1 - probability;
+            
+            document.getElementById("complementProb").textContent = complement.toFixed(4);
+            document.getElementById("complementPercent").textContent = (complement * 100).toFixed(2);
+            document.getElementById("complementResult").style.display = "block";
+        }
+        
+        function calculateAddition() {
+            const probA = parseFloat(document.getElementById("probA").value);
+            const probB = parseFloat(document.getElementById("probB").value);
+            const probIntersect = parseFloat(document.getElementById("probIntersect").value);
+            
+            if (isNaN(probA) || isNaN(probB) || isNaN(probIntersect) || 
+                probA < 0 || probA > 1 || probB < 0 || probB > 1 || probIntersect < 0 || probIntersect > 1) {
+                alert("Please enter valid probabilities between 0 and 1");
+                return;
+            }
+            
+            if (probIntersect > Math.min(probA, probB)) {
+                alert("P(A ∩ B) cannot be greater than either P(A) or P(B)");
+                return;
+            }
+            
+            const union = probA + probB - probIntersect;
+            
+            if (union > 1) {
+                alert("The resulting probability is greater than 1. Please check your inputs.");
+                return;
+            }
+            
+            document.getElementById("additionProb").textContent = union.toFixed(4);
+            document.getElementById("additionPercent").textContent = (union * 100).toFixed(2);
+            document.getElementById("additionResult").style.display = "block";
+        }
+        
+        // Conditional Probability
+        function calculateConditional() {
+            const probAandB = parseFloat(document.getElementById("probAandB").value);
+            const probB = parseFloat(document.getElementById("probBcond").value);
+            
+            if (isNaN(probAandB) || isNaN(probB) || 
+                probAandB < 0 || probAandB > 1 || probB <= 0 || probB > 1) {
+                alert("Please enter valid probabilities between 0 and 1 (P(B) must be greater than 0)");
+                return;
+            }
+            
+            if (probAandB > probB) {
+                alert("P(A ∩ B) cannot be greater than P(B)");
+                return;
+            }
+            
+            const conditional = probAandB / probB;
+            
+            document.getElementById("conditionalProb").textContent = conditional.toFixed(4);
+            document.getElementById("conditionalPercent").textContent = (conditional * 100).toFixed(2);
+            document.getElementById("conditionalResult").style.display = "block";
+        }
+        
+        function calculateFromTable() {
+            const cell00 = parseInt(document.getElementById("cell00").value) || 0; // A ∩ B
+            const cell01 = parseInt(document.getElementById("cell01").value) || 0; // A' ∩ B
+            const cell10 = parseInt(document.getElementById("cell10").value) || 0; // A ∩ B'
+            const cell11 = parseInt(document.getElementById("cell11").value) || 0; // A' ∩ B'
+            
+            if (cell00 < 0 || cell01 < 0 || cell10 < 0 || cell11 < 0) {
+                alert("Please enter non-negative values");
+                return;
+            }
+            
+            const total = cell00 + cell01 + cell10 + cell11;
+            
+            if (total === 0) {
+                alert("Total count cannot be zero");
+                return;
+            }
+            
+            const countA = cell00 + cell10; // Count of A
+            const countB = cell00 + cell01; // Count of B
+            
+            const probA = countA / total;
+            const probB = countB / total;
+            const probAandB = cell00 / total;
+            
+            let probAgivenB = 0;
+            if (countB > 0) {
+                probAgivenB = cell00 / countB;
+            }
+            
+            let probBgivenA = 0;
+            if (countA > 0) {
+                probBgivenA = cell00 / countA;
+            }
+            
+            document.getElementById("tablePA").textContent = probA.toFixed(4);
+            document.getElementById("tablePB").textContent = probB.toFixed(4);
+            document.getElementById("tablePAandB").textContent = probAandB.toFixed(4);
+            document.getElementById("tablePAgivenB").textContent = probAgivenB.toFixed(4);
+            document.getElementById("tablePBgivenA").textContent = probBgivenA.toFixed(4);
+            document.getElementById("tableResult").style.display = "block";
+        }
+        
+        // Independence
+        function checkIndependence() {
+            const probA = parseFloat(document.getElementById("indepProbA").value);
+            const probB = parseFloat(document.getElementById("indepProbB").value);
+            const probAandB = parseFloat(document.getElementById("indepProbAandB").value);
+            
+            if (isNaN(probA) || isNaN(probB) || isNaN(probAandB) || 
+                probA < 0 || probA > 1 || probB < 0 || probB > 1 || probAandB < 0 || probAandB > 1) {
+                alert("Please enter valid probabilities between 0 and 1");
+                return;
+            }
+            
+            if (probAandB > Math.min(probA, probB)) {
+                alert("P(A ∩ B) cannot be greater than either P(A) or P(B)");
+                return;
+            }
+            
+            const expectedJoint = probA * probB;
+            const epsilon = 0.0001; // Small tolerance for floating-point comparison
+            
+            let conclusion = "";
+            if (Math.abs(probAandB - expectedJoint) < epsilon) {
+                conclusion = "Events A and B appear to be independent.";
+            } else if (probAandB > expectedJoint) {
+                conclusion = "Events A and B appear to be positively correlated (not independent).";
+            } else {
+                conclusion = "Events A and B appear to be negatively correlated (not independent).";
+            }
+            
+            document.getElementById("expectedJoint").textContent = expectedJoint.toFixed(4);
+            document.getElementById("actualJoint").textContent = probAandB.toFixed(4);
+            document.getElementById("independenceConclusion").textContent = conclusion;
+            document.getElementById("independenceResult").style.display = "block";
+        }
+        
+        // Bayes' Theorem
+        function calculateBayes() {
+            const priorA = parseFloat(document.getElementById("priorA").value);
+            const likelihoodB_A = parseFloat(document.getElementById("likelihoodB_A").value);
+            const likelihoodB_notA = parseFloat(document.getElementById("likelihoodB_notA").value);
+            
+            if (isNaN(priorA) || isNaN(likelihoodB_A) || isNaN(likelihoodB_notA) || 
+                priorA < 0 || priorA > 1 || likelihoodB_A < 0 || likelihoodB_A > 1 || 
+                likelihoodB_notA < 0 || likelihoodB_notA > 1) {
+                alert("Please enter valid probabilities between 0 and 1");
+                return;
+            }
+            
+            const priorNotA = 1 - priorA;
+            const marginalB = (likelihoodB_A * priorA) + (likelihoodB_notA * priorNotA);
+            
+            if (marginalB === 0) {
+                alert("P(B) cannot be zero. Please check your inputs.");
+                return;
+            }
+            
+            const posterior = (likelihoodB

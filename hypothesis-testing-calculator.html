@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypothesis Testing Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            background: #fff;
+        }
+        
+        .header {
+            background: #9b59b6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background: #9b59b6;
+            color: white;
+            border-color: #9b59b6;
+        }
+        
+        .calculator, .explanation {
+            display: none;
+        }
+        
+        .active-content {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #8e44ad;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .result h3 {
+            margin-bottom: 10px;
+            color: #9b59b6;
+        }
+        
+        .explanation {
+            line-height: 1.6;
+        }
+        
+        .explanation h3 {
+            margin: 15px 0 10px;
+            color: #9b59b6;
+        }
+        
+        .formula {
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .visual {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            background: #f8f8f8;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .distribution {
+            position: relative;
+            width: 80%;
+            height: 120px;
+        }
+        
+        .curve {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .rejection-area {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(231, 76, 60, 0.2);
+        }
+        
+        .critical-value {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #e74c3c;
+        }
+        
+        .test-statistic {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #9b59b6;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hypothesis Testing Calculator</h1>
+        </div>
+        
+        <div class="content">
+            <div class="tabs">
+                <div class="tab active" data-tab="calculator">Calculator</div>
+                <div class="tab" data-tab="explanation">Explanation</div>
+            </div>
+            
+            <div class="calculator active-content">
+                <div class="form-group">
+                    <label for="test-type">Test Type:</label>
+                    <select id="test-type">
+                        <option value="z-test">Z-Test (Known Population Std Dev)</option>
+                        <option value="t-test">T-Test (Unknown Population Std Dev)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hypothesis-type">Hypothesis Type:</label>
+                    <select id="hypothesis-type">
+                        <option value="two-tailed">Two-tailed (H₁: μ ≠ μ₀)</option>
+                        <option value="right-tailed">Right-tailed (H₁: μ > μ₀)</option>
+                        <option value="left-tailed">Left-tailed (H₁: μ < μ₀)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sample-mean">Sample Mean:</label>
+                    <input type="number" id="sample-mean" placeholder="Enter sample mean">
+                </div>
+                
+                <div class="form-group">
+                    <label for="null-value">Null Hypothesis Value (μ₀):</label>
+                    <input type="number" id="null-value" placeholder="Enter null hypothesis value">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sample-size">Sample Size:</label>
+                    <input type="number" id="sample-size" placeholder="Enter sample size">
+                </div>
+                
+                <div class="form-group">
+                    <label for="std-dev">Standard Deviation:</label>
+                    <input type="number" id="std-dev" placeholder="Enter standard deviation">
+                </div>
+                
+                <div class="form-group">
+                    <label for="significance-level">Significance Level (α):</label>
+                    <select id="significance-level">
+                        <option value="0.10">0.10 (10%)</option>
+                        <option value="0.05" selected>0.05 (5%)</option>
+                        <option value="0.01">0.01 (1%)</option>
+                    </select>
+                </div>
+                
+                <button id="calculate">Calculate</button>
+                
+                <div class="result" id="result">
+                    <h3>Results</h3>
+                    <p><strong>Test Statistic:</strong> <span id="test-statistic-value"></span></p>
+                    <p><strong>Critical Value(s):</strong> <span id="critical-value"></span></p>
+                    <p><strong>P-value:</strong> <span id="p-value"></span></p>
+                    <p><strong>Decision:</strong> <span id="decision"></span></p>
+                    <p><strong>Interpretation:</strong> <span id="interpretation"></span></p>
+                    
+                    <div class="visual">
+                        <div class="distribution">
+                            <svg class="curve" viewBox="0 0 200 100" preserveAspectRatio="none">
+                                <path d="M0,100 Q50,0 100,0 Q150,0 200,100" fill="none" stroke="#9b59b6" stroke-width="2"></path>
+                            </svg>
+                            <div class="rejection-area" id="rejection-area-left"></div>
+                            <div class="rejection-area" id="rejection-area-right"></div>
+                            <div class="critical-value" id="critical-value-left"></div>
+                            <div class="critical-value" id="critical-value-right"></div>
+                            <div class="test-statistic" id="test-statistic-line"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="explanation">
+                <h3>What is Hypothesis Testing?</h3>
+                <p>Hypothesis testing is a statistical method used to make decisions about a population based on sample data. It involves comparing a claim (hypothesis) about a population parameter against evidence from the sample.</p>
+                
+                <h3>Key Components</h3>
+                <p><strong>Null Hypothesis (H₀):</strong> A statement of no effect or no difference, typically the status quo.</p>
+                <p><strong>Alternative Hypothesis (H₁ or Hₐ):</strong> A statement that contradicts the null hypothesis.</p>
+                <p><strong>Test Statistic:</strong> A value calculated from the sample data used to determine whether to reject the null hypothesis.</p>
+                <p><strong>Significance Level (α):</strong> The probability of rejecting the null hypothesis when it is actually true (Type I error probability).</p>
+                <p><strong>P-value:</strong> The probability of observing a test statistic as extreme as or more extreme than the one calculated, assuming the null hypothesis is true.</p>
+                
+                <h3>Types of Errors</h3>
+                <table class="table">
+                    <tr>
+                        <th></th>
+                        <th>H₀ is True</th>
+                        <th>H₀ is False</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Reject H₀</strong></td>
+                        <td>Type I Error<br>(False Positive)<br>Probability = α</td>
+                        <td>Correct Decision<br>(True Positive)<br>Power = 1-β</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fail to Reject H₀</strong></td>
+                        <td>Correct Decision<br>(True Negative)<br>Probability = 1-α</td>
+                        <td>Type II Error<br>(False Negative)<br>Probability = β</td>
+                    </tr>
+                </table>
+                
+                <h3>Common Test Statistics</h3>
+                <p><strong>Z-Test:</strong> Used when the population standard deviation is known.</p>
+                <div class="formula">z = (x̄ - μ₀) / (σ / √n)</div>
+                
+                <p><strong>T-Test:</strong> Used when the population standard deviation is unknown (using sample standard deviation).</p>
+                <div class="formula">t = (x̄ - μ₀) / (s / √n)</div>
+                
+                <h3>Types of Hypothesis Tests</h3>
+                <ul>
+                    <li><strong>Two-tailed test:</strong> H₁: μ ≠ μ₀ (testing for any difference)</li>
+                    <li><strong>Right-tailed test:</strong> H₁: μ > μ₀ (testing for a positive difference)</li>
+                    <li><strong>Left-tailed test:</strong> H₁: μ < μ₀ (testing for a negative difference)</li>
+                </ul>
+                
+                <h3>Decision Rule</h3>
+                <p>Reject H₀ if:</p>
+                <ul>
+                    <li>The p-value is less than the significance level (α), OR</li>
+                    <li>The test statistic falls in the rejection region (beyond the critical value)</li>
+                </ul>
+                
+                <h3>Common Applications</h3>
+                <ul>
+                    <li>Testing if a new drug is effective</li>
+                    <li>Comparing two teaching methods</li>
+                    <li>Testing if a marketing campaign increased sales</li>
+                    <li>Quality control in manufacturing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.calculator, .explanation').forEach(content => {
+                    content.classList.remove('active-content');
+                });
+                
+                const tabName = tab.getAttribute('data-tab');
+                document.querySelector(`.${tabName}`).classList.add('active-content');
+            });
+        });
+        
+        // Normal distribution CDF approximation
+        function normalCDF(x) {
+            const a1 = 0.254829592;
+            const a2 = -0.284496736;
+            const a3 = 1.421413741;
+            const a4 = -1.453152027;
+            const a5 = 1.061405429;
+            const p = 0.3275911;
+            
+            const sign = x < 0 ? -1 : 1;
+            x = Math.abs(x);
+            
+            const t = 1.0 / (1.0 + p * x);
+            const y = 1.0 - ((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            
+            return 0.5 * (1.0 + sign * y);
+        }
+        
+        // T-distribution critical values for common degrees of freedom and significance levels
+        const tDistribution = {
+            '0.10': {1: 6.314, 2: 2.920, 5: 2.015, 10: 1.812, 20: 1.725, 30: 1.697, 60: 1.671, 100: 1.660, 1000: 1.646},
+            '0.05': {1: 12.706, 2: 4.303, 5: 2.571, 10: 2.228, 20: 2.086, 30: 2.042, 60: 2.000, 100: 1.984, 1000: 1.962},
+            '0.01': {1: 63.657, 2: 9.925, 5: 4.032, 10: 3.169, 20: 2.845, 30: 2.750, 60: 2.660, 100: 2.626, 1000: 2.581}
+        };
+        
+        // Find closest t value
+        function getClosestTValue(df, alpha) {
+            const keys = Object.keys(tDistribution[alpha]).map(Number);
+            let closest = keys[0];
+            
+            for (let key of keys) {
+                if (Math.abs(key - df) < Math.abs(closest - df)) {
+                    closest = key;
+                }
+            }
+            
+            return tDistribution[alpha][closest];
+        }
+        
+        // Critical Z-values for common significance levels
+        const zValues = {
+            '0.10': 1.645,
+            '0.05': 1.96,
+            '0.01': 2.576
+        };
+        
+        // Calculate button functionality
+        document.getElementById('calculate').addEventListener('click', () => {
+            const testType = document.getElementById('test-type').value;
+            const hypothesisType = document.getElementById('hypothesis-type').value;
+            const sampleMean = parseFloat(document.getElementById('sample-mean').value);
+            const nullValue = parseFloat(document.getElementById('null-value').value);
+            const sampleSize = parseInt(document.getElementById('sample-size').value);
+            const stdDev = parseFloat(document.getElementById('std-dev').value);
+            const alpha = document.getElementById('significance-level').value;
+            
+            // Validate inputs
+            if (isNaN(sampleMean) || isNaN(nullValue) || isNaN(sampleSize) || isNaN(stdDev) || sampleSize <= 0 || stdDev < 0) {
+                alert('Please enter valid values for all fields.');
+                return;
+            }
+            
+            // Calculate test statistic
+            const standardError = stdDev / Math.sqrt(sampleSize);
+            const testStatistic = (sampleMean - nullValue) / standardError;
+            
+            // Get critical value based on test type and hypothesis type
+            let criticalValue, criticalValueLeft, criticalValueRight;
+            let pValue;
+            
+            if (testType === 'z-test') {
+                if (hypothesisType === 'two-tailed') {
+                    criticalValue = zValues[alpha] / 2;
+                    criticalValueLeft = -zValues[alpha];
+                    criticalValueRight = zValues[alpha];
+                    pValue = 2 * (1 - normalCDF(Math.abs(testStatistic)));
+                } else if (hypothesisType === 'right-tailed') {
+                    criticalValue = zValues[alpha];
+                    criticalValueRight = zValues[alpha];
+                    pValue = 1 - normalCDF(testStatistic);
+                } else { // left-tailed
+                    criticalValue = -zValues[alpha];
+                    criticalValueLeft = -zValues[alpha];
+                    pValue = normalCDF(testStatistic);
+                }
+            } else { // t-test
+                const df = sampleSize - 1;
+                const tCritical = getClosestTValue(df, alpha);
+                
+                if (hypothesisType === 'two-tailed') {
+                    criticalValueLeft = -tCritical;
+                    criticalValueRight = tCritical;
+                    pValue = 2 * (1 - normalCDF(Math.abs(testStatistic))); // Approximation
+                } else if (hypothesisType === 'right-tailed') {
+                    criticalValueRight = tCritical;
+                    pValue = 1 - normalCDF(testStatistic); // Approximation
+                } else { // left-tailed
+                    criticalValueLeft = -tCritical;
+                    pValue = normalCDF(testStatistic); // Approximation
+                }
+            }
+            
+            // Make decision
+            let decision, interpretation;
+            
+            if (hypothesisType === 'two-tailed') {
+                if (Math.abs(testStatistic) > Math.abs(criticalValueRight)) {
+                    decision = "Reject the null hypothesis (H₀)";
+                    interpretation = `There is sufficient evidence at α = ${alpha} to suggest that the population mean is different from ${nullValue}.`;
+                } else {
+                    decision = "Fail to reject the null hypothesis (H₀)";
+                    interpretation = `There is insufficient evidence at α = ${alpha} to suggest that the population mean is different from ${nullValue}.`;
+                }
+            } else if (hypothesisType === 'right-tailed') {
+                if (testStatistic > criticalValueRight) {
+                    decision = "Reject the null hypothesis (H₀)";
+                    interpretation = `There is sufficient evidence at α = ${alpha} to suggest that the population mean is greater than ${nullValue}.`;
+                } else {
+                    decision = "Fail to reject the null hypothesis (H₀)";
+                    interpretation = `There is insufficient evidence at α = ${alpha} to suggest that the population mean is greater than ${nullValue}.`;
+                }
+            } else { // left-tailed
+                if (testStatistic < criticalValueLeft) {
+                    decision = "Reject the null hypothesis (H₀)";
+                    interpretation = `There is sufficient evidence at α = ${alpha} to suggest that the population mean is less than ${nullValue}.`;
+                } else {
+                    decision = "Fail to reject the null hypothesis (H₀)";
+                    interpretation = `There is insufficient evidence at α = ${alpha} to suggest that the population mean is less than ${nullValue}.`;
+                }
+            }
+            
+            // Update results
+            document.getElementById('test-statistic-value').textContent = testStatistic.toFixed(4);
+            
+            let criticalValueText = '';
+            if (hypothesisType === 'two-tailed') {
+                criticalValueText = `${criticalValueLeft?.toFixed(4)} and ${criticalValueRight?.toFixed(4)}`;
+            } else if (hypothesisType === 'right-tailed') {
+                criticalValueText = criticalValueRight?.toFixed(4);
+            } else { // left-tailed
+                criticalValueText = criticalValueLeft?.toFixed(4);
+            }
+            
+            document.getElementById('critical-value').textContent = criticalValueText;
+            document.getElementById('p-value').textContent = pValue.toFixed(4);
+            document.getElementById('decision').textContent = decision;
+            document.getElementById('interpretation').textContent = interpretation;
+            
+            // Update visualization
+            const testStatLine = document.getElementById('test-statistic-line');
+            testStatLine.style.left = `${50 + (testStatistic * 10)}%`;
+            
+            const rejectionAreaLeft = document.getElementById('rejection-area-left');
+            const rejectionAreaRight = document.getElementById('rejection-area-right');
+            const criticalValueLeftLine = document.getElementById('critical-value-left');
+            const criticalValueRightLine = document.getElementById('critical-value-right');
+            
+            // Reset areas
+            rejectionAreaLeft.style.display = 'none';
+            rejectionAreaRight.style.display = 'none';
+            criticalValueLeftLine.style.display = 'none';
+            criticalValueRightLine.style.display = 'none';
+            
+            if (hypothesisType === 'two-tailed') {
+                rejectionAreaLeft.style.display = 'block';
+                rejectionAreaRight.style.display = 'block';
+                criticalValueLeftLine.style.display = 'block';
+                criticalValueRightLine.style.display = 'block';
+                
+                rejectionAreaLeft.style.left = '0';
+                rejectionAreaLeft.style.width = `${50 + (criticalValueLeft * 10)}%`;
+                
+                rejectionAreaRight.style.left = `${50 + (criticalValueRight * 10)}%`;
+                rejectionAreaRight.style.width = `${50 - (criticalValueRight * 10)}%`;
+                
+                criticalValueLeftLine.style.left = `${50 + (criticalValueLeft * 10)}%`;
+                criticalValueRightLine.style.left = `${50 + (criticalValueRight * 10)}%`;
+            } else if (hypothesisType === 'right-tailed') {
+                rejectionAreaRight.style.display = 'block';
+                criticalValueRightLine.style.display = 'block';
+                
+                rejectionAreaRight.style.left = `${50 + (criticalValueRight * 10)}%`;
+                rejectionAreaRight.style.width = `${50 - (criticalValueRight * 10)}%`;
+                
+                criticalValueRightLine.style.left = `${50 + (criticalValueRight * 10)}%`;
+            } else { // left-tailed
+                rejectionAreaLeft.style.display = 'block';
+                criticalValueLeftLine.style.display = 'block';
+                
+                rejectionAreaLeft.style.left = '0';
+                rejectionAreaLeft.style.width = `${50 + (criticalValueLeft * 10)}%`;
+                
+                criticalValueLeftLine.style.left = `${50 + (criticalValueLeft * 10)}%`;
+            }
+            
+            // Show results
+            document.getElementById('result').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
