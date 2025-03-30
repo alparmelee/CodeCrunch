@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Polar Equation Grapher</title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: 0 auto; padding: 10px; background: #f5f5f5; }
+        h1 { color: #333; text-align: center; }
+        .container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .panel { background: white; border-radius: 8px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .controls { width: 300px; }
+        canvas { border: 1px solid #ddd; border-radius: 4px; }
+        label { display: block; margin-top: 8px; font-weight: bold; }
+        input, select { width: 100%; padding: 6px; margin-top: 3px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #4CAF50; color: white; border: none; padding: 8px 12px; margin-top: 10px; border-radius: 4px; cursor: pointer; }
+        .section { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+        .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 8px; }
+        .presets button { font-size: 11px; padding: 5px; margin-top: 0; }
+        .info { font-size: 13px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Polar Equation Grapher</h1>
+    <div class="container">
+        <div class="panel controls">
+            <div class="section">
+                <label for="equation">Polar Equation (r as function of θ):</label>
+                <input type="text" id="equation" value="2 + 2*Math.sin(theta)" placeholder="Example: 2 + 2*Math.sin(theta)">
+                <div class="info">Use 'theta' for angle and 'Math.sin', 'Math.cos' for trig functions</div>
+                <div class="presets">
+                    <button onclick="setPreset('2 + 2*Math.sin(theta)')">Limaçon</button>
+                    <button onclick="setPreset('2*Math.cos(3*theta)')">Three-Leaf Rose</button>
+                    <button onclick="setPreset('2*Math.cos(2*theta)')">Four-Leaf Rose</button>
+                    <button onclick="setPreset('theta')">Archimedes Spiral</button>
+                    <button onclick="setPreset('1 + Math.cos(theta)')">Cardioid</button>
+                </div>
+            </div>
+            <div class="section">
+                <label for="thetaStart">θ Start (radians):</label>
+                <input type="number" id="thetaStart" value="0" step="0.1">
+                <label for="thetaEnd">θ End (radians):</label>
+                <input type="number" id="thetaEnd" value="6.283" step="0.1">
+                <label for="thetaStep">θ Step:</label>
+                <input type="number" id="thetaStep" value="0.01" step="0.001" min="0.001" max="0.5">
+                <label for="gridSize">Grid Size:</label>
+                <input type="range" id="gridSize" min="1" max="10" value="5" step="1">
+                <label><input type="checkbox" id="showGrid" checked> Show Grid</label>
+                <label><input type="checkbox" id="showAxis" checked> Show Axes</label>
+            </div>
+            <button id="drawButton">Draw Graph</button>
+            <div id="coordinates" class="info">Hover over graph for coordinates</div>
+            <div class="section">
+                <h3>Coordinate Converter</h3>
+                <label for="rectangularX">Rectangular X:</label>
+                <input type="number" id="rectangularX" value="1" step="0.1">
+                <label for="rectangularY">Rectangular Y:</label>
+                <input type="number" id="rectangularY" value="1" step="0.1">
+                <button id="toPolarButton">Convert to Polar</button>
+                <div id="polarResult" class="info">r = √2, θ = π/4</div>
+                <label for="polarR">Polar r:</label>
+                <input type="number" id="polarR" value="2" step="0.1" min="0">
+                <label for="polarTheta">Polar θ (radians):</label>
+                <input type="number" id="polarTheta" value="0.785" step="0.1">
+                <button id="toRectangularButton">Convert to Rectangular</button>
+                <div id="rectangularResult" class="info">x = 1.414, y = 1.414</div>
+            </div>
+        </div>
+        <div class="panel">
+            <canvas id="graphCanvas" width="450" height="450"></canvas>
+        </div>
+    </div>
+    <script>
+        // Get elements
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        const equationInput = document.getElementById('equation');
+        const thetaStartInput = document.getElementById('thetaStart');
+        const thetaEndInput = document.getElementById('thetaEnd');
+        const thetaStepInput = document.getElementById('thetaStep');
+        const gridSizeInput = document.getElementById('gridSize');
+        const showGridCheckbox = document.getElementById('showGrid');
+        const showAxisCheckbox = document.getElementById('showAxis');
+        const drawButton = document.getElementById('drawButton');
+        const coordinatesDiv = document.getElementById('coordinates');
+        
+        // Canvas properties
+        const width = canvas.width;
+        const height = canvas.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        
+        // Function to evaluate the polar equation
+        function evaluatePolarEquation(equation, theta) {
+            try {
+                // Make built-in Math methods available to the evaluation
+                return Function('theta', 'Math', 'return ' + equation + ';')(theta, Math);
+            } catch (error) {
+                console.error('Error evaluating equation:', error);
+                return 0;
+            }
+        }
+        
+        // Convert between coordinate systems
+        function polarToCartesian(r, theta) {
+            return { x: r * Math.cos(theta), y: r * Math.sin(theta) };
+        }
+        
+        function cartesianToPolar(x, y) {
+            const r = Math.sqrt(x * x + y * y);
+            let theta = Math.atan2(y, x);
+            if (theta < 0) theta += 2 * Math.PI;
+            return { r, theta };
+        }
+        
+        // Draw the grid and graph
+        function drawPolarGraph() {
+            const gridSize = parseInt(gridSizeInput.value);
+            const showGrid = showGridCheckbox.checked;
+            const showAxis = showAxisCheckbox.checked;
+            const scale = Math.min(width, height) / (gridSize * 2);
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw grid
+            if (showGrid) {
+                ctx.strokeStyle = '#e0e0e0';
+                ctx.lineWidth = 1;
+                
+                // Draw concentric circles
+                for (let r = 1; r <= gridSize; r++) {
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, r * scale, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+                
+                // Draw radial lines
+                for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 6) {
+                    const start = polarToCartesian(0, angle);
+                    const end = polarToCartesian(gridSize, angle);
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + start.x * scale, centerY - start.y * scale);
+                    ctx.lineTo(centerX + end.x * scale, centerY - end.y * scale);
+                    ctx.stroke();
+                }
+            }
+            
+            // Draw axes
+            if (showAxis) {
+                ctx.strokeStyle = '#666';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX - gridSize * scale, centerY);
+                ctx.lineTo(centerX + gridSize * scale, centerY);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY - gridSize * scale);
+                ctx.lineTo(centerX, centerY + gridSize * scale);
+                ctx.stroke();
+            }
+            
+            // Draw the polar curve
+            const equation = equationInput.value;
+            const thetaStart = parseFloat(thetaStartInput.value);
+            const thetaEnd = parseFloat(thetaEndInput.value);
+            const thetaStep = parseFloat(thetaStepInput.value);
+            
+            ctx.strokeStyle = '#ff4081';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            let isFirstPoint = true;
+            
+            for (let theta = thetaStart; theta <= thetaEnd; theta += thetaStep) {
+                const r = evaluatePolarEquation(equation, theta);
+                const point = polarToCartesian(r, theta);
+                const x = centerX + point.x * scale;
+                const y = centerY - point.y * scale;
+                
+                if (isFirstPoint) {
+                    ctx.moveTo(x, y);
+                    isFirstPoint = false;
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+        }
+        
+        // Set preset function
+        function setPreset(equation) {
+            equationInput.value = equation;
+        }
+        
+        // Event listeners
+        drawButton.addEventListener('click', drawPolarGraph);
+        
+        // Mouse move event for coordinates
+        canvas.addEventListener('mousemove', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+            const gridSize = parseInt(gridSizeInput.value);
+            const scale = Math.min(width, height) / (gridSize * 2);
+            
+            const x = (mouseX - centerX) / scale;
+            const y = -(mouseY - centerY) / scale;
+            const polar = cartesianToPolar(x, y);
+            
+            coordinatesDiv.innerHTML = `(x=${x.toFixed(2)}, y=${y.toFixed(2)}) | (r=${polar.r.toFixed(2)}, θ=${polar.theta.toFixed(2)})`;
+        });
+        
+        // Coordinate conversion
+        document.getElementById('toPolarButton').addEventListener('click', function() {
+            const x = parseFloat(document.getElementById('rectangularX').value);
+            const y = parseFloat(document.getElementById('rectangularY').value);
+            const polar = cartesianToPolar(x, y);
+            document.getElementById('polarResult').innerHTML = `r = ${polar.r.toFixed(3)}, θ = ${polar.theta.toFixed(3)} rad`;
+        });
+        
+        document.getElementById('toRectangularButton').addEventListener('click', function() {
+            const r = parseFloat(document.getElementById('polarR').value);
+            const theta = parseFloat(document.getElementById('polarTheta').value);
+            const rect = polarToCartesian(r, theta);
+            document.getElementById('rectangularResult').innerHTML = `x = ${rect.x.toFixed(3)}, y = ${rect.y.toFixed(3)}`;
+        });
+        
+        // Initial draw
+        drawPolarGraph();
+    </script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Radian Measure</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .visualization {
+            flex: 1;
+            min-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        
+        .controls {
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        input[type="range"] {
+            width: 80%;
+        }
+        
+        input[type="number"] {
+            width: 60px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .value {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        
+        .application-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .conversion-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .conversion-card {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        #angularVelocityCanvas {
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Understanding Radian Measure</h1>
+    
+    <div class="info-box">
+        <p>Radians are a unit of angular measure that relates the angle to the radius of a circle. One radian is the angle subtended at the center of a circle by an arc whose length equals the radius of the circle.</p>
+    </div>
+    
+    <div class="container">
+        <div class="visualization">
+            <h2>Radian Measure Visualization</h2>
+            <canvas id="radiansCanvas" width="300" height="300"></canvas>
+            <div class="controls">
+                <label for="angleSlider">Angle: <span id="angleValue" class="value">1.00 rad</span> (<span id="degreesValue" class="value">57.30°</span>)</label><br>
+                <input type="range" id="angleSlider" min="0" max="6.28" value="1" step="0.01">
+            </div>
+            <div>
+                <p>A complete circle is <span class="value">2π radians</span> (approximately 6.28) or <span class="value">360 degrees</span>.</p>
+                <p>The arc length formed by angle θ in a circle of radius r is: <span class="formula">s = r × θ</span> (when θ is in radians)</p>
+            </div>
+        </div>
+        
+        <div class="visualization">
+            <h2>Common Angle Values</h2>
+            <table>
+                <tr>
+                    <th>Angle in Degrees</th>
+                    <th>Angle in Radians</th>
+                    <th>Exact Value</th>
+                </tr>
+                <tr>
+                    <td>0°</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>30°</td>
+                    <td>π/6</td>
+                    <td>≈ 0.5236</td>
+                </tr>
+                <tr>
+                    <td>45°</td>
+                    <td>π/4</td>
+                    <td>≈ 0.7854</td>
+                </tr>
+                <tr>
+                    <td>60°</td>
+                    <td>π/3</td>
+                    <td>≈ 1.0472</td>
+                </tr>
+                <tr>
+                    <td>90°</td>
+                    <td>π/2</td>
+                    <td>≈ 1.5708</td>
+                </tr>
+                <tr>
+                    <td>180°</td>
+                    <td>π</td>
+                    <td>≈ 3.1416</td>
+                </tr>
+                <tr>
+                    <td>270°</td>
+                    <td>3π/2</td>
+                    <td>≈ 4.7124</td>
+                </tr>
+                <tr>
+                    <td>360°</td>
+                    <td>2π</td>
+                    <td>≈ 6.2832</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <h2>Converting Between Degrees and Radians</h2>
+    
+    <div class="info-box">
+        <p>Mathematical formulas for conversion:</p>
+        <ul>
+            <li><span class="formula">Radians = Degrees × (π/180)</span></li>
+            <li><span class="formula">Degrees = Radians × (180/π)</span></li>
+        </ul>
+    </div>
+    
+    <div class="conversion-section">
+        <div class="conversion-card">
+            <h3>Degrees to Radians</h3>
+            <div class="calculator">
+                <div>
+                    <input type="number" id="degreesInput" value="45"> degrees
+                </div>
+                <button id="degToRadButton">Convert →</button>
+                <div>
+                    = <span id="radiansOutput" class="value">0.7854</span> radians
+                </div>
+            </div>
+        </div>
+        
+        <div class="conversion-card">
+            <h3>Radians to Degrees</h3>
+            <div class="calculator">
+                <div>
+                    <input type="number" id="radiansInput" value="1" step="0.01"> radians
+                </div>
+                <button id="radToDegreesButton">Convert →</button>
+                <div>
+                    = <span id="degreesOutput" class="value">57.30</span> degrees
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <h2>Applications of Radian Measure</h2>
+    
+    <div class="application-card">
+        <h3>Angular Velocity</h3>
+        <p>Angular velocity (ω) is the rate of change of angular position with respect to time.</p>
+        <p>Formula: <span class="formula">ω = θ/t</span> (where θ is in radians and t is time)</p>
+        <p>Units: radians per second (rad/s)</p>
+        
+        <canvas id="angularVelocityCanvas" width="300" height="150"></canvas>
+        <div class="controls">
+            <label for="velocitySlider">Angular Velocity: <span id="velocityValue" class="value">1.0</span> rad/s</label><br>
+            <input type="range" id="velocitySlider" min="0.1" max="5" value="1" step="0.1">
+        </div>
+        <p>For an object moving in a circle of radius r with angular velocity ω:</p>
+        <ul>
+            <li>Linear velocity: <span class="formula">v = r × ω</span></li>
+            <li>Linear distance traveled: <span class="formula">s = r × θ</span></li>
+        </ul>
+    </div>
+    
+    <div class="application-card">
+        <h3>Arc Length</h3>
+        <p>The arc length (s) of a circle is related to the radius (r) and the central angle (θ in radians):</p>
+        <p><span class="formula">s = r × θ</span></p>
+        
+        <div class="controls">
+            <label>
+                Radius: <input type="number" id="radiusInput" value="5" min="1" max="20" step="1"> units
+            </label>
+            <label>
+                Angle: <input type="number" id="arcAngleInput" value="1" min="0" max="6.28" step="0.01"> radians
+            </label>
+            <button id="calculateArcButton">Calculate</button>
+        </div>
+        <p>Arc Length: <span id="arcLengthOutput" class="value">5.00</span> units</p>
+        <p>This relationship only works when the angle is measured in radians, which is why radians are the natural unit for calculus and physics.</p>
+    </div>
+    
+    <div class="info-box">
+        <h3>Why Use Radians?</h3>
+        <ol>
+            <li>Radians provide a direct relationship between angle and arc length (s = rθ)</li>
+            <li>Calculus formulas are simpler with radians (e.g., derivative of sin(θ) = cos(θ) only when θ is in radians)</li>
+            <li>Angular velocity and other physics concepts are more naturally expressed in radians</li>
+            <li>Radians are dimensionless (they're a ratio of lengths), making them mathematically elegant</li>
+        </ol>
+    </div>
+    
+    <script>
+        // Canvas elements
+        const radiansCanvas = document.getElementById('radiansCanvas');
+        const radiansCtx = radiansCanvas.getContext('2d');
+        const angleSlider = document.getElementById('angleSlider');
+        const angleValue = document.getElementById('angleValue');
+        const degreesValue = document.getElementById('degreesValue');
+        
+        // Conversion elements
+        const degreesInput = document.getElementById('degreesInput');
+        const radiansInput = document.getElementById('radiansInput');
+        const radiansOutput = document.getElementById('radiansOutput');
+        const degreesOutput = document.getElementById('degreesOutput');
+        const degToRadButton = document.getElementById('degToRadButton');
+        const radToDegreesButton = document.getElementById('radToDegreesButton');
+        
+        // Angular velocity elements
+        const angularVelocityCanvas = document.getElementById('angularVelocityCanvas');
+        const angularVelocityCtx = angularVelocityCanvas.getContext('2d');
+        const velocitySlider = document.getElementById('velocitySlider');
+        const velocityValue = document.getElementById('velocityValue');
+        
+        // Arc length elements
+        const radiusInput = document.getElementById('radiusInput');
+        const arcAngleInput = document.getElementById('arcAngleInput');
+        const arcLengthOutput = document.getElementById('arcLengthOutput');
+        const calculateArcButton = document.getElementById('calculateArcButton');
+        
+        // Initial values
+        let angle = 1; // in radians
+        let angularVelocity = 1; // in radians per second
+        let radius = 5; // units
+        let currentRotation = 0; // for animation
+        let lastFrameTime = 0;
+        
+        // Helper functions for conversion
+        function radiansToDegrees(rad) {
+            return rad * (180 / Math.PI);
+        }
+        
+        function degreesToRadians(deg) {
+            return deg * (Math.PI / 180);
+        }
+        
+        // Draw the unit circle with radian measure
+        function drawRadianCircle() {
+            radiansCtx.clearRect(0, 0, radiansCanvas.width, radiansCanvas.height);
+            
+            const centerX = radiansCanvas.width / 2;
+            const centerY = radiansCanvas.height / 2;
+            const radius = 100;
+            
+            // Draw the circle
+            radiansCtx.beginPath();
+            radiansCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            radiansCtx.strokeStyle = '#2c3e50';
+            radiansCtx.lineWidth = 2;
+            radiansCtx.stroke();
+            
+            // Draw the radius
+            radiansCtx.beginPath();
+            radiansCtx.moveTo(centerX, centerY);
+            radiansCtx.lineTo(centerX + radius * Math.cos(0), centerY - radius * Math.sin(0));
+            radiansCtx.strokeStyle = '#2c3e50';
+            radiansCtx.stroke();
+            
+            // Draw the angle
+            radiansCtx.beginPath();
+            radiansCtx.moveTo(centerX, centerY);
+            radiansCtx.lineTo(centerX + radius * Math.cos(angle), centerY - radius * Math.sin(angle));
+            radiansCtx.strokeStyle = '#e74c3c';
+            radiansCtx.lineWidth = 2;
+            radiansCtx.stroke();
+            
+            // Draw the arc
+            radiansCtx.beginPath();
+            radiansCtx.arc(centerX, centerY, radius, 0, angle, false);
+            radiansCtx.strokeStyle = '#3498db';
+            radiansCtx.lineWidth = 3;
+            radiansCtx.stroke();
+            
+            // Draw the arc length (r × θ)
+            radiansCtx.beginPath();
+            radiansCtx.arc(centerX, centerY, radius + 15, 0, angle, false);
+            radiansCtx.strokeStyle = '#2ecc71';
+            radiansCtx.lineWidth = 2;
+            radiansCtx.stroke();
+            
+            // Label the arc length
+            const arcMiddleAngle = angle / 2;
+            const labelRadius = radius + 30;
+            const labelX = centerX + labelRadius * Math.cos(arcMiddleAngle);
+            const labelY = centerY - labelRadius * Math.sin(arcMiddleAngle);
+            
+            radiansCtx.font = '14px Arial';
+            radiansCtx.fillStyle = '#2ecc71';
+            radiansCtx.fillText('Arc Length = r × θ', labelX - 60, labelY);
+            
+            // Label the radius
+            radiansCtx.fillStyle = '#2c3e50';
+            radiansCtx.fillText('r = 1', centerX + radius / 2 - 10, centerY - 10);
+            
+            // Update text values
+            angleValue.textContent = angle.toFixed(2) + ' rad';
+            degreesValue.textContent = radiansToDegrees(angle).toFixed(2) + '°';
+        }
+        
+        // Animate the rotating object for angular velocity
+        function animateAngularVelocity(timestamp) {
+            if (!lastFrameTime) lastFrameTime = timestamp;
+            const deltaTime = (timestamp - lastFrameTime) / 1000; // in seconds
+            lastFrameTime = timestamp;
+            
+            currentRotation += angularVelocity * deltaTime;
+            if (currentRotation > 2 * Math.PI) {
+                currentRotation -= 2 * Math.PI;
+            }
+            
+            angularVelocityCtx.clearRect(0, 0, angularVelocityCanvas.width, angularVelocityCanvas.height);
+            
+            const centerX = angularVelocityCanvas.width / 2;
+            const centerY = angularVelocityCanvas.height / 2;
+            const radius = 50;
+            
+            // Draw the circle
+            angularVelocityCtx.beginPath();
+            angularVelocityCtx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            angularVelocityCtx.strokeStyle = '#aaa';
+            angularVelocityCtx.lineWidth = 1;
+            angularVelocityCtx.stroke();
+            
+            // Draw the radius line to show rotation
+            angularVelocityCtx.beginPath();
+            angularVelocityCtx.moveTo(centerX, centerY);
+            angularVelocityCtx.lineTo(
+                centerX + radius * Math.cos(currentRotation),
+                centerY - radius * Math.sin(currentRotation)
+            );
+            angularVelocityCtx.strokeStyle = '#e74c3c';
+            angularVelocityCtx.lineWidth = 3;
+            angularVelocityCtx.stroke();
+            
+            // Draw a circle at the end of the radius
+            angularVelocityCtx.beginPath();
+            angularVelocityCtx.arc(
+                centerX + radius * Math.cos(currentRotation),
+                centerY - radius * Math.sin(currentRotation),
+                5, 0, 2 * Math.PI
+            );
+            angularVelocityCtx.fillStyle = '#e74c3c';
+            angularVelocityCtx.fill();
+            
+            // Display angular and linear velocity
+            angularVelocityCtx.font = '12px Arial';
+            angularVelocityCtx.fillStyle = '#333';
+            angularVelocityCtx.fillText(`ω = ${angularVelocity.toFixed(1)} rad/s`, 10, 20);
+            angularVelocityCtx.fillText(`v = r × ω = ${(radius * angularVelocity / 25).toFixed(1)} units/s`, 10, 40);
+            
+            requestAnimationFrame(animateAngularVelocity);
+        }
+        
+        // Calculate and display arc length
+        function calculateArcLength() {
+            const r = parseFloat(radiusInput.value);
+            const theta = parseFloat(arcAngleInput.value);
+            const arcLength = r * theta;
+            arcLengthOutput.textContent = arcLength.toFixed(2);
+        }
+        
+        // Event listeners
+        angleSlider.addEventListener('input', function() {
+            angle = parseFloat(this.value);
+            drawRadianCircle();
+        });
+        
+        degToRadButton.addEventListener('click', function() {
+            const degrees = parseFloat(degreesInput.value);
+            const radians = degreesToRadians(degrees);
+            radiansOutput.textContent = radians.toFixed(4);
+        });
+        
+        radToDegreesButton.addEventListener('click', function() {
+            const radians = parseFloat(radiansInput.value);
+            const degrees = radiansToDegrees(radians);
+            degreesOutput.textContent = degrees.toFixed(2);
+        });
+        
+        velocitySlider.addEventListener('input', function() {
+            angularVelocity = parseFloat(this.value);
+            velocityValue.textContent = angularVelocity.toFixed(1);
+        });
+        
+        calculateArcButton.addEventListener('click', calculateArcLength);
+        
+        // Initial draw
+        drawRadianCircle();
+        requestAnimationFrame(animateAngularVelocity);
+        calculateArcLength();
+    </script>
+</body>
+</html>

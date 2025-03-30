@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trigonometric Identities Explorer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f4f8;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      border-radius: 5px 5px 0 0;
+      margin-right: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    .tab:hover {
+      background-color: #e3f2fd;
+    }
+    
+    .tab.active {
+      background-color: #1976d2;
+      color: white;
+      border-color: #1976d2;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      animation: fadeIn 0.5s;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .identity-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      border-left: 4px solid #3498db;
+    }
+    
+    .identity {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .description {
+      margin-bottom: 15px;
+    }
+    
+    .example-box {
+      background-color: #e8f4fd;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+    
+    .practice-area {
+      margin-top: 20px;
+    }
+    
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    .feedback {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    
+    .feedback.correct {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+    
+    .feedback.incorrect {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+    
+    .angle-input {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .angle-input label {
+      margin-right: 10px;
+      width: 150px;
+    }
+    
+    .angle-input input[type="range"] {
+      flex: 1;
+    }
+    
+    .angle-input .value {
+      width: 70px;
+      text-align: right;
+      margin-left: 10px;
+    }
+    
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    
+    .result-table th, .result-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    
+    .result-table th {
+      background-color: #f2f2f2;
+    }
+    
+    .result-row {
+      transition: background-color 0.3s;
+    }
+    
+    .result-row.highlight {
+      background-color: #e3f2fd;
+    }
+    
+    .proof-step {
+      display: flex;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    
+    .step-number {
+      width: 30px;
+      height: 30px;
+      background-color: #3498db;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+    
+    .step-content {
+      flex: 1;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
+    
+    .math {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+    }
+    
+    .refresh-btn {
+      background-color: #3498db;
+      margin-top: 10px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trigonometric Identities Explorer</h1>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="learn">Learn Identities</div>
+      <div class="tab" data-tab="practice">Practice</div>
+      <div class="tab" data-tab="verify">Verify Identities</div>
+      <div class="tab" data-tab="prove">Step-by-Step Proofs</div>
+    </div>
+    
+    <div id="learn" class="tab-content active">
+      <h2>Fundamental Trigonometric Identities</h2>
+      
+      <div class="identity-section">
+        <h3>Pythagorean Identities</h3>
+        <div class="identity">sin²θ + cos²θ = 1</div>
+        <div class="identity">tan²θ + 1 = sec²θ</div>
+        <div class="identity">1 + cot²θ = csc²θ</div>
+        <div class="description">
+          These identities are derived from the Pythagorean theorem applied to the unit circle.
+        </div>
+        <div class="example-box">
+          Example: Simplify sin²x + cos²x<br>
+          Solution: sin²x + cos²x = 1
+        </div>
+      </div>
+      
+      <div class="identity-section">
+        <h3>Reciprocal Identities</h3>
+        <div class="identity">sin θ = 1/csc θ</div>
+        <div class="identity">cos θ = 1/sec θ</div>
+        <div class="identity">tan θ = 1/cot θ</div>
+        <div class="description">
+          These identities define the relationships between the primary and reciprocal trig functions.
+        </div>
+        <div class="example-box">
+          Example: Simplify cos θ · sec θ<br>
+          Solution: cos θ · sec θ = cos θ · (1/cos θ) = 1
+        </div>
+      </div>
+      
+      <div class="identity-section">
+        <h3>Quotient Identities</h3>
+        <div class="identity">tan θ = sin θ / cos θ</div>
+        <div class="identity">cot θ = cos θ / sin θ</div>
+        <div class="description">
+          These identities relate the tangent and cotangent functions to sine and cosine.
+        </div>
+        <div class="example-box">
+          Example: Simplify sin θ / cos θ<br>
+          Solution: sin θ / cos θ = tan θ
+        </div>
+      </div>
+      
+      <div class="identity-section">
+        <h3>Co-Function Identities</h3>
+        <div class="identity">sin(π/2 - θ) = cos θ</div>
+        <div class="identity">cos(π/2 - θ) = sin θ</div>
+        <div class="identity">tan(π/2 - θ) = cot θ</div>
+        <div class="description">
+          These identities relate functions to their co-functions at complementary angles.
+        </div>
+        <div class="example-box">
+          Example: Find sin(π/2 - π/4)<br>
+          Solution: sin(π/2 - π/4) = cos(π/4) = 1/√2 = √2/2
+        </div>
+      </div>
+    </div>
+    
+    <div id="practice" class="tab-content">
+      <h2>Practice with Identities</h2>
+      
+      <div class="practice-area">
+        <div class="question" id="practice-question">Simplify: sin²θ + 2sin²θcos²θ + cos²θ</div>
+        <input type="text" id="practice-answer" placeholder="Enter your answer...">
+        <button id="check-answer">Check Answer</button>
+        <button class="refresh-btn" id="new-question">New Question</button>
+        <div class="feedback" id="answer-feedback"></div>
+        <div class="example-box hidden" id="solution-box"></div>
+      </div>
+    </div>
+    
+    <div id="verify" class="tab-content">
+      <h2>Verify Identities Numerically</h2>
+      
+      <div class="angle-input">
+        <label for="angle-slider">Angle (θ): </label>
+        <input type="range" id="angle-slider" min="0" max="360" value="45">
+        <span class="value" id="angle-value">45°</span>
+      </div>
+      
+      <table class="result-table">
+        <tr>
+          <th>Function</th>
+          <th>Value</th>
+        </tr>
+        <tr class="result-row">
+          <td>sin θ</td>
+          <td id="sin-value">0.7071</td>
+        </tr>
+        <tr class="result-row">
+          <td>cos θ</td>
+          <td id="cos-value">0.7071</td>
+        </tr>
+        <tr class="result-row">
+          <td>tan θ</td>
+          <td id="tan-value">1.0000</td>
+        </tr>
+        <tr class="result-row">
+          <td>csc θ</td>
+          <td id="csc-value">1.4142</td>
+        </tr>
+        <tr class="result-row">
+          <td>sec θ</td>
+          <td id="sec-value">1.4142</td>
+        </tr>
+        <tr class="result-row">
+          <td>cot θ</td>
+          <td id="cot-value">1.0000</td>
+        </tr>
+      </table>
+      
+      <h3>Identity Verification</h3>
+      <table class="result-table">
+        <tr>
+          <th>Identity</th>
+          <th>Left Side</th>
+          <th>Right Side</th>
+          <th>Equal?</th>
+        </tr>
+        <tr class="result-row">
+          <td>sin²θ + cos²θ = 1</td>
+          <td id="pyth1-left">1.0000</td>
+          <td id="pyth1-right">1.0000</td>
+          <td id="pyth1-equal">✓</td>
+        </tr>
+        <tr class="result-row">
+          <td>tan²θ + 1 = sec²θ</td>
+          <td id="pyth2-left">2.0000</td>
+          <td id="pyth2-right">2.0000</td>
+          <td id="pyth2-equal">✓</td>
+        </tr>
+        <tr class="result-row">
+          <td>sin θ / cos θ = tan θ</td>
+          <td id="quot1-left">1.0000</td>
+          <td id="quot1-right">1.0000</td>
+          <td id="quot1-equal">✓</td>
+        </tr>
+        <tr class="result-row">
+          <td>sin(π/2 - θ) = cos θ</td>
+          <td id="cofunc1-left">0.7071</td>
+          <td id="cofunc1-right">0.7071</td>
+          <td id="cofunc1-equal">✓</td>
+        </tr>
+      </table>
+    </div>
+    
+    <div id="prove" class="tab-content">
+      <h2>Step-by-Step Proofs</h2>
+      
+      <div class="identity-section">
+        <div class="identity">Proving: sin²θ + cos²θ = 1</div>
+        
+        <div class="proof-steps">
+          <div class="proof-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              Start with the Pythagorean identity: sin²θ + cos²θ
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              Recall that on the unit circle (radius = 1), a point at angle θ has coordinates (cos θ, sin θ)
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              By the Pythagorean theorem, x² + y² = r²
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              Substituting the coordinates: (cos θ)² + (sin θ)² = 1²
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              Therefore: sin²θ + cos²θ = 1
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="identity-section">
+        <div class="identity">Proving: tan²θ + 1 = sec²θ</div>
+        
+        <div class="proof-steps">
+          <div class="proof-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              Start with tan²θ + 1
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              Substitute tan θ = sin θ / cos θ: (sin θ / cos θ)² + 1
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              Simplify the first term: sin²θ / cos²θ + 1
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              Find a common denominator: sin²θ / cos²θ + cos²θ / cos²θ
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              Combine the fractions: (sin²θ + cos²θ) / cos²θ
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              Use the Pythagorean identity (sin²θ + cos²θ = 1): 1 / cos²θ
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">7</div>
+            <div class="step-content">
+              Recall that sec θ = 1 / cos θ, so sec²θ = 1 / cos²θ
+            </div>
+          </div>
+          <div class="proof-step">
+            <div class="step-number">8</div>
+            <div class="step-content">
+              Therefore: tan²θ + 1 = sec²θ
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and content
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Practice section functionality
+    const questions = [
+      {
+        question: "Simplify: sin²θ + 2sin²θcos²θ + cos²θ",
+        answer: "1",
+        solution: "sin²θ + 2sin²θcos²θ + cos²θ = sin²θ + cos²θ + 2sin²θcos²θ = 1 + 2sin²θcos²θ = 1 + 2 · sin²θ · cos²θ"
+      },
+      {
+        question: "Simplify: (sin θ + cos θ)² - 2sin θ cos θ",
+        answer: "1",
+        solution: "(sin θ + cos θ)² - 2sin θ cos θ = sin²θ + 2sin θ cos θ + cos²θ - 2sin θ cos θ = sin²θ + cos²θ = 1"
+      },
+      {
+        question: "Express cot θ in terms of sin and cos",
+        answer: "cos θ / sin θ",
+        solution: "cot θ = 1 / tan θ = 1 / (sin θ / cos θ) = cos θ / sin θ"
+      },
+      {
+        question: "Express tan(π/2 - θ) in terms of another trig function",
+        answer: "cot θ",
+        solution: "tan(π/2 - θ) = sin(π/2 - θ) / cos(π/2 - θ) = cos θ / sin θ = cot θ"
+      },
+      {
+        question: "Simplify: sin θ · csc θ",
+        answer: "1",
+        solution: "sin θ · csc θ = sin θ · (1 / sin θ) = 1"
+      }
+    ];
+    
+    let currentQuestionIndex = 0;
+    
+    function loadQuestion(index) {
+      document.getElementById('practice-question').textContent = questions[index].question;
+      document.getElementById('practice-answer').value = '';
+      document.getElementById('answer-feedback').textContent = '';
+      document.getElementById('answer-feedback').className = 'feedback';
+      document.getElementById('solution-box').classList.add('hidden');
+    }
+    
+    document.getElementById('check-answer').addEventListener('click', () => {
+      const userAnswer = document.getElementById('practice-answer').value.trim().toLowerCase();
+      const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
+      const feedback = document.getElementById('answer-feedback');
+      const solutionBox = document.getElementById('solution-box');
+      
+      if (userAnswer === correctAnswer) {
+        feedback.textContent = "Correct! Great job.";
+        feedback.className = 'feedback correct';
+      } else {
+        feedback.textContent = "Not quite right. Try again or see the solution.";
+        feedback.className = 'feedback incorrect';
+        solutionBox.textContent = "Solution: " + questions[currentQuestionIndex].solution;
+        solutionBox.classList.remove('hidden');
+      }
+    });
+    
+    document.getElementById('new-question').addEventListener('click', () => {
+      currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+      loadQuestion(currentQuestionIndex);
+    });
+    
+    // Verification section functionality
+    const angleSlider = document.getElementById('angle-slider');
+    const angleValue = document.getElementById('angle-value');
+    
+    function updateTrigValues() {
+      const angle = parseInt(angleSlider.value);
+      const angleInRadians = angle * Math.PI / 180;
+      
+      angleValue.textContent = angle + "°";
+      
+      // Calculate trig values
+      const sinVal = Math.sin(angleInRadians);
+      const cosVal = Math.cos(angleInRadians);
+      const tanVal = Math.tan(angleInRadians);
+      
+      // Handle potential division by zero
+      const cscVal = sinVal !== 0 ? 1 / sinVal : "Undefined";
+      const secVal = cosVal !== 0 ? 1 / cosVal : "Undefined";
+      const cotVal = tanVal !== 0 ? 1 / tanVal : "Undefined";
+      
+      // Update individual trig values
+      document.getElementById('sin-value').textContent = typeof sinVal === 'number' ? sinVal.toFixed(4) : sinVal;
+      document.getElementById('cos-value').textContent = typeof cosVal === 'number' ? cosVal.toFixed(4) : cosVal;
+      document.getElementById('tan-value').textContent = typeof tanVal === 'number' ? tanVal.toFixed(4) : tanVal;
+      document.getElementById('csc-value').textContent = typeof cscVal === 'number' ? cscVal.toFixed(4) : cscVal;
+      document.getElementById('sec-value').textContent = typeof secVal === 'number' ? secVal.toFixed(4) : secVal;
+      document.getElementById('cot-value').textContent = typeof cotVal === 'number' ? cotVal.toFixed(4) : cotVal;
+      
+      // Verify identities
+      // Pythagorean: sin²θ + cos²θ = 1
+      const pyth1Left = sinVal * sinVal + cosVal * cosVal;
+      const pyth1Right = 1;
+      document.getElementById('pyth1-left').textContent = pyth1Left.toFixed(4);
+      document.getElementById('pyth1-right').textContent = pyth1Right.toFixed(4);
+      document.getElementById('pyth1-equal').textContent = Math.abs(pyth1Left - pyth1Right) < 0.0001 ? "✓" : "✗";
+      
+      // Pythagorean: tan²θ + 1 = sec²θ
+      const pyth2Left = typeof tanVal === 'number' ? tanVal * tanVal + 1 : "Undefined";
+      const pyth2Right = typeof secVal === 'number' ? secVal * secVal : "Undefined";
+      document.getElementById('pyth2-left').textContent = typeof pyth2Left === 'number' ? pyth2Left.toFixed(4) : pyth2Left;
+      document.getElementById('pyth2-right').textContent = typeof pyth2Right === 'number' ? pyth2Right.toFixed(4) : pyth2Right;
+      document.getElementById('pyth2-equal').textContent = 
+        typeof pyth2Left === 'number' && typeof pyth2Right === 'number' && Math.abs(pyth2Left - pyth2Right) < 0.0001 ? "✓" : "✗";
+      
+      // Quotient: sin θ / cos θ = tan θ
+      const quot1Left = cosVal !== 0 ? sinVal / cosVal : "Undefined";
+      const quot1Right = tanVal;
+      document.getElementById('quot1-left').textContent = typeof quot1Left === 'number' ? quot1Left.toFixed(4) : quot1Left;
+      document.getElementById('quot1-right').textContent = typeof quot1Right === 'number' ? quot1Right.toFixed(4) : quot1Right;
+      document.getElementById('quot1-equal').textContent = 
+        typeof quot1Left === 'number' && typeof quot1Right === 'number' && Math.abs(quot1Left - quot1Right) < 0.0001 ? "✓" : "✗";
+      
+      // Co-function: sin(π/2 - θ) = cos θ
+      const complementaryAngle = Math.PI / 2 - angleInRadians;
+      const cofunc1Left = Math.sin(complementaryAngle);
+      const cofunc1Right = cosVal;
+      document.getElementById('cofunc1-left').textContent = cofunc1Left.toFixed(4);
+      document.getElementById('cofunc1-right').textContent = cofunc1Right.toFixed(4);
+      document.getElementById('cofunc1-equal').textContent = Math.abs(cofunc1Left - cofunc1Right) < 0.0001 ? "✓" : "✗";
+    }
+    
+    angleSlider.addEventListener('input', updateTrigValues);
+    
+    // Initialize the application
+    loadQuestion(currentQuestionIndex);
+    updateTrigValues();
+  </script>
+</body>
+</html>

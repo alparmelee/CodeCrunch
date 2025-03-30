@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vector Applications</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .panel {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    #vectorCanvas {
+      border: 1px solid #ddd;
+      background-color: #fff;
+      width: 100%;
+      height: 300px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .vector-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    label {
+      font-weight: bold;
+      min-width: 120px;
+    }
+    input[type="number"], select {
+      width: 60px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      border-left: 4px solid #3498db;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #ddd;
+      margin-right: 5px;
+      border-radius: 4px 4px 0 0;
+    }
+    .tab.active {
+      background-color: #3498db;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .example-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .example-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .formulas {
+      background-color: #f0f8ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vector Applications</h1>
+  
+  <div class="tabs">
+    <div class="tab active" data-tab="vector-operations">Vector Operations</div>
+    <div class="tab" data-tab="physics-applications">Physics Applications</div>
+    <div class="tab" data-tab="engineering-applications">Engineering Applications</div>
+  </div>
+  
+  <div class="tab-content active" id="vector-operations">
+    <div class="panel">
+      <h2>Vector Visualization and Operations</h2>
+      <canvas id="vectorCanvas"></canvas>
+      
+      <div class="controls">
+        <div class="vector-input">
+          <label for="vector1x">Vector 1:</label>
+          <input type="number" id="vector1x" value="3" min="-10" max="10" step="0.5">
+          <span>i + </span>
+          <input type="number" id="vector1y" value="2" min="-10" max="10" step="0.5">
+          <span>j</span>
+        </div>
+        
+        <div class="vector-input">
+          <label for="vector2x">Vector 2:</label>
+          <input type="number" id="vector2x" value="1" min="-10" max="10" step="0.5">
+          <span>i + </span>
+          <input type="number" id="vector2y" value="4" min="-10" max="10" step="0.5">
+          <span>j</span>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <label for="operation">Select Operation:</label>
+        <select id="operation">
+          <option value="addition">Addition (A + B)</option>
+          <option value="subtraction">Subtraction (A - B)</option>
+          <option value="dotProduct">Dot Product (A · B)</option>
+          <option value="magnitude">Magnitudes</option>
+          <option value="unitVectors">Unit Vectors</option>
+        </select>
+        <button id="calculate">Calculate</button>
+        <button id="reset">Reset</button>
+      </div>
+      
+      <div class="result" id="result">
+        Select vectors and an operation, then click Calculate to see the result.
+      </div>
+      
+      <div class="formulas">
+        <h3>Key Formulas:</h3>
+        <p><strong>Vector Addition:</strong> A + B = (A<sub>x</sub> + B<sub>x</sub>, A<sub>y</sub> + B<sub>y</sub>)</p>
+        <p><strong>Vector Subtraction:</strong> A - B = (A<sub>x</sub> - B<sub>x</sub>, A<sub>y</sub> - B<sub>y</sub>)</p>
+        <p><strong>Dot Product:</strong> A · B = A<sub>x</sub>B<sub>x</sub> + A<sub>y</sub>B<sub>y</sub></p>
+        <p><strong>Magnitude:</strong> |A| = √(A<sub>x</sub>² + A<sub>y</sub>²)</p>
+        <p><strong>Unit Vector:</strong> Â = A / |A|</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tab-content" id="physics-applications">
+    <div class="panel">
+      <h2>Physics Applications of Vectors</h2>
+      <p>Vectors are fundamental in physics for representing quantities with both magnitude and direction.</p>
+      
+      <div class="examples">
+        <div class="example-card" data-app="force">
+          <h3>Force and Motion</h3>
+          <p>Calculate resultant forces and predict motion direction.</p>
+        </div>
+        <div class="example-card" data-app="velocity">
+          <h3>Velocity and Acceleration</h3>
+          <p>Analyze motion with velocity vectors.</p>
+        </div>
+        <div class="example-card" data-app="work">
+          <h3>Work and Energy</h3>
+          <p>Calculate work done by a force using dot product.</p>
+        </div>
+      </div>
+      
+      <div id="physics-demo" class="panel" style="margin-top: 20px; display: none;">
+        <h3 id="physics-title">Select an application</h3>
+        <div id="physics-content"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tab-content" id="engineering-applications">
+    <div class="panel">
+      <h2>Engineering Applications of Vectors</h2>
+      <p>Engineers use vectors to solve problems involving forces, flow, and electrical systems.</p>
+      
+      <div class="examples">
+        <div class="example-card" data-app="structures">
+          <h3>Structural Analysis</h3>
+          <p>Analyze forces in truss structures and bridges.</p>
+        </div>
+        <div class="example-card" data-app="electrical">
+          <h3>Electrical Engineering</h3>
+          <p>Work with electrical fields and circuit analysis.</p>
+        </div>
+        <div class="example-card" data-app="fluid">
+          <h3>Fluid Dynamics</h3>
+          <p>Study fluid flow using vector fields.</p>
+        </div>
+      </div>
+      
+      <div id="engineering-demo" class="panel" style="margin-top: 20px; display: none;">
+        <h3 id="engineering-title">Select an application</h3>
+        <div id="engineering-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById('vectorCanvas');
+    const ctx = canvas.getContext('2d');
+    let scale = 20; // Pixels per unit
+    let originX, originY;
+    
+    function resizeCanvas() {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      originX = canvas.width / 2;
+      originY = canvas.height / 2;
+      drawGrid();
+    }
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw axes
+      ctx.strokeStyle = '#ccc';
+      ctx.lineWidth = 1;
+      
+      // Horizontal lines
+      for (let y = originY % scale; y < canvas.height; y += scale) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      
+      // Vertical lines
+      for (let x = originX % scale; x < canvas.width; x += scale) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      
+      // Draw axes
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      
+      // x-axis
+      ctx.beginPath();
+      ctx.moveTo(0, originY);
+      ctx.lineTo(canvas.width, originY);
+      ctx.stroke();
+      
+      // y-axis
+      ctx.beginPath();
+      ctx.moveTo(originX, 0);
+      ctx.lineTo(originX, canvas.height);
+      ctx.stroke();
+    }
+    
+    function drawVector(startX, startY, endX, endY, color, label) {
+      // Calculate arrow points
+      const angle = Math.atan2(endY - startY, endX - startX);
+      const length = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
+      const arrowSize = 10;
+      
+      // Draw line
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(endX, endY);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Draw arrowhead
+      ctx.beginPath();
+      ctx.moveTo(endX, endY);
+      ctx.lineTo(
+        endX - arrowSize * Math.cos(angle - Math.PI / 6),
+        endY - arrowSize * Math.sin(angle - Math.PI / 6)
+      );
+      ctx.lineTo(
+        endX - arrowSize * Math.cos(angle + Math.PI / 6),
+        endY - arrowSize * Math.sin(angle + Math.PI / 6)
+      );
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      
+      // Draw label
+      if (label) {
+        ctx.fillStyle = color;
+        ctx.font = '14px Arial';
+        ctx.fillText(label, endX + 5, endY - 5);
+      }
+    }
+    
+    function updateVectors() {
+      const v1x = parseFloat(document.getElementById('vector1x').value);
+      const v1y = parseFloat(document.getElementById('vector1y').value);
+      const v2x = parseFloat(document.getElementById('vector2x').value);
+      const v2y = parseFloat(document.getElementById('vector2y').value);
+      
+      drawGrid();
+      
+      // Draw Vector 1
+      drawVector(
+        originX, originY,
+        originX + v1x * scale, originY - v1y * scale,
+        '#E74C3C', 'A'
+      );
+      
+      // Draw Vector 2
+      drawVector(
+        originX, originY,
+        originX + v2x * scale, originY - v2y * scale,
+        '#3498DB', 'B'
+      );
+      
+      const operation = document.getElementById('operation').value;
+      
+      // Draw result vector based on selected operation
+      if (operation === 'addition') {
+        const resultX = v1x + v2x;
+        const resultY = v1y + v2y;
+        
+        // Draw Result Vector
+        drawVector(
+          originX, originY,
+          originX + resultX * scale, originY - resultY * scale,
+          '#2ECC71', 'A+B'
+        );
+        
+        // Show vector addition graphically
+        drawVector(
+          originX + v1x * scale, originY - v1y * scale,
+          originX + resultX * scale, originY - resultY * scale,
+          '#3498DB', ''
+        );
+      } else if (operation === 'subtraction') {
+        const resultX = v1x - v2x;
+        const resultY = v1y - v2y;
+        
+        // Draw Result Vector
+        drawVector(
+          originX, originY,
+          originX + resultX * scale, originY - resultY * scale,
+          '#2ECC71', 'A-B'
+        );
+      } else if (operation === 'unitVectors') {
+        // Calculate unit vectors
+        const mag1 = Math.sqrt(v1x ** 2 + v1y ** 2);
+        const mag2 = Math.sqrt(v2x ** 2 + v2y ** 2);
+        
+        if (mag1 > 0) {
+          const u1x = v1x / mag1;
+          const u1y = v1y / mag1;
+          drawVector(
+            originX, originY,
+            originX + u1x * scale, originY - u1y * scale,
+            '#F39C12', 'Â'
+          );
+        }
+        
+        if (mag2 > 0) {
+          const u2x = v2x / mag2;
+          const u2y = v2y / mag2;
+          drawVector(
+            originX, originY,
+            originX + u2x * scale, originY - u2y * scale,
+            '#9B59B6', 'B̂'
+          );
+        }
+      }
+    }
+    
+    function calculateResult() {
+      const v1x = parseFloat(document.getElementById('vector1x').value);
+      const v1y = parseFloat(document.getElementById('vector1y').value);
+      const v2x = parseFloat(document.getElementById('vector2x').value);
+      const v2y = parseFloat(document.getElementById('vector2y').value);
+      
+      const operation = document.getElementById('operation').value;
+      const resultElement = document.getElementById('result');
+      
+      switch (operation) {
+        case 'addition':
+          const sumX = v1x + v2x;
+          const sumY = v1y + v2y;
+          resultElement.innerHTML = `
+            <h3>Vector Addition: A + B</h3>
+            <p>A = (${v1x}, ${v1y})</p>
+            <p>B = (${v2x}, ${v2y})</p>
+            <p>A + B = (${v1x} + ${v2x}, ${v1y} + ${v2y}) = (${sumX.toFixed(2)}, ${sumY.toFixed(2)})</p>
+            <p>Magnitude of result: |A + B| = √(${sumX.toFixed(2)}² + ${sumY.toFixed(2)}²) = ${Math.sqrt(sumX ** 2 + sumY ** 2).toFixed(2)}</p>
+          `;
+          break;
+          
+        case 'subtraction':
+          const diffX = v1x - v2x;
+          const diffY = v1y - v2y;
+          resultElement.innerHTML = `
+            <h3>Vector Subtraction: A - B</h3>
+            <p>A = (${v1x}, ${v1y})</p>
+            <p>B = (${v2x}, ${v2y})</p>
+            <p>A - B = (${v1x} - ${v2x}, ${v1y} - ${v2y}) = (${diffX.toFixed(2)}, ${diffY.toFixed(2)})</p>
+            <p>Magnitude of result: |A - B| = √(${diffX.toFixed(2)}² + ${diffY.toFixed(2)}²) = ${Math.sqrt(diffX ** 2 + diffY ** 2).toFixed(2)}</p>
+          `;
+          break;
+          
+        case 'dotProduct':
+          const dotProduct = v1x * v2x + v1y * v2y;
+          const mag1 = Math.sqrt(v1x ** 2 + v1y ** 2);
+          const mag2 = Math.sqrt(v2x ** 2 + v2y ** 2);
+          const angle = Math.acos(dotProduct / (mag1 * mag2)) * (180 / Math.PI);
+          
+          resultElement.innerHTML = `
+            <h3>Dot Product: A · B</h3>
+            <p>A = (${v1x}, ${v1y})</p>
+            <p>B = (${v2x}, ${v2y})</p>
+            <p>A · B = ${v1x} × ${v2x} + ${v1y} × ${v2y} = ${dotProduct.toFixed(2)}</p>
+            <p>Angle between vectors: θ = ${angle.toFixed(2)}°</p>
+            <p>Interpretation: ${dotProduct > 0 ? 'Vectors are in the same general direction (acute angle)' : 
+                              dotProduct < 0 ? 'Vectors are in opposite general directions (obtuse angle)' : 
+                              'Vectors are perpendicular (orthogonal)'}</p>
+          `;
+          break;
+          
+        case 'magnitude':
+          const mag1Result = Math.sqrt(v1x ** 2 + v1y ** 2);
+          const mag2Result = Math.sqrt(v2x ** 2 + v2y ** 2);
+          
+          resultElement.innerHTML = `
+            <h3>Vector Magnitudes</h3>
+            <p>A = (${v1x}, ${v1y})</p>
+            <p>B = (${v2x}, ${v2y})</p>
+            <p>|A| = √(${v1x}² + ${v1y}²) = ${mag1Result.toFixed(2)}</p>
+            <p>|B| = √(${v2x}² + ${v2y}²) = ${mag2Result.toFixed(2)}</p>
+          `;
+          break;
+          
+        case 'unitVectors':
+          const magA = Math.sqrt(v1x ** 2 + v1y ** 2);
+          const magB = Math.sqrt(v2x ** 2 + v2y ** 2);
+          
+          let unitAx = 0, unitAy = 0, unitBx = 0, unitBy = 0;
+          
+          if (magA > 0) {
+            unitAx = v1x / magA;
+            unitAy = v1y / magA;
+          }
+          
+          if (magB > 0) {
+            unitBx = v2x / magB;
+            unitBy = v2y / magB;
+          }
+          
+          resultElement.innerHTML = `
+            <h3>Unit Vectors</h3>
+            <p>A = (${v1x}, ${v1y}) with magnitude |A| = ${magA.toFixed(2)}</p>
+            <p>B = (${v2x}, ${v2y}) with magnitude |B| = ${magB.toFixed(2)}</p>
+            <p>Unit vector Â = A/|A| = (${unitAx.toFixed(2)}, ${unitAy.toFixed(2)})</p>
+            <p>Unit vector B̂ = B/|B| = (${unitBx.toFixed(2)}, ${unitBy.toFixed(2)})</p>
+            <p>Note: A unit vector has a magnitude of 1 and preserves the original direction.</p>
+          `;
+          break;
+      }
+      
+      updateVectors();
+    }
+    
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and content
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked tab and its content
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Physics applications
+    const physicsApps = {
+      force: {
+        title: "Force and Motion",
+        content: `
+          <p>When multiple forces act on an object, we use vector addition to find the resultant force.</p>
+          <div class="example">
+            <h4>Example: Forces on an Object</h4>
+            <p>Two forces act on a 5kg object: F₁ = 30N east and F₂ = 40N north.</p>
+            <p>The resultant force is: F = F₁ + F₂ = (30N, 40N) with magnitude |F| = √(30² + 40²) = 50N</p>
+            <p>Using Newton's Second Law (F = ma), the acceleration is: a = F/m = 50N/5kg = 10 m/s² in the direction of the resultant force.</p>
+          </div>
+        `
+      },
+      velocity: {
+        title: "Velocity and Acceleration",
+        content: `
+          <p>Vectors are essential in kinematics for describing motion in multiple dimensions.</p>
+          <div class="example">
+            <h4>Example: Projectile Motion</h4>
+            <p>A ball is thrown with initial velocity v₀ = (10 m/s, 15 m/s).</p>
+            <p>Horizontal velocity remains constant: vₓ = 10 m/s</p>
+            <p>Vertical velocity changes due to gravity: vᵧ = 15 m/s - 9.8t m/s</p>
+            <p>The position after t seconds is given by:</p>
+            <p>x = 10t meters</p>
+            <p>y = 15t - 4.9t² meters</p>
+          </div>
+        `
+      },
+      work: {
+        title: "Work and Energy",
+        content: `
+          <p>Work done by a force is calculated using the dot product: W = F·d</p>
+          <div class="example">
+            <h4>Example: Work Calculation</h4>
+            <p>A force F = (5N, 3N) acts on an object while it moves along displacement d = (4m, 2m).</p>
+            <p>Work done: W = F·d = 5×4 + 3×2 = 20J + 6J = 26J</p>
+            <p>If F and d are perpendicular, their dot product equals zero, meaning no work is done in moving the object.</p>
+          </div>
+        `
+      }
+    };
+    
+    // Engineering applications
+    const engineeringApps = {
+      structures: {
+        title: "Structural Analysis",
+        content: `
+          <p>Engineers analyze forces in structures using vector decomposition.</p>
+          <div class="example">
+            <h4>Example: Bridge Truss Analysis</h4>
+            <p>A force of 1000N acts at 30° to the horizontal on a truss joint.</p>
+            <p>Decomposing the force:</p>
+            <p>Horizontal component: Fₓ = 1000 × cos(30°) = 866N</p>
+            <p>Vertical component: Fᵧ = 1000 × sin(30°) = 500N</p>
+            <p>Engineers use these components to analyze internal forces in each member of the truss.</p>
+          </div>
+        `
+      },
+      electrical: {
+        title: "Electrical Engineering",
+        content: `
+          <p>Vectors represent electrical quantities like voltage, current, and electromagnetic fields.</p>
+          <div class="example">
+            <h4>Example: AC Circuit Analysis</h4>
+            <p>In AC circuits, voltage and current are represented as vectors in the complex plane.</p>
+            <p>For a circuit with impedance Z = 3 + 4j ohms and current I = 2∠30° amperes:</p>
+            <p>Complex voltage: V = IZ = 2∠30° × 5∠53.13° = 10∠83.13° volts</p>
+            <p>Real power: P = |V||I|cos(θ) = 10 × 2 × cos(53.13°) = 12W</p>
+          </div>
+        `
+      },
+      fluid: {
+        title: "Fluid Dynamics",
+        content: `
+          <p>Vector fields model fluid flow, pressure gradients, and aerodynamics.</p>
+          <div class="example">
+            <h4>Example: Flow Analysis</h4>
+            <p>Consider a velocity field v = (x², y) for a 2D fluid flow.</p>
+            <p>The divergence ∇·v = ∂/∂x(x²) + ∂/∂y(y) = 2x + 1 represents the rate of fluid expansion.</p>
+            <p>The curl ∇×v = ∂/∂x(y) - ∂/∂y(x²) = 0 - 0 = 0 indicates irrotational flow.</p>
+            <p>Engineers use these vector calculus operations to design efficient fluid systems.</p>
+          </div>
+        `
+      }
+    };
+    
+    // Event Listeners
+    document.getElementById('calculate').addEventListener('click', calculateResult);
+    document.getElementById('reset').addEventListener('click', () => {
+      document.getElementById('vector1x').value = 3;
+      document.getElementById('vector1y').value = 2;
+      document.getElementById('vector2x').value = 1;
+      document.getElementById('vector2y').value = 4;
+      document.getElementById('operation').value = 'addition';
+      calculateResult();
+    });
+    
+    document.getElementById('operation').addEventListener('change', updateVectors);
+    document.querySelectorAll('.vector-input input').forEach(input => {
+      input.addEventListener('input', updateVectors);
+    });
+    
+    // Physics app examples
+    document.querySelectorAll('#physics-applications .example-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const appId = card.getAttribute('data-app');
+        const app = physicsApps[appId];
+        
+        document.getElementById('physics-demo').style.display = 'block';
+        document.getElementById('physics-title').textContent = app.title;
+        document.getElementById('physics-content').innerHTML = app.content;
+      });
+    });
+    
+    // Engineering app examples
+    document.querySelectorAll('#engineering-applications .example-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const appId = card.getAttribute('data-app');
+        const app = engineeringApps[appId];
+        
+        document.getElementById('engineering-demo').style.display = 'block';
+        document.getElementById('engineering-title').textContent = app.title;
+        document.getElementById('engineering-content').innerHTML = app.content;
+      });
+    });
+    
+    // Initial calculation
+    calculateResult();
+  </script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trigonometric Function Visualizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .control-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .control-group {
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .graph-container {
+      position: relative;
+      height: 400px;
+      margin-top: 30px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .formula {
+      text-align: center;
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #f0f8ff;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+    .axis {
+      position: absolute;
+      background-color: #999;
+    }
+    .x-axis {
+      width: 100%;
+      height: 1px;
+      top: 50%;
+    }
+    .y-axis {
+      width: 1px;
+      height: 100%;
+      left: 50%;
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    button {
+      padding: 8px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .grid-toggle {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .note {
+      font-size: 14px;
+      color: #666;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trigonometric Function Visualizer</h1>
+    
+    <div class="control-panel">
+      <div class="control-group">
+        <label for="function-select">Function:</label>
+        <select id="function-select">
+          <option value="sin">Sine (sin)</option>
+          <option value="cos">Cosine (cos)</option>
+          <option value="tan">Tangent (tan)</option>
+          <option value="csc">Cosecant (csc)</option>
+          <option value="sec">Secant (sec)</option>
+          <option value="cot">Cotangent (cot)</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="amplitude">Amplitude (A):</label>
+        <input type="range" id="amplitude" min="0.1" max="5" step="0.1" value="1">
+        <span id="amplitude-value">1</span>
+      </div>
+      
+      <div class="control-group">
+        <label for="period">Period Factor (B):</label>
+        <input type="range" id="period" min="0.1" max="5" step="0.1" value="1">
+        <span id="period-value">1</span>
+      </div>
+      
+      <div class="control-group">
+        <label for="phase-shift">Phase Shift (C):</label>
+        <input type="range" id="phase-shift" min="-3.14" max="3.14" step="0.1" value="0">
+        <span id="phase-shift-value">0</span>
+      </div>
+      
+      <div class="control-group">
+        <label for="vertical-shift">Vertical Shift (D):</label>
+        <input type="range" id="vertical-shift" min="-5" max="5" step="0.1" value="0">
+        <span id="vertical-shift-value">0</span>
+      </div>
+    </div>
+    
+    <div class="formula" id="formula">y = sin(x)</div>
+    
+    <div class="grid-toggle">
+      <label for="grid-checkbox">Show Grid</label>
+      <input type="checkbox" id="grid-checkbox" checked>
+    </div>
+    
+    <div class="graph-container">
+      <div class="axis x-axis"></div>
+      <div class="axis y-axis"></div>
+      <canvas id="graph-canvas"></canvas>
+    </div>
+    
+    <div class="button-group">
+      <button id="reset-button">Reset All</button>
+      <button id="animate-button">Animate</button>
+    </div>
+    
+    <div class="note">
+      <p>This visualizer helps you understand how parameters affect trig functions:</p>
+      <ul>
+        <li>A: Amplitude - stretches/compresses the graph vertically</li>
+        <li>B: Period Factor - affects the period (period = 2π/B)</li>
+        <li>C: Phase Shift - shifts the graph horizontally</li>
+        <li>D: Vertical Shift - moves the graph up or down</li>
+      </ul>
+      <p>General form: y = A × f(B × (x - C)) + D</p>
+    </div>
+  </div>
+
+  <script>
+    // Get DOM elements
+    const functionSelect = document.getElementById('function-select');
+    const amplitudeInput = document.getElementById('amplitude');
+    const periodInput = document.getElementById('period');
+    const phaseShiftInput = document.getElementById('phase-shift');
+    const verticalShiftInput = document.getElementById('vertical-shift');
+    const gridCheckbox = document.getElementById('grid-checkbox');
+    const resetButton = document.getElementById('reset-button');
+    const animateButton = document.getElementById('animate-button');
+    
+    const amplitudeValue = document.getElementById('amplitude-value');
+    const periodValue = document.getElementById('period-value');
+    const phaseShiftValue = document.getElementById('phase-shift-value');
+    const verticalShiftValue = document.getElementById('vertical-shift-value');
+    
+    const formula = document.getElementById('formula');
+    const canvas = document.getElementById('graph-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set up canvas
+    function setupCanvas() {
+      // Set canvas to be responsive
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    
+    // Initialize with resize
+    window.addEventListener('resize', setupCanvas);
+    setupCanvas();
+    
+    // Default parameters
+    let params = {
+      function: 'sin',
+      amplitude: 1,
+      period: 1,
+      phaseShift: 0,
+      verticalShift: 0
+    };
+    
+    // Animation variables
+    let isAnimating = false;
+    let animationParam = 'phaseShift';
+    let animationValue = 0;
+    let animationDirection = 1;
+    
+    // Calculate trig function value
+    function calculateTrigValue(x, func, amplitude, period, phaseShift, verticalShift) {
+      const modifiedX = period * (x - phaseShift);
+      
+      let value;
+      switch(func) {
+        case 'sin':
+          value = Math.sin(modifiedX);
+          break;
+        case 'cos':
+          value = Math.cos(modifiedX);
+          break;
+        case 'tan':
+          value = Math.tan(modifiedX);
+          break;
+        case 'csc':
+          value = 1 / Math.sin(modifiedX);
+          break;
+        case 'sec':
+          value = 1 / Math.cos(modifiedX);
+          break;
+        case 'cot':
+          value = 1 / Math.tan(modifiedX);
+          break;
+        default:
+          value = Math.sin(modifiedX);
+      }
+      
+      return amplitude * value + verticalShift;
+    }
+    
+    // Draw grid
+    function drawGrid() {
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      
+      ctx.strokeStyle = '#ddd';
+      ctx.lineWidth = 0.5;
+      
+      // Draw grid lines
+      if (gridCheckbox.checked) {
+        // Vertical grid lines
+        for (let x = centerX % 50; x < width; x += 50) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+        
+        // Horizontal grid lines
+        for (let y = centerY % 50; y < height; y += 50) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+      }
+      
+      // Draw axes
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+      
+      // x-axis
+      ctx.beginPath();
+      ctx.moveTo(0, centerY);
+      ctx.lineTo(width, centerY);
+      ctx.stroke();
+      
+      // y-axis
+      ctx.beginPath();
+      ctx.moveTo(centerX, 0);
+      ctx.lineTo(centerX, height);
+      ctx.stroke();
+      
+      // Draw tick marks and labels
+      ctx.fillStyle = '#333';
+      ctx.font = '12px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      // x-axis ticks and labels
+      for (let x = Math.ceil(centerX / 50) * 50; x < width; x += 50) {
+        // Positive direction
+        ctx.beginPath();
+        ctx.moveTo(x, centerY - 5);
+        ctx.lineTo(x, centerY + 5);
+        ctx.stroke();
+        
+        const xValue = ((x - centerX) / 50) * Math.PI;
+        if (xValue % Math.PI === 0) {
+          ctx.fillText(`${xValue / Math.PI}π`, x, centerY + 20);
+        }
+        
+        // Negative direction
+        const xNeg = centerX - (x - centerX);
+        if (xNeg > 0) {
+          ctx.beginPath();
+          ctx.moveTo(xNeg, centerY - 5);
+          ctx.lineTo(xNeg, centerY + 5);
+          ctx.stroke();
+          
+          const xValueNeg = -((centerX - xNeg) / 50) * Math.PI;
+          if (xValueNeg % Math.PI === 0 && xValueNeg !== 0) {
+            ctx.fillText(`${xValueNeg / Math.PI}π`, xNeg, centerY + 20);
+          }
+        }
+      }
+      
+      // y-axis ticks and labels
+      for (let y = Math.ceil(centerY / 50) * 50; y < height; y += 50) {
+        // Positive direction (down)
+        ctx.beginPath();
+        ctx.moveTo(centerX - 5, y);
+        ctx.lineTo(centerX + 5, y);
+        ctx.stroke();
+        
+        const yValue = -((y - centerY) / 50);
+        if (yValue !== 0 && Number.isInteger(yValue)) {
+          ctx.fillText(yValue.toString(), centerX - 20, y);
+        }
+        
+        // Negative direction (up)
+        const yNeg = centerY - (y - centerY);
+        if (yNeg > 0) {
+          ctx.beginPath();
+          ctx.moveTo(centerX - 5, yNeg);
+          ctx.lineTo(centerX + 5, yNeg);
+          ctx.stroke();
+          
+          const yValueNeg = (centerY - yNeg) / 50;
+          if (Number.isInteger(yValueNeg)) {
+            ctx.fillText(yValueNeg.toString(), centerX - 20, yNeg);
+          }
+        }
+      }
+    }
+    
+    // Draw the function graph
+    function drawGraph() {
+      setupCanvas();
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw grid and axes
+      drawGrid();
+      
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      
+      // Draw the function
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      
+      // Scale factors
+      const xScale = 50 / Math.PI; // 50px = π
+      const yScale = 50; // 50px = 1 unit
+      
+      // Range to plot (in real coordinates)
+      const rangeStart = -4 * Math.PI;
+      const rangeEnd = 4 * Math.PI;
+      const step = 0.01;
+      
+      // Determine if we need to handle special cases for tan, sec, csc, cot
+      const isSpecialFunc = ['tan', 'sec', 'csc', 'cot'].includes(params.function);
+      
+      let isFirst = true;
+      let prevY;
+      
+      for (let xReal = rangeStart; xReal <= rangeEnd; xReal += step) {
+        // Calculate function value
+        try {
+          const yReal = calculateTrigValue(
+            xReal,
+            params.function,
+            params.amplitude,
+            params.period,
+            params.phaseShift,
+            params.verticalShift
+          );
+          
+          // Convert to canvas coordinates
+          const x = centerX + xReal * xScale;
+          const y = centerY - yReal * yScale;
+          
+          // Check if the value is within a reasonable range to display
+          if (!isNaN(y) && isFinite(y) && Math.abs(y) < 3000) {
+            // For special functions with asymptotes, don't connect across very large jumps
+            if (isSpecialFunc && prevY && Math.abs(y - prevY) > 200) {
+              ctx.stroke();
+              ctx.beginPath();
+              isFirst = true;
+            }
+            
+            if (isFirst) {
+              ctx.moveTo(x, y);
+              isFirst = false;
+            } else {
+              ctx.lineTo(x, y);
+            }
+            
+            prevY = y;
+          } else {
+            // Handle discontinuities
+            if (!isFirst) {
+              ctx.stroke();
+              ctx.beginPath();
+              isFirst = true;
+            }
+          }
+        } catch (e) {
+          // Handle potential division by zero
+          if (!isFirst) {
+            ctx.stroke();
+            ctx.beginPath();
+            isFirst = true;
+          }
+        }
+      }
+      
+      ctx.stroke();
+      
+      // Update formula display
+      updateFormula();
+    }
+    
+    // Update formula display
+    function updateFormula() {
+      let funcName = params.function;
+      let amplitude = params.amplitude === 1 ? '' : params.amplitude;
+      let period = params.period === 1 ? '' : params.period;
+      let phaseShift = params.phaseShift;
+      let verticalShift = params.verticalShift;
+      
+      let phaseShiftText = '';
+      if (phaseShift !== 0) {
+        phaseShiftText = phaseShift > 0 ? ` - ${Math.abs(phaseShift).toFixed(1)}` : ` + ${Math.abs(phaseShift).toFixed(1)}`;
+      }
+      
+      let periodText = period ? `${period}x${phaseShiftText}` : `x${phaseShiftText}`;
+      
+      let verticalShiftText = '';
+      if (verticalShift !== 0) {
+        verticalShiftText = verticalShift > 0 ? ` + ${verticalShift.toFixed(1)}` : ` - ${Math.abs(verticalShift).toFixed(1)}`;
+      }
+      
+      formula.textContent = `y = ${amplitude}${funcName}(${periodText})${verticalShiftText}`;
+    }
+    
+    // Event Listeners
+    functionSelect.addEventListener('change', () => {
+      params.function = functionSelect.value;
+      drawGraph();
+    });
+    
+    amplitudeInput.addEventListener('input', () => {
+      params.amplitude = parseFloat(amplitudeInput.value);
+      amplitudeValue.textContent = params.amplitude.toFixed(1);
+      drawGraph();
+    });
+    
+    periodInput.addEventListener('input', () => {
+      params.period = parseFloat(periodInput.value);
+      periodValue.textContent = params.period.toFixed(1);
+      drawGraph();
+    });
+    
+    phaseShiftInput.addEventListener('input', () => {
+      params.phaseShift = parseFloat(phaseShiftInput.value);
+      phaseShiftValue.textContent = params.phaseShift.toFixed(1);
+      drawGraph();
+    });
+    
+    verticalShiftInput.addEventListener('input', () => {
+      params.verticalShift = parseFloat(verticalShiftInput.value);
+      verticalShiftValue.textContent = params.verticalShift.toFixed(1);
+      drawGraph();
+    });
+    
+    gridCheckbox.addEventListener('change', drawGraph);
+    
+    resetButton.addEventListener('click', () => {
+      // Reset parameters
+      params = {
+        function: 'sin',
+        amplitude: 1,
+        period: 1,
+        phaseShift: 0,
+        verticalShift: 0
+      };
+      
+      // Reset UI elements
+      functionSelect.value = 'sin';
+      amplitudeInput.value = '1';
+      periodInput.value = '1';
+      phaseShiftInput.value = '0';
+      verticalShiftInput.value = '0';
+      
+      amplitudeValue.textContent = '1';
+      periodValue.textContent = '1';
+      phaseShiftValue.textContent = '0';
+      verticalShiftValue.textContent = '0';
+      
+      // Stop animation if running
+      isAnimating = false;
+      animateButton.textContent = 'Animate';
+      
+      drawGraph();
+    });
+    
+    animateButton.addEventListener('click', () => {
+      isAnimating = !isAnimating;
+      animateButton.textContent = isAnimating ? 'Stop' : 'Animate';
+      
+      if (isAnimating) {
+        animate();
+      }
+    });
+    
+    // Animation function
+    function animate() {
+      if (!isAnimating) return;
+      
+      // Update animation parameter
+      animationValue += 0.05 * animationDirection;
+      
+      // Reverse direction at boundaries
+      if (animationValue > 3.14 || animationValue < -3.14) {
+        animationDirection *= -1;
+      }
+      
+      // Apply animation to phase shift
+      params.phaseShift = animationValue;
+      phaseShiftInput.value = params.phaseShift;
+      phaseShiftValue.textContent = params.phaseShift.toFixed(1);
+      
+      // Redraw graph
+      drawGraph();
+      
+      // Continue animation
+      requestAnimationFrame(animate);
+    }
+    
+    // Initial draw
+    drawGraph();
+  </script>
+</body>
+</html>

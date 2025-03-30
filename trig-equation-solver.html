@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigonometric Equation Solver</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .equation-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        select, input, button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .interval-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .solution-steps {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .solution {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .tab.active {
+            border: 1px solid #ddd;
+            border-bottom: 1px solid white;
+            border-radius: 4px 4px 0 0;
+            background-color: white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .equation-display {
+            font-size: 24px;
+            margin: 10px 0;
+            font-family: 'Times New Roman', serif;
+        }
+        .error {
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .example {
+            padding: 8px 12px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .example:hover {
+            background-color: #e1e1e1;
+        }
+        .hidden {
+            display: none;
+        }
+        .step {
+            margin-bottom: 8px;
+        }
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trigonometric Equation Solver</h1>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="basic">Basic Equations</div>
+            <div class="tab" data-tab="identity">Identity-Based</div>
+            <div class="tab" data-tab="learn">Learn & Examples</div>
+        </div>
+        
+        <div class="tab-content active" id="basic">
+            <h2>Solve Basic Trigonometric Equations</h2>
+            
+            <div class="equation-input">
+                <select id="trig-function">
+                    <option value="sin">sin</option>
+                    <option value="cos">cos</option>
+                    <option value="tan">tan</option>
+                </select>
+                <input type="text" id="angle" placeholder="angle (e.g., x, θ)" value="x">
+                <select id="equation-type">
+                    <option value="=">=</option>
+                </select>
+                <input type="text" id="value" placeholder="value" value="0.5">
+            </div>
+            
+            <div class="interval-container">
+                <label>
+                    <input type="checkbox" id="use-interval"> Find solutions in interval:
+                </label>
+                <input type="text" id="interval-start" placeholder="Start" value="0" class="hidden">
+                <span class="hidden">to</span>
+                <input type="text" id="interval-end" placeholder="End" value="2π" class="hidden">
+            </div>
+            
+            <button id="solve-basic">Solve Equation</button>
+            
+            <div id="equation-display" class="equation-display"></div>
+            <div id="error-message" class="error"></div>
+            
+            <div id="solution-steps" class="solution-steps"></div>
+            <div id="solution" class="solution"></div>
+            
+            <div class="examples">
+                <h3>Try these examples:</h3>
+                <div class="example" data-fn="sin" data-angle="x" data-value="0.5">sin(x) = 0.5</div>
+                <div class="example" data-fn="cos" data-angle="x" data-value="-0.5">cos(x) = -0.5</div>
+                <div class="example" data-fn="tan" data-angle="θ" data-value="1">tan(θ) = 1</div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="identity">
+            <h2>Identity-Based Equations</h2>
+            
+            <div class="equation-input">
+                <select id="identity-type">
+                    <option value="double-angle">Double Angle</option>
+                    <option value="sin2-cos2">sin²θ + cos²θ = 1</option>
+                    <option value="sincos">sin(A)cos(B)</option>
+                </select>
+                <div id="identity-params">
+                    <input type="text" id="identity-param1" placeholder="angle" value="x">
+                    <input type="text" id="identity-value" placeholder="value" value="0.5">
+                </div>
+            </div>
+            
+            <button id="solve-identity">Apply Identity & Solve</button>
+            
+            <div id="identity-display" class="equation-display"></div>
+            <div id="identity-error" class="error"></div>
+            
+            <div id="identity-steps" class="solution-steps"></div>
+            <div id="identity-solution" class="solution"></div>
+        </div>
+        
+        <div class="tab-content" id="learn">
+            <h2>Learn Trigonometric Equation Solving</h2>
+            
+            <h3>Methods of Solving</h3>
+            <div class="method">
+                <h4>1. Basic Equations:</h4>
+                <p>To solve equations like sin(x) = 0.5:</p>
+                <ol>
+                    <li>Find the reference angle: sin⁻¹(0.5) = π/6</li>
+                    <li>Apply periodicity: x = π/6 + 2nπ or x = (π - π/6) + 2nπ</li>
+                </ol>
+            </div>
+            
+            <div class="method">
+                <h4>2. Factoring:</h4>
+                <p>For equations like 2sin²x - sin x - 1 = 0:</p>
+                <ol>
+                    <li>Substitute u = sin x: 2u² - u - 1 = 0</li>
+                    <li>Solve for u using the quadratic formula</li>
+                    <li>Substitute back and solve for x</li>
+                </ol>
+            </div>
+            
+            <div class="method">
+                <h4>3. Using Identities:</h4>
+                <p>For equations like sin(2x) = sin(x):</p>
+                <ol>
+                    <li>Use the double angle identity: sin(2x) = 2sin(x)cos(x)</li>
+                    <li>Rewrite as 2sin(x)cos(x) = sin(x)</li>
+                    <li>Factor: sin(x)(2cos(x) - 1) = 0</li>
+                    <li>Solve each factor</li>
+                </ol>
+            </div>
+            
+            <h3>Common Values to Remember</h3>
+            <div class="values">
+                <p>sin(0) = 0, sin(π/6) = 0.5, sin(π/4) = √2/2, sin(π/3) = √3/2, sin(π/2) = 1</p>
+                <p>cos(0) = 1, cos(π/6) = √3/2, cos(π/4) = √2/2, cos(π/3) = 0.5, cos(π/2) = 0</p>
+                <p>tan(0) = 0, tan(π/6) = 1/√3, tan(π/4) = 1, tan(π/3) = √3</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+            // Interval checkbox handling
+            document.getElementById('use-interval').addEventListener('change', function() {
+                const intervalElements = document.querySelectorAll('#interval-start, #interval-end, .interval-container span');
+                intervalElements.forEach(el => {
+                    if (this.checked) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Examples
+            document.querySelectorAll('.example').forEach(example => {
+                example.addEventListener('click', () => {
+                    document.getElementById('trig-function').value = example.getAttribute('data-fn');
+                    document.getElementById('angle').value = example.getAttribute('data-angle');
+                    document.getElementById('value').value = example.getAttribute('data-value');
+                    updateEquationDisplay();
+                });
+            });
+
+            // Identity type change handler
+            document.getElementById('identity-type').addEventListener('change', function() {
+                updateIdentityParams();
+                updateIdentityDisplay();
+            });
+
+            function updateIdentityParams() {
+                const identityType = document.getElementById('identity-type').value;
+                const paramsDiv = document.getElementById('identity-params');
+                
+                if (identityType === 'double-angle') {
+                    paramsDiv.innerHTML = `
+                        <input type="text" id="identity-param1" placeholder="angle" value="x">
+                        <input type="text" id="identity-value" placeholder="value" value="0.5">
+                    `;
+                } else if (identityType === 'sin2-cos2') {
+                    paramsDiv.innerHTML = `
+                        <input type="text" id="identity-param1" placeholder="angle" value="x">
+                        <input type="text" id="identity-value" placeholder="value (should be 1)" value="1" disabled>
+                    `;
+                } else if (identityType === 'sincos') {
+                    paramsDiv.innerHTML = `
+                        <input type="text" id="identity-param1" placeholder="angle A" value="x">
+                        <input type="text" id="identity-param2" placeholder="angle B" value="x">
+                        <input type="text" id="identity-value" placeholder="value" value="0.25">
+                    `;
+                }
+            }
+
+            // Equation display updates
+            function updateEquationDisplay() {
+                const trigFn = document.getElementById('trig-function').value;
+                const angle = document.getElementById('angle').value;
+                const value = document.getElementById('value').value;
+                
+                document.getElementById('equation-display').textContent = 
+                    `${trigFn}(${angle}) = ${value}`;
+            }
+
+            function updateIdentityDisplay() {
+                const identityType = document.getElementById('identity-type').value;
+                const param1 = document.getElementById('identity-param1').value;
+                let displayText = '';
+                
+                if (identityType === 'double-angle') {
+                    const value = document.getElementById('identity-value').value;
+                    displayText = `sin(2${param1}) = ${value}`;
+                } else if (identityType === 'sin2-cos2') {
+                    displayText = `sin²(${param1}) + cos²(${param1}) = 1`;
+                } else if (identityType === 'sincos') {
+                    const param2 = document.getElementById('identity-param2').value;
+                    const value = document.getElementById('identity-value').value;
+                    displayText = `sin(${param1})cos(${param2}) = ${value}`;
+                }
+                
+                document.getElementById('identity-display').textContent = displayText;
+            }
+
+            // Attach change handlers for equation display
+            document.getElementById('trig-function').addEventListener('change', updateEquationDisplay);
+            document.getElementById('angle').addEventListener('input', updateEquationDisplay);
+            document.getElementById('value').addEventListener('input', updateEquationDisplay);
+            
+            // Initial updates
+            updateEquationDisplay();
+            updateIdentityParams();
+            updateIdentityDisplay();
+
+            // Solve button handlers
+            document.getElementById('solve-basic').addEventListener('click', solveBasicEquation);
+            document.getElementById('solve-identity').addEventListener('click', solveIdentityEquation);
+
+            // Solving functions
+            function solveBasicEquation() {
+                const trigFn = document.getElementById('trig-function').value;
+                const angle = document.getElementById('angle').value;
+                const value = parseFloat(document.getElementById('value').value);
+                const useInterval = document.getElementById('use-interval').checked;
+                
+                // Clear previous results
+                document.getElementById('error-message').textContent = '';
+                document.getElementById('solution-steps').innerHTML = '';
+                document.getElementById('solution').textContent = '';
+                
+                // Validate input
+                if (isNaN(value)) {
+                    document.getElementById('error-message').textContent = 'Please enter a valid numeric value.';
+                    return;
+                }
+
+                // Check if the value is in the valid range for the trig function
+                if ((trigFn === 'sin' || trigFn === 'cos') && (value < -1 || value > 1)) {
+                    document.getElementById('error-message').textContent = 
+                        `The value for ${trigFn} must be between -1 and 1.`;
+                    return;
+                }
+                
+                // Generate steps and solution
+                let steps = [];
+                let solution = '';
+                
+                if (trigFn === 'sin') {
+                    solveSinEquation(value, steps, useInterval);
+                } else if (trigFn === 'cos') {
+                    solveArcCosEquation(value, steps, useInterval);
+                } else if (trigFn === 'tan') {
+                    solveTanEquation(value, steps, useInterval);
+                }
+                
+                // Display steps
+                document.getElementById('solution-steps').innerHTML = steps.map(step => 
+                    `<div class="step">${step}</div>`).join('');
+            }
+
+            function solveSinEquation(value, steps, useInterval) {
+                const angle = document.getElementById('angle').value;
+                steps.push(`To solve sin(${angle}) = ${value}, we need to find all angles whose sine equals ${value}.`);
+                
+                // Find reference angle
+                const referenceAngle = Math.asin(value);
+                steps.push(`First, we find the reference angle: sin<sup>-1</sup>(${value}) ≈ ${referenceAngle.toFixed(4)} radians.`);
+                
+                // First solution set
+                steps.push(`Since sine is positive in the first and second quadrants, we have our first solution:`);
+                steps.push(`${angle} = ${referenceAngle.toFixed(4)} + 2nπ, where n is an integer`);
+                
+                // Second solution set (if not 1 or -1)
+                if (value !== 1 && value !== -1) {
+                    const secondAngle = Math.PI - referenceAngle;
+                    steps.push(`And the second solution:`);
+                    steps.push(`${angle} = ${secondAngle.toFixed(4)} + 2nπ, where n is an integer`);
+                }
+                
+                // Find solutions in interval if requested
+                if (useInterval) {
+                    const start = parseFloat(document.getElementById('interval-start').value);
+                    const end = parseFloat(document.getElementById('interval-end').value);
+                    
+                    if (isNaN(start) || isNaN(end)) {
+                        steps.push(`Please enter valid interval bounds.`);
+                        return;
+                    }
+                    
+                    steps.push(`Finding solutions in the interval [${start}, ${end}]:`);
+                    
+                    const solutions = [];
+                    // First set of solutions
+                    for (let n = Math.floor((start - referenceAngle) / (2 * Math.PI)); 
+                         n <= Math.ceil((end - referenceAngle) / (2 * Math.PI)); n++) {
+                        const sol = referenceAngle + 2 * Math.PI * n;
+                        if (sol >= start && sol <= end) {
+                            solutions.push(sol.toFixed(4));
+                        }
+                    }
+                    
+                    // Second set of solutions (if not 1 or -1)
+                    if (value !== 1 && value !== -1) {
+                        const secondAngle = Math.PI - referenceAngle;
+                        for (let n = Math.floor((start - secondAngle) / (2 * Math.PI)); 
+                             n <= Math.ceil((end - secondAngle) / (2 * Math.PI)); n++) {
+                            const sol = secondAngle + 2 * Math.PI * n;
+                            if (sol >= start && sol <= end) {
+                                solutions.push(sol.toFixed(4));
+                            }
+                        }
+                    }
+                    
+                    // Sort solutions
+                    solutions.sort((a, b) => parseFloat(a) - parseFloat(b));
+                    
+                    steps.push(`Solutions in this interval: ${solutions.join(', ')} radians`);
+                }
+            }
+
+            function solveArcCosEquation(value, steps, useInterval) {
+                const angle = document.getElementById('angle').value;
+                steps.push(`To solve cos(${angle}) = ${value}, we need to find all angles whose cosine equals ${value}.`);
+                
+                // Find reference angle
+                const referenceAngle = Math.acos(value);
+                steps.push(`First, we find the reference angle: cos<sup>-1</sup>(${value}) ≈ ${referenceAngle.toFixed(4)} radians.`);
+                
+                // First solution set
+                steps.push(`Since cosine is positive in the first and fourth quadrants, we have our first solution:`);
+                steps.push(`${angle} = ${referenceAngle.toFixed(4)} + 2nπ, where n is an integer`);
+                
+                // Second solution set (if not 1 or -1)
+                if (value !== 1 && value !== -1) {
+                    const secondAngle = -referenceAngle;
+                    steps.push(`And the second solution:`);
+                    steps.push(`${angle} = ${secondAngle.toFixed(4)} + 2nπ, where n is an integer`);
+                }
+                
+                // Find solutions in interval if requested
+                if (useInterval) {
+                    const start = parseFloat(document.getElementById('interval-start').value);
+                    const end = parseFloat(document.getElementById('interval-end').value);
+                    
+                    if (isNaN(start) || isNaN(end)) {
+                        steps.push(`Please enter valid interval bounds.`);
+                        return;
+                    }
+                    
+                    steps.push(`Finding solutions in the interval [${start}, ${end}]:`);
+                    
+                    const solutions = [];
+                    // First set of solutions
+                    for (let n = Math.floor((start - referenceAngle) / (2 * Math.PI)); 
+                         n <= Math.ceil((end - referenceAngle) / (2 * Math.PI)); n++) {
+                        const sol = referenceAngle + 2 * Math.PI * n;
+                        if (sol >= start && sol <= end) {
+                            solutions.push(sol.toFixed(4));
+                        }
+                    }
+                    
+                    // Second set of solutions (if not 1 or -1)
+                    if (value !== 1 && value !== -1) {
+                        const secondAngle = -referenceAngle + 2 * Math.PI;  // Make it positive for easier calculation
+                        for (let n = Math.floor((start - secondAngle) / (2 * Math.PI)); 
+                             n <= Math.ceil((end - secondAngle) / (2 * Math.PI)); n++) {
+                            const sol = secondAngle + 2 * Math.PI * n;
+                            if (sol >= start && sol <= end) {
+                                solutions.push(sol.toFixed(4));
+                            }
+                        }
+                    }
+                    
+                    // Sort solutions
+                    solutions.sort((a, b) => parseFloat(a) - parseFloat(b));
+                    
+                    steps.push(`Solutions in this interval: ${solutions.join(', ')} radians`);
+                }
+            }
+
+            function solveTanEquation(value, steps, useInterval) {
+                const angle = document.getElementById('angle').value;
+                steps.push(`To solve tan(${angle}) = ${value}, we need to find all angles whose tangent equals ${value}.`);
+                
+                // Find reference angle
+                const referenceAngle = Math.atan(value);
+                steps.push(`First, we find the reference angle: tan<sup>-1</sup>(${value}) ≈ ${referenceAngle.toFixed(4)} radians.`);
+                
+                // Solution set
+                steps.push(`Since tangent has a period of π, the general solution is:`);
+                steps.push(`${angle} = ${referenceAngle.toFixed(4)} + nπ, where n is an integer`);
+                
+                // Find solutions in interval if requested
+                if (useInterval) {
+                    const start = parseFloat(document.getElementById('interval-start').value);
+                    const end = parseFloat(document.getElementById('interval-end').value);
+                    
+                    if (isNaN(start) || isNaN(end)) {
+                        steps.push(`Please enter valid interval bounds.`);
+                        return;
+                    }
+                    
+                    steps.push(`Finding solutions in the interval [${start}, ${end}]:`);
+                    
+                    const solutions = [];
+                    for (let n = Math.floor((start - referenceAngle) / Math.PI); 
+                         n <= Math.ceil((end - referenceAngle) / Math.PI); n++) {
+                        const sol = referenceAngle + Math.PI * n;
+                        if (sol >= start && sol <= end) {
+                            solutions.push(sol.toFixed(4));
+                        }
+                    }
+                    
+                    steps.push(`Solutions in this interval: ${solutions.join(', ')} radians`);
+                }
+            }
+
+            function solveIdentityEquation() {
+                const identityType = document.getElementById('identity-type').value;
+                const param1 = document.getElementById('identity-param1').value;
+                
+                // Clear previous results
+                document.getElementById('identity-error').textContent = '';
+                document.getElementById('identity-steps').innerHTML = '';
+                document.getElementById('identity-solution').textContent = '';
+                
+                let steps = [];
+                
+                if (identityType === 'double-angle') {
+                    const value = parseFloat(document.getElementById('identity-value').value);
+                    
+                    if (isNaN(value)) {
+                        document.getElementById('identity-error').textContent = 'Please enter a valid numeric value.';
+                        return;
+                    }
+                    
+                    steps.push(`To solve sin(2${param1}) = ${value}, we'll use the double angle identity.`);
+                    steps.push(`sin(2${param1}) = 2sin(${param1})cos(${param1})`);
+                    steps.push(`So our equation becomes: 2sin(${param1})cos(${param1}) = ${value}`);
+                    
+                    // Continue with solution steps
+                    steps.push(`This is equivalent to sin(2${param1}) = ${value}`);
+                    steps.push(`We can solve this directly using the arcsine function.`);
+                    
+                    const angle = Math.asin(value) / 2;
+                    steps.push(`${param1} = ${angle.toFixed(4)} + nπ/2 or ${param1} = (π - ${angle.toFixed(4)}) + nπ/2`);
+                    
+                } else if (identityType === 'sin2-cos2') {
+                    steps.push(`The identity sin²(${param1}) + cos²(${param1}) = 1 is always true for any angle ${param1}.`);
+                    steps.push(`This is a fundamental trigonometric identity that doesn't need to be solved.`);
+                    steps.push(`It's useful for simplifying other trigonometric expressions and equations.`);
+                    
+                } else if (identityType === 'sincos') {
+                    const param2 = document.getElementById('identity-param2').value;
+                    const value = parseFloat(document.getElementById('identity-value').value);
+                    
+                    if (isNaN(value)) {
+                        document.getElementById('identity-error').textContent = 'Please enter a valid numeric value.';
+                        return;
+                    }
+                    
+                    steps.push(`To solve sin(${param1})cos(${param2}) = ${value}, we can use the product-to-sum identity.`);
+                    
+                    if (param1 === param2) {
+                        steps.push(`Since both angles are the same (${param1}), we have sin(${param1})cos(${param1}) = ${value}`);
+                        steps.push(`We can use the identity: 2sin(θ)cos(θ) = sin(2θ)`);
+                        steps.push(`So our equation becomes: sin(2${param1})/2 = ${value}`);
+                        steps.push(`Multiplying both sides by 2: sin(2${param1}) = ${value * 2}`);
+                        
+                        if (Math.abs(value * 2) > 1) {
+                            steps.push(`Since ${value * 2} is outside the range [-1, 1], this equation has no solution.`);
+                        } else {
+                            const angle = Math.asin(value * 2) / 2;
+                            steps.push(`${param1} = ${angle.toFixed(4)} + nπ or ${param1} = (π/2 - ${angle.toFixed(4)}) + nπ`);
+                        }
+                    } else {
+                        steps.push(`For different angles, we can use the identity: sin(A)cos(B) = (1/2)[sin(A+B) + sin(A-B)]`);
+                        steps.push(`So sin(${param1})cos(${param2}) = (1/2)[sin(${param1}+${param2}) + sin(${param1}-${param2})]`);
+                        steps.push(`This equation becomes more complex and might require numerical methods to solve.`);
+                    }
+                }
+                
+                // Display steps
+                document.getElementById('identity-steps').innerHTML = steps.map(step => 
+                    `<div class="step">${step}</div>`).join('');
+            }
+        });
+    </script>
+</body>
+</html>

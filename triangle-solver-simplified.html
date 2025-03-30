@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangle Solver</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        .container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px;
+            flex: 1;
+            min-width: 300px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background: white;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            background: #eee;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .results {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 3px solid #3498db;
+        }
+        .formula {
+            font-style: italic;
+            background: #f1f1f1;
+            padding: 8px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .error { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <h1>Triangle Solver</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab('sines')">Law of Sines</div>
+        <div class="tab" onclick="openTab('cosines')">Law of Cosines</div>
+    </div>
+    
+    <div id="sines" class="tab-content active">
+        <div class="formula">
+            <p>a/sin(A) = b/sin(B) = c/sin(C)</p>
+        </div>
+        
+        <div class="container">
+            <div class="panel">
+                <canvas id="sinesCanvas" width="280" height="280"></canvas>
+                
+                <form id="sinesForm">
+                    <div class="grid">
+                        <div>
+                            <label for="sideA">Side a:</label>
+                            <input type="number" id="sideA" placeholder="Length of a">
+                        </div>
+                        <div>
+                            <label for="sideB">Side b:</label>
+                            <input type="number" id="sideB" placeholder="Length of b">
+                        </div>
+                        <div>
+                            <label for="sideC">Side c:</label>
+                            <input type="number" id="sideC" placeholder="Length of c">
+                        </div>
+                        <div>
+                            <label for="angleA">Angle A (°):</label>
+                            <input type="number" id="angleA" placeholder="Angle A" min="0" max="180">
+                        </div>
+                        <div>
+                            <label for="angleB">Angle B (°):</label>
+                            <input type="number" id="angleB" placeholder="Angle B" min="0" max="180">
+                        </div>
+                        <div>
+                            <label for="angleC">Angle C (°):</label>
+                            <input type="number" id="angleC" placeholder="Angle C" min="0" max="180">
+                        </div>
+                    </div>
+                    
+                    <div id="sinesError" class="error"></div>
+                    <button type="button" onclick="calculateSines()">Calculate</button>
+                </form>
+                
+                <div id="sinesResult" class="results" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="cosines" class="tab-content">
+        <div class="formula">
+            <p>c² = a² + b² - 2ab·cos(C)</p>
+        </div>
+        
+        <div class="container">
+            <div class="panel">
+                <canvas id="cosinesCanvas" width="280" height="280"></canvas>
+                
+                <form id="cosinesForm">
+                    <div class="grid">
+                        <div>
+                            <label for="sideCosA">Side a:</label>
+                            <input type="number" id="sideCosA" placeholder="Length of a">
+                        </div>
+                        <div>
+                            <label for="sideCosB">Side b:</label>
+                            <input type="number" id="sideCosB" placeholder="Length of b">
+                        </div>
+                        <div>
+                            <label for="sideCosC">Side c:</label>
+                            <input type="number" id="sideCosC" placeholder="Length of c">
+                        </div>
+                        <div>
+                            <label for="angleCosA">Angle A (°):</label>
+                            <input type="number" id="angleCosA" placeholder="Angle A" min="0" max="180">
+                        </div>
+                        <div>
+                            <label for="angleCosB">Angle B (°):</label>
+                            <input type="number" id="angleCosB" placeholder="Angle B" min="0" max="180">
+                        </div>
+                        <div>
+                            <label for="angleCosC">Angle C (°):</label>
+                            <input type="number" id="angleCosC" placeholder="Angle C" min="0" max="180">
+                        </div>
+                    </div>
+                    
+                    <div id="cosinesError" class="error"></div>
+                    <button type="button" onclick="calculateCosines()">Calculate</button>
+                </form>
+                
+                <div id="cosinesResult" class="results" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        const sinesCanvas = document.getElementById('sinesCanvas');
+        const sinesCtx = sinesCanvas.getContext('2d');
+        const cosinesCanvas = document.getElementById('cosinesCanvas');
+        const cosinesCtx = cosinesCanvas.getContext('2d');
+        
+        // Helper functions
+        function degToRad(degrees) { return degrees * Math.PI / 180; }
+        function radToDeg(radians) { return radians * 180 / Math.PI; }
+        
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        function drawTriangle(ctx, a, b, c, A, B, C) {
+            // Clear canvas
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            
+            // Set scale for drawing
+            const maxSide = Math.max(a, b, c);
+            const scale = 100 / maxSide;
+            
+            // Convert angles to radians
+            const angleA = degToRad(A);
+            const angleB = degToRad(B);
+            const angleC = degToRad(C);
+            
+            // Calculate coordinates
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            
+            // Start at bottom left
+            const x1 = centerX - (b * scale) / 2;
+            const y1 = centerY + 50;
+            
+            // Bottom right
+            const x2 = x1 + c * scale;
+            const y2 = y1;
+            
+            // Top
+            const height = b * scale * Math.sin(angleA);
+            const x3 = x1 + a * scale * Math.cos(angleC);
+            const y3 = y1 - height;
+            
+            // Draw triangle
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x3, y3);
+            ctx.closePath();
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Fill with color
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.2)';
+            ctx.fill();
+            
+            // Label sides and angles
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#2c3e50';
+            
+            // Sides
+            ctx.fillText(`a = ${a.toFixed(1)}`, (x2 + x3) / 2 + 5, (y2 + y3) / 2);
+            ctx.fillText(`b = ${b.toFixed(1)}`, (x1 + x3) / 2 - 25, (y1 + y3) / 2);
+            ctx.fillText(`c = ${c.toFixed(1)}`, (x1 + x2) / 2, y1 + 15);
+            
+            // Angles
+            ctx.fillText(`A = ${A.toFixed(1)}°`, x2 - 15, y2 + 20);
+            ctx.fillText(`B = ${B.toFixed(1)}°`, x1 + 5, y1 + 20);
+            ctx.fillText(`C = ${C.toFixed(1)}°`, x3 - 10, y3 - 10);
+        }
+        
+        function calculateSines() {
+            // Get input values
+            const a = parseFloat(document.getElementById('sideA').value) || 0;
+            const b = parseFloat(document.getElementById('sideB').value) || 0;
+            const c = parseFloat(document.getElementById('sideC').value) || 0;
+            const A = parseFloat(document.getElementById('angleA').value) || 0;
+            const B = parseFloat(document.getElementById('angleB').value) || 0;
+            const C = parseFloat(document.getElementById('angleC').value) || 0;
+            
+            const errorElement = document.getElementById('sinesError');
+            const resultElement = document.getElementById('sinesResult');
+            
+            // Count known values
+            const knownSides = [a, b, c].filter(s => s > 0).length;
+            const knownAngles = [A, B, C].filter(a => a > 0).length;
+            
+            // Check if we have enough information
+            if (knownSides + knownAngles < 3 || knownSides === 0) {
+                errorElement.textContent = "Need at least 3 values with at least 1 side.";
+                resultElement.style.display = 'none';
+                return;
+            }
+            
+            // Create copies for calculation
+            let solvedA = A, solvedB = B, solvedC = C;
+            let solvedSideA = a, solvedSideB = b, solvedSideC = c;
+            
+            // Find third angle if two are known
+            if (knownAngles === 2) {
+                if (solvedA === 0) solvedA = 180 - solvedB - solvedC;
+                else if (solvedB === 0) solvedB = 180 - solvedA - solvedC;
+                else if (solvedC === 0) solvedC = 180 - solvedA - solvedB;
+                
+                if (Math.abs(solvedA + solvedB + solvedC - 180) > 0.01) {
+                    errorElement.textContent = "The sum of angles must be 180°.";
+                    resultElement.style.display = 'none';
+                    return;
+                }
+            }
+            
+            // Use Law of Sines
+            const sinA = Math.sin(degToRad(solvedA));
+            const sinB = Math.sin(degToRad(solvedB));
+            const sinC = Math.sin(degToRad(solvedC));
+            
+            // Calculate ratio
+            let ratio;
+            if (solvedSideA > 0 && solvedA > 0) ratio = solvedSideA / sinA;
+            else if (solvedSideB > 0 && solvedB > 0) ratio = solvedSideB / sinB;
+            else if (solvedSideC > 0 && solvedC > 0) ratio = solvedSideC / sinC;
+            
+            // Find unknown sides
+            if (solvedSideA === 0 && solvedA > 0) solvedSideA = ratio * sinA;
+            if (solvedSideB === 0 && solvedB > 0) solvedSideB = ratio * sinB;
+            if (solvedSideC === 0 && solvedC > 0) solvedSideC = ratio * sinC;
+            
+            // Find remaining angles if needed
+            if (solvedSideA > 0 && solvedSideB > 0 && solvedSideC > 0) {
+                if (solvedA === 0) solvedA = radToDeg(Math.asin((solvedSideA * sinB) / solvedSideB));
+                if (solvedB === 0) solvedB = radToDeg(Math.asin((solvedSideB * sinA) / solvedSideA));
+                if (solvedC === 0) solvedC = radToDeg(Math.asin((solvedSideC * sinA) / solvedSideA));
+                
+                // Ensure angles sum to 180°
+                if (knownAngles === 1) {
+                    if (solvedA > 0 && solvedB > 0) solvedC = 180 - solvedA - solvedB;
+                    else if (solvedA > 0 && solvedC > 0) solvedB = 180 - solvedA - solvedC;
+                    else if (solvedB > 0 && solvedC > 0) solvedA = 180 - solvedB - solvedC;
+                }
+            }
+            
+            // Display results
+            drawTriangle(sinesCtx, solvedSideA, solvedSideB, solvedSideC, solvedA, solvedB, solvedC);
+            errorElement.textContent = "";
+            resultElement.innerHTML = `
+                <p><strong>Sides:</strong> a=${solvedSideA.toFixed(2)}, b=${solvedSideB.toFixed(2)}, c=${solvedSideC.toFixed(2)}</p>
+                <p><strong>Angles:</strong> A=${solvedA.toFixed(2)}°, B=${solvedB.toFixed(2)}°, C=${solvedC.toFixed(2)}°</p>
+            `;
+            resultElement.style.display = 'block';
+        }
+        
+        function calculateCosines() {
+            // Get input values
+            const a = parseFloat(document.getElementById('sideCosA').value) || 0;
+            const b = parseFloat(document.getElementById('sideCosB').value) || 0;
+            const c = parseFloat(document.getElementById('sideCosC').value) || 0;
+            const A = parseFloat(document.getElementById('angleCosA').value) || 0;
+            const B = parseFloat(document.getElementById('angleCosB').value) || 0;
+            const C = parseFloat(document.getElementById('angleCosC').value) || 0;
+            
+            const errorElement = document.getElementById('cosinesError');
+            const resultElement = document.getElementById('cosinesResult');
+            
+            // Count known values
+            const knownSides = [a, b, c].filter(s => s > 0).length;
+            const knownAngles = [A, B, C].filter(a => a > 0).length;
+            
+            if (knownSides + knownAngles < 3) {
+                errorElement.textContent = "Need at least 3 values.";
+                resultElement.style.display = 'none';
+                return;
+            }
+            
+            // Create copies for calculation
+            let solvedA = A, solvedB = B, solvedC = C;
+            let solvedSideA = a, solvedSideB = b, solvedSideC = c;
+            
+            // SSS case
+            if (knownSides === 3) {
+                // Find angles using Law of Cosines
+                if (solvedA === 0) {
+                    const cosA = (b*b + c*c - a*a) / (2*b*c);
+                    solvedA = radToDeg(Math.acos(Math.max(-1, Math.min(1, cosA))));
+                }
+                if (solvedB === 0) {
+                    const cosB = (a*a + c*c - b*b) / (2*a*c);
+                    solvedB = radToDeg(Math.acos(Math.max(-1, Math.min(1, cosB))));
+                }
+                if (solvedC === 0) {
+                    const cosC = (a*a + b*b - c*c) / (2*a*b);
+                    solvedC = radToDeg(Math.acos(Math.max(-1, Math.min(1, cosC))));
+                }
+            }
+            
+            // SAS case
+            else if (knownSides === 2 && knownAngles === 1) {
+                // Find the third side
+                if (solvedSideA === 0 && solvedB > 0 && solvedC > 0 && solvedA > 0) {
+                    solvedSideA = Math.sqrt(b*b + c*c - 2*b*c*Math.cos(degToRad(solvedA)));
+                }
+                else if (solvedSideB === 0 && solvedA > 0 && solvedC > 0 && solvedB > 0) {
+                    solvedSideB = Math.sqrt(a*a + c*c - 2*a*c*Math.cos(degToRad(solvedB)));
+                }
+                else if (solvedSideC === 0 && solvedA > 0 && solvedB > 0 && solvedC > 0) {
+                    solvedSideC = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(degToRad(solvedC)));
+                }
+                
+                // Once we have all three sides, we can find the remaining angles
+                if (solvedSideA > 0 && solvedSideB > 0 && solvedSideC > 0) {
+                    if (solvedA === 0) {
+                        const cosA = (b*b + c*c - a*a) / (2*b*c);
+                        solvedA = radToDeg(Math.acos(Math.max(-1, Math.min(1, cosA))));
+                    }
+                    if (solvedB === 0) {
+                        const cosB = (a*a + c*c - b*b) / (2*a*c);
+                        solvedB = radToDeg(Math.acos(Math.max(-1, Math.min(1, cosB))));
+                    }
+                    if (solvedC === 0) {
+                        const cosC = (a*a + b*b - c*c) / (2*a*b);
+                        solvedC = radToDeg(Math.acos(Math.max(-1, Math.min(1, cosC))));
+                    }
+                }
+            }
+            
+            // Display results
+            drawTriangle(cosinesCtx, solvedSideA, solvedSideB, solvedSideC, solvedA, solvedB, solvedC);
+            errorElement.textContent = "";
+            resultElement.innerHTML = `
+                <p><strong>Sides:</strong> a=${solvedSideA.toFixed(2)}, b=${solvedSideB.toFixed(2)}, c=${solvedSideC.toFixed(2)}</p>
+                <p><strong>Angles:</strong> A=${solvedA.toFixed(2)}°, B=${solvedB.toFixed(2)}°, C=${solvedC.toFixed(2)}°</p>
+            `;
+            resultElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
