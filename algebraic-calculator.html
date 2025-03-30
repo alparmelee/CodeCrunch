@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algebraic Calculator</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3dc;
+            --light: #e8f1f5;
+            --dark: #1b3a5c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1, h2 {
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        .calculator-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .display {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        button {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .number-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+        
+        .operation-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .equals-btn {
+            background-color: var(--secondary);
+            color: white;
+            grid-column: span 2;
+        }
+        
+        .clear-btn {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        button:hover {
+            opacity: 0.8;
+        }
+        
+        .example-problem {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .steps {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .explanation {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .properties-section {
+            margin-top: 30px;
+        }
+        
+        .property {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .variable-section input {
+            width: 60px;
+            padding: 8px;
+            margin: 0 10px;
+            text-align: center;
+        }
+        
+        .result {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <h1>Algebraic Calculator</h1>
+    
+    <div class="calculator-container">
+        <input type="text" class="display" id="display" placeholder="Enter an expression...">
+        <div class="buttons">
+            <button class="number-btn" onclick="appendToDisplay('7')">7</button>
+            <button class="number-btn" onclick="appendToDisplay('8')">8</button>
+            <button class="number-btn" onclick="appendToDisplay('9')">9</button>
+            <button class="operation-btn" onclick="appendToDisplay('/')">/</button>
+            
+            <button class="number-btn" onclick="appendToDisplay('4')">4</button>
+            <button class="number-btn" onclick="appendToDisplay('5')">5</button>
+            <button class="number-btn" onclick="appendToDisplay('6')">6</button>
+            <button class="operation-btn" onclick="appendToDisplay('*')">×</button>
+            
+            <button class="number-btn" onclick="appendToDisplay('1')">1</button>
+            <button class="number-btn" onclick="appendToDisplay('2')">2</button>
+            <button class="number-btn" onclick="appendToDisplay('3')">3</button>
+            <button class="operation-btn" onclick="appendToDisplay('-')">-</button>
+            
+            <button class="number-btn" onclick="appendToDisplay('0')">0</button>
+            <button class="number-btn" onclick="appendToDisplay('.')">.</button>
+            <button class="operation-btn" onclick="appendToDisplay('+'')">+</button>
+            <button class="operation-btn" onclick="appendToDisplay('(')">(</button>
+            
+            <button class="operation-btn" onclick="appendToDisplay(')')">)</button>
+            <button class="operation-btn" onclick="appendToDisplay('^')">^</button>
+            <button class="clear-btn" onclick="clearDisplay()">C</button>
+            <button class="equals-btn" onclick="calculate()">=</button>
+        </div>
+    </div>
+    
+    <div class="explanation">
+        <h2>Order of Operations (PEMDAS)</h2>
+        <p>When evaluating mathematical expressions, we follow the PEMDAS rule:</p>
+        <ol>
+            <li><strong>P</strong>arentheses - Evaluate expressions inside parentheses first</li>
+            <li><strong>E</strong>xponents - Evaluate exponents (powers)</li>
+            <li><strong>M</strong>ultiplication and <strong>D</strong>ivision - From left to right</li>
+            <li><strong>A</strong>ddition and <strong>S</strong>ubtraction - From left to right</li>
+        </ol>
+    </div>
+    
+    <div class="example-problem">
+        <h3>Example: Evaluate 3 + 4 × 2 - (6 ÷ 2) + 2²</h3>
+        <div class="steps" id="example-steps">
+            <p>Step 1: Parentheses first → 3 + 4 × 2 - (6 ÷ 2) + 2²</p>
+            <p>Step 1 result: 3 + 4 × 2 - 3 + 2²</p>
+            <p>Step 2: Exponents → 3 + 4 × 2 - 3 + 2²</p>
+            <p>Step 2 result: 3 + 4 × 2 - 3 + 4</p>
+            <p>Step 3: Multiplication and Division → 3 + 4 × 2 - 3 + 4</p>
+            <p>Step 3 result: 3 + 8 - 3 + 4</p>
+            <p>Step 4: Addition and Subtraction (left to right) → 3 + 8 - 3 + 4</p>
+            <p>Step 4 result: 12</p>
+        </div>
+        <button onclick="solveExample()" class="operation-btn" style="margin-top: 10px; width: 100%;">Solve Step-by-Step</button>
+    </div>
+    
+    <div class="properties-section">
+        <h2>Properties of Addition and Multiplication</h2>
+        
+        <div class="property">
+            <h3>Commutative Property</h3>
+            <p>The order of operands doesn't change the result:</p>
+            <p>a + b = b + a</p>
+            <p>a × b = b × a</p>
+            <div class="variable-section">
+                <label>a = <input type="number" id="commutative-a" value="5"></label>
+                <label>b = <input type="number" id="commutative-b" value="3"></label>
+                <button onclick="demonstrateCommutative()" class="operation-btn">Demonstrate</button>
+                <p id="commutative-result"></p>
+            </div>
+        </div>
+        
+        <div class="property">
+            <h3>Associative Property</h3>
+            <p>The grouping of operands doesn't change the result:</p>
+            <p>(a + b) + c = a + (b + c)</p>
+            <p>(a × b) × c = a × (b × c)</p>
+            <div class="variable-section">
+                <label>a = <input type="number" id="associative-a" value="2"></label>
+                <label>b = <input type="number" id="associative-b" value="3"></label>
+                <label>c = <input type="number" id="associative-c" value="4"></label>
+                <button onclick="demonstrateAssociative()" class="operation-btn">Demonstrate</button>
+                <p id="associative-result"></p>
+            </div>
+        </div>
+        
+        <div class="property">
+            <h3>Distributive Property</h3>
+            <p>Multiplication distributes over addition:</p>
+            <p>a × (b + c) = (a × b) + (a × c)</p>
+            <div class="variable-section">
+                <label>a = <input type="number" id="distributive-a" value="2"></label>
+                <label>b = <input type="number" id="distributive-b" value="3"></label>
+                <label>c = <input type="number" id="distributive-c" value="4"></label>
+                <button onclick="demonstrateDistributive()" class="operation-btn">Demonstrate</button>
+                <p id="distributive-result"></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Basic calculator functions
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+        
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+        
+        function calculate() {
+            const display = document.getElementById('display');
+            try {
+                // Replace ^ with ** for JavaScript exponentiation
+                let expression = display.value.replace(/\^/g, '**');
+                
+                // Calculate and display the result
+                display.value = eval(expression);
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+        
+        // Example problem steps
+        let currentStep = 0;
+        const steps = document.querySelectorAll('#example-steps p');
+        
+        function solveExample() {
+            if (currentStep === 0) {
+                for (let i = 2; i < steps.length; i++) {
+                    steps[i].style.display = 'none';
+                }
+            }
+            
+            if (currentStep < steps.length / 2) {
+                steps[currentStep * 2].style.fontWeight = 'bold';
+                steps[currentStep * 2 + 1].style.display = 'block';
+                currentStep++;
+                
+                if (currentStep === steps.length / 2) {
+                    // Reset for next demonstration
+                    setTimeout(() => {
+                        currentStep = 0;
+                        for (let i = 0; i < steps.length; i++) {
+                            steps[i].style.fontWeight = 'normal';
+                            steps[i].style.display = 'block';
+                        }
+                    }, 3000);
+                }
+            }
+        }
+        
+        // Property demonstration functions
+        function demonstrateCommutative() {
+            const a = parseFloat(document.getElementById('commutative-a').value);
+            const b = parseFloat(document.getElementById('commutative-b').value);
+            
+            const result = document.getElementById('commutative-result');
+            result.innerHTML = `
+                <span class="result">Addition:</span> ${a} + ${b} = ${a + b} and ${b} + ${a} = ${b + a}<br>
+                <span class="result">Multiplication:</span> ${a} × ${b} = ${a * b} and ${b} × ${a} = ${b * a}
+            `;
+        }
+        
+        function demonstrateAssociative() {
+            const a = parseFloat(document.getElementById('associative-a').value);
+            const b = parseFloat(document.getElementById('associative-b').value);
+            const c = parseFloat(document.getElementById('associative-c').value);
+            
+            const result = document.getElementById('associative-result');
+            result.innerHTML = `
+                <span class="result">Addition:</span> (${a} + ${b}) + ${c} = ${(a + b) + c} and ${a} + (${b} + ${c}) = ${a + (b + c)}<br>
+                <span class="result">Multiplication:</span> (${a} × ${b}) × ${c} = ${(a * b) * c} and ${a} × (${b} × ${c}) = ${a * (b * c)}
+            `;
+        }
+        
+        function demonstrateDistributive() {
+            const a = parseFloat(document.getElementById('distributive-a').value);
+            const b = parseFloat(document.getElementById('distributive-b').value);
+            const c = parseFloat(document.getElementById('distributive-c').value);
+            
+            const result = document.getElementById('distributive-result');
+            result.innerHTML = `
+                <span class="result">Left side:</span> ${a} × (${b} + ${c}) = ${a * (b + c)}<br>
+                <span class="result">Right side:</span> (${a} × ${b}) + (${a} × ${c}) = ${(a * b) + (a * c)}
+            `;
+        }
+        
+        // Initialize
+        window.onload = function() {
+            for (let i = 2; i < steps.length; i++) {
+                steps[i].style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

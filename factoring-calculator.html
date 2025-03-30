@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factoring Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .steps {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .step {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Factoring Calculator</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="openTab('gcf')">GCF</button>
+            <button class="tab" onclick="openTab('trinomial')">Trinomials</button>
+            <button class="tab" onclick="openTab('difference-squares')">Difference of Squares</button>
+            <button class="tab" onclick="openTab('grouping')">Factoring by Grouping</button>
+        </div>
+        
+        <!-- GCF Tab -->
+        <div id="gcf" class="tab-content active">
+            <h2>Find Greatest Common Factor (GCF)</h2>
+            <div class="input-group">
+                <label for="gcf-numbers">Enter numbers (separated by commas):</label>
+                <input type="text" id="gcf-numbers" placeholder="Example: 12, 18, 24">
+            </div>
+            <button onclick="calculateGCF()">Calculate GCF</button>
+            <div id="gcf-result" class="result"></div>
+            <div id="gcf-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="gcf-steps" class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Trinomials Tab -->
+        <div id="trinomial" class="tab-content">
+            <h2>Factor Trinomials (ax² + bx + c)</h2>
+            <div class="input-group">
+                <label for="trinomial-a">a:</label>
+                <input type="number" id="trinomial-a" value="1">
+            </div>
+            <div class="input-group">
+                <label for="trinomial-b">b:</label>
+                <input type="number" id="trinomial-b" value="0">
+            </div>
+            <div class="input-group">
+                <label for="trinomial-c">c:</label>
+                <input type="number" id="trinomial-c" value="0">
+            </div>
+            <button onclick="factorTrinomial()">Factor Trinomial</button>
+            <div id="trinomial-result" class="result"></div>
+            <div id="trinomial-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="trinomial-steps" class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Difference of Squares Tab -->
+        <div id="difference-squares" class="tab-content">
+            <h2>Factor Difference of Squares (a² - b²)</h2>
+            <div class="input-group">
+                <label for="dos-a">a:</label>
+                <input type="number" id="dos-a" value="0">
+            </div>
+            <div class="input-group">
+                <label for="dos-b">b:</label>
+                <input type="number" id="dos-b" value="0">
+            </div>
+            <button onclick="factorDifferenceOfSquares()">Factor</button>
+            <div id="dos-result" class="result"></div>
+            <div id="dos-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="dos-steps" class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Factoring by Grouping Tab -->
+        <div id="grouping" class="tab-content">
+            <h2>Factoring by Grouping (ax³ + bx² + cx + d)</h2>
+            <div class="input-group">
+                <label for="grouping-a">a:</label>
+                <input type="number" id="grouping-a" value="1">
+            </div>
+            <div class="input-group">
+                <label for="grouping-b">b:</label>
+                <input type="number" id="grouping-b" value="0">
+            </div>
+            <div class="input-group">
+                <label for="grouping-c">c:</label>
+                <input type="number" id="grouping-c" value="0">
+            </div>
+            <div class="input-group">
+                <label for="grouping-d">d:</label>
+                <input type="number" id="grouping-d" value="0">
+            </div>
+            <button onclick="factorByGrouping()">Factor</button>
+            <div id="grouping-result" class="result"></div>
+            <div id="grouping-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="grouping-steps" class="steps"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            const tabContents = document.getElementsByClassName("tab-content");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            document.querySelector(`button.tab[onclick="openTab('${tabName}')"]`).classList.add("active");
+        }
+        
+        // GCF calculation
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            
+            while (b) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+            
+            return a;
+        }
+        
+        function calculateGCF() {
+            const input = document.getElementById("gcf-numbers").value.trim();
+            const numbers = input.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num));
+            
+            if (numbers.length < 2) {
+                document.getElementById("gcf-result").innerHTML = "Please enter at least two valid numbers.";
+                document.getElementById("gcf-explanation").classList.remove("show");
+                return;
+            }
+            
+            let result = numbers[0];
+            const steps = [];
+            
+            // Calculate GCD of all numbers
+            steps.push(`Starting with numbers: ${numbers.join(', ')}`);
+            
+            for (let i = 1; i < numbers.length; i++) {
+                steps.push(`Finding GCD of ${result} and ${numbers[i]}:`);
+                const a = result;
+                const b = numbers[i];
+                
+                // Show the Euclidean algorithm steps
+                let tempA = a;
+                let tempB = b;
+                
+                while (tempB !== 0) {
+                    steps.push(`${tempA} = ${Math.floor(tempA / tempB)} × ${tempB} + ${tempA % tempB}`);
+                    const temp = tempB;
+                    tempB = tempA % tempB;
+                    tempA = temp;
+                }
+                
+                result = gcd(result, numbers[i]);
+                steps.push(`GCD(${a}, ${b}) = ${result}`);
+            }
+            
+            document.getElementById("gcf-result").innerHTML = `The GCF of ${numbers.join(', ')} is ${result}`;
+            document.getElementById("gcf-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("gcf-explanation").classList.add("show");
+        }
+        
+        // Trinomial factoring
+        function factorTrinomial() {
+            const a = parseInt(document.getElementById("trinomial-a").value);
+            const b = parseInt(document.getElementById("trinomial-b").value);
+            const c = parseInt(document.getElementById("trinomial-c").value);
+            
+            if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0) {
+                document.getElementById("trinomial-result").innerHTML = "Please enter valid coefficients. 'a' cannot be zero.";
+                document.getElementById("trinomial-explanation").classList.remove("show");
+                return;
+            }
+            
+            const steps = [];
+            steps.push(`Starting with: ${a}x² + ${b}x + ${c}`);
+            
+            // Check for common factor
+            const commonFactor = gcd(gcd(a, b), c);
+            let factored = "";
+            
+            if (commonFactor > 1) {
+                steps.push(`Finding the GCD of coefficients ${a}, ${b}, and ${c}`);
+                steps.push(`GCD = ${commonFactor}`);
+                steps.push(`Factoring out ${commonFactor}: ${commonFactor}(${a/commonFactor}x² + ${b/commonFactor}x + ${c/commonFactor})`);
+                factored = `${commonFactor}(`;
+                a = a / commonFactor;
+                b = b / commonFactor;
+                c = c / commonFactor;
+            }
+            
+            const discriminant = b * b - 4 * a * c;
+            steps.push(`Calculate discriminant: b² - 4ac = ${b}² - 4(${a})(${c}) = ${discriminant}`);
+            
+            if (discriminant < 0) {
+                if (commonFactor > 1) {
+                    document.getElementById("trinomial-result").innerHTML = `Partially factored: ${commonFactor}(${a}x² + ${b}x + ${c})`;
+                    steps.push(`The trinomial ${a}x² + ${b}x + ${c} cannot be factored further over the real numbers.`);
+                } else {
+                    document.getElementById("trinomial-result").innerHTML = `${a}x² + ${b}x + ${c} cannot be factored over the real numbers.`;
+                    steps.push(`The trinomial cannot be factored over the real numbers (discriminant is negative).`);
+                }
+            } else if (discriminant === 0) {
+                // Perfect square trinomial
+                const r = -b / (2 * a);
+                if (commonFactor > 1) {
+                    factored += `${a}x² + ${b}x + ${c}) = ${commonFactor}(${a}(x - ${r})²)`;
+                } else {
+                    factored = `${a}(x - ${r})²`;
+                }
+                document.getElementById("trinomial-result").innerHTML = `Factored form: ${factored}`;
+                steps.push(`The trinomial is a perfect square (discriminant = 0).`);
+                steps.push(`The repeated root is x = ${r}`);
+                steps.push(`Factored form: ${factored}`);
+            } else {
+                // Use quadratic formula to find roots
+                const sqrtDiscriminant = Math.sqrt(discriminant);
+                const r1 = (-b + sqrtDiscriminant) / (2 * a);
+                const r2 = (-b - sqrtDiscriminant) / (2 * a);
+                
+                steps.push(`Using the quadratic formula: x = (-b ± √(b² - 4ac)) / 2a`);
+                steps.push(`x = (${-b} ± √${discriminant}) / ${2*a}`);
+                steps.push(`Roots: x = ${r1} or x = ${r2}`);
+                
+                if (a === 1) {
+                    factored += `(x - ${r1})(x - ${r2})`;
+                } else {
+                    factored += `${a}(x - ${r1})(x - ${r2})`;
+                }
+                
+                document.getElementById("trinomial-result").innerHTML = `Factored form: ${factored}`;
+                steps.push(`Factored form: ${factored}`);
+            }
+            
+            document.getElementById("trinomial-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("trinomial-explanation").classList.add("show");
+        }
+        
+        // Difference of squares factoring
+        function factorDifferenceOfSquares() {
+            const a = parseInt(document.getElementById("dos-a").value);
+            const b = parseInt(document.getElementById("dos-b").value);
+            
+            if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) {
+                document.getElementById("dos-result").innerHTML = "Please enter positive values for a and b.";
+                document.getElementById("dos-explanation").classList.remove("show");
+                return;
+            }
+            
+            const steps = [];
+            steps.push(`Starting with: ${a}² - ${b}² = ${a*a} - ${b*b}`);
+            steps.push(`Using the formula: a² - b² = (a + b)(a - b)`);
+            steps.push(`Substituting: (${a} + ${b})(${a} - ${b}) = (${a+b})(${a-b})`);
+            
+            document.getElementById("dos-result").innerHTML = `Factored form: (${a} + ${b})(${a} - ${b})`;
+            document.getElementById("dos-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("dos-explanation").classList.add("show");
+        }
+        
+        // Factoring by grouping
+        function factorByGrouping() {
+            const a = parseInt(document.getElementById("grouping-a").value);
+            const b = parseInt(document.getElementById("grouping-b").value);
+            const c = parseInt(document.getElementById("grouping-c").value);
+            const d = parseInt(document.getElementById("grouping-d").value);
+            
+            if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d) || a === 0) {
+                document.getElementById("grouping-result").innerHTML = "Please enter valid coefficients. 'a' cannot be zero.";
+                document.getElementById("grouping-explanation").classList.remove("show");
+                return;
+            }
+            
+            const steps = [];
+            steps.push(`Starting with: ${a}x³ + ${b}x² + ${c}x + ${d}`);
+            
+            // Check for common factor first
+            const commonFactor = gcd(gcd(gcd(a, b), c), d);
+            let factored = "";
+            
+            if (commonFactor > 1) {
+                steps.push(`Finding the GCD of coefficients ${a}, ${b}, ${c}, and ${d}`);
+                steps.push(`GCD = ${commonFactor}`);
+                steps.push(`Factoring out ${commonFactor}: ${commonFactor}(${a/commonFactor}x³ + ${b/commonFactor}x² + ${c/commonFactor}x + ${d/commonFactor})`);
+                factored = `${commonFactor}(`;
+                a = a / commonFactor;
+                b = b / commonFactor;
+                c = c / commonFactor;
+                d = d / commonFactor;
+            }
+            
+            // Try to find factors of a*d that sum to b*c
+            const product = a * d;
+            const sum = b * c;
+            let m = null, n = null;
+            
+            for (let i = 1; i <= Math.abs(product); i++) {
+                if (product % i === 0) {
+                    const j = product / i;
+                    if (i + j === sum) {
+                        m = i;
+                        n = j;
+                        break;
+                    }
+                    if (-i + -j === sum) {
+                        m = -i;
+                        n = -j;
+                        break;
+                    }
+                    if (i + -j === sum) {
+                        m = i;
+                        n = -j;
+                        break;
+                    }
+                    if (-i + j === sum) {
+                        m = -i;
+                        n = j;
+                        break;
+                    }
+                }
+            }
+            
+            if (m !== null) {
+                steps.push(`Rewriting the middle terms by finding numbers that multiply to ${product} and add to ${sum}`);
+                steps.push(`Found: ${m} and ${n}`);
+                steps.push(`Rewriting: ${a}x³ + ${b}x² + ${c}x + ${d} = ${a}x³ + ${m}x² + ${n}x² + ${d}`);
+                
+                steps.push(`Grouping terms: (${a}x³ + ${m}x²) + (${n}x² + ${d})`);
+                steps.push(`Factoring the first group: ${a}x²(x + ${m/a}) + ${d}(${n/d}x + 1)`);
+                
+                if (m/a === n/d) {
+                    steps.push(`Common factor: (x + ${m/a})`);
+                    if (commonFactor > 1) {
+                        factored += `(x + ${m/a})(${a}x² + ${d})`;
+                    } else {
+                        factored = `(x + ${m/a})(${a}x² + ${d})`;
+                    }
+                    document.getElementById("grouping-result").innerHTML = `Factored form: ${factored}`;
+                } else {
+                    if (commonFactor > 1) {
+                        document.getElementById("grouping-result").innerHTML = `Partially factored: ${commonFactor}(${a}x³ + ${b}x² + ${c}x + ${d})`;
+                        steps.push(`Cannot complete factoring by grouping (no common binomial factor)`);
+                    } else {
+                        document.getElementById("grouping-result").innerHTML = `Cannot factor ${a}x³ + ${b}x² + ${c}x + ${d} by grouping.`;
+                        steps.push(`Cannot factor by grouping (no common binomial factor)`);
+                    }
+                }
+            } else {
+                if (commonFactor > 1) {
+                    document.getElementById("grouping-result").innerHTML = `Partially factored: ${commonFactor}(${a}x³ + ${b}x² + ${c}x + ${d})`;
+                    steps.push(`Cannot complete factoring by grouping`);
+                } else {
+                    document.getElementById("grouping-result").innerHTML = `Cannot factor ${a}x³ + ${b}x² + ${c}x + ${d} by grouping.`;
+                    steps.push(`Cannot factor by grouping`);
+                }
+            }
+            
+            document.getElementById("grouping-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("grouping-explanation").classList.add("show");
+        }
+    </script>
+</body>
+</html>

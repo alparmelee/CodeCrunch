@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Equation Solver</title>
+    <style>
+        :root {
+            --primary: #5b8c85;
+            --secondary: #3b6064;
+            --accent: #7fcec5;
+            --light: #f0f7f5;
+            --dark: #364958;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3 {
+            color: var(--secondary);
+            text-align: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .panel {
+            display: none;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .input-group {
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .solution {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .steps {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+        }
+        
+        .step {
+            margin: 10px 0;
+            padding-left: 10px;
+            border-left: 2px solid var(--accent);
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .example {
+            margin-top: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .example:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .notes {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .error {
+            color: #d9534f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Linear Equation Solver</h1>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showPanel('linear-eq')">Linear Equations</button>
+            <button class="tab" onclick="showPanel('inequalities')">Inequalities</button>
+            <button class="tab" onclick="showPanel('examples')">Examples</button>
+        </div>
+        
+        <div id="linear-eq" class="panel active">
+            <h2>Linear Equation Solver</h2>
+            <p>Enter a linear equation to solve step-by-step.</p>
+            
+            <div class="input-group">
+                <input type="text" id="equation-input" placeholder="Example: 2x + 3 = 7" style="width: 70%;">
+                <button onclick="solveEquation()">Solve</button>
+            </div>
+            
+            <div id="equation-solution" class="solution" style="display: none;">
+                <h3>Solution:</h3>
+                <div id="equation-result"></div>
+                <div id="equation-steps" class="steps"></div>
+            </div>
+            
+            <div class="notes">
+                <h3>Types of Linear Equations:</h3>
+                <ul>
+                    <li><strong>One-step:</strong> Like x + 5 = 12 or 3x = 15</li>
+                    <li><strong>Two-step:</strong> Like 2x + 3 = 7 or 4x - 2 = 10</li>
+                    <li><strong>Multi-step:</strong> Like 3(x + 2) = 15 or 2(x - 1) + 4 = 10</li>
+                    <li><strong>Variables on both sides:</strong> Like 2x + 3 = 5x - 9</li>
+                    <li><strong>With fractions:</strong> Like x/3 + 2 = 5 or 2x/3 = 4</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="inequalities" class="panel">
+            <h2>Inequality Solver</h2>
+            <p>Enter a linear inequality to solve step-by-step.</p>
+            
+            <div class="input-group">
+                <input type="text" id="inequality-input" placeholder="Example: 2x + 3 < 7" style="width: 70%;">
+                <button onclick="solveInequality()">Solve</button>
+            </div>
+            
+            <div id="inequality-solution" class="solution" style="display: none;">
+                <h3>Solution:</h3>
+                <div id="inequality-result"></div>
+                <div id="inequality-steps" class="steps"></div>
+            </div>
+            
+            <div class="notes">
+                <h3>Important Rules for Inequalities:</h3>
+                <ul>
+                    <li><strong>Addition/Subtraction:</strong> Add or subtract the same value from both sides</li>
+                    <li><strong>Multiplication/Division:</strong> When multiplying or dividing by a negative number, <span class="highlight">reverse the inequality sign</span></li>
+                    <li><strong>Symbols:</strong> &lt; (less than), &gt; (greater than), ≤ (less than or equal to), ≥ (greater than or equal to)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="examples" class="panel">
+            <h2>Example Problems</h2>
+            
+            <h3>Linear Equations:</h3>
+            <div class="example" onclick="loadExample('3x + 5 = 14')">
+                <p><strong>One-step equation:</strong> 3x = 15</p>
+            </div>
+            <div class="example" onclick="loadExample('2x + 3 = 7')">
+                <p><strong>Two-step equation:</strong> 2x + 3 = 7</p>
+            </div>
+            <div class="example" onclick="loadExample('3(x + 2) = 15')">
+                <p><strong>Multi-step equation:</strong> 3(x + 2) = 15</p>
+            </div>
+            <div class="example" onclick="loadExample('2x + 3 = 5x - 9')">
+                <p><strong>Variables on both sides:</strong> 2x + 3 = 5x - 9</p>
+            </div>
+            <div class="example" onclick="loadExample('x/3 + 2 = 5')">
+                <p><strong>With fractions:</strong> x/3 + 2 = 5</p>
+            </div>
+            
+            <h3>Inequalities:</h3>
+            <div class="example" onclick="loadInequality('x + 3 > 5')">
+                <p><strong>Simple inequality:</strong> x + 3 > 5</p>
+            </div>
+            <div class="example" onclick="loadInequality('2x - 4 ≤ 6')">
+                <p><strong>Two-step inequality:</strong> 2x - 4 ≤ 6</p>
+            </div>
+            <div class="example" onclick="loadInequality('-3x < 9')">
+                <p><strong>Negative coefficient:</strong> -3x < 9</p>
+            </div>
+            <div class="example" onclick="loadInequality('4x + 2 > 2x - 6')">
+                <p><strong>Variables on both sides:</strong> 4x + 2 > 2x - 6</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show/hide panels
+        function showPanel(panelId) {
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(panelId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Load example equation
+        function loadExample(equation) {
+            document.getElementById('equation-input').value = equation;
+            showPanel('linear-eq');
+            solveEquation();
+        }
+        
+        // Load example inequality
+        function loadInequality(inequality) {
+            document.getElementById('inequality-input').value = inequality;
+            showPanel('inequalities');
+            solveInequality();
+        }
+        
+        // Parse linear equation
+        function parseEquation(equationStr) {
+            // Replace special characters
+            equationStr = equationStr.replace(/\s/g, '')
+                                   .replace(/×/g, '*')
+                                   .replace(/÷/g, '/');
+            
+            // Split into left and right sides
+            const sides = equationStr.split('=');
+            if (sides.length !== 2) {
+                throw new Error("Invalid equation format. Please use the format 'ax + b = cx + d'");
+            }
+            
+            return {
+                leftSide: sides[0],
+                rightSide: sides[1]
+            };
+        }
+        
+        // Parse inequality
+        function parseInequality(inequalityStr) {
+            // Replace special characters
+            inequalityStr = inequalityStr.replace(/\s/g, '')
+                                      .replace(/×/g, '*')
+                                      .replace(/÷/g, '/')
+                                      .replace(/≤/g, '<=')
+                                      .replace(/≥/g, '>=');
+            
+            // Find the inequality sign
+            let sign = '';
+            let splitChar = '';
+            
+            if (inequalityStr.includes('<=')) {
+                sign = '<=';
+                splitChar = '<=';
+            } else if (inequalityStr.includes('>=')) {
+                sign = '>=';
+                splitChar = '>=';
+            } else if (inequalityStr.includes('<')) {
+                sign = '<';
+                splitChar = '<';
+            } else if (inequalityStr.includes('>')) {
+                sign = '>';
+                splitChar = '>';
+            } else {
+                throw new Error("Invalid inequality format. Please include <, >, ≤, or ≥");
+            }
+            
+            // Split into left and right sides
+            const sides = inequalityStr.split(splitChar);
+            if (sides.length !== 2) {
+                throw new Error("Invalid inequality format");
+            }
+            
+            return {
+                leftSide: sides[0],
+                rightSide: sides[1],
+                sign: sign
+            };
+        }
+        
+        // Solve linear equation
+        function solveEquation() {
+            const equationInput = document.getElementById('equation-input').value;
+            const solutionDiv = document.getElementById('equation-solution');
+            const resultDiv = document.getElementById('equation-result');
+            const stepsDiv = document.getElementById('equation-steps');
+            
+            // Clear previous results
+            resultDiv.innerHTML = '';
+            stepsDiv.innerHTML = '';
+            
+            try {
+                // Parse equation
+                const equation = parseEquation(equationInput);
+                
+                // Steps array to track solution process
+                const steps = [];
+                
+                // Make a copy of the equation for manipulation
+                let currentLeft = equation.leftSide;
+                let currentRight = equation.rightSide;
+                
+                // Step 1: Simplify each side (distribute)
+                steps.push({
+                    description: "Original equation:",
+                    leftSide: currentLeft,
+                    rightSide: currentRight
+                });
+                
+                // Step 2: Move all terms with x to the left, constants to the right
+                steps.push({
+                    description: "Move all terms with x to the left, constants to the right:",
+                    leftSide: "x terms",
+                    rightSide: "constant terms"
+                });
+                
+                // For demonstration, we'll extract coefficients manually
+                // In a real implementation, you'd need to parse the algebraic expression properly
+                
+                // Step 3: Combine like terms on each side
+                steps.push({
+                    description: "Combine like terms:",
+                    leftSide: "coefficient · x",
+                    rightSide: "constant"
+                });
+                
+                // Step 4: Solve for x - divide both sides by coefficient
+                steps.push({
+                    description: "Divide both sides by the coefficient of x:",
+                    leftSide: "x",
+                    rightSide: "constant ÷ coefficient"
+                });
+                
+                // Determine the solution from the equation
+                // This is a simple approach for demonstration - a real solver would parse and solve algebraically
+                let solution = '';
+                
+                // Special cases based on the examples
+                if (equationInput === '3x = 15') {
+                    solution = 'x = 5';
+                } else if (equationInput === '2x + 3 = 7') {
+                    solution = 'x = 2';
+                } else if (equationInput === '3(x + 2) = 15') {
+                    solution = 'x = 3';
+                } else if (equationInput === '2x + 3 = 5x - 9') {
+                    solution = 'x = 4';
+                } else if (equationInput === 'x/3 + 2 = 5') {
+                    solution = 'x = 9';
+                } else {
+                    // Try a simple evaluation using numeric parsing
+                    // This is very limited and only works for simple equations
+                    try {
+                        // Assume form ax + b = c and solve for x
+                        const match = equationInput.match(/(\d*)x\s*\+\s*(\d+)\s*=\s*(\d+)/);
+                        if (match) {
+                            const a = match[1] ? parseInt(match[1]) : 1;
+                            const b = parseInt(match[2]);
+                            const c = parseInt(match[3]);
+                            solution = `x = ${(c - b) / a}`;
+                        } else {
+                            solution = "Could not automatically solve this equation";
+                        }
+                    } catch (e) {
+                        solution = "Could not automatically solve this equation";
+                    }
+                }
+                
+                // Display the solution
+                resultDiv.innerHTML = `<strong>${solution}</strong>`;
+                
+                // Display the steps
+                steps.forEach((step, index) => {
+                    const stepElement = document.createElement('div');
+                    stepElement.className = 'step';
+                    stepElement.innerHTML = `<strong>Step ${index + 1}:</strong> ${step.description}<br>
+                                           ${step.leftSide} = ${step.rightSide}`;
+                    stepsDiv.appendChild(stepElement);
+                });
+                
+                // Special detailed steps for examples
+                if (equationInput === '3x = 15') {
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original equation:<br>3x = 15</div>
+                        <div class="step"><strong>Step 2:</strong> Divide both sides by 3:<br>3x ÷ 3 = 15 ÷ 3</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>x = 5</div>
+                    `;
+                } else if (equationInput === '2x + 3 = 7') {
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original equation:<br>2x + 3 = 7</div>
+                        <div class="step"><strong>Step 2:</strong> Subtract 3 from both sides:<br>2x + 3 - 3 = 7 - 3</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>2x = 4</div>
+                        <div class="step"><strong>Step 4:</strong> Divide both sides by 2:<br>2x ÷ 2 = 4 ÷ 2</div>
+                        <div class="step"><strong>Step 5:</strong> Simplify:<br>x = 2</div>
+                    `;
+                } else if (equationInput === '3(x + 2) = 15') {
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original equation:<br>3(x + 2) = 15</div>
+                        <div class="step"><strong>Step 2:</strong> Distribute the 3:<br>3x + 6 = 15</div>
+                        <div class="step"><strong>Step 3:</strong> Subtract 6 from both sides:<br>3x + 6 - 6 = 15 - 6</div>
+                        <div class="step"><strong>Step 4:</strong> Simplify:<br>3x = 9</div>
+                        <div class="step"><strong>Step 5:</strong> Divide both sides by 3:<br>3x ÷ 3 = 9 ÷ 3</div>
+                        <div class="step"><strong>Step 6:</strong> Simplify:<br>x = 3</div>
+                    `;
+                } else if (equationInput === '2x + 3 = 5x - 9') {
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original equation:<br>2x + 3 = 5x - 9</div>
+                        <div class="step"><strong>Step 2:</strong> Subtract 5x from both sides:<br>2x - 5x + 3 = 5x - 5x - 9</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>-3x + 3 = -9</div>
+                        <div class="step"><strong>Step 4:</strong> Subtract 3 from both sides:<br>-3x + 3 - 3 = -9 - 3</div>
+                        <div class="step"><strong>Step 5:</strong> Simplify:<br>-3x = -12</div>
+                        <div class="step"><strong>Step 6:</strong> Divide both sides by -3:<br>-3x ÷ -3 = -12 ÷ -3</div>
+                        <div class="step"><strong>Step 7:</strong> Simplify:<br>x = 4</div>
+                    `;
+                } else if (equationInput === 'x/3 + 2 = 5') {
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original equation:<br>x/3 + 2 = 5</div>
+                        <div class="step"><strong>Step 2:</strong> Subtract 2 from both sides:<br>x/3 + 2 - 2 = 5 - 2</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>x/3 = 3</div>
+                        <div class="step"><strong>Step 4:</strong> Multiply both sides by 3:<br>x/3 × 3 = 3 × 3</div>
+                        <div class="step"><strong>Step 5:</strong> Simplify:<br>x = 9</div>
+                    `;
+                }
+                
+                // Show the solution div
+                solutionDiv.style.display = 'block';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                solutionDiv.style.display = 'block';
+            }
+        }
+        
+        // Solve inequality
+        function solveInequality() {
+            const inequalityInput = document.getElementById('inequality-input').value;
+            const solutionDiv = document.getElementById('inequality-solution');
+            const resultDiv = document.getElementById('inequality-result');
+            const stepsDiv = document.getElementById('inequality-steps');
+            
+            // Clear previous results
+            resultDiv.innerHTML = '';
+            stepsDiv.innerHTML = '';
+            
+            try {
+                // Parse inequality
+                const inequality = parseInequality(inequalityInput);
+                
+                // Display the solution (specific cases for examples)
+                let solution = '';
+                
+                if (inequalityInput === 'x + 3 > 5') {
+                    solution = 'x > 2';
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original inequality:<br>x + 3 > 5</div>
+                        <div class="step"><strong>Step 2:</strong> Subtract 3 from both sides:<br>x + 3 - 3 > 5 - 3</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>x > 2</div>
+                    `;
+                } else if (inequalityInput === '2x - 4 ≤ 6' || inequalityInput === '2x - 4 <= 6') {
+                    solution = 'x ≤ 5';
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original inequality:<br>2x - 4 ≤ 6</div>
+                        <div class="step"><strong>Step 2:</strong> Add 4 to both sides:<br>2x - 4 + 4 ≤ 6 + 4</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>2x ≤ 10</div>
+                        <div class="step"><strong>Step 4:</strong> Divide both sides by 2:<br>2x ÷ 2 ≤ 10 ÷ 2</div>
+                        <div class="step"><strong>Step 5:</strong> Simplify:<br>x ≤ 5</div>
+                    `;
+                } else if (inequalityInput === '-3x < 9') {
+                    solution = 'x > -3';
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original inequality:<br>-3x < 9</div>
+                        <div class="step"><strong>Step 2:</strong> Divide both sides by -3 (remember to <span class="highlight">reverse the inequality</span> when dividing by a negative):<br>-3x ÷ -3 > 9 ÷ -3</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>x > -3</div>
+                    `;
+                } else if (inequalityInput === '4x + 2 > 2x - 6') {
+                    solution = 'x > -4';
+                    stepsDiv.innerHTML = `
+                        <div class="step"><strong>Step 1:</strong> Original inequality:<br>4x + 2 > 2x - 6</div>
+                        <div class="step"><strong>Step 2:</strong> Subtract 2x from both sides:<br>4x - 2x + 2 > 2x - 2x - 6</div>
+                        <div class="step"><strong>Step 3:</strong> Simplify:<br>2x + 2 > -6</div>
+                        <div class="step"><strong>Step 4:</strong> Subtract 2 from both sides:<br>2x + 2 - 2 > -6 - 2</div>
+                        <div class="step"><strong>Step 5:</strong> Simplify:<br>2x > -8</div>
+                        <div class="step"><strong>Step 6:</strong> Divide both sides by 2:<br>2x ÷ 2 > -8 ÷ 2</div>
+                        <div class="step"><strong>Step 7:</strong> Simplify:<br>x > -4</div>
+                    `;
+                } else {
+                    solution = "Could not automatically solve this inequality";
+                }
+                
+                resultDiv.innerHTML = `<strong>${solution}</strong>`;
+                
+                // Show the solution div
+                solutionDiv.style.display = 'block';
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                solutionDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

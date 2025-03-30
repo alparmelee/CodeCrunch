@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radical Expressions Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 15px;
+            background-color: #eee;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .tab-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .steps {
+            margin-top: 15px;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .flex-row input {
+            flex: 1;
+        }
+        .operation-select {
+            width: auto;
+            min-width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Radical Expressions Calculator</h1>
+        
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="simplify">Simplify</button>
+            <button class="tab-btn" data-tab="operations">Operations</button>
+            <button class="tab-btn" data-tab="rationalize">Rationalize</button>
+            <button class="tab-btn" data-tab="equations">Equations</button>
+        </div>
+        
+        <!-- Simplify Radicals Tab -->
+        <div id="simplify" class="tab-content active">
+            <div class="input-group">
+                <label>Enter Radical Expression:</label>
+                <div class="flex-row">
+                    <input type="number" id="coef-simplify" value="1" min="1" step="1" placeholder="Coefficient">
+                    <span>√</span>
+                    <input type="number" id="radicand-simplify" value="12" min="1" step="1" placeholder="Radicand">
+                </div>
+            </div>
+            <button id="simplify-btn">Simplify</button>
+            <div id="simplify-result" class="result">
+                <p>Enter a radical expression to simplify</p>
+                <div class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Operations with Radicals Tab -->
+        <div id="operations" class="tab-content">
+            <div class="input-group">
+                <label>First Radical:</label>
+                <div class="flex-row">
+                    <input type="number" id="coef1" value="1" step="1" placeholder="Coefficient">
+                    <span>√</span>
+                    <input type="number" id="radicand1" value="3" min="1" step="1" placeholder="Radicand">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>Operation:</label>
+                <select id="operation" class="operation-select">
+                    <option value="add">+</option>
+                    <option value="subtract">−</option>
+                    <option value="multiply">×</option>
+                    <option value="divide">÷</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>Second Radical:</label>
+                <div class="flex-row">
+                    <input type="number" id="coef2" value="1" step="1" placeholder="Coefficient">
+                    <span>√</span>
+                    <input type="number" id="radicand2" value="12" min="1" step="1" placeholder="Radicand">
+                </div>
+            </div>
+            
+            <button id="operations-btn">Calculate</button>
+            <div id="operations-result" class="result">
+                <p>Enter two radical expressions and select an operation</p>
+                <div class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Rationalize Denominator Tab -->
+        <div id="rationalize" class="tab-content">
+            <div class="input-group">
+                <label>Numerator:</label>
+                <input type="number" id="num" value="1" step="1" placeholder="Numerator">
+            </div>
+            
+            <div class="input-group">
+                <label>Denominator:</label>
+                <div class="flex-row">
+                    <input type="number" id="denom-coef" value="1" step="1" placeholder="Coefficient">
+                    <span>√</span>
+                    <input type="number" id="denom-radicand" value="3" min="1" step="1" placeholder="Radicand">
+                </div>
+            </div>
+            
+            <button id="rationalize-btn">Rationalize</button>
+            <div id="rationalize-result" class="result">
+                <p>Enter a fraction with a radical in the denominator</p>
+                <div class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Solve Radical Equations Tab -->
+        <div id="equations" class="tab-content">
+            <div class="input-group">
+                <label>Radical Equation: (format: a√x + b = c)</label>
+                <div class="flex-row">
+                    <input type="number" id="eq-coef" value="1" step="1" placeholder="a">
+                    <span>√x + </span>
+                    <input type="number" id="eq-constant" value="0" step="1" placeholder="b">
+                    <span> = </span>
+                    <input type="number" id="eq-right" value="5" step="1" placeholder="c">
+                </div>
+            </div>
+            
+            <button id="equation-btn">Solve</button>
+            <div id="equation-result" class="result">
+                <p>Enter a radical equation to solve</p>
+                <div class="steps"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab navigation
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // Deactivate all tabs
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Activate selected tab
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Simplify radical function
+            document.getElementById('simplify-btn').addEventListener('click', function() {
+                const coefficient = parseFloat(document.getElementById('coef-simplify').value) || 1;
+                const radicand = parseInt(document.getElementById('radicand-simplify').value) || 0;
+                
+                if (radicand < 0) {
+                    document.getElementById('simplify-result').innerHTML = 
+                        "<p>Error: Cannot simplify negative numbers under the square root.</p>";
+                    return;
+                }
+                
+                const result = simplifyRadical(coefficient, radicand);
+                displaySimplifyResult(result);
+            });
+            
+            // Operations with radicals function
+            document.getElementById('operations-btn').addEventListener('click', function() {
+                const coef1 = parseFloat(document.getElementById('coef1').value) || 1;
+                const radicand1 = parseInt(document.getElementById('radicand1').value) || 0;
+                const coef2 = parseFloat(document.getElementById('coef2').value) || 1;
+                const radicand2 = parseInt(document.getElementById('radicand2').value) || 0;
+                const operation = document.getElementById('operation').value;
+                
+                if (radicand1 < 0 || radicand2 < 0) {
+                    document.getElementById('operations-result').innerHTML = 
+                        "<p>Error: Cannot perform operations with negative numbers under the square root.</p>";
+                    return;
+                }
+                
+                const result = performRadicalOperation(coef1, radicand1, coef2, radicand2, operation);
+                displayOperationResult(result, coef1, radicand1, coef2, radicand2, operation);
+            });
+            
+            // Rationalize denominator function
+            document.getElementById('rationalize-btn').addEventListener('click', function() {
+                const numerator = parseFloat(document.getElementById('num').value) || 1;
+                const denomCoef = parseFloat(document.getElementById('denom-coef').value) || 1;
+                const denomRadicand = parseInt(document.getElementById('denom-radicand').value) || 0;
+                
+                if (denomRadicand < 0) {
+                    document.getElementById('rationalize-result').innerHTML = 
+                        "<p>Error: Cannot rationalize with negative numbers under the square root.</p>";
+                    return;
+                }
+                
+                const result = rationalizeRadical(numerator, denomCoef, denomRadicand);
+                displayRationalizeResult(result, numerator, denomCoef, denomRadicand);
+            });
+            
+            // Solve radical equation function
+            document.getElementById('equation-btn').addEventListener('click', function() {
+                const coef = parseFloat(document.getElementById('eq-coef').value) || 1;
+                const constant = parseFloat(document.getElementById('eq-constant').value) || 0;
+                const rightSide = parseFloat(document.getElementById('eq-right').value) || 0;
+                
+                const result = solveRadicalEquation(coef, constant, rightSide);
+                displayEquationResult(result, coef, constant, rightSide);
+            });
+            
+            function simplifyRadical(coefficient, radicand) {
+                if (radicand === 0) return { coefficient: 0, radicand: 0, steps: "The square root of 0 is 0." };
+                
+                let steps = `Simplify ${coefficient}√${radicand}:\n\n`;
+                
+                // Find the largest perfect square factor
+                let perfectSquare = 1;
+                let i = 1;
+                
+                while (i * i <= radicand) {
+                    if (radicand % (i * i) === 0) {
+                        perfectSquare = i * i;
+                    }
+                    i++;
+                }
+                
+                const outsideFactor = Math.sqrt(perfectSquare);
+                const insideFactor = radicand / perfectSquare;
+                
+                steps += `Step 1: Find the largest perfect square factor of ${radicand}.\n`;
+                
+                if (perfectSquare > 1) {
+                    steps += `${radicand} = ${perfectSquare} × ${insideFactor}\n`;
+                    steps += `√${radicand} = √(${perfectSquare} × ${insideFactor}) = √${perfectSquare} × √${insideFactor} = ${outsideFactor} × √${insideFactor}\n\n`;
+                } else {
+                    steps += `${radicand} has no perfect square factors other than 1.\n\n`;
+                }
+                
+                steps += `Step 2: Multiply the coefficient by any factors that can be taken out of the radical.\n`;
+                
+                const newCoefficient = coefficient * outsideFactor;
+                
+                steps += `${coefficient} × ${outsideFactor} = ${newCoefficient}\n\n`;
+                
+                steps += `Final simplified form: ${newCoefficient === 1 ? '' : newCoefficient}${insideFactor === 1 ? '' : '√' + insideFactor}`;
+                if (insideFactor === 1) steps += ` = ${newCoefficient}`;
+                
+                return {
+                    coefficient: newCoefficient,
+                    radicand: insideFactor,
+                    steps: steps
+                };
+            }
+            
+            function performRadicalOperation(coef1, radicand1, coef2, radicand2, operation) {
+                let steps = "";
+                let result = { coefficient: 0, radicand: 0 };
+                
+                // First simplify each radical
+                const radical1 = simplifyRadical(coef1, radicand1);
+                const radical2 = simplifyRadical(coef2, radicand2);
+                
+                steps += `Step 1: Simplify each radical expression.\n`;
+                steps += `First expression: ${coef1}√${radicand1} = ${formatRadical(radical1.coefficient, radical1.radicand)}\n`;
+                steps += `Second expression: ${coef2}√${radicand2} = ${formatRadical(radical2.coefficient, radical2.radicand)}\n\n`;
+                
+                coef1 = radical1.coefficient;
+                radicand1 = radical1.radicand;
+                coef2 = radical2.coefficient;
+                radicand2 = radical2.radicand;
+                
+                steps += `Step 2: Perform the ${getOperationName(operation)}.\n`;
+                
+                switch (operation) {
+                    case 'add':
+                    case 'subtract':
+                        const opSign = operation === 'add' ? '+' : '-';
+                        steps += `${formatRadical(coef1, radicand1)} ${opSign} ${formatRadical(coef2, radicand2)}\n`;
+                        
+                        if (radicand1 === radicand2) {
+                            // Like radicals can be combined
+                            const newCoef = operation === 'add' ? coef1 + coef2 : coef1 - coef2;
+                            result = { coefficient: newCoef, radicand: radicand1 };
+                            
+                            steps += `Since both expressions have the same radicand, we can combine the coefficients.\n`;
+                            steps += `(${coef1} ${opSign} ${coef2})√${radicand1} = ${newCoef}√${radicand1}\n`;
+                        } else {
+                            // Unlike radicals cannot be combined further
+                            result = {
+                                combined: false,
+                                first: { coefficient: coef1, radicand: radicand1 },
+                                second: { coefficient: operation === 'add' ? coef2 : -coef2, radicand: radicand2 },
+                                operation: operation
+                            };
+                            
+                            steps += `These radicals have different radicands, so they cannot be combined further.\n`;
+                            steps += `The result remains ${formatRadical(coef1, radicand1)} ${opSign} ${formatRadical(coef2, radicand2)}\n`;
+                        }
+                        break;
+                        
+                    case 'multiply':
+                        steps += `(${formatRadical(coef1, radicand1)}) × (${formatRadical(coef2, radicand2)})\n`;
+                        steps += `= ${coef1} × ${coef2} × √${radicand1} × √${radicand2}\n`;
+                        steps += `= ${coef1 * coef2} × √(${radicand1} × ${radicand2})\n`;
+                        steps += `= ${coef1 * coef2}√${radicand1 * radicand2}\n\n`;
+                        
+                        // Simplify the result
+                        result = simplifyRadical(coef1 * coef2, radicand1 * radicand2);
+                        steps += `Step 3: Simplify the resulting radical.\n`;
+                        steps += result.steps.split('\n').slice(2).join('\n');
+                        break;
+                        
+                    case 'divide':
+                        steps += `${formatRadical(coef1, radicand1)} ÷ ${formatRadical(coef2, radicand2)}\n`;
+                        steps += `= (${coef1}√${radicand1}) / (${coef2}√${radicand2})\n`;
+                        steps += `= (${coef1} / ${coef2}) × (√${radicand1} / √${radicand2})\n`;
+                        steps += `= (${coef1} / ${coef2}) × √(${radicand1} / ${radicand2})\n\n`;
+                        
+                        if (radicand1 % radicand2 === 0) {
+                            const newRadicand = radicand1 / radicand2;
+                            result = simplifyRadical(coef1 / coef2, newRadicand);
+                            
+                            steps += `Since ${radicand1} is divisible by ${radicand2}, we can simplify the radicand.\n`;
+                            steps += `= (${coef1} / ${coef2}) × √${newRadicand}\n\n`;
+                            steps += `Step 3: Simplify the resulting radical.\n`;
+                            steps += result.steps.split('\n').slice(2).join('\n');
+                        } else {
+                            steps += `This division would result in an irrational denominator. To get a standard form, we need to rationalize.\n`;
+                            
+                            // This needs to be rationalized
+                            result = {
+                                needsRationalizing: true,
+                                numerator: { coefficient: coef1, radicand: radicand1 },
+                                denominator: { coefficient: coef2, radicand: radicand2 }
+                            };
+                        }
+                        break;
+                }
+                
+                return {
+                    result: result,
+                    steps: steps
+                };
+            }
+            
+            function rationalizeRadical(numerator, denomCoef, denomRadicand) {
+                let steps = `Rationalize ${numerator} / (${denomCoef}√${denomRadicand}):\n\n`;
+                
+                // Simplify the denominator radical first
+                const simplified = simplifyRadical(denomCoef, denomRadicand);
+                denomCoef = simplified.coefficient;
+                denomRadicand = simplified.radicand;
+                
+                steps += `Step 1: Simplify the denominator if possible.\n`;
+                steps += simplified.steps + "\n\n";
+                
+                if (denomRadicand === 1) {
+                    // No need to rationalize
+                    steps += `The denominator is already rational: ${denomCoef}\n`;
+                    steps += `The result is ${numerator} / ${denomCoef} = ${numerator / denomCoef}`;
+                    
+                    return {
+                        numerator: numerator / denomCoef,
+                        denominator: 1,
+                        steps: steps
+                    };
+                }
+                
+                steps += `Step 2: Multiply both numerator and denominator by the conjugate of the denominator.\n`;
+                steps += `For a denominator with a single radical term, we multiply by the same radical:\n`;
+                steps += `(${numerator}) / (${formatRadical(denomCoef, denomRadicand)}) × (√${denomRadicand}) / (√${denomRadicand})\n\n`;
+                
+                const newNumerator = numerator * Math.sqrt(denomRadicand);
+                const newDenominator = denomCoef * denomRadicand;
+                
+                steps += `Step 3: Simplify the numerator and denominator.\n`;
+                steps += `Numerator: ${numerator} × √${denomRadicand} = ${numerator}√${denomRadicand}\n`;
+                steps += `Denominator: ${denomCoef} × √${denomRadicand} × √${denomRadicand} = ${denomCoef} × ${denomRadicand} = ${newDenominator}\n\n`;
+                
+                // Check if we can further simplify the fraction
+                const gcd = findGCD(numerator, newDenominator);
+                let simplifiedNum = numerator;
+                let simplifiedDenom = newDenominator;
+                
+                if (gcd > 1) {
+                    simplifiedNum = numerator / gcd;
+                    simplifiedDenom = newDenominator / gcd;
+                    
+                    steps += `Step 4: Reduce the fraction if possible.\n`;
+                    steps += `GCD(${numerator}, ${newDenominator}) = ${gcd}\n`;
+                    steps += `${numerator} / ${gcd} = ${simplifiedNum}\n`;
+                    steps += `${newDenominator} / ${gcd} = ${simplifiedDenom}\n\n`;
+                }
+                
+                steps += `Final rationalized form: ${simplifiedNum}√${denomRadicand} / ${simplifiedDenom}`;
+                
+                return {
+                    numerator: { coefficient: simplifiedNum, radicand: denomRadicand },
+                    denominator: simplifiedDenom,
+                    steps: steps
+                };
+            }
+            
+            function solveRadicalEquation(coef, constant, rightSide) {
+                let steps = `Solve ${formatRadicalEquation(coef, constant, rightSide)}:\n\n`;
+                
+                // Step 1: Isolate the radical term
+                const isolatedConstant = rightSide - constant;
+                steps += `Step 1: Isolate the radical term by moving the constant to the right side.\n`;
+                steps += `${formatRadicalEquation(coef, constant, rightSide)}\n`;
+                steps += `${coef}√x = ${isolatedConstant}\n\n`;
+                
+                // Step 2: Divide both sides by the coefficient
+                const dividedTerm = isolatedConstant / coef;
+                steps += `Step 2: Divide both sides by ${coef}.\n`;
+                steps += `√x = ${dividedTerm}\n\n`;
+                
+                // Step 3: Square both sides
+                const squared = dividedTerm * dividedTerm;
+                steps += `Step 3: Square both sides to eliminate the radical.\n`;
+                steps += `(√x)² = (${dividedTerm})²\n`;
+                steps += `x = ${squared}\n\n`;
+                
+                // Step 4: Check for extraneous solutions
+                const checkResult = coef * Math.sqrt(squared) + constant;
+                const isValid = Math.abs(checkResult - rightSide) < 0.0001; // Use a small epsilon for floating point comparison
+                
+                steps += `Step 4: Check the solution by substituting back into the original equation.\n`;
+                steps += `${coef}√${squared} + ${constant} = ${checkResult}\n`;
+                
+                if (isValid) {
+                    steps += `Since ${checkResult} ≈ ${rightSide}, x = ${squared} is a valid solution.\n\n`;
+                    steps += `The solution is x = ${squared}`;
+                    
+                    return {
+                        solution: squared,
+                        isValid: true,
+                        steps: steps
+                    };
+                } else {
+                    steps += `Since ${checkResult} ≠ ${rightSide}, x = ${squared} is an extraneous solution.\n\n`;
+                    steps += `The equation has no real solutions.`;
+                    
+                    return {
+                        solution: squared,
+                        isValid: false,
+                        steps: steps
+                    };
+                }
+            }
+            
+            // Helper functions
+            function findGCD(a, b) {
+                a = Math.abs(a);
+                b = Math.abs(b);
+                while (b) {
+                    const temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                return a;
+            }
+            
+            function formatRadical(coefficient, radicand) {
+                if (radicand === 0) return "0";
+                if (radicand === 1) return coefficient.toString();
+                if (coefficient === 0) return "0";
+                
+                let result = "";
+                if (coefficient !== 1) {
+                    result += coefficient;
+                }
+                result += "√" + radicand;
+                
+                return result;
+            }
+            
+            function formatRadicalEquation(coef, constant, rightSide) {
+                let equation = "";
+                
+                if (coef !== 0) {
+                    equation += coef === 1 ? "√x" : coef + "√x";
+                }
+                
+                if (constant > 0) {
+                    equation += " + " + constant;
+                } else if (constant < 0) {
+                    equation += " - " + Math.abs(constant);
+                }
+                
+                equation += " = " + rightSide;
+                
+                return equation;
+            }
+            
+            function getOperationName(operation) {
+                switch (operation) {
+                    case 'add': return 'addition';
+                    case 'subtract': return 'subtraction';
+                    case 'multiply': return 'multiplication';
+                    case 'divide': return 'division';
+                    default: return operation;
+                }
+            }
+            
+            // Display functions
+            function displaySimplifyResult(result) {
+                const resultDiv = document.getElementById('simplify-result');
+                const stepsDiv = resultDiv.querySelector('.steps');
+                
+                let displayStr = "Simplified form: ";
+                
+                if (result.coefficient === 0) {
+                    displayStr += "0";
+                } else if (result.radicand === 0) {
+                    displayStr += "0";
+                } else if (result.radicand === 1) {
+                    displayStr += result.coefficient;
+                } else {
+                    if (result.coefficient === 1) {
+                        displayStr += "√" + result.radicand;
+                    } else {
+                        displayStr += result.coefficient + "√" + result.radicand;
+                    }
+                }
+                
+                resultDiv.innerHTML = `<p>${displayStr}</p>`;
+                stepsDiv.textContent = result.steps;
+                resultDiv.appendChild(stepsDiv);
+            }
+            
+            function displayOperationResult(res, coef1, radicand1, coef2, radicand2, operation) {
+                const resultDiv = document.getElementById('operations-result');
+                const stepsDiv = resultDiv.querySelector('.steps');
+                
+                let opSymbol;
+                switch (operation) {
+                    case 'add': opSymbol = '+'; break;
+                    case 'subtract': opSymbol = '−'; break;
+                    case 'multiply': opSymbol = '×'; break;
+                    case 'divide': opSymbol = '÷'; break;
+                }
+                
+                let displayStr = `${coef1}√${radicand1} ${opSymbol} ${coef2}√${radicand2} = `;
+                
+                if (res.result.combined === false) {
+                    // Result is in the form a√b + c√d
+                    displayStr += formatRadical(res.result.first.coefficient, res.result.first.radicand);
+                    const secondCoef = res.result.second.coefficient;
+                    
+                    if (secondCoef > 0) {
+                        displayStr += " + " + formatRadical(secondCoef, res.result.second.radicand);
+                    } else if (secondCoef < 0) {
+                        displayStr += " - " + formatRadical(Math.abs(secondCoef), res.result.second.radicand);
+                    }
+                } else if (res.result.needsRationalizing) {
+                    // Result is in the form (a√b)/(c√d)
+                    displayStr += `${formatRadical(res.result.numerator.coefficient, res.result.numerator.radicand)}/${formatRadical(res.result.denominator.coefficient, res.result.denominator.radicand)}`;
+                } else {
+                    // Standard result
+                    displayStr += formatRadical(res.result.coefficient, res.result.radicand);
+                }
+                
+                resultDiv.innerHTML = `<p>${displayStr}</p>`;
+                stepsDiv.textContent = res.steps;
+                resultDiv.appendChild(stepsDiv);
+            }
+            
+            function displayRationalizeResult(result, numerator, denomCoef, denomRadicand) {
+                const resultDiv = document.getElementById('rationalize-result');
+                const stepsDiv = resultDiv.querySelector('.steps');
+                
+                let displayStr = `${numerator}/(${denomCoef}√${denomRadicand}) = `;
+                
+                if (result.denominator === 1) {
+                    // Fully simplified to a whole number
+                    displayStr += result.numerator;
+                } else {
+                    // Result with rationalized denominator
+                    displayStr += `${formatRadical(result.numerator.coefficient, result.numerator.radicand)}/${result.denominator}`;
+                }
+                
+                resultDiv.innerHTML = `<p>${displayStr}</p>`;
+                stepsDiv.textContent = result.steps;
+                resultDiv.appendChild(stepsDiv);
+            }
+            
+            function displayEquationResult(result, coef, constant, rightSide) {
+                const resultDiv = document.getElementById('equation-result');
+                const stepsDiv = resultDiv.querySelector('.steps');
+                
+                let displayStr = `Equation: ${formatRadicalEquation(coef, constant, rightSide)}\n`;
+                
+                if (result.isValid) {
+                    displayStr += `Solution: x = ${result.solution}`;
+                } else {
+                    displayStr += "No valid solutions";
+                }
+                
+                resultDiv.innerHTML = `<p>${displayStr}</p>`;
+                stepsDiv.textContent = result.steps;
+                resultDiv.appendChild(stepsDiv);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function & Statistics Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      border-radius: 5px 5px 0 0;
+    }
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    .tab button.active {
+      background-color: #3498db;
+      color: white;
+    }
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      background-color: white;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      display: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .data-table {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Function & Statistics Calculator</h1>
+  
+  <div class="tab">
+    <button class="tablinks active" onclick="openTab(event, 'function')">Functions</button>
+    <button class="tablinks" onclick="openTab(event, 'statistics')">Statistics</button>
+  </div>
+  
+  <div id="function" class="tabcontent" style="display: block;">
+    <h2>Function Evaluation</h2>
+    <div>
+      <label for="functionType">Select Function Type:</label>
+      <select id="functionType" onchange="updateFunctionInputs()">
+        <option value="linear">Linear (ax + b)</option>
+        <option value="quadratic">Quadratic (ax² + bx + c)</option>
+        <option value="exponential">Exponential (a * b^x)</option>
+        <option value="custom">Custom Function</option>
+      </select>
+    </div>
+    
+    <div id="linearInputs">
+      <input type="number" id="linearA" placeholder="Enter a value (slope)" value="1">
+      <input type="number" id="linearB" placeholder="Enter b value (y-intercept)" value="0">
+    </div>
+    
+    <div id="quadraticInputs" style="display: none;">
+      <input type="number" id="quadraticA" placeholder="Enter a value" value="1">
+      <input type="number" id="quadraticB" placeholder="Enter b value" value="0">
+      <input type="number" id="quadraticC" placeholder="Enter c value" value="0">
+    </div>
+    
+    <div id="exponentialInputs" style="display: none;">
+      <input type="number" id="exponentialA" placeholder="Enter a value" value="1">
+      <input type="number" id="exponentialB" placeholder="Enter b value" value="2">
+    </div>
+    
+    <div id="customInputs" style="display: none;">
+      <input type="text" id="customFunction" placeholder="Enter function using x (e.g., 2*x + Math.sin(x))">
+    </div>
+    
+    <div>
+      <label for="xValueRange">Input Range:</label>
+      <div style="display: flex; gap: 10px;">
+        <input type="number" id="xMin" placeholder="Min x value" value="-10">
+        <input type="number" id="xMax" placeholder="Max x value" value="10">
+        <input type="number" id="xStep" placeholder="Step" value="1">
+      </div>
+    </div>
+    
+    <button onclick="calculateFunction()">Calculate</button>
+    
+    <div id="functionResult" class="result">
+      <h3>Results:</h3>
+      <p id="domainRange"></p>
+      <div class="data-table">
+        <table id="functionTable">
+          <thead>
+            <tr>
+              <th>x (input)</th>
+              <th>f(x) (output)</th>
+            </tr>
+          </thead>
+          <tbody id="functionTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div id="statistics" class="tabcontent">
+    <h2>Statistical Calculations</h2>
+    <textarea id="dataInput" rows="4" placeholder="Enter data values separated by commas (e.g., 1, 2, 3, 4, 5)"></textarea>
+    <button onclick="calculateStatistics()">Calculate</button>
+    
+    <div id="statisticsResult" class="result">
+      <h3>Results:</h3>
+      <p>Mean: <span id="mean"></span></p>
+      <p>Median: <span id="median"></span></p>
+      <p>Mode: <span id="mode"></span></p>
+      <p>Range: <span id="range"></span></p>
+      <p>Standard Deviation: <span id="stdDev"></span></p>
+      <p>Variance: <span id="variance"></span></p>
+      <p>Count: <span id="count"></span></p>
+      <p>Sum: <span id="sum"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function openTab(evt, tabName) {
+      const tabcontent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      
+      const tablinks = document.getElementsByClassName("tablinks");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    function updateFunctionInputs() {
+      const functionType = document.getElementById("functionType").value;
+      
+      document.getElementById("linearInputs").style.display = "none";
+      document.getElementById("quadraticInputs").style.display = "none";
+      document.getElementById("exponentialInputs").style.display = "none";
+      document.getElementById("customInputs").style.display = "none";
+      
+      document.getElementById(functionType + "Inputs").style.display = "block";
+    }
+    
+    function calculateFunction() {
+      const functionType = document.getElementById("functionType").value;
+      const xMin = parseFloat(document.getElementById("xMin").value);
+      const xMax = parseFloat(document.getElementById("xMax").value);
+      const xStep = parseFloat(document.getElementById("xStep").value);
+      
+      let func;
+      let domainDescription = "";
+      
+      switch(functionType) {
+        case "linear":
+          const a = parseFloat(document.getElementById("linearA").value);
+          const b = parseFloat(document.getElementById("linearB").value);
+          func = x => a * x + b;
+          domainDescription = `f(x) = ${a}x + ${b}`;
+          break;
+        case "quadratic":
+          const quadA = parseFloat(document.getElementById("quadraticA").value);
+          const quadB = parseFloat(document.getElementById("quadraticB").value);
+          const quadC = parseFloat(document.getElementById("quadraticC").value);
+          func = x => quadA * x * x + quadB * x + quadC;
+          domainDescription = `f(x) = ${quadA}x² + ${quadB}x + ${quadC}`;
+          break;
+        case "exponential":
+          const expA = parseFloat(document.getElementById("exponentialA").value);
+          const expB = parseFloat(document.getElementById("exponentialB").value);
+          func = x => expA * Math.pow(expB, x);
+          domainDescription = `f(x) = ${expA} × ${expB}^x`;
+          break;
+        case "custom":
+          const customFunc = document.getElementById("customFunction").value;
+          try {
+            func = new Function('x', `return ${customFunc}`);
+            // Test function
+            func(0);
+            domainDescription = `f(x) = ${customFunc}`;
+          } catch (e) {
+            alert("Invalid function expression. Please check your syntax.");
+            return;
+          }
+          break;
+      }
+      
+      // Generate results
+      const tableBody = document.getElementById("functionTableBody");
+      tableBody.innerHTML = "";
+      
+      for (let x = xMin; x <= xMax; x += xStep) {
+        const xRounded = Math.round(x * 1000) / 1000;
+        let y;
+        try {
+          y = func(xRounded);
+          y = Math.round(y * 1000) / 1000;
+        } catch (e) {
+          y = "Error";
+        }
+        
+        const row = document.createElement("tr");
+        const xCell = document.createElement("td");
+        const yCell = document.createElement("td");
+        
+        xCell.textContent = xRounded;
+        yCell.textContent = y;
+        
+        row.appendChild(xCell);
+        row.appendChild(yCell);
+        tableBody.appendChild(row);
+      }
+      
+      document.getElementById("domainRange").textContent = 
+        `${domainDescription}, Domain: [${xMin}, ${xMax}]`;
+      document.getElementById("functionResult").style.display = "block";
+    }
+    
+    function calculateStatistics() {
+      const dataStr = document.getElementById("dataInput").value;
+      const dataArr = dataStr.split(',')
+        .map(x => x.trim())
+        .filter(x => x !== '')
+        .map(x => parseFloat(x))
+        .filter(x => !isNaN(x));
+      
+      if (dataArr.length === 0) {
+        alert("Please enter valid data values");
+        return;
+      }
+      
+      // Sort the array for calculations
+      const sortedData = [...dataArr].sort((a, b) => a - b);
+      
+      // Mean
+      const sum = dataArr.reduce((acc, val) => acc + val, 0);
+      const mean = sum / dataArr.length;
+      
+      // Median
+      let median;
+      if (dataArr.length % 2 === 0) {
+        median = (sortedData[dataArr.length / 2 - 1] + sortedData[dataArr.length / 2]) / 2;
+      } else {
+        median = sortedData[Math.floor(dataArr.length / 2)];
+      }
+      
+      // Mode
+      const countMap = {};
+      dataArr.forEach(num => {
+        countMap[num] = (countMap[num] || 0) + 1;
+      });
+      
+      let maxFreq = 0;
+      let modes = [];
+      
+      for (const [key, value] of Object.entries(countMap)) {
+        if (value > maxFreq) {
+          maxFreq = value;
+          modes = [key];
+        } else if (value === maxFreq) {
+          modes.push(key);
+        }
+      }
+      
+      const mode = modes.length === Object.keys(countMap).length ? "No mode" : modes.join(", ");
+      
+      // Range
+      const range = sortedData[sortedData.length - 1] - sortedData[0];
+      
+      // Standard Deviation and Variance
+      const variance = dataArr.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / dataArr.length;
+      const stdDev = Math.sqrt(variance);
+      
+      // Update results
+      document.getElementById("mean").textContent = mean.toFixed(2);
+      document.getElementById("median").textContent = median.toFixed(2);
+      document.getElementById("mode").textContent = mode;
+      document.getElementById("range").textContent = range.toFixed(2);
+      document.getElementById("stdDev").textContent = stdDev.toFixed(2);
+      document.getElementById("variance").textContent = variance.toFixed(2);
+      document.getElementById("count").textContent = dataArr.length;
+      document.getElementById("sum").textContent = sum.toFixed(2);
+      
+      document.getElementById("statisticsResult").style.display = "block";
+    }
+    
+    // Initialize the first tab
+    updateFunctionInputs();
+  </script>
+</body>
+</html>

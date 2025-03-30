@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systems of Equations Solver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .input-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .equation {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        input {
+            width: 60px;
+            padding: 8px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            min-height: 100px;
+        }
+        .method-selector {
+            margin-bottom: 20px;
+        }
+        .steps {
+            margin-top: 15px;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+        #graph-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Systems of Equations Solver</h1>
+        
+        <div class="input-area">
+            <div class="equation">
+                <input type="number" id="a1" value="1" step="any"> x + 
+                <input type="number" id="b1" value="2" step="any"> y = 
+                <input type="number" id="c1" value="5" step="any">
+            </div>
+            <div class="equation">
+                <input type="number" id="a2" value="3" step="any"> x + 
+                <input type="number" id="b2" value="-1" step="any"> y = 
+                <input type="number" id="c2" value="4" step="any">
+            </div>
+        </div>
+        
+        <div class="method-selector">
+            <label for="method">Solve using: </label>
+            <select id="method">
+                <option value="substitution">Substitution</option>
+                <option value="elimination">Elimination</option>
+                <option value="graphing">Graphing</option>
+            </select>
+        </div>
+        
+        <button id="solve-btn">Solve System</button>
+        <button id="clear-btn">Clear All</button>
+        
+        <div id="result">
+            <p>Enter coefficients and select a method, then press "Solve System"</p>
+            <div class="steps"></div>
+        </div>
+        
+        <div id="graph-container">
+            <canvas id="graph" width="500" height="300"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const solveBtn = document.getElementById('solve-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const resultDiv = document.getElementById('result');
+            const stepsDiv = document.querySelector('.steps');
+            const canvas = document.getElementById('graph');
+            const ctx = canvas.getContext('2d');
+            
+            // Set up canvas coordinate system with origin at center
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const scaleX = 30; // pixels per unit on x-axis
+            const scaleY = 30; // pixels per unit on y-axis
+            
+            function drawGraph() {
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+                
+                // Draw x and y axes
+                ctx.beginPath();
+                ctx.moveTo(0, canvasHeight/2);
+                ctx.lineTo(canvasWidth, canvasHeight/2);
+                ctx.moveTo(canvasWidth/2, 0);
+                ctx.lineTo(canvasWidth/2, canvasHeight);
+                ctx.strokeStyle = '#000';
+                ctx.stroke();
+                
+                // Draw grid
+                ctx.beginPath();
+                ctx.strokeStyle = '#eee';
+                for (let x = scaleX; x < canvasWidth; x += scaleX) {
+                    ctx.moveTo(canvasWidth/2 + x, 0);
+                    ctx.lineTo(canvasWidth/2 + x, canvasHeight);
+                    ctx.moveTo(canvasWidth/2 - x, 0);
+                    ctx.lineTo(canvasWidth/2 - x, canvasHeight);
+                }
+                for (let y = scaleY; y < canvasHeight; y += scaleY) {
+                    ctx.moveTo(0, canvasHeight/2 + y);
+                    ctx.lineTo(canvasWidth, canvasHeight/2 + y);
+                    ctx.moveTo(0, canvasHeight/2 - y);
+                    ctx.lineTo(canvasWidth, canvasHeight/2 - y);
+                }
+                ctx.stroke();
+                
+                // Label axes
+                ctx.fillStyle = '#000';
+                ctx.font = '12px Arial';
+                ctx.fillText('x', canvasWidth - 10, canvasHeight/2 - 5);
+                ctx.fillText('y', canvasWidth/2 + 5, 10);
+                
+                // Add numbers to axes
+                for (let i = 1; i < canvasWidth/scaleX/2; i++) {
+                    ctx.fillText(i.toString(), canvasWidth/2 + i*scaleX, canvasHeight/2 + 15);
+                    ctx.fillText((-i).toString(), canvasWidth/2 - i*scaleX, canvasHeight/2 + 15);
+                }
+                for (let i = 1; i < canvasHeight/scaleY/2; i++) {
+                    ctx.fillText(i.toString(), canvasWidth/2 + 5, canvasHeight/2 - i*scaleY);
+                    ctx.fillText((-i).toString(), canvasWidth/2 + 5, canvasHeight/2 + i*scaleY);
+                }
+            }
+            
+            function plotLine(a, b, c, color) {
+                // Line equation: ax + by = c
+                // To plot: y = (c - ax) / b
+                
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                
+                if (b === 0) {
+                    // Vertical line: x = c/a
+                    const x = c/a;
+                    const xCanvas = canvasWidth/2 + x * scaleX;
+                    ctx.moveTo(xCanvas, 0);
+                    ctx.lineTo(xCanvas, canvasHeight);
+                } else {
+                    // Calculate y for left and right edges of canvas
+                    const leftX = -canvasWidth/2/scaleX;
+                    const rightX = canvasWidth/2/scaleX;
+                    
+                    const leftY = (c - a*leftX) / b;
+                    const rightY = (c - a*rightX) / b;
+                    
+                    // Convert to canvas coordinates
+                    const startX = 0;
+                    const startY = canvasHeight/2 - leftY * scaleY;
+                    const endX = canvasWidth;
+                    const endY = canvasHeight/2 - rightY * scaleY;
+                    
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                }
+                ctx.stroke();
+            }
+            
+            function plotPoint(x, y, color) {
+                const canvasX = canvasWidth/2 + x * scaleX;
+                const canvasY = canvasHeight/2 - y * scaleY;
+                
+                ctx.beginPath();
+                ctx.arc(canvasX, canvasY, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Label point
+                ctx.fillStyle = '#000';
+                ctx.font = '12px Arial';
+                ctx.fillText(`(${x.toFixed(2)}, ${y.toFixed(2)})`, canvasX + 10, canvasY - 5);
+            }
+            
+            function getCoefficients() {
+                return {
+                    a1: parseFloat(document.getElementById('a1').value),
+                    b1: parseFloat(document.getElementById('b1').value),
+                    c1: parseFloat(document.getElementById('c1').value),
+                    a2: parseFloat(document.getElementById('a2').value),
+                    b2: parseFloat(document.getElementById('b2').value),
+                    c2: parseFloat(document.getElementById('c2').value)
+                };
+            }
+            
+            function solveBySubstitution(a1, b1, c1, a2, b2, c2) {
+                let steps = "Solving by substitution:\n\n";
+                
+                // First equation: a1x + b1y = c1
+                // Second equation: a2x + b2y = c2
+                
+                // Express x in terms of y from equation 1
+                if (a1 === 0) {
+                    // If a1 is 0, equation 1 gives us a direct value for y
+                    const y = c1 / b1;
+                    steps += `From equation 1: ${b1}y = ${c1}\n`;
+                    steps += `y = ${c1} / ${b1} = ${y}\n\n`;
+                    
+                    // Substitute y into equation 2 to find x
+                    const x = (c2 - b2 * y) / a2;
+                    steps += `Substitute y = ${y} into equation 2: ${a2}x + ${b2}(${y}) = ${c2}\n`;
+                    steps += `${a2}x + ${b2 * y} = ${c2}\n`;
+                    steps += `${a2}x = ${c2} - ${b2 * y} = ${c2 - b2 * y}\n`;
+                    steps += `x = ${(c2 - b2 * y)} / ${a2} = ${x}\n\n`;
+                    
+                    return {
+                        x: x,
+                        y: y,
+                        steps: steps,
+                        hasSolution: true
+                    };
+                } else {
+                    // Express x in terms of y
+                    const xTerm = `(${c1} - ${b1}y) / ${a1}`;
+                    steps += `Rearranging equation 1: ${a1}x + ${b1}y = ${c1}\n`;
+                    steps += `${a1}x = ${c1} - ${b1}y\n`;
+                    steps += `x = ${xTerm}\n\n`;
+                    
+                    // Substitute x expression into equation 2
+                    steps += `Substituting this expression for x into equation 2: ${a2}(${xTerm}) + ${b2}y = ${c2}\n`;
+                    
+                    // Simplify the algebra
+                    const term1 = a2 * c1 / a1;
+                    const term2 = a2 * b1 / a1;
+                    steps += `${term1} - ${term2}y + ${b2}y = ${c2}\n`;
+                    
+                    // Solve for y
+                    const yCoef = b2 - (a2 * b1 / a1);
+                    const yVal = (c2 - (a2 * c1 / a1)) / yCoef;
+                    steps += `${term1} + (${b2} - ${term2})y = ${c2}\n`;
+                    steps += `${term1} + ${yCoef}y = ${c2}\n`;
+                    steps += `${yCoef}y = ${c2} - ${term1} = ${c2 - term1}\n`;
+                    steps += `y = ${c2 - term1} / ${yCoef} = ${yVal}\n\n`;
+                    
+                    // Back-substitute to find x
+                    const xVal = (c1 - b1 * yVal) / a1;
+                    steps += `Substituting y = ${yVal} back into our x expression:\n`;
+                    steps += `x = (${c1} - ${b1} × ${yVal}) / ${a1} = ${xVal}\n\n`;
+                    
+                    return {
+                        x: xVal,
+                        y: yVal,
+                        steps: steps,
+                        hasSolution: true
+                    };
+                }
+            }
+            
+            function solveByElimination(a1, b1, c1, a2, b2, c2) {
+                let steps = "Solving by elimination:\n\n";
+                
+                steps += `Equation 1: ${a1}x + ${b1}y = ${c1}\n`;
+                steps += `Equation 2: ${a2}x + ${b2}y = ${c2}\n\n`;
+                
+                // Try to eliminate y first
+                const lcm = Math.abs(b1 * b2) / gcd(Math.abs(b1), Math.abs(b2));
+                
+                if (b1 !== 0 && b2 !== 0) {
+                    const factor1 = lcm / Math.abs(b1);
+                    const factor2 = lcm / Math.abs(b2);
+                    
+                    const sign1 = b1 > 0 ? 1 : -1;
+                    const sign2 = b2 > 0 ? -1 : 1;
+                    
+                    const eq1 = {
+                        a: a1 * factor1 * sign1,
+                        b: b1 * factor1 * sign1,
+                        c: c1 * factor1 * sign1
+                    };
+                    
+                    const eq2 = {
+                        a: a2 * factor2 * sign2,
+                        b: b2 * factor2 * sign2,
+                        c: c2 * factor2 * sign2
+                    };
+                    
+                    steps += `Multiply equation 1 by ${factor1 * sign1} to get: ${eq1.a}x + ${eq1.b}y = ${eq1.c}\n`;
+                    steps += `Multiply equation 2 by ${factor2 * sign2} to get: ${eq2.a}x + ${eq2.b}y = ${eq2.c}\n\n`;
+                    
+                    // Adding the equations eliminates y
+                    const resultA = eq1.a + eq2.a;
+                    const resultB = eq1.b + eq2.b; // Should be 0
+                    const resultC = eq1.c + eq2.c;
+                    
+                    steps += `Adding these equations: (${eq1.a}x + ${eq1.b}y) + (${eq2.a}x + ${eq2.b}y) = ${eq1.c} + ${eq2.c}\n`;
+                    steps += `(${eq1.a} + ${eq2.a})x + (${eq1.b} + ${eq2.b})y = ${resultC}\n`;
+                    steps += `${resultA}x + ${resultB}y = ${resultC}\n\n`;
+                    
+                    if (resultA === 0) {
+                        if (resultC === 0) {
+                            steps += "This system has infinitely many solutions (dependent equations).\n";
+                            return {
+                                hasSolution: false,
+                                steps: steps,
+                                type: "infinite"
+                            };
+                        } else {
+                            steps += "This system has no solution (inconsistent equations).\n";
+                            return {
+                                hasSolution: false,
+                                steps: steps,
+                                type: "none"
+                            };
+                        }
+                    }
+                    
+                    // Solve for x
+                    const x = resultC / resultA;
+                    steps += `${resultA}x = ${resultC}\n`;
+                    steps += `x = ${resultC} / ${resultA} = ${x}\n\n`;
+                    
+                    // Back-substitute to find y
+                    const y = (c1 - a1 * x) / b1;
+                    steps += `Substituting x = ${x} into equation 1: ${a1}(${x}) + ${b1}y = ${c1}\n`;
+                    steps += `${a1 * x} + ${b1}y = ${c1}\n`;
+                    steps += `${b1}y = ${c1} - ${a1 * x} = ${c1 - a1 * x}\n`;
+                    steps += `y = ${c1 - a1 * x} / ${b1} = ${y}\n\n`;
+                    
+                    return {
+                        x: x,
+                        y: y,
+                        steps: steps,
+                        hasSolution: true
+                    };
+                } else if (b1 === 0) {
+                    // If b1 = 0, equation 1 directly gives us x
+                    const x = c1 / a1;
+                    steps += `From equation 1: ${a1}x = ${c1}\n`;
+                    steps += `x = ${c1} / ${a1} = ${x}\n\n`;
+                    
+                    // Substitute x into equation 2 to find y
+                    const y = (c2 - a2 * x) / b2;
+                    steps += `Substituting x = ${x} into equation 2: ${a2}(${x}) + ${b2}y = ${c2}\n`;
+                    steps += `${a2 * x} + ${b2}y = ${c2}\n`;
+                    steps += `${b2}y = ${c2} - ${a2 * x} = ${c2 - a2 * x}\n`;
+                    steps += `y = ${c2 - a2 * x} / ${b2} = ${y}\n\n`;
+                    
+                    return {
+                        x: x,
+                        y: y,
+                        steps: steps,
+                        hasSolution: true
+                    };
+                } else if (b2 === 0) {
+                    // If b2 = 0, equation 2 directly gives us x
+                    const x = c2 / a2;
+                    steps += `From equation 2: ${a2}x = ${c2}\n`;
+                    steps += `x = ${c2} / ${a2} = ${x}\n\n`;
+                    
+                    // Substitute x into equation 1 to find y
+                    const y = (c1 - a1 * x) / b1;
+                    steps += `Substituting x = ${x} into equation 1: ${a1}(${x}) + ${b1}y = ${c1}\n`;
+                    steps += `${a1 * x} + ${b1}y = ${c1}\n`;
+                    steps += `${b1}y = ${c1} - ${a1 * x} = ${c1 - a1 * x}\n`;
+                    steps += `y = ${c1 - a1 * x} / ${b1} = ${y}\n\n`;
+                    
+                    return {
+                        x: x,
+                        y: y,
+                        steps: steps,
+                        hasSolution: true
+                    };
+                }
+            }
+            
+            function solveByGraphing(a1, b1, c1, a2, b2, c2) {
+                let steps = "Solving by graphing:\n\n";
+                
+                // Convert to slope-intercept form (y = mx + b)
+                let eq1, eq2;
+                
+                if (b1 === 0) {
+                    // Vertical line: x = c1/a1
+                    const x = c1 / a1;
+                    eq1 = {type: "vertical", x: x};
+                    steps += `Equation 1: ${a1}x + ${b1}y = ${c1}\n`;
+                    steps += `${a1}x = ${c1}\n`;
+                    steps += `x = ${x} (vertical line)\n\n`;
+                } else {
+                    // Standard line: y = mx + b
+                    const slope = -a1 / b1;
+                    const intercept = c1 / b1;
+                    eq1 = {type: "standard", slope: slope, intercept: intercept};
+                    steps += `Equation 1: ${a1}x + ${b1}y = ${c1}\n`;
+                    steps += `${b1}y = ${c1} - ${a1}x\n`;
+                    steps += `y = ${slope}x + ${intercept}\n\n`;
+                }
+                
+                if (b2 === 0) {
+                    // Vertical line: x = c2/a2
+                    const x = c2 / a2;
+                    eq2 = {type: "vertical", x: x};
+                    steps += `Equation 2: ${a2}x + ${b2}y = ${c2}\n`;
+                    steps += `${a2}x = ${c2}\n`;
+                    steps += `x = ${x} (vertical line)\n\n`;
+                } else {
+                    // Standard line: y = mx + b
+                    const slope = -a2 / b2;
+                    const intercept = c2 / b2;
+                    eq2 = {type: "standard", slope: slope, intercept: intercept};
+                    steps += `Equation 2: ${a2}x + ${b2}y = ${c2}\n`;
+                    steps += `${b2}y = ${c2} - ${a2}x\n`;
+                    steps += `y = ${slope}x + ${intercept}\n\n`;
+                }
+                
+                // Find intersection
+                let x, y;
+                
+                if (eq1.type === "vertical" && eq2.type === "vertical") {
+                    if (eq1.x === eq2.x) {
+                        steps += "Both equations represent the same vertical line. The system has infinitely many solutions.\n";
+                        return {
+                            hasSolution: false,
+                            steps: steps,
+                            type: "infinite"
+                        };
+                    } else {
+                        steps += "The equations represent parallel vertical lines. The system has no solution.\n";
+                        return {
+                            hasSolution: false,
+                            steps: steps,
+                            type: "none"
+                        };
+                    }
+                } else if (eq1.type === "vertical") {
+                    x = eq1.x;
+                    y = eq2.slope * x + eq2.intercept;
+                    steps += `Equation 1 is a vertical line at x = ${x}.\n`;
+                    steps += `Substituting x = ${x} into equation 2: y = ${eq2.slope}(${x}) + ${eq2.intercept} = ${y}\n\n`;
+                } else if (eq2.type === "vertical") {
+                    x = eq2.x;
+                    y = eq1.slope * x + eq1.intercept;
+                    steps += `Equation 2 is a vertical line at x = ${x}.\n`;
+                    steps += `Substituting x = ${x} into equation 1: y = ${eq1.slope}(${x}) + ${eq1.intercept} = ${y}\n\n`;
+                } else {
+                    // Both lines in standard form
+                    if (eq1.slope === eq2.slope) {
+                        if (eq1.intercept === eq2.intercept) {
+                            steps += "Both equations represent the same line. The system has infinitely many solutions.\n";
+                            return {
+                                hasSolution: false,
+                                steps: steps,
+                                type: "infinite"
+                            };
+                        } else {
+                            steps += "The equations represent parallel lines. The system has no solution.\n";
+                            return {
+                                hasSolution: false,
+                                steps: steps,
+                                type: "none"
+                            };
+                        }
+                    } else {
+                        // Find intersection by setting equations equal
+                        x = (eq2.intercept - eq1.intercept) / (eq1.slope - eq2.slope);
+                        y = eq1.slope * x + eq1.intercept;
+                        steps += `Setting the equations equal: ${eq1.slope}x + ${eq1.intercept} = ${eq2.slope}x + ${eq2.intercept}\n`;
+                        steps += `${eq1.slope}x - ${eq2.slope}x = ${eq2.intercept} - ${eq1.intercept}\n`;
+                        steps += `${eq1.slope - eq2.slope}x = ${eq2.intercept - eq1.intercept}\n`;
+                        steps += `x = ${(eq2.intercept - eq1.intercept)} / ${(eq1.slope - eq2.slope)} = ${x}\n\n`;
+                        steps += `Substituting x = ${x} into equation 1: y = ${eq1.slope}(${x}) + ${eq1.intercept} = ${y}\n\n`;
+                    }
+                }
+                
+                return {
+                    x: x,
+                    y: y,
+                    steps: steps,
+                    hasSolution: true
+                };
+            }
+            
+            function gcd(a, b) {
+                while (b) {
+                    const temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                return a;
+            }
+            
+            function solve() {
+                const coef = getCoefficients();
+                const method = document.getElementById('method').value;
+                
+                let result;
+                switch (method) {
+                    case 'substitution':
+                        result = solveBySubstitution(coef.a1, coef.b1, coef.c1, coef.a2, coef.b2, coef.c2);
+                        break;
+                    case 'elimination':
+                        result = solveByElimination(coef.a1, coef.b1, coef.c1, coef.a2, coef.b2, coef.c2);
+                        break;
+                    case 'graphing':
+                        result = solveByGraphing(coef.a1, coef.b1, coef.c1, coef.a2, coef.b2, coef.c2);
+                        break;
+                }
+                
+                // Draw graph first
+                drawGraph();
+                
+                // Draw both lines
+                plotLine(coef.a1, coef.b1, coef.c1, 'red');
+                plotLine(coef.a2, coef.b2, coef.c2, 'blue');
+                
+                // Plot intersection if applicable
+                if (result.hasSolution) {
+                    plotPoint(result.x, result.y, 'green');
+                    
+                    resultDiv.innerHTML = `<p>Solution: x = ${result.x.toFixed(4)}, y = ${result.y.toFixed(4)}</p>`;
+                    stepsDiv.textContent = result.steps;
+                    resultDiv.appendChild(stepsDiv);
+                } else {
+                    if (result.type === "infinite") {
+                        resultDiv.innerHTML = '<p>This system has infinitely many solutions.</p>';
+                    } else {
+                        resultDiv.innerHTML = '<p>This system has no solution.</p>';
+                    }
+                    stepsDiv.textContent = result.steps;
+                    resultDiv.appendChild(stepsDiv);
+                }
+            }
+            
+            function clearAll() {
+                document.getElementById('a1').value = '1';
+                document.getElementById('b1').value = '2';
+                document.getElementById('c1').value = '5';
+                document.getElementById('a2').value = '3';
+                document.getElementById('b2').value = '-1';
+                document.getElementById('c2').value = '4';
+                
+                resultDiv.innerHTML = '<p>Enter coefficients and select a method, then press "Solve System"</p>';
+                stepsDiv.textContent = '';
+                
+                drawGraph();
+            }
+            
+            solveBtn.addEventListener('click', solve);
+            clearBtn.addEventListener('click', clearAll);
+            
+            // Initialize the graph
+            drawGraph();
+        });
+    </script>
+</body>
+</html>

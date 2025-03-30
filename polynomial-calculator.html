@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polynomial Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            background-color: #fff;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .polynomials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .polynomial {
+            flex: 1;
+            min-width: 250px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        .explanation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 5px solid #2ecc71;
+            border-radius: 5px;
+        }
+        .special-products {
+            margin-top: 20px;
+        }
+        .special-product {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .step {
+            margin: 10px 0;
+            padding-left: 15px;
+            border-left: 3px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>Polynomial Calculator</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('intro')">Introduction</div>
+        <div class="tab" onclick="switchTab('calculator')">Calculator</div>
+        <div class="tab" onclick="switchTab('special')">Special Products</div>
+    </div>
+    
+    <div id="intro" class="tab-content active">
+        <h2>Introduction to Polynomials</h2>
+        <p>A polynomial is an expression consisting of variables and coefficients, involving only the operations of addition, subtraction, multiplication, and non-negative integer exponents.</p>
+        <p>Examples of polynomials:</p>
+        <ul>
+            <li>3x² + 2x - 5</li>
+            <li>x³ - 7x + 2</li>
+            <li>5x⁴ - 3x² + x - 9</li>
+        </ul>
+        <p>Use the Calculator tab to perform operations with polynomials, and the Special Products tab to learn about common polynomial patterns.</p>
+    </div>
+    
+    <div id="calculator" class="tab-content">
+        <h2>Polynomial Operations</h2>
+        <div class="polynomials">
+            <div class="polynomial">
+                <h3>First Polynomial</h3>
+                <input type="text" id="poly1" placeholder="Ex: 3x^2+2x-5" value="x^2+2x+1">
+            </div>
+            <div class="polynomial">
+                <h3>Second Polynomial</h3>
+                <input type="text" id="poly2" placeholder="Ex: x^3-7x+2" value="x-1">
+            </div>
+        </div>
+        
+        <div>
+            <h3>Select Operation</h3>
+            <select id="operation">
+                <option value="add">Addition</option>
+                <option value="subtract">Subtraction</option>
+                <option value="multiply">Multiplication</option>
+                <option value="divide">Division</option>
+            </select>
+            <button onclick="calculate()">Calculate</button>
+        </div>
+        
+        <div id="result" class="result" style="display: none;"></div>
+        <div id="explanation" class="explanation" style="display: none;"></div>
+    </div>
+    
+    <div id="special" class="tab-content">
+        <h2>Special Products and Formulas</h2>
+        
+        <div class="special-products">
+            <div class="special-product">
+                <h3>Difference of Squares</h3>
+                <p>Formula: (a + b)(a - b) = a² - b²</p>
+                <p>Example: (x + 3)(x - 3) = x² - 9</p>
+                <button onclick="showExample('squares')">Try Example</button>
+            </div>
+            
+            <div class="special-product">
+                <h3>Perfect Square Trinomials</h3>
+                <p>Formula 1: (a + b)² = a² + 2ab + b²</p>
+                <p>Example: (x + 5)² = x² + 10x + 25</p>
+                <button onclick="showExample('square1')">Try Example</button>
+                
+                <p>Formula 2: (a - b)² = a² - 2ab + b²</p>
+                <p>Example: (x - 4)² = x² - 8x + 16</p>
+                <button onclick="showExample('square2')">Try Example</button>
+            </div>
+            
+            <div class="special-product">
+                <h3>Sum and Difference of Cubes</h3>
+                <p>Formula 1: a³ + b³ = (a + b)(a² - ab + b²)</p>
+                <p>Example: x³ + 8 = (x + 2)(x² - 2x + 4)</p>
+                <button onclick="showExample('cube1')">Try Example</button>
+                
+                <p>Formula 2: a³ - b³ = (a - b)(a² + ab + b²)</p>
+                <p>Example: x³ - 27 = (x - 3)(x² + 3x + 9)</p>
+                <button onclick="showExample('cube2')">Try Example</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Deactivate all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Activate the selected tab and content
+            document.getElementById(tabId).classList.add('active');
+            const selectedTab = Array.from(tabs).find(tab => 
+                tab.textContent.toLowerCase().includes(tabId) || 
+                (tabId === 'intro' && tab.textContent.includes('Introduction')));
+            if (selectedTab) selectedTab.classList.add('active');
+        }
+        
+        function showExample(type) {
+            switchTab('calculator');
+            let poly1, poly2, operation;
+            
+            switch(type) {
+                case 'squares':
+                    poly1 = 'x+3';
+                    poly2 = 'x-3';
+                    operation = 'multiply';
+                    break;
+                case 'square1':
+                    poly1 = 'x+5';
+                    poly2 = 'x+5';
+                    operation = 'multiply';
+                    break;
+                case 'square2':
+                    poly1 = 'x-4';
+                    poly2 = 'x-4';
+                    operation = 'multiply';
+                    break;
+                case 'cube1':
+                    poly1 = 'x+2';
+                    poly2 = 'x^2-2x+4';
+                    operation = 'multiply';
+                    break;
+                case 'cube2':
+                    poly1 = 'x-3';
+                    poly2 = 'x^2+3x+9';
+                    operation = 'multiply';
+                    break;
+            }
+            
+            document.getElementById('poly1').value = poly1;
+            document.getElementById('poly2').value = poly2;
+            document.getElementById('operation').value = operation;
+            
+            calculate();
+        }
+        
+        // Parse a polynomial string into an array of terms
+        function parsePoly(polyStr) {
+            // Clean up input
+            polyStr = polyStr.replace(/\s+/g, '').replace(/-/g, '+-').replace(/\^/g, '');
+            if (polyStr.startsWith('+')) polyStr = polyStr.substring(1);
+            if (polyStr === '') return [];
+            
+            const terms = polyStr.split('+');
+            const result = [];
+            
+            for (let term of terms) {
+                if (term === '') continue;
+                
+                let coef = 1;
+                let exp = 0;
+                
+                // Handle pure numbers
+                if (!term.includes('x')) {
+                    coef = parseFloat(term);
+                    exp = 0;
+                } 
+                // Handle pure x terms
+                else if (term === 'x') {
+                    coef = 1;
+                    exp = 1;
+                }
+                // Handle -x terms
+                else if (term === '-x') {
+                    coef = -1;
+                    exp = 1;
+                }
+                // Handle term with coefficient and exponent
+                else {
+                    const parts = term.split('x');
+                    
+                    // Get coefficient
+                    coef = parts[0] === '' ? 1 : (parts[0] === '-' ? -1 : parseFloat(parts[0]));
+                    
+                    // Get exponent
+                    exp = parts[1] === '' ? 1 : parseInt(parts[1]);
+                }
+                
+                result.push({ coef, exp });
+            }
+            
+            // Sort by descending exponent
+            return result.sort((a, b) => b.exp - a.exp);
+        }
+        
+        // Convert polynomial array to string representation
+        function polyToString(poly) {
+            if (poly.length === 0) return '0';
+            
+            let result = '';
+            
+            for (let i = 0; i < poly.length; i++) {
+                const { coef, exp } = poly[i];
+                
+                if (coef === 0) continue;
+                
+                // Add plus sign if needed
+                if (i > 0 && coef > 0) result += ' + ';
+                else if (i > 0 && coef < 0) result += ' - ';
+                else if (coef < 0) result += '-';
+                
+                // Add coefficient (if not 1 or -1, unless exponent is 0)
+                if (exp === 0 || Math.abs(coef) !== 1) {
+                    result += Math.abs(coef);
+                }
+                
+                // Add variable with exponent
+                if (exp > 0) {
+                    result += 'x';
+                    if (exp > 1) {
+                        result += '²³⁴⁵⁶⁷⁸⁹'[exp - 2] || `^${exp}`;
+                    }
+                }
+            }
+            
+            return result || '0';
+        }
+        
+        // Add two polynomials
+        function addPoly(poly1, poly2) {
+            const result = [...poly1];
+            
+            for (const term of poly2) {
+                const existingTerm = result.find(t => t.exp === term.exp);
+                if (existingTerm) {
+                    existingTerm.coef += term.coef;
+                } else {
+                    result.push({ ...term });
+                }
+            }
+            
+            return result
+                .filter(term => term.coef !== 0)
+                .sort((a, b) => b.exp - a.exp);
+        }
+        
+        // Subtract poly2 from poly1
+        function subtractPoly(poly1, poly2) {
+            return addPoly(poly1, poly2.map(term => ({ ...term, coef: -term.coef })));
+        }
+        
+        // Multiply two polynomials
+        function multiplyPoly(poly1, poly2) {
+            const result = [];
+            
+            for (const term1 of poly1) {
+                for (const term2 of poly2) {
+                    const newTerm = {
+                        coef: term1.coef * term2.coef,
+                        exp: term1.exp + term2.exp
+                    };
+                    
+                    const existingTerm = result.find(t => t.exp === newTerm.exp);
+                    if (existingTerm) {
+                        existingTerm.coef += newTerm.coef;
+                    } else {
+                        result.push(newTerm);
+                    }
+                }
+            }
+            
+            return result
+                .filter(term => term.coef !== 0)
+                .sort((a, b) => b.exp - a.exp);
+        }
+        
+        // Divide poly1 by poly2 (polynomial long division)
+        function dividePoly(dividend, divisor) {
+            if (divisor.length === 0 || divisor[0].coef === 0) {
+                return { quotient: [], remainder: [], error: "Cannot divide by zero" };
+            }
+            
+            // Copy dividend array to work with
+            let remainder = [...dividend];
+            const quotient = [];
+            
+            // Sort polynomials by descending exponent
+            remainder.sort((a, b) => b.exp - a.exp);
+            divisor.sort((a, b) => b.exp - a.exp);
+            
+            // If the dividend degree is less than the divisor, return 0 with the dividend as remainder
+            if (remainder.length === 0 || remainder[0].exp < divisor[0].exp) {
+                return { quotient: [], remainder, error: null };
+            }
+            
+            // Perform polynomial long division
+            while (remainder.length > 0 && remainder[0].exp >= divisor[0].exp) {
+                // Calculate the new term for the quotient
+                const quotientTerm = {
+                    coef: remainder[0].coef / divisor[0].coef,
+                    exp: remainder[0].exp - divisor[0].exp
+                };
+                quotient.push(quotientTerm);
+                
+                // Multiply the quotient term by the divisor
+                const tempPoly = divisor.map(term => ({
+                    coef: term.coef * quotientTerm.coef,
+                    exp: term.exp + quotientTerm.exp
+                }));
+                
+                // Subtract from the remainder
+                remainder = subtractPoly(remainder, tempPoly);
+                
+                // Remove any zero terms
+                remainder = remainder.filter(term => Math.abs(term.coef) > 1e-10);
+            }
+            
+            return { 
+                quotient: quotient.sort((a, b) => b.exp - a.exp), 
+                remainder: remainder.sort((a, b) => b.exp - a.exp),
+                error: null
+            };
+        }
+        
+        function calculate() {
+            try {
+                const poly1Str = document.getElementById('poly1').value;
+                const poly2Str = document.getElementById('poly2').value;
+                const operation = document.getElementById('operation').value;
+                
+                const poly1 = parsePoly(poly1Str);
+                const poly2 = parsePoly(poly2Str);
+                
+                let result, explanation;
+                
+                switch(operation) {
+                    case 'add':
+                        result = addPoly(poly1, poly2);
+                        explanation = `To add polynomials, we combine like terms (terms with the same exponent):<br>
+                            <div class="step">(${polyToString(poly1)}) + (${polyToString(poly2)}) = ${polyToString(result)}</div>`;
+                        break;
+                    case 'subtract':
+                        result = subtractPoly(poly1, poly2);
+                        explanation = `To subtract polynomials, we change the signs of all terms in the second polynomial and then add:<br>
+                            <div class="step">(${polyToString(poly1)}) - (${polyToString(poly2)}) = ${polyToString(result)}</div>`;
+                        break;
+                    case 'multiply':
+                        result = multiplyPoly(poly1, poly2);
+                        explanation = `To multiply polynomials, we multiply each term in the first polynomial by each term in the second polynomial, then combine like terms:<br>
+                            <div class="step">(${polyToString(poly1)}) × (${polyToString(poly2)}) = ${polyToString(result)}</div>`;
+                        
+                        // Check for special products
+                        if (poly1.length === 2 && poly2.length === 2) {
+                            if (poly1[0].exp === poly2[0].exp && poly1[1].exp === poly2[1].exp) {
+                                if (poly1[0].coef === poly2[0].coef && poly1[1].coef === -poly2[1].coef) {
+                                    explanation += `<br>This is an example of the <strong>difference of squares</strong> formula: (a + b)(a - b) = a² - b²`;
+                                }
+                                else if (poly1[0].coef === poly2[0].coef && poly1[1].coef === poly2[1].coef) {
+                                    explanation += `<br>This is an example of the <strong>perfect square trinomial</strong> formula: (a + b)² = a² + 2ab + b²`;
+                                }
+                            }
+                        }
+                        break;
+                    case 'divide':
+                        const division = dividePoly(poly1, poly2);
+                        
+                        if (division.error) {
+                            document.getElementById('result').innerHTML = `Error: ${division.error}`;
+                            document.getElementById('result').style.display = 'block';
+                            document.getElementById('explanation').style.display = 'none';
+                            return;
+                        }
+                        
+                        result = division.quotient;
+                        const remainder = division.remainder;
+                        
+                        const quotientStr = polyToString(result);
+                        const remainderStr = polyToString(remainder);
+                        
+                        document.getElementById('result').innerHTML = `
+                            <h3>Result:</h3>
+                            <p>Quotient: ${quotientStr || '0'}</p>
+                            <p>Remainder: ${remainderStr || '0'}</p>
+                            <p>Thus: (${polyToString(poly1)}) ÷ (${polyToString(poly2)}) = ${quotientStr || '0'} + ${remainderStr || '0'}/(${polyToString(poly2)})</p>
+                        `;
+                        document.getElementById('result').style.display = 'block';
+                        
+                        explanation = `
+                            <h3>Explanation:</h3>
+                            <p>When dividing polynomials, we use polynomial long division:</p>
+                            <ol>
+                                <li>Divide the first term of the dividend by the first term of the divisor to get the first term of the quotient.</li>
+                                <li>Multiply the divisor by this term and subtract from the dividend.</li>
+                                <li>Repeat with the remainder until the degree of the remainder is less than the degree of the divisor.</li>
+                            </ol>
+                        `;
+                        document.getElementById('explanation').innerHTML = explanation;
+                        document.getElementById('explanation').style.display = 'block';
+                        return;
+                }
+                
+                document.getElementById('result').innerHTML = `
+                    <h3>Result:</h3>
+                    <p>${polyToString(result)}</p>
+                `;
+                document.getElementById('explanation').innerHTML = `
+                    <h3>Explanation:</h3>
+                    ${explanation}
+                `;
+                
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('explanation').style.display = 'block';
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <h3>Error:</h3>
+                    <p>There was a problem processing your input. Please check your polynomials.</p>
+                    <p>Use the format like: 3x^2+2x-5</p>
+                `;
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('explanation').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

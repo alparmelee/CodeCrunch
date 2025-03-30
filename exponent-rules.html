@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponent Rules Explorer</title>
+    <style>
+        :root {
+            --primary: #6a5acd;
+            --secondary: #483d8b;
+            --accent: #9370db;
+            --light: #f0f0ff;
+            --dark: #2e2e4e;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3 {
+            color: var(--secondary);
+            text-align: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .panel {
+            display: none;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        .rule-card {
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .rule-title {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .rule-formula {
+            font-family: 'Courier New', monospace;
+            background-color: var(--light);
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .example {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        
+        .exercise-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+        }
+        
+        input[type="text"], input[type="number"], button {
+            padding: 8px 12px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .calculator-display {
+            width: 100%;
+            max-width: 300px;
+            text-align: right;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .calculator-btn {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .calculator-btn:hover {
+            background-color: #e9e9e9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .scientific-notation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .scientific-notation input {
+            width: 60px;
+            text-align: center;
+        }
+        
+        .hint {
+            font-style: italic;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exponent Rules Explorer</h1>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showPanel('rules')">Exponent Rules</button>
+            <button class="tab" onclick="showPanel('practice')">Practice</button>
+            <button class="tab" onclick="showPanel('calculator')">Exponent Calculator</button>
+            <button class="tab" onclick="showPanel('scientific')">Scientific Notation</button>
+        </div>
+        
+        <div id="rules" class="panel active">
+            <h2>Exponent Rules</h2>
+            
+            <div class="rule-card">
+                <div class="rule-title">Multiplication with Same Base</div>
+                <div class="rule-formula">a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup></div>
+                <p>When multiplying expressions with the same base, add the exponents.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> 2<sup>3</sup> × 2<sup>4</sup> = 2<sup>3+4</sup> = 2<sup>7</sup> = 128</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Division with Same Base</div>
+                <div class="rule-formula">a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m-n</sup></div>
+                <p>When dividing expressions with the same base, subtract the exponents.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> 2<sup>7</sup> ÷ 2<sup>3</sup> = 2<sup>7-3</sup> = 2<sup>4</sup> = 16</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Power of a Power</div>
+                <div class="rule-formula">(a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup></div>
+                <p>When raising a power to another power, multiply the exponents.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> (2<sup>3</sup>)<sup>2</sup> = 2<sup>3×2</sup> = 2<sup>6</sup> = 64</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Power of a Product</div>
+                <div class="rule-formula">(a × b)<sup>n</sup> = a<sup>n</sup> × b<sup>n</sup></div>
+                <p>When raising a product to a power, distribute the exponent to each factor.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> (2 × 3)<sup>2</sup> = 2<sup>2</sup> × 3<sup>2</sup> = 4 × 9 = 36</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Power of a Quotient</div>
+                <div class="rule-formula">(a ÷ b)<sup>n</sup> = a<sup>n</sup> ÷ b<sup>n</sup></div>
+                <p>When raising a quotient to a power, distribute the exponent to both numerator and denominator.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> (4 ÷ 2)<sup>3</sup> = 4<sup>3</sup> ÷ 2<sup>3</sup> = 64 ÷ 8 = 8</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Negative Exponents</div>
+                <div class="rule-formula">a<sup>-n</sup> = 1 ÷ a<sup>n</sup> = 1/a<sup>n</sup></div>
+                <p>A negative exponent indicates the reciprocal of the base raised to the positive exponent.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> 2<sup>-3</sup> = 1 ÷ 2<sup>3</sup> = 1/8 = 0.125</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Zero Exponent</div>
+                <div class="rule-formula">a<sup>0</sup> = 1 (where a ≠ 0)</div>
+                <p>Any non-zero number raised to the power of zero equals 1.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> 7<sup>0</sup> = 1</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Fractional Exponents</div>
+                <div class="rule-formula">a<sup>m/n</sup> = <sup>n</sup>√a<sup>m</sup> = (<sup>n</sup>√a)<sup>m</sup></div>
+                <p>A fractional exponent indicates a root with the denominator as the root index and the numerator as the power.</p>
+                <div class="example">
+                    <p><strong>Example:</strong> 8<sup>2/3</sup> = (∛8)<sup>2</sup> = 2<sup>2</sup> = 4</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="practice" class="panel">
+            <h2>Practice Exponent Rules</h2>
+            
+            <div class="exercise-container">
+                <h3>Simplify the following expressions:</h3>
+                
+                <div id="practice-problems">
+                    <!-- Practice problems will be generated here -->
+                </div>
+                
+                <button onclick="generatePracticeProblems()">Generate New Problems</button>
+            </div>
+        </div>
+        
+        <div id="calculator" class="panel">
+            <h2>Exponent Calculator</h2>
+            
+            <div class="calculator">
+                <div class="calculator-display" id="calc-display">0</div>
+                
+                <div class="calculator-buttons">
+                    <button class="calculator-btn" onclick="calcInput('7')">7</button>
+                    <button class="calculator-btn" onclick="calcInput('8')">8</button>
+                    <button class="calculator-btn" onclick="calcInput('9')">9</button>
+                    <button class="calculator-btn" onclick="calcClear()">C</button>
+                    
+                    <button class="calculator-btn" onclick="calcInput('4')">4</button>
+                    <button class="calculator-btn" onclick="calcInput('5')">5</button>
+                    <button class="calculator-btn" onclick="calcInput('6')">6</button>
+                    <button class="calculator-btn" onclick="calcInput('^')">^</button>
+                    
+                    <button class="calculator-btn" onclick="calcInput('1')">1</button>
+                    <button class="calculator-btn" onclick="calcInput('2')">2</button>
+                    <button class="calculator-btn" onclick="calcInput('3')">3</button>
+                    <button class="calculator-btn" onclick="calcInput('*')">×</button>
+                    
+                    <button class="calculator-btn" onclick="calcInput('0')">0</button>
+                    <button class="calculator-btn" onclick="calcInput('.')">.</button>
+                    <button class="calculator-btn" onclick="calcInput('/')">÷</button>
+                    <button class="calculator-btn" onclick="calcEvaluate()">=</button>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <button onclick="calcInput('(')">(</button>
+                    <button onclick="calcInput(')')">)</button>
+                    <button onclick="calcInput('-')" style="width: 40px;">-</button>
+                    <button onclick="calcNegExp()" style="width: 60px;">x<sup>-1</sup></button>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Interactive Examples</div>
+                <p>Click on any example to calculate it:</p>
+                <div class="example" onclick="setCalcExample('2^3 * 2^4')">
+                    <p>2<sup>3</sup> × 2<sup>4</sup> = ?</p>
+                </div>
+                <div class="example" onclick="setCalcExample('3^5 / 3^2')">
+                    <p>3<sup>5</sup> ÷ 3<sup>2</sup> = ?</p>
+                </div>
+                <div class="example" onclick="setCalcExample('(2^2)^3')">
+                    <p>(2<sup>2</sup>)<sup>3</sup> = ?</p>
+                </div>
+                <div class="example" onclick="setCalcExample('5^-2')">
+                    <p>5<sup>-2</sup> = ?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="scientific" class="panel">
+            <h2>Scientific Notation</h2>
+            
+            <div class="rule-card">
+                <div class="rule-title">What is Scientific Notation?</div>
+                <p>Scientific notation expresses numbers as a product of a coefficient between 1 and 10 and a power of 10:</p>
+                <div class="rule-formula">a × 10<sup>n</sup></div>
+                <p>where 1 ≤ a < 10 and n is an integer.</p>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Converting to Scientific Notation</div>
+                <p>To convert a number to scientific notation:</p>
+                <ol>
+                    <li>Move the decimal point so that there is exactly one non-zero digit to the left of the decimal point</li>
+                    <li>Count the number of places the decimal point moved</li>
+                    <li>If you moved the decimal point to the left, the exponent is positive</li>
+                    <li>If you moved the decimal point to the right, the exponent is negative</li>
+                </ol>
+                <div class="example">
+                    <p><strong>Example:</strong> 4,570,000 = 4.57 × 10<sup>6</sup></p>
+                    <p><strong>Example:</strong> 0.00034 = 3.4 × 10<sup>-4</sup></p>
+                </div>
+            </div>
+            
+            <div class="calculator">
+                <h3>Scientific Notation Converter</h3>
+                
+                <div style="margin: 15px 0;">
+                    <input type="text" id="decimal-input" placeholder="Enter a number" style="width: 200px;">
+                    <button onclick="convertToScientific()">Convert to Scientific</button>
+                    <div id="scientific-result" style="margin-top: 10px;"></div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <div class="scientific-notation">
+                        <input type="number" id="coefficient-input" step="0.01" placeholder="a"> × 10<sup><input type="number" id="exponent-input" placeholder="n"></sup>
+                    </div>
+                    <button onclick="convertFromScientific()">Convert to Decimal</button>
+                    <div id="decimal-result" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Operations with Scientific Notation</div>
+                <p>When performing operations with numbers in scientific notation, follow these rules:</p>
+                
+                <div class="example">
+                    <p><strong>Multiplication:</strong> (a × 10<sup>m</sup>) × (b × 10<sup>n</sup>) = (a × b) × 10<sup>m+n</sup></p>
+                    <p>Example: (3 × 10<sup>4</sup>) × (2 × 10<sup>-2</sup>) = 6 × 10<sup>2</sup> = 600</p>
+                </div>
+                
+                <div class="example">
+                    <p><strong>Division:</strong> (a × 10<sup>m</sup>) ÷ (b × 10<sup>n</sup>) = (a ÷ b) × 10<sup>m-n</sup></p>
+                    <p>Example: (8 × 10<sup>5</sup>) ÷ (4 × 10<sup>2</sup>) = 2 × 10<sup>3</sup> = 2,000</p>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Real-World Applications</div>
+                <p>Scientific notation is commonly used to express very large or very small numbers in science:</p>
+                <table>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Decimal</th>
+                        <th>Scientific Notation</th>
+                    </tr>
+                    <tr>
+                        <td>Speed of light</td>
+                        <td>299,792,458 m/s</td>
+                        <td>2.99792458 × 10<sup>8</sup> m/s</td>
+                    </tr>
+                    <tr>
+                        <td>Mass of electron</td>
+                        <td>0.0000000000000000000000000000009109 kg</td>
+                        <td>9.109 × 10<sup>-31</sup> kg</td>
+                    </tr>
+                    <tr>
+                        <td>Avogadro's number</td>
+                        <td>602,214,076,000,000,000,000,000</td>
+                        <td>6.02214076 × 10<sup>23</sup></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show/hide panels
+        function showPanel(panelId) {
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(panelId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Practice problems
+        function generatePracticeProblems() {
+            const problemsContainer = document.getElementById('practice-problems');
+            problemsContainer.innerHTML = '';
+            
+            const problemTypes = [
+                'multiplication',
+                'division',
+                'power-of-power',
+                'negative-exponent',
+                'zero-exponent',
+                'mixed'
+            ];
+            
+            for (let i = 0; i < 5; i++) {
+                const type = problemTypes[Math.floor(Math.random() * problemTypes.length)];
+                let problem, answer;
+                
+                switch (type) {
+                    case 'multiplication':
+                        const base1 = Math.floor(Math.random() * 5) + 2;
+                        const exp1 = Math.floor(Math.random() * 3) + 1;
+                        const exp2 = Math.floor(Math.random() * 3) + 1;
+                        problem = `${base1}<sup>${exp1}</sup> × ${base1}<sup>${exp2}</sup>`;
+                        answer = Math.pow(base1, exp1 + exp2);
+                        break;
+                    case 'division':
+                        const base2 = Math.floor(Math.random() * 3) + 2;
+                        const expA = Math.floor(Math.random() * 3) + 3;
+                        const expB = Math.floor(Math.random() * 3) + 1;
+                        problem = `${base2}<sup>${expA}</sup> ÷ ${base2}<sup>${expB}</sup>`;
+                        answer = Math.pow(base2, expA - expB);
+                        break;
+                    case 'power-of-power':
+                        const base3 = Math.floor(Math.random() * 3) + 2;
+                        const exp3 = Math.floor(Math.random() * 2) + 1;
+                        const exp4 = Math.floor(Math.random() * 2) + 2;
+                        problem = `(${base3}<sup>${exp3}</sup>)<sup>${exp4}</sup>`;
+                        answer = Math.pow(base3, exp3 * exp4);
+                        break;
+                    case 'negative-exponent':
+                        const base4 = Math.floor(Math.random() * 3) + 2;
+                        const exp5 = Math.floor(Math.random() * 2) + 1;
+                        problem = `${base4}<sup>-${exp5}</sup>`;
+                        answer = 1 / Math.pow(base4, exp5);
+                        break;
+                    case 'zero-exponent':
+                        const base5 = Math.floor(Math.random() * 8) + 2;
+                        problem = `${base5}<sup>0</sup>`;
+                        answer = 1;
+                        break;
+                    case 'mixed':
+                        const base6 = Math.floor(Math.random() * 3) + 2;
+                        const exp6 = Math.floor(Math.random() * 2) + 1;
+                        const exp7 = Math.floor(Math.random() * 2) + 1;
+                        problem = `${base6}<sup>${exp6}</sup> × ${base6}<sup>-${exp7}</sup>`;
+                        answer = Math.pow(base6, exp6 - exp7);
+                        break;
+                }
+                
+                const problemHTML = `
+                    <div style="margin: 15px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <p>Simplify: ${problem}</p>
+                        <input type="text" id="answer-${i}" placeholder="Your answer">
+                        <button onclick="checkAnswer(${i}, ${answer})">Check</button>
+                        <span id="result-${i}"></span>
+                    </div>
+                `;
+                
+                problemsContainer.innerHTML += problemHTML;
+            }
+        }
+        
+        function checkAnswer(index, correctAnswer) {
+            const userAnswer = parseFloat(document.getElementById(`answer-${index}`).value);
+            const resultSpan = document.getElementById(`result-${index}`);
+            
+            // Check if the answer is within a small tolerance for floating point comparisons
+            const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.0001;
+            
+            if (isCorrect) {
+                resultSpan.innerHTML = `<span class="correct">Correct!</span>`;
+            } else {
+                resultSpan.innerHTML = `<span class="incorrect">Incorrect. The answer is ${correctAnswer}.</span>`;
+            }
+        }
+        
+        // Calculator functions
+        function calcInput(value) {
+            const display = document.getElementById('calc-display');
+            if (display.textContent === '0' && value !== '.') {
+                display.textContent = value;
+            } else {
+                display.textContent += value;
+            }
+        }
+        
+        function calcClear() {
+            document.getElementById('calc-display').textContent = '0';
+        }
+        
+        function calcEvaluate() {
+            const display = document.getElementById('calc-display');
+            try {
+                // Replace ^ with ** for JavaScript exponentiation
+                let expression = display.textContent.replace(/\^/g, '**');
+                display.textContent = eval(expression);
+            } catch (error) {
+                display.textContent = 'Error';
+            }
+        }
+        
+        function calcNegExp() {
+            const display = document.getElementById('calc-display');
+            try {
+                // Calculate 1 divided by the current value
+                display.textContent = 1 / eval(display.textContent);
+            } catch (error) {
+                display.textContent = 'Error';
+            }
+        }
+        
+        function setCalcExample(example) {
+            document.getElementById('calc-display').textContent = example;
+        }
+        
+        // Scientific notation functions
+        function convertToScientific() {
+            const input = parseFloat(document.getElementById('decimal-input').value);
+            const resultDiv = document.getElementById('scientific-result');
+            
+            if (isNaN(input) || input === 0) {
+                resultDiv.textContent = 'Please enter a valid non-zero number';
+                return;
+            }
+            
+            // Convert to scientific notation
+            const exponent = Math.floor(Math.log10(Math.abs(input)));
+            const coefficient = input / Math.pow(10, exponent);
+            
+            resultDiv.innerHTML = `${input} = ${coefficient.toFixed(4)} × 10<sup>${exponent}</sup>`;
+        }
+        
+        function convertFromScientific() {
+            const coefficient = parseFloat(document.getElementById('coefficient-input').value);
+            const exponent = parseInt(document.getElementById('exponent-input').value);
+            const resultDiv = document.getElementById('decimal-result');
+            
+            if (isNaN(coefficient) || isNaN(exponent)) {
+                resultDiv.textContent = 'Please enter valid numbers for both fields';
+                return;
+            }
+            
+            // Convert from scientific notation
+            const decimal = coefficient * Math.pow(10, exponent);
+            
+            // Format the output based on the size of the number
+            if (Math.abs(decimal) >= 0.001 && Math.abs(decimal) < 1000000) {
+                resultDiv.textContent = `${coefficient} × 10^${exponent} = ${decimal}`;
+            } else {
+                resultDiv.textContent = `${coefficient} × 10^${exponent} = ${decimal.toExponential()}`;
+            }
+        }
+        
+        // Initialize
+        window.onload = function() {
+            generatePracticeProblems();
+        };
+    </script>
+</body>
+</html>

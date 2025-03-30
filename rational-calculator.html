@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rational Expressions Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .tab.active {
+            background-color: #2980b9;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #1e6091;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #2980b9;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .steps {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .step {
+            margin-bottom: 5px;
+        }
+        
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0 3px;
+        }
+        
+        .numerator, .denominator {
+            display: block;
+            padding: 0 5px;
+        }
+        
+        .numerator {
+            border-bottom: 1px solid black;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .operation-selector {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .operation-btn {
+            margin: 0 5px;
+            padding: 8px 15px;
+        }
+        
+        .operation-btn.selected {
+            background-color: #16a085;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rational Expressions Calculator</h1>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="openTab('simplify')">Simplify</button>
+            <button class="tab" onclick="openTab('operations')">Operations</button>
+            <button class="tab" onclick="openTab('equations')">Solve Equations</button>
+        </div>
+        
+        <!-- Simplify Tab -->
+        <div id="simplify" class="tab-content active">
+            <h2>Simplify Rational Expressions</h2>
+            <div class="input-group">
+                <label for="simplify-numerator">Numerator (e.g., x^2+3x+2):</label>
+                <input type="text" id="simplify-numerator" placeholder="Polynomial expression">
+            </div>
+            <div class="input-group">
+                <label for="simplify-denominator">Denominator (e.g., x^2-1):</label>
+                <input type="text" id="simplify-denominator" placeholder="Polynomial expression">
+            </div>
+            <button onclick="simplifyRational()">Simplify Expression</button>
+            <div id="simplify-result" class="result"></div>
+            <div id="simplify-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="simplify-steps" class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Operations Tab -->
+        <div id="operations" class="tab-content">
+            <h2>Rational Expression Operations</h2>
+            <div class="operation-selector">
+                <button id="add-btn" class="operation-btn selected" onclick="selectOperation('add')">Addition</button>
+                <button id="subtract-btn" class="operation-btn" onclick="selectOperation('subtract')">Subtraction</button>
+                <button id="multiply-btn" class="operation-btn" onclick="selectOperation('multiply')">Multiplication</button>
+                <button id="divide-btn" class="operation-btn" onclick="selectOperation('divide')">Division</button>
+            </div>
+            <div class="input-group">
+                <label for="first-numerator">First Numerator:</label>
+                <input type="text" id="first-numerator" placeholder="Polynomial expression">
+            </div>
+            <div class="input-group">
+                <label for="first-denominator">First Denominator:</label>
+                <input type="text" id="first-denominator" placeholder="Polynomial expression">
+            </div>
+            <div class="input-group">
+                <label for="second-numerator">Second Numerator:</label>
+                <input type="text" id="second-numerator" placeholder="Polynomial expression">
+            </div>
+            <div class="input-group">
+                <label for="second-denominator">Second Denominator:</label>
+                <input type="text" id="second-denominator" placeholder="Polynomial expression">
+            </div>
+            <button onclick="performOperation()">Calculate</button>
+            <div id="operation-result" class="result"></div>
+            <div id="operation-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="operation-steps" class="steps"></div>
+            </div>
+        </div>
+        
+        <!-- Solve Equations Tab -->
+        <div id="equations" class="tab-content">
+            <h2>Solve Rational Equations</h2>
+            <div class="input-group">
+                <label for="equation">Enter equation (e.g., x/(x-1) = 2/(x+2)):</label>
+                <input type="text" id="equation" placeholder="Rational equation">
+            </div>
+            <button onclick="solveEquation()">Solve Equation</button>
+            <div id="equation-result" class="result"></div>
+            <div id="equation-explanation" class="explanation">
+                <h3>Explanation:</h3>
+                <div id="equation-steps" class="steps"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            const tabContents = document.getElementsByClassName("tab-content");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            document.querySelector(`button.tab[onclick="openTab('${tabName}')"]`).classList.add("active");
+        }
+        
+        // Operation selector
+        let currentOperation = 'add';
+        
+        function selectOperation(operation) {
+            currentOperation = operation;
+            document.querySelectorAll('.operation-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById(`${operation}-btn`).classList.add('selected');
+        }
+        
+        // GCD calculation
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            
+            while (b) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+            
+            return a;
+        }
+        
+        // Function to parse simple polynomial expressions
+        function parseExpression(expr) {
+            // This is a simplified parser for demonstration purposes
+            // Convert expression like "x^2+3x+2" to a more structured form
+            
+            // Basic validation
+            if (!expr || expr.trim() === "") {
+                return { error: "Expression cannot be empty" };
+            }
+            
+            // Simple sanitization - remove spaces
+            expr = expr.replace(/\s/g, '');
+            
+            // Replace ^ with ** for JavaScript exponentiation
+            expr = expr.replace(/\^/g, '**');
+            
+            // Replace x with a variable
+            expr = expr.replace(/x/g, 'variable');
+            
+            try {
+                // Test if the expression is valid
+                const testFunc = new Function('variable', `return ${expr};`);
+                testFunc(1); // Test with x = 1
+                
+                return {
+                    expression: expr,
+                    original: expr.replace(/variable/g, 'x').replace(/\*\*/g, '^'),
+                    evaluate: function(x) {
+                        return new Function('variable', `return ${expr};`)(x);
+                    }
+                };
+            } catch (e) {
+                return { error: "Invalid expression: " + e.message };
+            }
+        }
+        
+        // Function to find factors of a polynomial
+        function findFactors(expr) {
+            // This is a simplified factorization for demonstration
+            // In a real app, you'd need a more sophisticated approach
+            
+            const factors = [];
+            factors.push(expr.original);
+            
+            return {
+                factors: factors,
+                factorized: expr.original
+            };
+        }
+        
+        // Simplify rational expressions
+        function simplifyRational() {
+            const numeratorExpr = document.getElementById("simplify-numerator").value.trim();
+            const denominatorExpr = document.getElementById("simplify-denominator").value.trim();
+            
+            const numerator = parseExpression(numeratorExpr);
+            const denominator = parseExpression(denominatorExpr);
+            
+            const steps = [];
+            
+            if (numerator.error) {
+                document.getElementById("simplify-result").innerHTML = `<span class="error">Error in numerator: ${numerator.error}</span>`;
+                document.getElementById("simplify-explanation").classList.remove("show");
+                return;
+            }
+            
+            if (denominator.error) {
+                document.getElementById("simplify-result").innerHTML = `<span class="error">Error in denominator: ${denominator.error}</span>`;
+                document.getElementById("simplify-explanation").classList.remove("show");
+                return;
+            }
+            
+            steps.push(`Starting with: <div class="fraction"><span class="numerator">${numerator.original}</span><span class="denominator">${denominator.original}</span></div>`);
+            
+            // Check for constants
+            try {
+                const numValue = eval(numerator.expression.replace(/variable/g, '0'));
+                const denomValue = eval(denominator.expression.replace(/variable/g, '0'));
+                
+                if (typeof numValue === 'number' && typeof denomValue === 'number' && !isNaN(numValue) && !isNaN(denomValue)) {
+                    const divisor = gcd(numValue, denomValue);
+                    
+                    if (divisor > 1) {
+                        steps.push(`Both expressions are constants. Find GCD of ${numValue} and ${denomValue}, which is ${divisor}.`);
+                        const simplifiedNum = numValue / divisor;
+                        const simplifiedDenom = denomValue / divisor;
+                        
+                        document.getElementById("simplify-result").innerHTML = `
+                            Simplified: <div class="fraction"><span class="numerator">${simplifiedNum}</span><span class="denominator">${simplifiedDenom}</span></div>
+                        `;
+                        steps.push(`Simplified to: <div class="fraction"><span class="numerator">${simplifiedNum}</span><span class="denominator">${simplifiedDenom}</span></div>`);
+                        document.getElementById("simplify-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+                        document.getElementById("simplify-explanation").classList.add("show");
+                        return;
+                    }
+                }
+            } catch (e) {
+                // Not constants, continue
+            }
+            
+            // Find factors of numerator and denominator
+            const numFactors = findFactors(numerator);
+            const denomFactors = findFactors(denominator);
+            
+            steps.push(`Factoring numerator: ${numFactors.factorized}`);
+            steps.push(`Factoring denominator: ${denomFactors.factorized}`);
+            
+            // Find common factors (simplified for this demo)
+            steps.push(`Looking for common factors...`);
+            steps.push(`This calculator provides a simplified demonstration. For complex rational expressions, factor both the numerator and denominator, then cancel common factors.`);
+            
+            document.getElementById("simplify-result").innerHTML = `
+                Rational Expression: <div class="fraction"><span class="numerator">${numerator.original}</span><span class="denominator">${denominator.original}</span></div>
+                <br>
+                This is a simplified demonstration. For a full simplification, you would need to:
+                <br>
+                1. Factor both the numerator and denominator
+                <br>
+                2. Cancel any common factors
+            `;
+            
+            document.getElementById("simplify-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("simplify-explanation").classList.add("show");
+        }
+        
+        // Perform operations on rational expressions
+        function performOperation() {
+            const firstNum = parseExpression(document.getElementById("first-numerator").value.trim());
+            const firstDenom = parseExpression(document.getElementById("first-denominator").value.trim());
+            const secondNum = parseExpression(document.getElementById("second-numerator").value.trim());
+            const secondDenom = parseExpression(document.getElementById("second-denominator").value.trim());
+            
+            const steps = [];
+            
+            // Validate inputs
+            if (firstNum.error || firstDenom.error || secondNum.error || secondDenom.error) {
+                document.getElementById("operation-result").innerHTML = `<span class="error">Error in one of the expressions</span>`;
+                document.getElementById("operation-explanation").classList.remove("show");
+                return;
+            }
+            
+            steps.push(`First rational expression: <div class="fraction"><span class="numerator">${firstNum.original}</span><span class="denominator">${firstDenom.original}</span></div>`);
+            steps.push(`Second rational expression: <div class="fraction"><span class="numerator">${secondNum.original}</span><span class="denominator">${secondDenom.original}</span></div>`);
+            
+            let resultNumExpr, resultDenomExpr;
+            
+            switch(currentOperation) {
+                case 'add':
+                    steps.push(`For addition, we need a common denominator.`);
+                    steps.push(`Multiply the first expression by <div class="fraction"><span class="numerator">${secondDenom.original}</span><span class="denominator">${secondDenom.original}</span></div> and the second by <div class="fraction"><span class="numerator">${firstDenom.original}</span><span class="denominator">${firstDenom.original}</span></div>`);
+                    
+                    resultNumExpr = `(${firstNum.expression})*(${secondDenom.expression}) + (${secondNum.expression})*(${firstDenom.expression})`;
+                    resultDenomExpr = `(${firstDenom.expression})*(${secondDenom.expression})`;
+                    
+                    steps.push(`Numerator: (${firstNum.original})×(${secondDenom.original}) + (${secondNum.original})×(${firstDenom.original})`);
+                    steps.push(`Denominator: (${firstDenom.original})×(${secondDenom.original})`);
+                    break;
+                    
+                case 'subtract':
+                    steps.push(`For subtraction, we need a common denominator.`);
+                    steps.push(`Multiply the first expression by <div class="fraction"><span class="numerator">${secondDenom.original}</span><span class="denominator">${secondDenom.original}</span></div> and the second by <div class="fraction"><span class="numerator">${firstDenom.original}</span><span class="denominator">${firstDenom.original}</span></div>`);
+                    
+                    resultNumExpr = `(${firstNum.expression})*(${secondDenom.expression}) - (${secondNum.expression})*(${firstDenom.expression})`;
+                    resultDenomExpr = `(${firstDenom.expression})*(${secondDenom.expression})`;
+                    
+                    steps.push(`Numerator: (${firstNum.original})×(${secondDenom.original}) - (${secondNum.original})×(${firstDenom.original})`);
+                    steps.push(`Denominator: (${firstDenom.original})×(${secondDenom.original})`);
+                    break;
+                    
+                case 'multiply':
+                    steps.push(`For multiplication, multiply the numerators and multiply the denominators.`);
+                    
+                    resultNumExpr = `(${firstNum.expression})*(${secondNum.expression})`;
+                    resultDenomExpr = `(${firstDenom.expression})*(${secondDenom.expression})`;
+                    
+                    steps.push(`Numerator: (${firstNum.original})×(${secondNum.original})`);
+                    steps.push(`Denominator: (${firstDenom.original})×(${secondDenom.original})`);
+                    break;
+                    
+                case 'divide':
+                    steps.push(`For division, multiply by the reciprocal of the second fraction.`);
+                    
+                    resultNumExpr = `(${firstNum.expression})*(${secondDenom.expression})`;
+                    resultDenomExpr = `(${firstDenom.expression})*(${secondNum.expression})`;
+                    
+                    steps.push(`Numerator: (${firstNum.original})×(${secondDenom.original})`);
+                    steps.push(`Denominator: (${firstDenom.original})×(${secondNum.original})`);
+                    break;
+            }
+            
+            steps.push(`Result should be simplified by factoring and canceling common terms.`);
+            
+            document.getElementById("operation-result").innerHTML = `
+                Operation (${currentOperation}): <div class="fraction"><span class="numerator">${resultNumExpr.replace(/variable/g, 'x').replace(/\*/g, '×')}</span><span class="denominator">${resultDenomExpr.replace(/variable/g, 'x').replace(/\*/g, '×')}</span></div>
+                <br>
+                This is a simplified demonstration. For a complete result, you would need to:
+                <br>
+                1. Expand the expressions
+                <br>
+                2. Factor both numerator and denominator
+                <br>
+                3. Cancel any common factors
+            `;
+            
+            document.getElementById("operation-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("operation-explanation").classList.add("show");
+        }
+        
+        // Solve rational equations
+        function solveEquation() {
+            const equationStr = document.getElementById("equation").value.trim();
+            
+            if (!equationStr || equationStr.indexOf('=') === -1) {
+                document.getElementById("equation-result").innerHTML = `<span class="error">Please enter a valid equation with an equals sign</span>`;
+                document.getElementById("equation-explanation").classList.remove("show");
+                return;
+            }
+            
+            const sides = equationStr.split('=');
+            if (sides.length !== 2) {
+                document.getElementById("equation-result").innerHTML = `<span class="error">Equation should have exactly one equals sign</span>`;
+                document.getElementById("equation-explanation").classList.remove("show");
+                return;
+            }
+            
+            const leftSide = sides[0].trim();
+            const rightSide = sides[1].trim();
+            
+            const steps = [];
+            steps.push(`Starting with equation: ${leftSide} = ${rightSide}`);
+            
+            // Demonstration of solving approach for rational equations
+            steps.push(`To solve a rational equation, we must:`);
+            steps.push(`1. Find the LCD (Least Common Denominator) of all fractions`);
+            steps.push(`2. Multiply all terms by the LCD to eliminate denominators`);
+            steps.push(`3. Solve the resulting polynomial equation`);
+            steps.push(`4. Check solutions for restrictions (values that make denominators zero)`);
+            
+            // Display a sample solution for demonstration purposes
+            document.getElementById("equation-result").innerHTML = `
+                This calculator provides a simplified demonstration of solving rational equations.
+                <br><br>
+                For the equation ${equationStr}, you would:
+                <br>
+                1. Find the LCD
+                <br>
+                2. Multiply both sides by the LCD
+                <br>
+                3. Solve the resulting equation
+                <br>
+                4. Check for extraneous solutions (values that make denominators zero)
+            `;
+            
+            document.getElementById("equation-steps").innerHTML = steps.map(step => `<div class="step">${step}</div>`).join('');
+            document.getElementById("equation-explanation").classList.add("show");
+        }
+    </script>
+</body>
+</html>

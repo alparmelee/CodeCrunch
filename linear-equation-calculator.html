@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Equation Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .graph-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #3498db;
+            font-size: 18px;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .equation-display {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        #coordinateSystem {
+            border: 1px solid #ddd;
+            background-color: #fff;
+            display: block;
+            margin-top: 15px;
+        }
+        .info-section {
+            margin-top: 20px;
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .form-tab {
+            display: none;
+        }
+        .form-tab.active {
+            display: block;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab-button {
+            flex: 1;
+            background-color: #eee;
+            color: #555;
+            border: 1px solid #ddd;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        .tab-button.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .tab-button:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+        .tab-button:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        .point {
+            fill: red;
+            stroke: white;
+            stroke-width: 1;
+        }
+        .x-intercept, .y-intercept {
+            fill: green;
+            stroke: white;
+            stroke-width: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Linear Equation Calculator & Grapher</h1>
+    
+    <div class="container">
+        <div class="input-section">
+            <h2>Enter Equation Details</h2>
+            
+            <div class="tab-buttons">
+                <div class="tab-button active" onclick="showTab('slope-intercept')">Slope-Intercept</div>
+                <div class="tab-button" onclick="showTab('point-slope')">Point-Slope</div>
+                <div class="tab-button" onclick="showTab('standard')">Standard Form</div>
+            </div>
+            
+            <!-- Slope-Intercept Form (y = mx + b) -->
+            <div id="slope-intercept" class="form-tab active">
+                <h3>Slope-Intercept Form: y = mx + b</h3>
+                <div class="form-group">
+                    <label for="slope-m">Slope (m):</label>
+                    <input type="number" id="slope-m" value="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="y-intercept">y-intercept (b):</label>
+                    <input type="number" id="y-intercept" value="2" step="0.1">
+                </div>
+                <button onclick="calculateSlopeIntercept()">Graph Equation</button>
+            </div>
+            
+            <!-- Point-Slope Form (y - y1 = m(x - x1)) -->
+            <div id="point-slope" class="form-tab">
+                <h3>Point-Slope Form: y - y₁ = m(x - x₁)</h3>
+                <div class="form-group">
+                    <label for="ps-slope">Slope (m):</label>
+                    <input type="number" id="ps-slope" value="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="point-x">Point x₁:</label>
+                    <input type="number" id="point-x" value="2" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="point-y">Point y₁:</label>
+                    <input type="number" id="point-y" value="3" step="0.1">
+                </div>
+                <button onclick="calculatePointSlope()">Graph Equation</button>
+            </div>
+            
+            <!-- Standard Form (Ax + By = C) -->
+            <div id="standard" class="form-tab">
+                <h3>Standard Form: Ax + By = C</h3>
+                <div class="form-group">
+                    <label for="coeff-a">A:</label>
+                    <input type="number" id="coeff-a" value="1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="coeff-b">B:</label>
+                    <input type="number" id="coeff-b" value="-1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="coeff-c">C:</label>
+                    <input type="number" id="coeff-c" value="3" step="0.1">
+                </div>
+                <button onclick="calculateStandardForm()">Graph Equation</button>
+            </div>
+            
+            <div class="equation-display">
+                <strong>Current Equation:</strong>
+                <div id="current-equation">y = 1x + 2</div>
+                <div id="conversion-equations"></div>
+            </div>
+        </div>
+        
+        <div class="graph-section">
+            <h2>Graph</h2>
+            <canvas id="coordinateSystem" width="350" height="350"></canvas>
+            <div class="info-section">
+                <h3>Key Points:</h3>
+                <div id="key-points"></div>
+                <h3>Visual Interpretation:</h3>
+                <div id="interpretation"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSlope = 1;
+        let currentYIntercept = 2;
+        let ctx;
+        let canvas;
+        let gridSize = 30; // pixels per unit
+        let xOrigin, yOrigin;
+        
+        // Initialize canvas when page loads
+        window.onload = function() {
+            canvas = document.getElementById('coordinateSystem');
+            ctx = canvas.getContext('2d');
+            xOrigin = canvas.width / 2;
+            yOrigin = canvas.height / 2;
+            drawGrid();
+            calculateSlopeIntercept(); // Draw default equation
+        };
+
+        // Tab switching
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.form-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+        
+        // Slope-Intercept Form calculation
+        function calculateSlopeIntercept() {
+            const m = parseFloat(document.getElementById('slope-m').value);
+            const b = parseFloat(document.getElementById('y-intercept').value);
+            
+            currentSlope = m;
+            currentYIntercept = b;
+            
+            // Update equation display
+            document.getElementById('current-equation').innerHTML = `y = ${m}x + ${b}`;
+            
+            // Show conversions to other forms
+            const conversionHTML = `
+                <strong>Standard Form:</strong> ${m}x + (-1)y = ${-b}<br>
+                <strong>Point-Slope Form:</strong> y - ${b} = ${m}(x - 0)
+            `;
+            document.getElementById('conversion-equations').innerHTML = conversionHTML;
+            
+            // Draw the graph
+            drawGraph(m, b);
+            
+            // Update key points
+            updateKeyPoints(m, b);
+        }
+        
+        // Point-Slope Form calculation
+        function calculatePointSlope() {
+            const m = parseFloat(document.getElementById('ps-slope').value);
+            const x1 = parseFloat(document.getElementById('point-x').value);
+            const y1 = parseFloat(document.getElementById('point-y').value);
+            
+            // Convert to slope-intercept form: y = m(x - x1) + y1 => y = mx - mx1 + y1
+            const b = y1 - m * x1;
+            currentSlope = m;
+            currentYIntercept = b;
+            
+            // Update equation display
+            document.getElementById('current-equation').innerHTML = 
+                `Point-Slope: y - ${y1} = ${m}(x - ${x1})<br>
+                Slope-Intercept: y = ${m}x + ${b}`;
+            
+            // Show conversion to standard form
+            document.getElementById('conversion-equations').innerHTML = 
+                `<strong>Standard Form:</strong> ${m}x + (-1)y = ${-b}`;
+            
+            // Draw the graph
+            drawGraph(m, b);
+            
+            // Update key points
+            updateKeyPoints(m, b, {x: x1, y: y1});
+        }
+        
+        // Standard Form calculation
+        function calculateStandardForm() {
+            const a = parseFloat(document.getElementById('coeff-a').value);
+            const b = parseFloat(document.getElementById('coeff-b').value);
+            const c = parseFloat(document.getElementById('coeff-c').value);
+            
+            // Check if valid (B should not be 0)
+            if (b === 0) {
+                alert("Coefficient B cannot be zero in a linear equation.");
+                return;
+            }
+            
+            // Convert to slope-intercept form: Ax + By = C => y = (-A/B)x + (C/B)
+            const m = -a / b;
+            const yInt = c / b;
+            currentSlope = m;
+            currentYIntercept = yInt;
+            
+            // Update equation display
+            document.getElementById('current-equation').innerHTML = 
+                `Standard Form: ${a}x + ${b}y = ${c}<br>
+                Slope-Intercept: y = ${m}x + ${yInt}`;
+            
+            // Show conversion to point-slope form
+            document.getElementById('conversion-equations').innerHTML = 
+                `<strong>Point-Slope Form:</strong> y - ${yInt} = ${m}(x - 0)`;
+            
+            // Draw the graph
+            drawGraph(m, yInt);
+            
+            // Update key points
+            updateKeyPoints(m, yInt);
+        }
+        
+        // Draw the coordinate grid
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Set styles for grid
+            ctx.strokeStyle = "#e0e0e0";
+            ctx.lineWidth = 1;
+            
+            // Draw grid lines
+            const numLinesX = Math.floor(canvas.width / gridSize);
+            const numLinesY = Math.floor(canvas.height / gridSize);
+            
+            // Draw horizontal grid lines
+            for (let i = -numLinesY; i <= numLinesY; i++) {
+                const y = yOrigin + i * gridSize;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw vertical grid lines
+            for (let i = -numLinesX; i <= numLinesX; i++) {
+                const x = xOrigin + i * gridSize;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Draw axes with stronger lines
+            ctx.strokeStyle = "#999";
+            ctx.lineWidth = 2;
+            
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(0, yOrigin);
+            ctx.lineTo(canvas.width, yOrigin);
+            ctx.stroke();
+            
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(xOrigin, 0);
+            ctx.lineTo(xOrigin, canvas.height);
+            ctx.stroke();
+            
+            // Draw labels for axes
+            ctx.fillStyle = "#333";
+            ctx.font = "12px Arial";
+            
+            // X-axis labels
+            for (let i = -Math.floor(xOrigin / gridSize); i <= Math.floor((canvas.width - xOrigin) / gridSize); i++) {
+                if (i === 0) continue; // Skip 0
+                const x = xOrigin + i * gridSize;
+                ctx.fillText(i.toString(), x - 5, yOrigin + 15);
+            }
+            
+            // Y-axis labels (note: y-coordinates are inverted in canvas)
+            for (let i = -Math.floor(yOrigin / gridSize); i <= Math.floor((canvas.height - yOrigin) / gridSize); i++) {
+                if (i === 0) continue; // Skip 0
+                const y = yOrigin + i * gridSize;
+                ctx.fillText((-i).toString(), xOrigin + 5, y + 4);
+            }
+            
+            // Origin label
+            ctx.fillText("0", xOrigin - 10, yOrigin + 15);
+        }
+        
+        // Draw the linear equation on the grid
+        function drawGraph(slope, yIntercept) {
+            // Redraw grid
+            drawGrid();
+            
+            // Draw the line
+            ctx.strokeStyle = "#3498db";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            // Calculate points for the entire canvas width
+            const leftX = -Math.floor(xOrigin / gridSize);
+            const rightX = Math.floor((canvas.width - xOrigin) / gridSize);
+            
+            // Calculate y for left edge x-coordinate
+            const leftY = slope * leftX + yIntercept;
+            const leftCanvasY = yOrigin - leftY * gridSize;
+            
+            // Calculate y for right edge x-coordinate
+            const rightY = slope * rightX + yIntercept;
+            const rightCanvasY = yOrigin - rightY * gridSize;
+            
+            // Draw line
+            ctx.moveTo(xOrigin + leftX * gridSize, leftCanvasY);
+            ctx.lineTo(xOrigin + rightX * gridSize, rightCanvasY);
+            ctx.stroke();
+            
+            // Draw y-intercept point
+            const yInterceptCanvasY = yOrigin - yIntercept * gridSize;
+            drawPoint(xOrigin, yInterceptCanvasY, "#27ae60");
+            
+            // Draw x-intercept if it exists and is in view
+            if (slope !== 0) {
+                const xIntercept = -yIntercept / slope;
+                const xInterceptCanvasX = xOrigin + xIntercept * gridSize;
+                if (xInterceptCanvasX >= 0 && xInterceptCanvasX <= canvas.width) {
+                    drawPoint(xInterceptCanvasX, yOrigin, "#27ae60");
+                }
+            }
+        }
+        
+        // Draw a point on the graph
+        function drawPoint(x, y, color = "#e74c3c", radius = 5) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Add white border for visibility
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        
+        // Update the key points information
+        function updateKeyPoints(slope, yIntercept, point = null) {
+            let keyPointsHTML = "";
+            let interpretationHTML = "";
+            
+            // Calculate x-intercept
+            let xIntercept = null;
+            if (slope !== 0) {
+                xIntercept = -yIntercept / slope;
+                keyPointsHTML += `<p><strong>X-intercept:</strong> (${xIntercept.toFixed(2)}, 0)</p>`;
+            } else {
+                keyPointsHTML += `<p><strong>X-intercept:</strong> None (horizontal line)</p>`;
+            }
+            
+            // Y-intercept
+            keyPointsHTML += `<p><strong>Y-intercept:</strong> (0, ${yIntercept.toFixed(2)})</p>`;
+            
+            // Additional point if provided
+            if (point) {
+                keyPointsHTML += `<p><strong>Point:</strong> (${point.x.toFixed(2)}, ${point.y.toFixed(2)})</p>`;
+            }
+            
+            // Slope information
+            keyPointsHTML += `<p><strong>Slope:</strong> ${slope.toFixed(2)}</p>`;
+            
+            // Visual interpretation
+            if (slope > 0) {
+                interpretationHTML += "<p>The line rises from left to right (positive slope).</p>";
+            } else if (slope < 0) {
+                interpretationHTML += "<p>The line falls from left to right (negative slope).</p>";
+            } else {
+                interpretationHTML += "<p>The line is horizontal (zero slope).</p>";
+            }
+            
+            if (Math.abs(slope) === 1) {
+                interpretationHTML += "<p>The line has a 45-degree angle with the x-axis.</p>";
+            } else if (Math.abs(slope) < 1) {
+                interpretationHTML += "<p>The line is relatively flat (changes more in x than y).</p>";
+            } else {
+                interpretationHTML += "<p>The line is relatively steep (changes more in y than x).</p>";
+            }
+            
+            // Display the information
+            document.getElementById('key-points').innerHTML = keyPointsHTML;
+            document.getElementById('interpretation').innerHTML = interpretationHTML;
+        }
+    </script>
+</body>
+</html>
