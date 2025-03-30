@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Shape Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .shape-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .shape-button {
+            padding: 10px 15px;
+            background-color: #ddd;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .shape-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .shape-form {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .active-form {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button.calculate {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button.calculate:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+        }
+        .canvas-container {
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+        canvas {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .formula {
+            background-color: #eef7ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>3D Shape Calculator</h1>
+    
+    <div class="shape-selector">
+        <button class="shape-button active" onclick="selectShape('cube')">Cube</button>
+        <button class="shape-button" onclick="selectShape('rectangular-prism')">Rectangular Prism</button>
+        <button class="shape-button" onclick="selectShape('cylinder')">Cylinder</button>
+        <button class="shape-button" onclick="selectShape('cone')">Cone</button>
+        <button class="shape-button" onclick="selectShape('pyramid')">Pyramid</button>
+        <button class="shape-button" onclick="selectShape('sphere')">Sphere</button>
+    </div>
+    
+    <!-- Cube Form -->
+    <div id="cube" class="shape-form active-form">
+        <h2>Cube</h2>
+        <div class="formula">
+            Volume = a³<br>
+            Surface Area = 6a²
+        </div>
+        <div class="form-group">
+            <label for="cube-side">Side Length (a):</label>
+            <input type="number" id="cube-side" min="0.1" step="0.1" value="5">
+        </div>
+        <button class="calculate" onclick="calculateCube()">Calculate</button>
+        <div id="cube-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="cube-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <!-- Rectangular Prism Form -->
+    <div id="rectangular-prism" class="shape-form">
+        <h2>Rectangular Prism</h2>
+        <div class="formula">
+            Volume = l × w × h<br>
+            Surface Area = 2(lw + lh + wh)
+        </div>
+        <div class="form-group">
+            <label for="rect-length">Length (l):</label>
+            <input type="number" id="rect-length" min="0.1" step="0.1" value="5">
+        </div>
+        <div class="form-group">
+            <label for="rect-width">Width (w):</label>
+            <input type="number" id="rect-width" min="0.1" step="0.1" value="4">
+        </div>
+        <div class="form-group">
+            <label for="rect-height">Height (h):</label>
+            <input type="number" id="rect-height" min="0.1" step="0.1" value="3">
+        </div>
+        <button class="calculate" onclick="calculateRectPrism()">Calculate</button>
+        <div id="rect-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="rect-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <!-- Cylinder Form -->
+    <div id="cylinder" class="shape-form">
+        <h2>Cylinder</h2>
+        <div class="formula">
+            Volume = πr²h<br>
+            Surface Area = 2πr² + 2πrh
+        </div>
+        <div class="form-group">
+            <label for="cyl-radius">Radius (r):</label>
+            <input type="number" id="cyl-radius" min="0.1" step="0.1" value="3">
+        </div>
+        <div class="form-group">
+            <label for="cyl-height">Height (h):</label>
+            <input type="number" id="cyl-height" min="0.1" step="0.1" value="6">
+        </div>
+        <button class="calculate" onclick="calculateCylinder()">Calculate</button>
+        <div id="cyl-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="cyl-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <!-- Cone Form -->
+    <div id="cone" class="shape-form">
+        <h2>Cone</h2>
+        <div class="formula">
+            Volume = (1/3)πr²h<br>
+            Surface Area = πr² + πr√(r² + h²)
+        </div>
+        <div class="form-group">
+            <label for="cone-radius">Radius (r):</label>
+            <input type="number" id="cone-radius" min="0.1" step="0.1" value="3">
+        </div>
+        <div class="form-group">
+            <label for="cone-height">Height (h):</label>
+            <input type="number" id="cone-height" min="0.1" step="0.1" value="6">
+        </div>
+        <button class="calculate" onclick="calculateCone()">Calculate</button>
+        <div id="cone-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="cone-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <!-- Pyramid Form -->
+    <div id="pyramid" class="shape-form">
+        <h2>Square Pyramid</h2>
+        <div class="formula">
+            Volume = (1/3) × base area × height<br>
+            Surface Area = a² + 2a√(a²/4 + h²)
+        </div>
+        <div class="form-group">
+            <label for="pyr-base">Base Length (a):</label>
+            <input type="number" id="pyr-base" min="0.1" step="0.1" value="5">
+        </div>
+        <div class="form-group">
+            <label for="pyr-height">Height (h):</label>
+            <input type="number" id="pyr-height" min="0.1" step="0.1" value="7">
+        </div>
+        <button class="calculate" onclick="calculatePyramid()">Calculate</button>
+        <div id="pyr-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="pyr-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <!-- Sphere Form -->
+    <div id="sphere" class="shape-form">
+        <h2>Sphere</h2>
+        <div class="formula">
+            Volume = (4/3)πr³<br>
+            Surface Area = 4πr²
+        </div>
+        <div class="form-group">
+            <label for="sphere-radius">Radius (r):</label>
+            <input type="number" id="sphere-radius" min="0.1" step="0.1" value="4">
+        </div>
+        <button class="calculate" onclick="calculateSphere()">Calculate</button>
+        <div id="sphere-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="sphere-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        // Shape selection
+        function selectShape(shapeId) {
+            const forms = document.getElementsByClassName("shape-form");
+            const buttons = document.getElementsByClassName("shape-button");
+            
+            for (let i = 0; i < forms.length; i++) {
+                forms[i].classList.remove("active-form");
+            }
+            
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            
+            document.getElementById(shapeId).classList.add("active-form");
+            event.currentTarget.classList.add("active");
+            
+            // Trigger calculation for the selected shape
+            switch(shapeId) {
+                case 'cube': calculateCube(); break;
+                case 'rectangular-prism': calculateRectPrism(); break;
+                case 'cylinder': calculateCylinder(); break;
+                case 'cone': calculateCone(); break;
+                case 'pyramid': calculatePyramid(); break;
+                case 'sphere': calculateSphere(); break;
+            }
+        }
+        
+        // Cube calculations
+        function calculateCube() {
+            const side = parseFloat(document.getElementById("cube-side").value);
+            
+            const volume = Math.pow(side, 3);
+            const surfaceArea = 6 * Math.pow(side, 2);
+            
+            document.getElementById("cube-results").innerHTML = `
+                <p><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</p>
+                <p><strong>Surface Area:</strong> ${surfaceArea.toFixed(2)} square units</p>
+            `;
+            
+            drawCube(side);
+        }
+        
+        function drawCube(side) {
+            const canvas = document.getElementById("cube-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxSize = Math.min(canvas.width, canvas.height) * 0.4;
+            const size = maxSize;
+            
+            // Draw a 3D cube with perspective
+            const frontX = centerX - size/2;
+            const frontY = centerY - size/2;
+            const depth = size * 0.5;  // Perspective depth
+            
+            // Draw back face (top-left, partially visible)
+            ctx.beginPath();
+            ctx.moveTo(frontX, frontY);
+            ctx.lineTo(frontX + depth, frontY - depth);
+            ctx.lineTo(frontX + depth + size, frontY - depth);
+            ctx.lineTo(frontX + size, frontY);
+            ctx.closePath();
+            ctx.fillStyle = "#ADD8E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw right face
+            ctx.beginPath();
+            ctx.moveTo(frontX + size, frontY);
+            ctx.lineTo(frontX + size + depth, frontY - depth);
+            ctx.lineTo(frontX + size + depth, frontY + size - depth);
+            ctx.lineTo(frontX + size, frontY + size);
+            ctx.closePath();
+            ctx.fillStyle = "#87CEEB";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw front face
+            ctx.beginPath();
+            ctx.rect(frontX, frontY, size, size);
+            ctx.fillStyle = "#B0E0E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Label the side
+            ctx.fillStyle = "#000";
+            ctx.font = "16px Arial";
+            ctx.fillText(`a = ${side}`, frontX + size/2 - 20, frontY + size + 20);
+        }
+        
+        // Rectangular Prism calculations
+        function calculateRectPrism() {
+            const length = parseFloat(document.getElementById("rect-length").value);
+            const width = parseFloat(document.getElementById("rect-width").value);
+            const height = parseFloat(document.getElementById("rect-height").value);
+            
+            const volume = length * width * height;
+            const surfaceArea = 2 * (length * width + length * height + width * height);
+            
+            document.getElementById("rect-results").innerHTML = `
+                <p><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</p>
+                <p><strong>Surface Area:</strong> ${surfaceArea.toFixed(2)} square units</p>
+            `;
+            
+            drawRectPrism(length, width, height);
+        }
+        
+        function drawRectPrism(length, width, height) {
+            const canvas = document.getElementById("rect-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Scale dimensions for display
+            const maxDim = Math.max(length, width, height);
+            const scale = Math.min(canvas.width, canvas.height) * 0.4 / maxDim;
+            
+            const l = length * scale;
+            const w = width * scale;
+            const h = height * scale;
+            
+            // Draw a 3D rectangular prism with perspective
+            const frontX = centerX - l/2;
+            const frontY = centerY - h/2;
+            const depth = w * 0.7;  // Perspective depth
+            
+            // Draw top face
+            ctx.beginPath();
+            ctx.moveTo(frontX, frontY);
+            ctx.lineTo(frontX + depth, frontY - depth * 0.5);
+            ctx.lineTo(frontX + depth + l, frontY - depth * 0.5);
+            ctx.lineTo(frontX + l, frontY);
+            ctx.closePath();
+            ctx.fillStyle = "#ADD8E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw right face
+            ctx.beginPath();
+            ctx.moveTo(frontX + l, frontY);
+            ctx.lineTo(frontX + l + depth, frontY - depth * 0.5);
+            ctx.lineTo(frontX + l + depth, frontY + h - depth * 0.5);
+            ctx.lineTo(frontX + l, frontY + h);
+            ctx.closePath();
+            ctx.fillStyle = "#87CEEB";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw front face
+            ctx.beginPath();
+            ctx.rect(frontX, frontY, l, h);
+            ctx.fillStyle = "#B0E0E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = "#000";
+            ctx.font = "12px Arial";
+            ctx.fillText(`l = ${length}`, frontX + l/2 - 20, frontY + h + 15);
+            ctx.fillText(`h = ${height}`, frontX - 30, frontY + h/2 + 5);
+            ctx.fillText(`w = ${width}`, frontX + l + depth/2, frontY - depth/4);
+        }
+        
+        // Cylinder calculations
+        function calculateCylinder() {
+            const radius = parseFloat(document.getElementById("cyl-radius").value);
+            const height = parseFloat(document.getElementById("cyl-height").value);
+            
+            const volume = Math.PI * Math.pow(radius, 2) * height;
+            const surfaceArea = 2 * Math.PI * Math.pow(radius, 2) + 2 * Math.PI * radius * height;
+            
+            document.getElementById("cyl-results").innerHTML = `
+                <p><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</p>
+                <p><strong>Surface Area:</strong> ${surfaceArea.toFixed(2)} square units</p>
+            `;
+            
+            drawCylinder(radius, height);
+        }
+        
+        function drawCylinder(radius, height) {
+            const canvas = document.getElementById("cyl-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Scale dimensions for display
+            const maxDim = Math.max(radius * 2, height);
+            const scale = Math.min(canvas.width, canvas.height) * 0.4 / maxDim;
+            
+            const r = radius * scale;
+            const h = height * scale;
+            
+            // Draw elliptical top
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY - h/2, r, r * 0.3, 0, 0, 2 * Math.PI);
+            ctx.fillStyle = "#ADD8E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw sides
+            ctx.beginPath();
+            ctx.moveTo(centerX - r, centerY - h/2);
+            ctx.lineTo(centerX - r, centerY + h/2);
+            ctx.lineTo(centerX + r, centerY + h/2);
+            ctx.lineTo(centerX + r, centerY - h/2);
+            ctx.stroke();
+            
+            // Draw elliptical bottom
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY + h/2, r, r * 0.3, 0, 0, 2 * Math.PI);
+            ctx.fillStyle = "#B0E0E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = "#000";
+            ctx.font = "12px Arial";
+            ctx.fillText(`r = ${radius}`, centerX + r + 5, centerY);
+            ctx.fillText(`h = ${height}`, centerX + 5, centerY);
+        }
+        
+        // Cone calculations
+        function calculateCone() {
+            const radius = parseFloat(document.getElementById("cone-radius").value);
+            const height = parseFloat(document.getElementById("cone-height").value);
+            
+            const volume = (1/3) * Math.PI * Math.pow(radius, 2) * height;
+            const slantHeight = Math.sqrt(Math.pow(radius, 2) + Math.pow(height, 2));
+            const surfaceArea = Math.PI * Math.pow(radius, 2) + Math.PI * radius * slantHeight;
+            
+            document.getElementById("cone-results").innerHTML = `
+                <p><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</p>
+                <p><strong>Surface Area:</strong> ${surfaceArea.toFixed(2)} square units</p>
+                <p><strong>Slant Height:</strong> ${slantHeight.toFixed(2)} units</p>
+            `;
+            
+            drawCone(radius, height);
+        }
+        
+        function drawCone(radius, height) {
+            const canvas = document.getElementById("cone-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2 + height * 0.2;
+            
+            // Scale dimensions for display
+            const maxDim = Math.max(radius * 2, height);
+            const scale = Math.min(canvas.width, canvas.height) * 0.4 / maxDim;
+            
+            const r = radius * scale;
+            const h = height * scale;
+            
+            // Draw base ellipse
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY, r, r * 0.3, 0, 0, 2 * Math.PI);
+            ctx.fillStyle = "#B0E0E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw sides to apex
+            ctx.beginPath();
+            ctx.moveTo(centerX - r, centerY);
+            ctx.lineTo(centerX, centerY - h);
+            ctx.lineTo(centerX + r, centerY);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = "#000";
+            ctx.font = "12px Arial";
+            ctx.fillText(`r = ${radius}`, centerX + r + 5, centerY);
+            ctx.fillText(`h = ${height}`, centerX + 5, centerY - h/2);
+        }
+        
+        // Pyramid calculations
+        function calculatePyramid() {
+            const baseLength = parseFloat(document.getElementById("pyr-base").value);
+            const height = parseFloat(document.getElementById("pyr-height").value);
+            
+            const baseArea = Math.pow(baseLength, 2);
+            const volume = (1/3) * baseArea * height;
+            
+            // Calculate slant height for triangular faces
+            const slantHeight = Math.sqrt(Math.pow(height, 2) + Math.pow(baseLength/2, 2));
+            const surfaceArea = baseArea + 2 * baseLength * slantHeight;
+            
+            document.getElementById("pyr-results").innerHTML = `
+                <p><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</p>
+                <p><strong>Surface Area:</strong> ${surfaceArea.toFixed(2)} square units</p>
+                <p><strong>Slant Height:</strong> ${slantHeight.toFixed(2)} units</p>
+            `;
+            
+            drawPyramid(baseLength, height);
+        }
+        
+        function drawPyramid(baseLength, height) {
+            const canvas = document.getElementById("pyr-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2 + height * 0.2;
+            
+            // Scale dimensions for display
+            const maxDim = Math.max(baseLength, height);
+            const scale = Math.min(canvas.width, canvas.height) * 0.4 / maxDim;
+            
+            const bl = baseLength * scale;
+            const h = height * scale;
+            
+            // Base corners in isometric view
+            const baseX = centerX - bl/2;
+            const baseY = centerY - bl/4;
+            
+            // Draw base
+            ctx.beginPath();
+            ctx.moveTo(baseX, baseY);
+            ctx.lineTo(baseX + bl, baseY);
+            ctx.lineTo(baseX + bl, baseY + bl/2);
+            ctx.lineTo(baseX, baseY + bl/2);
+            ctx.closePath();
+            ctx.fillStyle = "#B0E0E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw lines to apex
+            const apexX = centerX;
+            const apexY = baseY - h;
+            
+            ctx.beginPath();
+            ctx.moveTo(baseX, baseY);
+            ctx.lineTo(apexX, apexY);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(baseX + bl, baseY);
+            ctx.lineTo(apexX, apexY);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(baseX + bl, baseY + bl/2);
+            ctx.lineTo(apexX, apexY);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(baseX, baseY + bl/2);
+            ctx.lineTo(apexX, apexY);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = "#000";
+            ctx.font = "12px Arial";
+            ctx.fillText(`a = ${baseLength}`, baseX + bl/2 - 15, baseY + bl/2 + 15);
+            ctx.fillText(`h = ${height}`, apexX + 5, baseY - h/2);
+        }
+        
+        // Sphere calculations
+        function calculateSphere() {
+            const radius = parseFloat(document.getElementById("sphere-radius").value);
+            
+            const volume = (4/3) * Math.PI * Math.pow(radius, 3);
+            const surfaceArea = 4 * Math.PI * Math.pow(radius, 2);
+            
+            document.getElementById("sphere-results").innerHTML = `
+                <p><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</p>
+                <p><strong>Surface Area:</strong> ${surfaceArea.toFixed(2)} square units</p>
+            `;
+            
+            drawSphere(radius);
+        }
+        
+        function drawSphere(radius) {
+            const canvas = document.getElementById("sphere-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Scale radius for display
+            const maxSize = Math.min(canvas.width, canvas.height) * 0.4;
+            const r = maxSize;
+            
+            // Draw circle (representing sphere)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
+            ctx.fillStyle = "#ADD8E6";
+            ctx.fill();
+            ctx.stroke();
+            
+            // Add shading for 3D effect
+            const gradient = ctx.createRadialGradient(
+                centerX - r/3, centerY - r/3, r/10,
+                centerX, centerY, r
+            );
+            gradient.addColorStop(0, "#FFFFFF");
+            gradient.addColorStop(1, "#87CEEB");
+            
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Draw "equator" for 3D effect
+            ctx.beginPath();
+            ctx.ellipse(centerX, centerY, r, r/3, 0, 0, 2 * Math.PI);
+            ctx.strokeStyle = "#5555AA";
+            ctx.stroke();
+            
+            // Label
+            ctx.fillStyle = "#000";
+            ctx.font = "16px Arial";
+            ctx.fillText(`r = ${radius}`, centerX + r + 10, centerY);
+        }
+        
+        // Initialize first calculation
+        calculateCube();
+    </script>
+</body>
+</html>

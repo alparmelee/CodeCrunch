@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Congruent Triangles Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1, h2 { color: #2c3e50; }
+    .container { display: flex; flex-wrap: wrap; gap: 20px; }
+    .panel { 
+      flex: 1; 
+      min-width: 300px; 
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .input-group { margin-bottom: 10px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background-color: #2980b9; }
+    #result {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .success { background-color: #d4edda; color: #155724; }
+    .error { background-color: #f8d7da; color: #721c24; }
+    canvas { border: 1px solid #ddd; background-color: white; display: block; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h1>Congruent Triangles Calculator</h1>
+
+  <div class="container">
+    <div class="panel">
+      <h2>Congruence Criteria</h2>
+      <p>Select a congruence criterion to check if two triangles are congruent:</p>
+      <select id="criteria">
+        <option value="SSS">SSS (Side-Side-Side)</option>
+        <option value="SAS">SAS (Side-Angle-Side)</option>
+        <option value="ASA">ASA (Angle-Side-Angle)</option>
+        <option value="AAS">AAS (Angle-Angle-Side)</option>
+        <option value="HL">HL (Hypotenuse-Leg)</option>
+      </select>
+
+      <div id="criteria-info">
+        <h3>SSS (Side-Side-Side)</h3>
+        <p>All three pairs of corresponding sides are equal.</p>
+      </div>
+
+      <div class="input-container">
+        <h3>Triangle 1</h3>
+        <div id="inputs1"></div>
+        
+        <h3>Triangle 2</h3>
+        <div id="inputs2"></div>
+        
+        <button id="checkBtn">Check Congruence</button>
+        
+        <div id="result"></div>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <h2>Special Triangles</h2>
+      <h3>Isosceles Triangle</h3>
+      <p>Has at least two equal sides. If two sides are equal, then the angles opposite those sides are equal.</p>
+      
+      <h3>Equilateral Triangle</h3>
+      <p>Has all three sides equal. All angles are equal (60° each).</p>
+      
+      <h3>Congruence by Transformations</h3>
+      <p>Triangles can be proven congruent using transformations:</p>
+      <ul>
+        <li>Translations (slides)</li>
+        <li>Rotations (turns)</li>
+        <li>Reflections (flips)</li>
+      </ul>
+      
+      <h3>Visualization</h3>
+      <canvas id="triangleCanvas" width="300" height="200"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Get DOM elements
+    const criteriaSelect = document.getElementById('criteria');
+    const criteriaInfo = document.getElementById('criteria-info');
+    const inputs1 = document.getElementById('inputs1');
+    const inputs2 = document.getElementById('inputs2');
+    const checkBtn = document.getElementById('checkBtn');
+    const resultDiv = document.getElementById('result');
+    const canvas = document.getElementById('triangleCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Criteria descriptions
+    const criteriaDescriptions = {
+      'SSS': 'All three pairs of corresponding sides are equal.',
+      'SAS': 'Two pairs of sides and the included angle are equal.',
+      'ASA': 'Two pairs of angles and the included side are equal.',
+      'AAS': 'Two pairs of angles and one pair of non-included sides are equal.',
+      'HL': 'For right triangles, the hypotenuse and one leg are equal.'
+    };
+    
+    // Update criteria info when selection changes
+    criteriaSelect.addEventListener('change', function() {
+      const criteria = criteriaSelect.value;
+      criteriaInfo.innerHTML = `<h3>${criteria}</h3><p>${criteriaDescriptions[criteria]}</p>`;
+      updateInputFields();
+    });
+    
+    // Initialize the input fields
+    updateInputFields();
+    drawExampleTriangles();
+    
+    // Event listeners
+    checkBtn.addEventListener('click', checkCongruence);
+    
+    // Function to update input fields based on selected criteria
+    function updateInputFields() {
+      const criteria = criteriaSelect.value;
+      
+      // Clear existing inputs
+      inputs1.innerHTML = '';
+      inputs2.innerHTML = '';
+      
+      switch(criteria) {
+        case 'SSS':
+          addSideInputs(inputs1, 1);
+          addSideInputs(inputs2, 2);
+          break;
+        case 'SAS':
+          addInput(inputs1, 'side_a1', 'Side a:', 'number', 3);
+          addInput(inputs1, 'angle_C1', 'Angle C (degrees):', 'number', 60);
+          addInput(inputs1, 'side_b1', 'Side b:', 'number', 4);
+          
+          addInput(inputs2, 'side_a2', 'Side a:', 'number', 3);
+          addInput(inputs2, 'angle_C2', 'Angle C (degrees):', 'number', 60);
+          addInput(inputs2, 'side_b2', 'Side b:', 'number', 4);
+          break;
+        case 'ASA':
+          addInput(inputs1, 'angle_A1', 'Angle A (degrees):', 'number', 60);
+          addInput(inputs1, 'side_c1', 'Side c:', 'number', 5);
+          addInput(inputs1, 'angle_B1', 'Angle B (degrees):', 'number', 60);
+          
+          addInput(inputs2, 'angle_A2', 'Angle A (degrees):', 'number', 60);
+          addInput(inputs2, 'side_c2', 'Side c:', 'number', 5);
+          addInput(inputs2, 'angle_B2', 'Angle B (degrees):', 'number', 60);
+          break;
+        case 'AAS':
+          addInput(inputs1, 'angle_A1', 'Angle A (degrees):', 'number', 45);
+          addInput(inputs1, 'angle_B1', 'Angle B (degrees):', 'number', 45);
+          addInput(inputs1, 'side_a1', 'Side a:', 'number', 5);
+          
+          addInput(inputs2, 'angle_A2', 'Angle A (degrees):', 'number', 45);
+          addInput(inputs2, 'angle_B2', 'Angle B (degrees):', 'number', 45);
+          addInput(inputs2, 'side_a2', 'Side a:', 'number', 5);
+          break;
+        case 'HL':
+          addInput(inputs1, 'hypotenuse1', 'Hypotenuse:', 'number', 5);
+          addInput(inputs1, 'leg1', 'Leg:', 'number', 3);
+          
+          addInput(inputs2, 'hypotenuse2', 'Hypotenuse:', 'number', 5);
+          addInput(inputs2, 'leg2', 'Leg:', 'number', 3);
+          break;
+      }
+      
+      // Reset result
+      resultDiv.style.display = 'none';
+    }
+    
+    // Helper function to add inputs for all three sides
+    function addSideInputs(container, triangleNum) {
+      addInput(container, `side_a${triangleNum}`, 'Side a:', 'number', 3);
+      addInput(container, `side_b${triangleNum}`, 'Side b:', 'number', 4);
+      addInput(container, `side_c${triangleNum}`, 'Side c:', 'number', 5);
+    }
+    
+    // Helper function to add an input field
+    function addInput(container, id, labelText, type, defaultValue) {
+      const div = document.createElement('div');
+      div.className = 'input-group';
+      
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.textContent = labelText;
+      
+      const input = document.createElement('input');
+      input.type = type;
+      input.id = id;
+      input.required = true;
+      input.step = 'any';
+      input.value = defaultValue;
+      
+      div.appendChild(label);
+      div.appendChild(input);
+      container.appendChild(div);
+    }
+    
+    // Function to check if triangles are congruent
+    function checkCongruence() {
+      const criteria = criteriaSelect.value;
+      let isCongruent = false;
+      let message = '';
+      
+      try {
+        switch(criteria) {
+          case 'SSS':
+            const a1 = Number(document.getElementById('side_a1').value);
+            const b1 = Number(document.getElementById('side_b1').value);
+            const c1 = Number(document.getElementById('side_c1').value);
+            
+            const a2 = Number(document.getElementById('side_a2').value);
+            const b2 = Number(document.getElementById('side_b2').value);
+            const c2 = Number(document.getElementById('side_c2').value);
+            
+            if (!isValidTriangle(a1, b1, c1) || !isValidTriangle(a2, b2, c2)) {
+              throw new Error("Invalid triangle measurements.");
+            }
+            
+            isCongruent = areEqual(a1, a2) && areEqual(b1, b2) && areEqual(c1, c2);
+            break;
+            
+          case 'SAS':
+            const sas_a1 = Number(document.getElementById('side_a1').value);
+            const sas_C1 = Number(document.getElementById('angle_C1').value);
+            const sas_b1 = Number(document.getElementById('side_b1').value);
+            
+            const sas_a2 = Number(document.getElementById('side_a2').value);
+            const sas_C2 = Number(document.getElementById('angle_C2').value);
+            const sas_b2 = Number(document.getElementById('side_b2').value);
+            
+            if (!isValidAngle(sas_C1) || !isValidAngle(sas_C2)) {
+              throw new Error("Angles must be between 0 and 180 degrees.");
+            }
+            
+            isCongruent = areEqual(sas_a1, sas_a2) && areEqual(sas_C1, sas_C2) && areEqual(sas_b1, sas_b2);
+            break;
+            
+          // Similar cases for ASA, AAS, and HL
+          case 'ASA':
+            const asa_A1 = Number(document.getElementById('angle_A1').value);
+            const asa_c1 = Number(document.getElementById('side_c1').value);
+            const asa_B1 = Number(document.getElementById('angle_B1').value);
+            
+            const asa_A2 = Number(document.getElementById('angle_A2').value);
+            const asa_c2 = Number(document.getElementById('side_c2').value);
+            const asa_B2 = Number(document.getElementById('angle_B2').value);
+            
+            isCongruent = areEqual(asa_A1, asa_A2) && areEqual(asa_c1, asa_c2) && areEqual(asa_B1, asa_B2);
+            break;
+            
+          case 'AAS':
+            const aas_A1 = Number(document.getElementById('angle_A1').value);
+            const aas_B1 = Number(document.getElementById('angle_B1').value);
+            const aas_a1 = Number(document.getElementById('side_a1').value);
+            
+            const aas_A2 = Number(document.getElementById('angle_A2').value);
+            const aas_B2 = Number(document.getElementById('angle_B2').value);
+            const aas_a2 = Number(document.getElementById('side_a2').value);
+            
+            isCongruent = areEqual(aas_A1, aas_A2) && areEqual(aas_B1, aas_B2) && areEqual(aas_a1, aas_a2);
+            break;
+            
+          case 'HL':
+            const hyp1 = Number(document.getElementById('hypotenuse1').value);
+            const leg1 = Number(document.getElementById('leg1').value);
+            
+            const hyp2 = Number(document.getElementById('hypotenuse2').value);
+            const leg2 = Number(document.getElementById('leg2').value);
+            
+            if (hyp1 <= leg1 || hyp2 <= leg2) {
+              throw new Error("The hypotenuse must be longer than the leg.");
+            }
+            
+            isCongruent = areEqual(hyp1, hyp2) && areEqual(leg1, leg2);
+            break;
+        }
+        
+        message = isCongruent ? 
+          `The triangles are congruent by ${criteria}.` : 
+          `The triangles are NOT congruent by ${criteria}.`;
+        
+        resultDiv.textContent = message;
+        resultDiv.className = isCongruent ? 'success' : 'error';
+        resultDiv.style.display = 'block';
+        
+      } catch (error) {
+        resultDiv.textContent = error.message;
+        resultDiv.className = 'error';
+        resultDiv.style.display = 'block';
+      }
+    }
+    
+    // Helper functions
+    function isValidTriangle(a, b, c) {
+      return a > 0 && b > 0 && c > 0 && (a + b > c) && (a + c > b) && (b + c > a);
+    }
+    
+    function isValidAngle(angle) {
+      return angle > 0 && angle < 180;
+    }
+    
+    function areEqual(a, b, tolerance = 0.001) {
+      return Math.abs(a - b) < tolerance;
+    }
+    
+    // Draw example triangles on canvas
+    function drawExampleTriangles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw congruent triangles
+      drawTriangle(50, 150, 100, 50, 150, 150, "rgba(0, 123, 255, 0.5)");
+      drawTriangle(200, 150, 250, 50, 300, 150, "rgba(255, 99, 71, 0.5)");
+      
+      // Labels
+      ctx.font = "12px Arial";
+      ctx.fillStyle = "black";
+      ctx.fillText("Triangle 1", 70, 170);
+      ctx.fillText("Triangle 2", 220, 170);
+    }
+    
+    // Draw a triangle given three points
+    function drawTriangle(x1, y1, x2, y2, x3, y3, color) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x3, y3);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = "black";
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>

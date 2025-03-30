@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        select, input, button {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        #coordinate-plane {
+            border: 1px solid #ddd;
+            margin-top: 15px;
+        }
+        .formula {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-left: 3px solid #4CAF50;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Geometry Calculator</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab(event, 'basic-concepts')">Basic Concepts</div>
+        <div class="tab" onclick="openTab(event, 'coordinate-geometry')">Coordinate Geometry</div>
+        <div class="tab" onclick="openTab(event, 'distance-area')">Distance & Area</div>
+        <div class="tab" onclick="openTab(event, 'angle-calculator')">Angle Calculator</div>
+    </div>
+    
+    <div id="basic-concepts" class="tab-content active">
+        <h2>Basic Geometric Concepts</h2>
+        
+        <div class="calculator">
+            <h3>Point, Line, and Plane</h3>
+            <p>• A <strong>point</strong> has position but no size or dimension.</p>
+            <p>• A <strong>line</strong> is a straight path that extends infinitely in two directions.</p>
+            <p>• A <strong>plane</strong> is a flat surface that extends infinitely in all directions.</p>
+            
+            <h3>Basic Postulates</h3>
+            <p>• Through two distinct points, exactly one line can be drawn.</p>
+            <p>• Through three non-collinear points, exactly one plane can be drawn.</p>
+            <p>• If two points lie in a plane, then the line containing them lies in the plane.</p>
+        </div>
+    </div>
+    
+    <div id="coordinate-geometry" class="tab-content">
+        <h2>Coordinate Geometry</h2>
+        
+        <div class="calculator">
+            <h3>Plot Points</h3>
+            <div>
+                <label for="x1">X1:</label>
+                <input type="number" id="x1" value="0">
+                <label for="y1">Y1:</label>
+                <input type="number" id="y1" value="0">
+                <button onclick="addPoint()">Add Point</button>
+            </div>
+            <button onclick="clearPoints()">Clear Points</button>
+            <canvas id="coordinate-plane" width="400" height="400"></canvas>
+        </div>
+    </div>
+    
+    <div id="distance-area" class="tab-content">
+        <h2>Distance & Area Formulas</h2>
+        
+        <div class="calculator">
+            <h3>Distance Formula</h3>
+            <div class="formula">
+                The distance between points (x₁, y₁) and (x₂, y₂) is:
+                <br>d = √[(x₂ - x₁)² + (y₂ - y₁)²]
+            </div>
+            
+            <div>
+                <label for="distance-x1">Point 1 X:</label>
+                <input type="number" id="distance-x1" value="0">
+                <label for="distance-y1">Point 1 Y:</label>
+                <input type="number" id="distance-y1" value="0">
+            </div>
+            <div>
+                <label for="distance-x2">Point 2 X:</label>
+                <input type="number" id="distance-x2" value="3">
+                <label for="distance-y2">Point 2 Y:</label>
+                <input type="number" id="distance-y2" value="4">
+            </div>
+            <button onclick="calculateDistance()">Calculate Distance</button>
+            <div id="distance-result" class="result">Distance: 5</div>
+            
+            <h3>Area Formulas</h3>
+            <select id="area-shape">
+                <option value="rectangle">Rectangle</option>
+                <option value="circle">Circle</option>
+                <option value="triangle">Triangle</option>
+            </select>
+            
+            <div id="rectangle-inputs">
+                <label for="rect-width">Width:</label>
+                <input type="number" id="rect-width" value="5">
+                <label for="rect-height">Height:</label>
+                <input type="number" id="rect-height" value="4">
+            </div>
+            
+            <div id="circle-inputs" style="display: none;">
+                <label for="circle-radius">Radius:</label>
+                <input type="number" id="circle-radius" value="3">
+            </div>
+            
+            <div id="triangle-inputs" style="display: none;">
+                <label for="triangle-base">Base:</label>
+                <input type="number" id="triangle-base" value="6">
+                <label for="triangle-height">Height:</label>
+                <input type="number" id="triangle-height" value="4">
+            </div>
+            
+            <button onclick="calculateArea()">Calculate Area</button>
+            <div id="area-result" class="result">Area: 20</div>
+        </div>
+    </div>
+    
+    <div id="angle-calculator" class="tab-content">
+        <h2>Angle Calculator</h2>
+        
+        <div class="calculator">
+            <h3>Angle Types</h3>
+            <p>• <strong>Acute Angle:</strong> Less than 90°</p>
+            <p>• <strong>Right Angle:</strong> Exactly 90°</p>
+            <p>• <strong>Obtuse Angle:</strong> Between 90° and 180°</p>
+            <p>• <strong>Straight Angle:</strong> Exactly 180°</p>
+            
+            <h3>Angle Relationships</h3>
+            <select id="angle-relationship">
+                <option value="complementary">Complementary Angles (sum to 90°)</option>
+                <option value="supplementary">Supplementary Angles (sum to 180°)</option>
+                <option value="vertically-opposite">Vertically Opposite Angles (equal)</option>
+            </select>
+            
+            <div>
+                <label for="angle-value">Angle Value (degrees):</label>
+                <input type="number" id="angle-value" min="0" max="180" value="30">
+            </div>
+            
+            <button onclick="calculateAngle()">Calculate</button>
+            <div id="angle-result" class="result">Related angle: 60°</div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var tabContent = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContent.length; i++) {
+                tabContent[i].className = tabContent[i].className.replace(" active", "");
+            }
+            
+            var tabs = document.getElementsByClassName("tab");
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Area shape change handler
+        document.getElementById('area-shape').addEventListener('change', function() {
+            document.getElementById('rectangle-inputs').style.display = 'none';
+            document.getElementById('circle-inputs').style.display = 'none';
+            document.getElementById('triangle-inputs').style.display = 'none';
+            
+            document.getElementById(this.value + '-inputs').style.display = 'block';
+        });
+        
+        // Initialize coordinate plane
+        const canvas = document.getElementById('coordinate-plane');
+        const ctx = canvas.getContext('2d');
+        const points = [];
+        
+        function drawCoordinatePlane() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw axes
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height/2);
+            ctx.lineTo(canvas.width, canvas.height/2);
+            ctx.moveTo(canvas.width/2, 0);
+            ctx.lineTo(canvas.width/2, canvas.height);
+            ctx.strokeStyle = '#000';
+            ctx.stroke();
+            
+            // Draw grid
+            ctx.beginPath();
+            ctx.strokeStyle = '#ddd';
+            for (let i = 0; i < canvas.width; i += 40) {
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+            }
+            for (let i = 0; i < canvas.height; i += 40) {
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+            }
+            ctx.stroke();
+            
+            // Draw points
+            points.forEach(point => {
+                ctx.beginPath();
+                ctx.arc(point.canvasX, point.canvasY, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+                
+                // Label points
+                ctx.fillStyle = 'black';
+                ctx.fillText(`(${point.x}, ${point.y})`, point.canvasX + 10, point.canvasY - 10);
+            });
+        }
+        
+        function addPoint() {
+            const x = parseInt(document.getElementById('x1').value);
+            const y = parseInt(document.getElementById('y1').value);
+            
+            // Convert to canvas coordinates (origin at center)
+            const canvasX = (x * 40) + (canvas.width / 2);
+            const canvasY = (canvas.height / 2) - (y * 40);
+            
+            points.push({x, y, canvasX, canvasY});
+            drawCoordinatePlane();
+        }
+        
+        function clearPoints() {
+            points.length = 0;
+            drawCoordinatePlane();
+        }
+        
+        // Distance calculation
+        function calculateDistance() {
+            const x1 = parseFloat(document.getElementById('distance-x1').value);
+            const y1 = parseFloat(document.getElementById('distance-y1').value);
+            const x2 = parseFloat(document.getElementById('distance-x2').value);
+            const y2 = parseFloat(document.getElementById('distance-y2').value);
+            
+            const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            document.getElementById('distance-result').textContent = `Distance: ${distance.toFixed(2)}`;
+        }
+        
+        // Area calculation
+        function calculateArea() {
+            const shape = document.getElementById('area-shape').value;
+            let area = 0;
+            
+            if (shape === 'rectangle') {
+                const width = parseFloat(document.getElementById('rect-width').value);
+                const height = parseFloat(document.getElementById('rect-height').value);
+                area = width * height;
+            } else if (shape === 'circle') {
+                const radius = parseFloat(document.getElementById('circle-radius').value);
+                area = Math.PI * radius * radius;
+            } else if (shape === 'triangle') {
+                const base = parseFloat(document.getElementById('triangle-base').value);
+                const height = parseFloat(document.getElementById('triangle-height').value);
+                area = 0.5 * base * height;
+            }
+            
+            document.getElementById('area-result').textContent = `Area: ${area.toFixed(2)}`;
+        }
+        
+        // Angle calculation
+        function calculateAngle() {
+            const relationship = document.getElementById('angle-relationship').value;
+            const angle = parseFloat(document.getElementById('angle-value').value);
+            let result = 0;
+            
+            if (relationship === 'complementary') {
+                result = 90 - angle;
+                document.getElementById('angle-result').textContent = `Complementary angle: ${result}°`;
+            } else if (relationship === 'supplementary') {
+                result = 180 - angle;
+                document.getElementById('angle-result').textContent = `Supplementary angle: ${result}°`;
+            } else if (relationship === 'vertically-opposite') {
+                document.getElementById('angle-result').textContent = `Vertically opposite angle: ${angle}° (equal to given angle)`;
+            }
+        }
+        
+        // Initialize the page
+        drawCoordinatePlane();
+        calculateDistance();
+        calculateArea();
+        calculateAngle();
+    </script>
+</body>
+</html>

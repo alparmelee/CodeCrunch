@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polygon & Circle Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .active-content {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+        }
+        .canvas-container {
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+        canvas {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Polygon & Circle Calculator</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab('regular')">Regular Polygon</div>
+        <div class="tab" onclick="openTab('irregular')">Irregular Polygon</div>
+        <div class="tab" onclick="openTab('circle-poly')">Circle & Polygon</div>
+    </div>
+    
+    <div id="regular" class="tab-content active-content">
+        <h2>Regular Polygon Calculator</h2>
+        <div class="form-group">
+            <label for="sides">Number of Sides:</label>
+            <input type="number" id="sides" min="3" value="5">
+        </div>
+        <div class="form-group">
+            <label for="side-length">Side Length:</label>
+            <input type="number" id="side-length" min="1" value="10">
+        </div>
+        <button onclick="calculateRegularPolygon()">Calculate</button>
+        
+        <div id="regular-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="regular-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <div id="irregular" class="tab-content">
+        <h2>Irregular Polygon Calculator</h2>
+        <p>Enter vertices coordinates (x,y) separated by comma. Add each vertex with Add Point button.</p>
+        <div class="form-group">
+            <label for="x-coord">X coordinate:</label>
+            <input type="number" id="x-coord" value="0">
+        </div>
+        <div class="form-group">
+            <label for="y-coord">Y coordinate:</label>
+            <input type="number" id="y-coord" value="0">
+        </div>
+        <button onclick="addPoint()">Add Point</button>
+        <button onclick="clearPoints()">Clear All Points</button>
+        
+        <div id="points-list" class="results">
+            <p>Points: </p>
+        </div>
+        <button onclick="calculateIrregularPolygon()">Calculate</button>
+        
+        <div id="irregular-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="irregular-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <div id="circle-poly" class="tab-content">
+        <h2>Circle & Polygon Interactions</h2>
+        <div class="form-group">
+            <label for="cp-sides">Number of Sides:</label>
+            <input type="number" id="cp-sides" min="3" value="5">
+        </div>
+        <div class="form-group">
+            <label for="cp-method">Method:</label>
+            <select id="cp-method">
+                <option value="inscribed">Polygon Inscribed in Circle</option>
+                <option value="circumscribed">Polygon Circumscribed around Circle</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cp-radius">Circle Radius:</label>
+            <input type="number" id="cp-radius" min="1" value="10">
+        </div>
+        <button onclick="calculateCirclePolygon()">Calculate</button>
+        
+        <div id="circle-poly-results" class="results"></div>
+        <div class="canvas-container">
+            <canvas id="circle-poly-canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let irregularPoints = [];
+        
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            const contents = document.getElementsByClassName("tab-content");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+                contents[i].classList.remove("active-content");
+            }
+            
+            document.getElementById(tabName).classList.add("active-content");
+            event.currentTarget.classList.add("active");
+        }
+        
+        // Regular Polygon Calculations
+        function calculateRegularPolygon() {
+            const sides = parseInt(document.getElementById("sides").value);
+            const sideLength = parseFloat(document.getElementById("side-length").value);
+            
+            if (sides < 3) {
+                alert("Number of sides must be at least 3");
+                return;
+            }
+            
+            // Calculate polygon properties
+            const interiorAngle = (sides - 2) * 180 / sides;
+            const exteriorAngle = 360 / sides;
+            const inRadius = sideLength / (2 * Math.tan(Math.PI / sides));
+            const circumRadius = sideLength / (2 * Math.sin(Math.PI / sides));
+            const area = (sides * Math.pow(sideLength, 2)) / (4 * Math.tan(Math.PI / sides));
+            const perimeter = sides * sideLength;
+            
+            // Display results
+            document.getElementById("regular-results").innerHTML = `
+                <p><strong>Interior Angle:</strong> ${interiorAngle.toFixed(2)}°</p>
+                <p><strong>Exterior Angle:</strong> ${exteriorAngle.toFixed(2)}°</p>
+                <p><strong>Inradius (r):</strong> ${inRadius.toFixed(2)}</p>
+                <p><strong>Circumradius (R):</strong> ${circumRadius.toFixed(2)}</p>
+                <p><strong>Area:</strong> ${area.toFixed(2)}</p>
+                <p><strong>Perimeter:</strong> ${perimeter.toFixed(2)}</p>
+                <p><strong>Sum of Interior Angles:</strong> ${(sides - 2) * 180}°</p>
+            `;
+            
+            // Draw the polygon
+            drawRegularPolygon(sides, sideLength);
+        }
+        
+        function drawRegularPolygon(sides, sideLength) {
+            const canvas = document.getElementById("regular-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = sideLength / (2 * Math.sin(Math.PI / sides));
+            const maxRadius = Math.min(canvas.width, canvas.height) / 2 - 10;
+            const scale = maxRadius / radius;
+            
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const angle = i * 2 * Math.PI / sides - Math.PI / 2;
+                const x = centerX + radius * scale * Math.cos(angle);
+                const y = centerY + radius * scale * Math.sin(angle);
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.strokeStyle = "#2c3e50";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw center
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+            ctx.fillStyle = "red";
+            ctx.fill();
+        }
+        
+        // Irregular Polygon Functions
+        function addPoint() {
+            const x = parseFloat(document.getElementById("x-coord").value);
+            const y = parseFloat(document.getElementById("y-coord").value);
+            
+            irregularPoints.push({x, y});
+            updatePointsList();
+            drawIrregularPolygon();
+        }
+        
+        function clearPoints() {
+            irregularPoints = [];
+            updatePointsList();
+            
+            const canvas = document.getElementById("irregular-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            document.getElementById("irregular-results").innerHTML = "";
+        }
+        
+        function updatePointsList() {
+            let pointsHTML = "<p><strong>Points:</strong> ";
+            
+            for (let i = 0; i < irregularPoints.length; i++) {
+                pointsHTML += `(${irregularPoints[i].x}, ${irregularPoints[i].y})`;
+                if (i < irregularPoints.length - 1) {
+                    pointsHTML += ", ";
+                }
+            }
+            
+            pointsHTML += "</p>";
+            document.getElementById("points-list").innerHTML = pointsHTML;
+        }
+        
+        function drawIrregularPolygon() {
+            if (irregularPoints.length < 3) return;
+            
+            const canvas = document.getElementById("irregular-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Find bounding box
+            let minX = Infinity, minY = Infinity;
+            let maxX = -Infinity, maxY = -Infinity;
+            
+            for (const point of irregularPoints) {
+                minX = Math.min(minX, point.x);
+                minY = Math.min(minY, point.y);
+                maxX = Math.max(maxX, point.x);
+                maxY = Math.max(maxY, point.y);
+            }
+            
+            const width = maxX - minX;
+            const height = maxY - minY;
+            const scale = Math.min((canvas.width - 20) / width, (canvas.height - 20) / height);
+            const offsetX = (canvas.width - width * scale) / 2 - minX * scale;
+            const offsetY = (canvas.height - height * scale) / 2 - minY * scale;
+            
+            // Draw polygon
+            ctx.beginPath();
+            for (let i = 0; i < irregularPoints.length; i++) {
+                const x = irregularPoints[i].x * scale + offsetX;
+                const y = irregularPoints[i].y * scale + offsetY;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.strokeStyle = "#2c3e50";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw points
+            for (let i = 0; i < irregularPoints.length; i++) {
+                const x = irregularPoints[i].x * scale + offsetX;
+                const y = irregularPoints[i].y * scale + offsetY;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                ctx.fillStyle = "blue";
+                ctx.fill();
+                
+                // Draw point number
+                ctx.fillStyle = "black";
+                ctx.font = "12px Arial";
+                ctx.fillText(i + 1, x + 5, y - 5);
+            }
+        }
+        
+        function calculateIrregularPolygon() {
+            if (irregularPoints.length < 3) {
+                alert("Please add at least 3 points to form a polygon");
+                return;
+            }
+            
+            // Calculate area using Shoelace formula
+            let area = 0;
+            for (let i = 0; i < irregularPoints.length; i++) {
+                const j = (i + 1) % irregularPoints.length;
+                area += irregularPoints[i].x * irregularPoints[j].y;
+                area -= irregularPoints[j].x * irregularPoints[i].y;
+            }
+            area = Math.abs(area) / 2;
+            
+            // Calculate perimeter
+            let perimeter = 0;
+            for (let i = 0; i < irregularPoints.length; i++) {
+                const j = (i + 1) % irregularPoints.length;
+                const dx = irregularPoints[j].x - irregularPoints[i].x;
+                const dy = irregularPoints[j].y - irregularPoints[i].y;
+                perimeter += Math.sqrt(dx * dx + dy * dy);
+            }
+            
+            // Calculate angles
+            let angles = [];
+            for (let i = 0; i < irregularPoints.length; i++) {
+                const prev = (i - 1 + irregularPoints.length) % irregularPoints.length;
+                const curr = i;
+                const next = (i + 1) % irregularPoints.length;
+                
+                const v1 = {
+                    x: irregularPoints[prev].x - irregularPoints[curr].x,
+                    y: irregularPoints[prev].y - irregularPoints[curr].y
+                };
+                
+                const v2 = {
+                    x: irregularPoints[next].x - irregularPoints[curr].x,
+                    y: irregularPoints[next].y - irregularPoints[curr].y
+                };
+                
+                const dot = v1.x * v2.x + v1.y * v2.y;
+                const v1Mag = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+                const v2Mag = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+                
+                let angle = Math.acos(dot / (v1Mag * v2Mag));
+                angle = angle * 180 / Math.PI;
+                angles.push(angle);
+            }
+            
+            // Display results
+            let results = `
+                <p><strong>Number of sides:</strong> ${irregularPoints.length}</p>
+                <p><strong>Area:</strong> ${area.toFixed(2)}</p>
+                <p><strong>Perimeter:</strong> ${perimeter.toFixed(2)}</p>
+                <p><strong>Sum of Interior Angles:</strong> ${(irregularPoints.length - 2) * 180}°</p>
+                <p><strong>Interior Angles:</strong></p>
+            `;
+            
+            for (let i = 0; i < angles.length; i++) {
+                results += `<p>Vertex ${i + 1}: ${angles[i].toFixed(2)}°</p>`;
+            }
+            
+            document.getElementById("irregular-results").innerHTML = results;
+        }
+        
+        // Circle & Polygon Interactions
+        function calculateCirclePolygon() {
+            const sides = parseInt(document.getElementById("cp-sides").value);
+            const method = document.getElementById("cp-method").value;
+            const radius = parseFloat(document.getElementById("cp-radius").value);
+            
+            if (sides < 3) {
+                alert("Number of sides must be at least 3");
+                return;
+            }
+            
+            let sideLength, area, perimeter, inRadius, circumRadius;
+            
+            if (method === "inscribed") {
+                // Polygon inscribed in circle
+                circumRadius = radius;
+                sideLength = 2 * radius * Math.sin(Math.PI / sides);
+                inRadius = radius * Math.cos(Math.PI / sides);
+                perimeter = sides * sideLength;
+                area = (sides * Math.pow(sideLength, 2)) / (4 * Math.tan(Math.PI / sides));
+            } else {
+                // Polygon circumscribed around circle
+                inRadius = radius;
+                circumRadius = radius / Math.cos(Math.PI / sides);
+                sideLength = 2 * radius * Math.tan(Math.PI / sides);
+                perimeter = sides * sideLength;
+                area = sides * radius * sideLength / 2;
+            }
+            
+            // Display results
+            document.getElementById("circle-poly-results").innerHTML = `
+                <p><strong>Side Length:</strong> ${sideLength.toFixed(2)}</p>
+                <p><strong>Inradius (r):</strong> ${inRadius.toFixed(2)}</p>
+                <p><strong>Circumradius (R):</strong> ${circumRadius.toFixed(2)}</p>
+                <p><strong>Polygon Area:</strong> ${area.toFixed(2)}</p>
+                <p><strong>Polygon Perimeter:</strong> ${perimeter.toFixed(2)}</p>
+                <p><strong>Circle Area:</strong> ${(Math.PI * Math.pow(radius, 2)).toFixed(2)}</p>
+                <p><strong>Circle Circumference:</strong> ${(2 * Math.PI * radius).toFixed(2)}</p>
+            `;
+            
+            drawCirclePolygon(sides, method, radius);
+        }
+        
+        function drawCirclePolygon(sides, method, radius) {
+            const canvas = document.getElementById("circle-poly-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxRadius = Math.min(canvas.width, canvas.height) / 2 - 10;
+            const scale = maxRadius / (method === "inscribed" ? radius : radius / Math.cos(Math.PI / sides));
+            
+            // Draw circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * scale, 0, 2 * Math.PI);
+            ctx.strokeStyle = "#2c3e50";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw polygon
+            ctx.beginPath();
+            if (method === "inscribed") {
+                for (let i = 0; i < sides; i++) {
+                    const angle = i * 2 * Math.PI / sides - Math.PI / 2;
+                    const x = centerX + radius * scale * Math.cos(angle);
+                    const y = centerY + radius * scale * Math.sin(angle);
+                    
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+            } else {
+                for (let i = 0; i < sides; i++) {
+                    const angle1 = i * 2 * Math.PI / sides - Math.PI / 2;
+                    const angle2 = (i + 1) * 2 * Math.PI / sides - Math.PI / 2;
+                    
+                    const r = radius / Math.cos(Math.PI / sides);
+                    
+                    // Find intersection points of tangent lines
+                    const x1 = centerX + r * scale * Math.cos(angle1);
+                    const y1 = centerY + r * scale * Math.sin(angle1);
+                    const x2 = centerX + r * scale * Math.cos(angle2);
+                    const y2 = centerY + r * scale * Math.sin(angle2);
+                    
+                    if (i === 0) {
+                        ctx.moveTo(x1, y1);
+                    } else {
+                        ctx.lineTo(x1, y1);
+                    }
+                }
+            }
+            ctx.closePath();
+            ctx.strokeStyle = "#4CAF50";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw center
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+            ctx.fillStyle = "red";
+            ctx.fill();
+        }
+        
+        // Initialize the first tab
+        calculateRegularPolygon();
+    </script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangle & Trigonometry Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        .container { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            flex: 1;
+            min-width: 280px;
+        }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #2980b9; }
+        .result {
+            margin-top: 12px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        canvas {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .tab-container { margin-bottom: 15px; }
+        .tab-buttons { display: flex; margin-bottom: 10px; }
+        .tab-button {
+            background-color: #eee;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .tab-button.active { background-color: #3498db; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .flex-container { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-start; }
+        .info-note {
+            background-color: #e8f4ff;
+            border-left: 4px solid #3498db;
+            padding: 8px;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Triangle & Trigonometry Calculator</h1>
+    
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="openTab('pythagoras')">Pythagorean Theorem</button>
+            <button class="tab-button" onclick="openTab('trigRatios')">Trig Ratios</button>
+            <button class="tab-button" onclick="openTab('rightTriangle')">Right Triangle</button>
+        </div>
+        
+        <!-- Pythagorean Theorem Tab -->
+        <div id="pythagoras" class="tab-content active">
+            <h2>Pythagorean Theorem: a² + b² = c²</h2>
+            <div class="flex-container">
+                <div class="card">
+                    <div class="input-group">
+                        <label for="side-a">Side a:</label>
+                        <input type="number" id="side-a" min="0" step="any" placeholder="Enter side a">
+                    </div>
+                    <div class="input-group">
+                        <label for="side-b">Side b:</label>
+                        <input type="number" id="side-b" min="0" step="any" placeholder="Enter side b">
+                    </div>
+                    <div class="input-group">
+                        <label for="side-c">Side c (hypotenuse):</label>
+                        <input type="number" id="side-c" min="0" step="any" placeholder="Enter side c">
+                    </div>
+                    <div class="input-group">
+                        <label>Calculate:</label>
+                        <select id="pythag-calc-type">
+                            <option value="c">Hypotenuse (c) from a and b</option>
+                            <option value="a">Side a from b and c</option>
+                            <option value="b">Side b from a and c</option>
+                        </select>
+                    </div>
+                    <button onclick="calculatePythagoras()">Calculate</button>
+                    <div id="pythag-result" class="result"></div>
+                </div>
+                <div class="card">
+                    <canvas id="pythag-canvas" width="280" height="280"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trigonometric Ratios Tab -->
+        <div id="trigRatios" class="tab-content">
+            <h2>Trigonometric Ratios</h2>
+            <div class="flex-container">
+                <div class="card">
+                    <div class="input-group">
+                        <label for="trig-angle">Angle (degrees):</label>
+                        <input type="number" id="trig-angle" min="0" max="360" step="any" placeholder="Enter angle in degrees">
+                    </div>
+                    <button onclick="calculateTrigRatios()">Calculate Ratios</button>
+                    <div id="trig-ratios-result" class="result"></div>
+                    <div class="info-note">
+                        <p><strong>Key Relations:</strong><br>
+                        sin θ = opposite / hypotenuse<br>
+                        cos θ = adjacent / hypotenuse<br>
+                        tan θ = opposite / adjacent = sin θ / cos θ</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <canvas id="trig-canvas" width="280" height="280"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Triangle Solver Tab -->
+        <div id="rightTriangle" class="tab-content">
+            <h2>Right Triangle Solver</h2>
+            <div class="flex-container">
+                <div class="card">
+                    <div class="input-group">
+                        <label>First known value:</label>
+                        <select id="right-first-type">
+                            <option value="a">Side a</option>
+                            <option value="b">Side b</option>
+                            <option value="c">Side c (hypotenuse)</option>
+                            <option value="A">Angle A</option>
+                            <option value="B">Angle B</option>
+                        </select>
+                        <input type="number" id="right-first-value" min="0" step="any" placeholder="Enter value">
+                    </div>
+                    <div class="input-group">
+                        <label>Second known value:</label>
+                        <select id="right-second-type">
+                            <option value="a">Side a</option>
+                            <option value="b">Side b</option>
+                            <option value="c">Side c (hypotenuse)</option>
+                            <option value="A">Angle A</option>
+                            <option value="B">Angle B</option>
+                        </select>
+                        <input type="number" id="right-second-value" min="0" step="any" placeholder="Enter value">
+                    </div>
+                    <button onclick="solveRightTriangle()">Solve Triangle</button>
+                    <div id="right-triangle-result" class="result"></div>
+                </div>
+                <div class="card">
+                    <canvas id="right-triangle-canvas" width="280" height="280"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching function
+        function openTab(tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`button[onclick="openTab('${tabName}')"]`).classList.add('active');
+            
+            // Redraw appropriate canvas
+            if (tabName === 'pythagoras') drawPythagorasTriangle();
+            else if (tabName === 'trigRatios') drawTrigCanvas();
+            else if (tabName === 'rightTriangle') drawRightTriangle();
+        }
+        
+        // Helper function to check if triangle is valid
+        function isValidTriangle(a, b, c) {
+            return a + b > c && a + c > b && b + c > a;
+        }
+        
+        // Pythagorean Theorem Calculator
+        function calculatePythagoras() {
+            const a = parseFloat(document.getElementById('side-a').value) || 0;
+            const b = parseFloat(document.getElementById('side-b').value) || 0;
+            const c = parseFloat(document.getElementById('side-c').value) || 0;
+            const calcType = document.getElementById('pythag-calc-type').value;
+            
+            let result = '';
+            
+            switch (calcType) {
+                case 'c':
+                    if (a <= 0 || b <= 0) {
+                        result = 'Please enter positive values for sides a and b.';
+                    } else {
+                        const cValue = Math.sqrt(a*a + b*b);
+                        result = `Hypotenuse (c) = √(${a}² + ${b}²) = ${cValue.toFixed(4)}`;
+                        document.getElementById('side-c').value = cValue.toFixed(4);
+                    }
+                    break;
+                case 'a':
+                    if (b <= 0 || c <= 0) {
+                        result = 'Please enter positive values for side b and hypotenuse c.';
+                    } else if (b >= c) {
+                        result = 'Hypotenuse c must be greater than side b.';
+                    } else {
+                        const aValue = Math.sqrt(c*c - b*b);
+                        result = `Side a = √(${c}² - ${b}²) = ${aValue.toFixed(4)}`;
+                        document.getElementById('side-a').value = aValue.toFixed(4);
+                    }
+                    break;
+                case 'b':
+                    if (a <= 0 || c <= 0) {
+                        result = 'Please enter positive values for side a and hypotenuse c.';
+                    } else if (a >= c) {
+                        result = 'Hypotenuse c must be greater than side a.';
+                    } else {
+                        const bValue = Math.sqrt(c*c - a*a);
+                        result = `Side b = √(${c}² - ${a}²) = ${bValue.toFixed(4)}`;
+                        document.getElementById('side-b').value = bValue.toFixed(4);
+                    }
+                    break;
+            }
+            
+            document.getElementById('pythag-result').innerHTML = result;
+            drawPythagorasTriangle();
+        }
+        
+        function drawPythagorasTriangle() {
+            const canvas = document.getElementById('pythag-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            let a = parseFloat(document.getElementById('side-a').value) || 0;
+            let b = parseFloat(document.getElementById('side-b').value) || 0;
+            let c = parseFloat(document.getElementById('side-c').value) || 0;
+            
+            if (a <= 0 || b <= 0 || c <= 0 || !isValidTriangle(a, b, c)) {
+                a = 3; b = 4; c = 5;
+            }
+            
+            const maxDimension = Math.max(a, b, c);
+            const scale = Math.min(canvas.width, canvas.height) * 0.6 / maxDimension;
+            
+            const startX = 50;
+            const startY = canvas.height - 50;
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(startX + b * scale, startY);
+            ctx.lineTo(startX, startY - a * scale);
+            ctx.closePath();
+            
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#2c3e50';
+            ctx.stroke();
+            
+            ctx.font = '14px Arial';
+            ctx.fillStyle = '#2c3e50';
+            
+            ctx.fillText(`a = ${a}`, startX - 30, startY - a * scale / 2);
+            ctx.fillText(`b = ${b}`, startX + b * scale / 2, startY + 20);
+            ctx.fillText(`c = ${c}`, startX + b * scale / 3 - 15, startY - a * scale / 3 - 10);
+            
+            // Right angle symbol
+            ctx.beginPath();
+            ctx.moveTo(startX + 15, startY);
+            ctx.lineTo(startX + 15, startY - 15);
+            ctx.lineTo(startX, startY - 15);
+            ctx.stroke();
+        }
+        
+        // Trigonometric Ratios Calculator
+        function calculateTrigRatios() {
+            const angleDeg = parseFloat(document.getElementById('trig-angle').value);
+            
+            if (isNaN(angleDeg)) {
+                document.getElementById('trig-ratios-result').innerHTML = 'Please enter a valid angle.';
+                return;
+            }
+            
+            const angleRad = angleDeg * Math.PI / 180;
+            const sinValue = Math.sin(angleRad);
+            const cosValue = Math.cos(angleRad);
+            const tanValue = Math.tan(angleRad);
+            
+            let result = `<strong>For angle θ = ${angleDeg}°:</strong><br>`;
+            result += `sin(θ) = ${sinValue.toFixed(6)}<br>`;
+            result += `cos(θ) = ${cosValue.toFixed(6)}<br>`;
+            result += `tan(θ) = ${tanValue.toFixed(6)}`;
+            
+            document.getElementById('trig-ratios-result').innerHTML = result;
+            drawTrigCanvas(angleDeg);
+        }
+        
+        function drawTrigCanvas(angleDeg = 30) {
+            const canvas = document.getElementById('trig-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            angleDeg = angleDeg || 30;
+            if (angleDeg > 89 && angleDeg < 271) angleDeg = 30;
+            if (angleDeg > 270) angleDeg = 360 - angleDeg;
+            
+            const angleRad = angleDeg * Math.PI / 180;
+            const centerX = canvas.width/2;
+            const centerY = canvas.height/2;
+            const radius = 90;
+            
+            // Draw axes
+            ctx.beginPath();
+            ctx.moveTo(50, centerY);
+            ctx.lineTo(canvas.width-50, centerY);
+            ctx.moveTo(centerX, canvas.height-50);
+            ctx.lineTo(centerX, 50);
+            ctx.strokeStyle = '#aaa';
+            ctx.stroke();
+            
+            // Draw unit circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#2c3e50';
+            ctx.stroke();
+            
+            // Calculate point on circle
+            const x = centerX + radius * Math.cos(angleRad);
+            const y = centerY - radius * Math.sin(angleRad);
+            
+            // Draw radius line
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw sin line
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, centerY);
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw cos line
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, centerY);
+            ctx.strokeStyle = '#2ecc71';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw angle arc
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 20, 0, -angleRad, true);
+            ctx.strokeStyle = '#9b59b6';
+            ctx.stroke();
+            
+            // Add labels
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillText(`θ = ${angleDeg}°`, centerX + 25, centerY - 10);
+            
+            ctx.fillStyle = '#3498db';
+            ctx.fillText(`sin(θ)`, x + 5, centerY + (y - centerY) / 2);
+            
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillText(`cos(θ)`, centerX + (x - centerX) / 2, centerY + 20);
+        }
+        
+        // Right Triangle Solver
+        function solveRightTriangle() {
+            const firstType = document.getElementById('right-first-type').value;
+            const secondType = document.getElementById('right-second-type').value;
+            const firstValue = parseFloat(document.getElementById('right-first-value').value);
+            const secondValue = parseFloat(document.getElementById('right-second-value').value);
+            
+            if (isNaN(firstValue) || isNaN(secondValue)) {
+                document.getElementById('right-triangle-result').innerHTML = 'Please enter valid values.';
+                return;
+            }
+            
+            if (firstType === secondType) {
+                document.getElementById('right-triangle-result').innerHTML = 'Please select two different properties.';
+                return;
+            }
+            
+            let a, b, c, A, B;
+            const C = 90;
+            
+            // Assign known values
+            if (firstType === 'a') a = firstValue;
+            else if (firstType === 'b') b = firstValue;
+            else if (firstType === 'c') c = firstValue;
+            else if (firstType === 'A') A = firstValue;
+            else if (firstType === 'B') B = firstValue;
+            
+            if (secondType === 'a') a = secondValue;
+            else if (secondType === 'b') b = secondValue;
+            else if (secondType === 'c') c = secondValue;
+            else if (secondType === 'A') A = secondValue;
+            else if (secondType === 'B') B = secondValue;
+            
+            try {
+                // If we know one angle, calculate the other
+                if (A && !B) B = 90 - A;
+                if (B && !A) A = 90 - B;
+                
+                // Convert angles to radians
+                const aRad = A * Math.PI / 180;
+                const bRad = B * Math.PI / 180;
+                
+                // Different cases based on what we know
+                if (a && b) {
+                    c = Math.sqrt(a*a + b*b);
+                    A = Math.atan(a/b) * 180 / Math.PI;
+                    B = 90 - A;
+                } else if (a && c) {
+                    if (a >= c) throw new Error('Side a must be less than hypotenuse c');
+                    b = Math.sqrt(c*c - a*a);
+                    A = Math.asin(a/c) * 180 / Math.PI;
+                    B = 90 - A;
+                } else if (b && c) {
+                    if (b >= c) throw new Error('Side b must be less than hypotenuse c');
+                    a = Math.sqrt(c*c - b*b);
+                    B = Math.asin(b/c) * 180 / Math.PI;
+                    A = 90 - B;
+                } else if (a && A) {
+                    b = a / Math.tan(aRad);
+                    c = a / Math.sin(aRad);
+                } else if (a && B) {
+                    b = a * Math.tan(bRad);
+                    c = a / Math.cos(bRad);
+                } else if (b && A) {
+                    a = b * Math.tan(aRad);
+                    c = b / Math.cos(aRad);
+                } else if (b && B) {
+                    a = b / Math.tan(bRad);
+                    c = b / Math.sin(bRad);
+                } else if (c && A) {
+                    a = c * Math.sin(aRad);
+                    b = c * Math.cos(aRad);
+                } else if (c && B) {
+                    a = c * Math.cos(bRad);
+                    b = c * Math.sin(bRad);
+                }
+                
+                let result = '<strong>Triangle Properties:</strong><br>';
+                result += `a = ${a.toFixed(4)}, b = ${b.toFixed(4)}, c = ${c.toFixed(4)}<br>`;
+                result += `A = ${A.toFixed(2)}°, B = ${B.toFixed(2)}°, C = 90°<br>`;
+                result += `Area = ${(0.5 * a * b).toFixed(4)}, Perimeter = ${(a + b + c).toFixed(4)}`;
+                
+                document.getElementById('right-triangle-result').innerHTML = result;
+                drawRightTriangle(a, b, c, A, B);
+                
+            } catch (error) {
+                document.getElementById('right-triangle-result').innerHTML = `Error: ${error.message}`;
+            }
+        }
+        
+        function drawRightTriangle(a, b, c, A, B) {
+            const canvas = document.getElementById('right-triangle-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            a = a || 3;
+            b = b || 4;
+            c = c || 5;
+            A = A || Math.asin(a/c) * 180 / Math.PI;
+            B = B || Math.asin(b/c) * 180 / Math.PI;
+            
+            const maxDimension = Math.max(a, b, c);
+            const scale = Math.min(canvas.width, canvas.height) * 0.6 / maxDimension;
+            
+            const startX = 50;
+            const startY = canvas.height - 50;
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(startX + b * scale, startY);
+            ctx.lineTo(startX, startY - a * scale);
+            ctx.closePath();
+            
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#2c3e50';
+            ctx.stroke();
+            
+            ctx.font = '12px Arial';
+            ctx.fillStyle = '#2c3e50';
+            
+            ctx.fillText(`a = ${a.toFixed(1)}`, startX - 35, startY - a * scale / 2);
+            ctx.fillText(`b = ${b.toFixed(1)}`, startX + b * scale / 2, startY + 15);
+            ctx.fillText(`c = ${c.toFixed(1)}`, startX + b * scale / 3 - 15, startY - a * scale / 3 - 10);
+            
+            ctx.fillText(`A = ${A.toFixed(1)}°`, startX - 5, startY - a * scale - 10);
+            ctx.fillText(`B = ${B.toFixed(1)}°`, startX + b * scale + 5, startY - 5);
+            
+            // Right angle symbol
+            ctx.beginPath();
+            ctx.moveTo(startX + 15, startY);
+            ctx.lineTo(startX + 15, startY - 15);
+            ctx.lineTo(startX, startY - 15);
+            ctx.stroke();
+            ctx.fillText('C = 90°', startX + 15, startY - 15);
+        }
+
+        // Initialize first tab
+        openTab('pythagoras');
+    </script>
+</body>
+</html>

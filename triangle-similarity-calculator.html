@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangle Similarity Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .hidden {
+            display: none;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            background-color: white;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Triangle Similarity Calculator</h1>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="criteria">Criteria</div>
+            <div class="tab" data-tab="calculator">Calculator</div>
+            <div class="tab" data-tab="indirect">Indirect Measurement</div>
+        </div>
+        
+        <div id="criteria" class="tab-content active">
+            <h2>Triangle Similarity Criteria</h2>
+            
+            <div class="info-box">
+                <p>Two triangles are similar if they satisfy any of these criteria:</p>
+                <ul>
+                    <li><strong>AA:</strong> Two angles of one triangle are equal to two angles of another triangle.</li>
+                    <li><strong>SSS:</strong> All three pairs of corresponding sides are proportional.</li>
+                    <li><strong>SAS:</strong> Two pairs of corresponding sides are proportional and the included angles are equal.</li>
+                </ul>
+                <p>In similar triangles, the ratios of corresponding sides are equal: a/a' = b/b' = c/c'</p>
+            </div>
+            
+            <canvas id="criteriaCanvas" width="600" height="250"></canvas>
+        </div>
+        
+        <div id="calculator" class="tab-content">
+            <h2>Similarity Calculator</h2>
+            
+            <select id="criterion">
+                <option value="aa">AA (Angle-Angle)</option>
+                <option value="sss">SSS (Side-Side-Side)</option>
+                <option value="sas">SAS (Side-Angle-Side)</option>
+            </select>
+            
+            <div id="aaInputs">
+                <h3>Triangle 1:</h3>
+                <label for="aa-a1">Angle A:</label>
+                <input type="number" id="aa-a1" placeholder="Degrees">
+                <label for="aa-b1">Angle B:</label>
+                <input type="number" id="aa-b1" placeholder="Degrees">
+                
+                <h3>Triangle 2:</h3>
+                <label for="aa-a2">Angle A:</label>
+                <input type="number" id="aa-a2" placeholder="Degrees">
+                <label for="aa-b2">Angle B:</label>
+                <input type="number" id="aa-b2" placeholder="Degrees">
+            </div>
+            
+            <div id="sssInputs" class="hidden">
+                <h3>Triangle 1:</h3>
+                <label for="sss-a1">Side a:</label>
+                <input type="number" id="sss-a1" placeholder="Length">
+                <label for="sss-b1">Side b:</label>
+                <input type="number" id="sss-b1" placeholder="Length">
+                <label for="sss-c1">Side c:</label>
+                <input type="number" id="sss-c1" placeholder="Length">
+                
+                <h3>Triangle 2:</h3>
+                <label for="sss-a2">Side a:</label>
+                <input type="number" id="sss-a2" placeholder="Length">
+                <label for="sss-b2">Side b:</label>
+                <input type="number" id="sss-b2" placeholder="Length">
+                <label for="sss-c2">Side c:</label>
+                <input type="number" id="sss-c2" placeholder="Length">
+            </div>
+            
+            <div id="sasInputs" class="hidden">
+                <h3>Triangle 1:</h3>
+                <label for="sas-a1">Side a:</label>
+                <input type="number" id="sas-a1" placeholder="Length">
+                <label for="sas-angle1">Included Angle:</label>
+                <input type="number" id="sas-angle1" placeholder="Degrees">
+                <label for="sas-b1">Side b:</label>
+                <input type="number" id="sas-b1" placeholder="Length">
+                
+                <h3>Triangle 2:</h3>
+                <label for="sas-a2">Side a:</label>
+                <input type="number" id="sas-a2" placeholder="Length">
+                <label for="sas-angle2">Included Angle:</label>
+                <input type="number" id="sas-angle2" placeholder="Degrees">
+                <label for="sas-b2">Side b:</label>
+                <input type="number" id="sas-b2" placeholder="Length">
+            </div>
+            
+            <button id="checkSimilarity">Check Similarity</button>
+            
+            <div id="similarityResult" class="result hidden">
+                <h3>Result:</h3>
+                <p id="resultText"></p>
+                <p>Scale Factor: <span id="scaleFactor"></span></p>
+            </div>
+        </div>
+        
+        <div id="indirect" class="tab-content">
+            <h2>Indirect Measurement</h2>
+            <div class="info-box">
+                <p>Use similar triangles to find heights or distances indirectly.</p>
+            </div>
+            
+            <label for="personHeight">Your Height (m):</label>
+            <input type="number" id="personHeight" placeholder="E.g., 1.75" step="0.01">
+            
+            <label for="personShadow">Your Shadow Length (m):</label>
+            <input type="number" id="personShadow" placeholder="E.g., 2.5" step="0.01">
+            
+            <label for="objectShadow">Object's Shadow Length (m):</label>
+            <input type="number" id="objectShadow" placeholder="E.g., 15" step="0.01">
+            
+            <button id="calculateHeight">Calculate Object Height</button>
+            
+            <div id="heightResult" class="result hidden">
+                <h3>Result:</h3>
+                <p>The height of the object is approximately <span id="objectHeight"></span> meters.</p>
+            </div>
+            
+            <canvas id="indirectCanvas" width="600" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+                
+                if (tab.getAttribute('data-tab') === 'criteria') {
+                    drawCriteriaCanvas();
+                } else if (tab.getAttribute('data-tab') === 'indirect') {
+                    drawIndirectCanvas();
+                }
+            });
+        });
+        
+        // Input type switcher
+        document.getElementById('criterion').addEventListener('change', function() {
+            const criterion = this.value;
+            
+            document.getElementById('aaInputs').classList.add('hidden');
+            document.getElementById('sssInputs').classList.add('hidden');
+            document.getElementById('sasInputs').classList.add('hidden');
+            
+            document.getElementById(criterion + 'Inputs').classList.remove('hidden');
+        });
+        
+        // Check similarity
+        document.getElementById('checkSimilarity').addEventListener('click', function() {
+            const criterion = document.getElementById('criterion').value;
+            const resultDiv = document.getElementById('similarityResult');
+            const resultText = document.getElementById('resultText');
+            const scaleFactorSpan = document.getElementById('scaleFactor');
+            
+            let isSimilar = false;
+            let scaleFactor = 0;
+            
+            if (criterion === 'aa') {
+                const a1 = parseFloat(document.getElementById('aa-a1').value);
+                const b1 = parseFloat(document.getElementById('aa-b1').value);
+                const a2 = parseFloat(document.getElementById('aa-a2').value);
+                const b2 = parseFloat(document.getElementById('aa-b2').value);
+                
+                if (isNaN(a1) || isNaN(b1) || isNaN(a2) || isNaN(b2)) {
+                    resultText.textContent = "Please enter all angles.";
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                // Check angles validity
+                if (a1 <= 0 || b1 <= 0 || a2 <= 0 || b2 <= 0 || 
+                    a1 >= 180 || b1 >= 180 || a2 >= 180 || b2 >= 180 || 
+                    a1 + b1 >= 180 || a2 + b2 >= 180) {
+                    resultText.textContent = "Invalid angles. Must be between 0° and 180°, and two angles cannot sum to 180° or more.";
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                isSimilar = (Math.abs(a1 - a2) < 0.01 && Math.abs(b1 - b2) < 0.01);
+                scaleFactor = "Cannot be determined from angles alone";
+                
+            } else if (criterion === 'sss') {
+                const a1 = parseFloat(document.getElementById('sss-a1').value);
+                const b1 = parseFloat(document.getElementById('sss-b1').value);
+                const c1 = parseFloat(document.getElementById('sss-c1').value);
+                const a2 = parseFloat(document.getElementById('sss-a2').value);
+                const b2 = parseFloat(document.getElementById('sss-b2').value);
+                const c2 = parseFloat(document.getElementById('sss-c2').value);
+                
+                if (isNaN(a1) || isNaN(b1) || isNaN(c1) || isNaN(a2) || isNaN(b2) || isNaN(c2)) {
+                    resultText.textContent = "Please enter all side lengths.";
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                // Check triangle inequality
+                if (a1 <= 0 || b1 <= 0 || c1 <= 0 || a2 <= 0 || b2 <= 0 || c2 <= 0 ||
+                    a1 + b1 <= c1 || a1 + c1 <= b1 || b1 + c1 <= a1 ||
+                    a2 + b2 <= c2 || a2 + c2 <= b2 || b2 + c2 <= a2) {
+                    resultText.textContent = "Invalid side lengths. The sum of any two sides must be greater than the third side.";
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                const ratio1 = a1 / a2;
+                const ratio2 = b1 / b2;
+                const ratio3 = c1 / c2;
+                
+                isSimilar = (Math.abs(ratio1 - ratio2) < 0.01 && Math.abs(ratio1 - ratio3) < 0.01);
+                
+                if (isSimilar) {
+                    scaleFactor = ratio1.toFixed(3);
+                }
+            } else if (criterion === 'sas') {
+                const a1 = parseFloat(document.getElementById('sas-a1').value);
+                const angle1 = parseFloat(document.getElementById('sas-angle1').value);
+                const b1 = parseFloat(document.getElementById('sas-b1').value);
+                const a2 = parseFloat(document.getElementById('sas-a2').value);
+                const angle2 = parseFloat(document.getElementById('sas-angle2').value);
+                const b2 = parseFloat(document.getElementById('sas-b2').value);
+                
+                if (isNaN(a1) || isNaN(angle1) || isNaN(b1) || isNaN(a2) || isNaN(angle2) || isNaN(b2)) {
+                    resultText.textContent = "Please enter all values.";
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                if (a1 <= 0 || b1 <= 0 || a2 <= 0 || b2 <= 0 ||
+                    angle1 <= 0 || angle1 >= 180 || angle2 <= 0 || angle2 >= 180) {
+                    resultText.textContent = "Invalid values. Sides must be positive and angles between 0° and 180°.";
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                const ratio1 = a1 / a2;
+                const ratio2 = b1 / b2;
+                
+                isSimilar = (Math.abs(angle1 - angle2) < 0.01 && Math.abs(ratio1 - ratio2) < 0.01);
+                
+                if (isSimilar) {
+                    scaleFactor = ratio1.toFixed(3);
+                }
+            }
+            
+            if (isSimilar) {
+                resultText.textContent = "The triangles are similar!";
+                scaleFactorSpan.textContent = scaleFactor;
+            } else {
+                resultText.textContent = "The triangles are NOT similar.";
+                scaleFactorSpan.textContent = "N/A";
+            }
+            
+            resultDiv.classList.remove('hidden');
+        });
+        
+        // Calculate height using indirect measurement
+        document.getElementById('calculateHeight').addEventListener('click', function() {
+            const personHeight = parseFloat(document.getElementById('personHeight').value);
+            const personShadow = parseFloat(document.getElementById('personShadow').value);
+            const objectShadow = parseFloat(document.getElementById('objectShadow').value);
+            
+            if (isNaN(personHeight) || isNaN(personShadow) || isNaN(objectShadow)) {
+                alert("Please enter all values.");
+                return;
+            }
+            
+            if (personHeight <= 0 || personShadow <= 0 || objectShadow <= 0) {
+                alert("All values must be positive.");
+                return;
+            }
+            
+            // Using the proportion: personHeight/personShadow = objectHeight/objectShadow
+            const objectHeight = (personHeight * objectShadow) / personShadow;
+            
+            document.getElementById('objectHeight').textContent = objectHeight.toFixed(2);
+            document.getElementById('heightResult').classList.remove('hidden');
+            
+            drawIndirectCanvas();
+        });
+        
+        // Canvas drawing functions
+        function drawCriteriaCanvas() {
+            const canvas = document.getElementById('criteriaCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // First triangle
+            ctx.beginPath();
+            ctx.moveTo(100, 200);
+            ctx.lineTo(200, 100);
+            ctx.lineTo(300, 200);
+            ctx.closePath();
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Second triangle (similar but smaller)
+            ctx.beginPath();
+            ctx.moveTo(400, 200);
+            ctx.lineTo(450, 150);
+            ctx.lineTo(500, 200);
+            ctx.closePath();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Label angles and sides
+            ctx.fillStyle = 'black';
+            ctx.font = '14px Arial';
+            ctx.fillText("A", 100, 220);
+            ctx.fillText("B", 200, 90);
+            ctx.fillText("C", 300, 220);
+            ctx.fillText("A'", 400, 220);
+            ctx.fillText("B'", 450, 140);
+            ctx.fillText("C'", 500, 220);
+            
+            // Label sides
+            ctx.fillText("a", 150, 160);
+            ctx.fillText("b", 250, 160);
+            ctx.fillText("c", 200, 210);
+            ctx.fillText("a'", 425, 180);
+            ctx.fillText("b'", 475, 180);
+            ctx.fillText("c'", 450, 210);
+        }
+        
+        function drawIndirectCanvas() {
+            const canvas = document.getElementById('indirectCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const personHeight = parseFloat(document.getElementById('personHeight').value) || 1.75;
+            const personShadow = parseFloat(document.getElementById('personShadow').value) || 2.5;
+            const objectShadow = parseFloat(document.getElementById('objectShadow').value) || 15;
+            const objectHeight = (personHeight * objectShadow) / personShadow;
+            
+            const scale = 20;
+            
+            // Draw sun
+            ctx.fillStyle = 'yellow';
+            ctx.beginPath();
+            ctx.arc(550, 50, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw ground
+            ctx.strokeStyle = 'brown';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(550, 150);
+            ctx.stroke();
+            
+            // Draw person
+            const personX = 150;
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(personX, 150);
+            ctx.lineTo(personX, 150 - personHeight * scale);
+            ctx.stroke();
+            
+            // Person shadow
+            ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.moveTo(personX, 150);
+            ctx.lineTo(personX + personShadow * scale, 150);
+            ctx.stroke();
+            
+            // Draw object
+            const objectX = 350;
+            ctx.strokeStyle = 'green';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(objectX, 150);
+            ctx.lineTo(objectX, 150 - Math.min(objectHeight * scale, 130));
+            ctx.stroke();
+            
+            // Object shadow
+            ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.moveTo(objectX, 150);
+            ctx.lineTo(objectX + objectShadow * scale, 150);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = 'black';
+            ctx.font = '12px Arial';
+            ctx.fillText(personHeight + "m", personX - 20, 150 - personHeight * scale / 2);
+            ctx.fillText(personShadow + "m", personX + personShadow * scale / 2, 165);
+            ctx.fillText(objectHeight.toFixed(2) + "m", objectX - 30, 150 - objectHeight * scale / 2);
+            ctx.fillText(objectShadow + "m", objectX + objectShadow * scale / 2, 165);
+        }
+        
+        // Initialize canvases
+        drawCriteriaCanvas();
+    </script>
+</body>
+</html>

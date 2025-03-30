@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadrilateral Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 10px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .quadrilateral-type {
+            color: #2980b9;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .properties {
+            margin-top: 10px;
+        }
+        
+        .property {
+            margin: 5px 0;
+            padding: 3px 8px;
+            background-color: #e8f4f8;
+            border-radius: 3px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .canvas-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        canvas {
+            border: 1px solid #ddd;
+            background-color: white;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f5f5f5;
+            border: none;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .definition {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quadrilateral Properties Calculator</h1>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'calculator')">Calculator</button>
+            <button class="tab" onclick="openTab(event, 'reference')">Reference Guide</button>
+        </div>
+        
+        <div id="calculator" class="tab-content active">
+            <p>Enter the coordinates of the four vertices of your quadrilateral (clockwise or counterclockwise order):</p>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="x1">Vertex 1 (x1, y1):</label>
+                    <input type="number" id="x1" placeholder="x1" value="0">
+                    <input type="number" id="y1" placeholder="y1" value="0">
+                </div>
+                
+                <div class="input-group">
+                    <label for="x2">Vertex 2 (x2, y2):</label>
+                    <input type="number" id="x2" placeholder="x2" value="4">
+                    <input type="number" id="y2" placeholder="y2" value="0">
+                </div>
+                
+                <div class="input-group">
+                    <label for="x3">Vertex 3 (x3, y3):</label>
+                    <input type="number" id="x3" placeholder="x3" value="4">
+                    <input type="number" id="y3" placeholder="y3" value="4">
+                </div>
+                
+                <div class="input-group">
+                    <label for="x4">Vertex 4 (x4, y4):</label>
+                    <input type="number" id="x4" placeholder="x4" value="0">
+                    <input type="number" id="y4" placeholder="y4" value="4">
+                </div>
+            </div>
+            
+            <button onclick="calculateProperties()">Identify Quadrilateral</button>
+            
+            <div class="canvas-container">
+                <canvas id="quadCanvas" width="300" height="300"></canvas>
+            </div>
+            
+            <div id="results" class="results" style="display: none;">
+                <div id="quadType" class="quadrilateral-type"></div>
+                <div id="properties" class="properties"></div>
+            </div>
+        </div>
+        
+        <div id="reference" class="tab-content">
+            <h2>Quadrilateral Types and Properties</h2>
+            
+            <div class="definition">
+                <h3>Square</h3>
+                <p>A quadrilateral with four equal sides and four right angles.</p>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>All sides are equal</li>
+                    <li>All angles are 90°</li>
+                    <li>Diagonals are equal and bisect each other at right angles</li>
+                    <li>Diagonals bisect opposite angles</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h3>Rectangle</h3>
+                <p>A quadrilateral with four right angles.</p>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>Opposite sides are parallel and equal</li>
+                    <li>All angles are 90°</li>
+                    <li>Diagonals are equal and bisect each other</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h3>Rhombus</h3>
+                <p>A quadrilateral with four equal sides.</p>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>All sides are equal</li>
+                    <li>Opposite angles are equal</li>
+                    <li>Diagonals bisect each other at right angles</li>
+                    <li>Diagonals bisect opposite angles</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h3>Parallelogram</h3>
+                <p>A quadrilateral with opposite sides parallel.</p>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>Opposite sides are parallel and equal</li>
+                    <li>Opposite angles are equal</li>
+                    <li>Diagonals bisect each other</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h3>Trapezoid</h3>
+                <p>A quadrilateral with exactly one pair of parallel sides.</p>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>One pair of sides is parallel</li>
+                    <li>The sum of angles on the same side of each parallel side is 180°</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h3>Kite</h3>
+                <p>A quadrilateral with two pairs of adjacent sides equal.</p>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>Two pairs of adjacent sides are equal</li>
+                    <li>One diagonal bisects the other at right angles</li>
+                    <li>One diagonal bisects two opposite angles</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabContent, tabLinks;
+            
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+            }
+            
+            tabLinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tabLinks.length; i++) {
+                tabLinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function calculateProperties() {
+            // Get coordinates
+            const vertices = [
+                {x: parseFloat(document.getElementById('x1').value), y: parseFloat(document.getElementById('y1').value)},
+                {x: parseFloat(document.getElementById('x2').value), y: parseFloat(document.getElementById('y2').value)},
+                {x: parseFloat(document.getElementById('x3').value), y: parseFloat(document.getElementById('y3').value)},
+                {x: parseFloat(document.getElementById('x4').value), y: parseFloat(document.getElementById('y4').value)}
+            ];
+            
+            // Calculate side lengths
+            const sides = [
+                distance(vertices[0], vertices[1]),
+                distance(vertices[1], vertices[2]),
+                distance(vertices[2], vertices[3]),
+                distance(vertices[3], vertices[0])
+            ];
+            
+            // Calculate diagonal lengths
+            const diagonals = [
+                distance(vertices[0], vertices[2]),
+                distance(vertices[1], vertices[3])
+            ];
+            
+            // Calculate angles
+            const angles = [
+                calculateAngle(vertices[3], vertices[0], vertices[1]),
+                calculateAngle(vertices[0], vertices[1], vertices[2]),
+                calculateAngle(vertices[1], vertices[2], vertices[3]),
+                calculateAngle(vertices[2], vertices[3], vertices[0])
+            ];
+            
+            // Check if opposite sides are parallel
+            const slopes = [
+                calculateSlope(vertices[0], vertices[1]),
+                calculateSlope(vertices[1], vertices[2]),
+                calculateSlope(vertices[2], vertices[3]),
+                calculateSlope(vertices[3], vertices[0])
+            ];
+            
+            const oppositeSidesParallel = 
+                (isParallel(slopes[0], slopes[2]) && isParallel(slopes[1], slopes[3]));
+            
+            const oneSetParallel = 
+                (isParallel(slopes[0], slopes[2]) || isParallel(slopes[1], slopes[3]));
+            
+            // Check if all sides are equal
+            const allSidesEqual = areAllEqual(sides);
+            
+            // Check if all angles are 90 degrees
+            const allAnglesRight = angles.every(angle => Math.abs(angle - 90) < 0.1);
+            
+            // Check if opposite angles are equal
+            const oppositeAnglesEqual = 
+                (Math.abs(angles[0] - angles[2]) < 0.1 && Math.abs(angles[1] - angles[3]) < 0.1);
+            
+            // Check if diagonals are equal
+            const diagonalsEqual = Math.abs(diagonals[0] - diagonals[1]) < 0.1;
+            
+            // Check if diagonals bisect each other
+            const diagonalIntersection = findIntersection(
+                vertices[0], vertices[2], 
+                vertices[1], vertices[3]
+            );
+            
+            // Calculate kite properties (two pairs of adjacent sides equal)
+            const isKite = 
+                (Math.abs(sides[0] - sides[1]) < 0.1 && Math.abs(sides[2] - sides[3]) < 0.1) || 
+                (Math.abs(sides[1] - sides[2]) < 0.1 && Math.abs(sides[3] - sides[0]) < 0.1);
+            
+            // Identify the quadrilateral type
+            let quadType = "General Quadrilateral";
+            let properties = [];
+            
+            if (allSidesEqual && allAnglesRight) {
+                quadType = "Square";
+                properties = [
+                    "All sides are equal",
+                    "All angles are 90°",
+                    "Diagonals are equal",
+                    "Diagonals bisect each other",
+                    "Diagonals bisect opposite angles"
+                ];
+            } else if (allAnglesRight) {
+                quadType = "Rectangle";
+                properties = [
+                    "Opposite sides are parallel and equal",
+                    "All angles are 90°",
+                    "Diagonals are equal",
+                    "Diagonals bisect each other"
+                ];
+            } else if (allSidesEqual && oppositeSidesParallel) {
+                quadType = "Rhombus";
+                properties = [
+                    "All sides are equal",
+                    "Opposite sides are parallel",
+                    "Opposite angles are equal",
+                    "Diagonals bisect each other",
+                    "Diagonals bisect opposite angles"
+                ];
+            } else if (oppositeSidesParallel) {
+                quadType = "Parallelogram";
+                properties = [
+                    "Opposite sides are parallel and equal",
+                    "Opposite angles are equal",
+                    "Diagonals bisect each other"
+                ];
+            } else if (oneSetParallel) {
+                quadType = "Trapezoid";
+                properties = [
+                    "One pair of sides is parallel"
+                ];
+            } else if (isKite) {
+                quadType = "Kite";
+                properties = [
+                    "Two pairs of adjacent sides are equal",
+                    "One diagonal bisects the other",
+                    "One diagonal bisects two opposite angles"
+                ];
+            }
+            
+            // Display results
+            document.getElementById('quadType').textContent = quadType;
+            
+            const propertiesDiv = document.getElementById('properties');
+            propertiesDiv.innerHTML = "";
+            properties.forEach(property => {
+                const propertyElement = document.createElement('div');
+                propertyElement.className = 'property';
+                propertyElement.textContent = property;
+                propertiesDiv.appendChild(propertyElement);
+            });
+            
+            document.getElementById('results').style.display = 'block';
+            
+            // Draw the quadrilateral
+            drawQuadrilateral(vertices);
+        }
+        
+        function distance(point1, point2) {
+            const dx = point2.x - point1.x;
+            const dy = point2.y - point1.y;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+        
+        function calculateAngle(point1, vertex, point2) {
+            const a = distance(vertex, point1);
+            const b = distance(vertex, point2);
+            const c = distance(point1, point2);
+            
+            const cosAngle = (a * a + b * b - c * c) / (2 * a * b);
+            return Math.acos(Math.max(-1, Math.min(1, cosAngle))) * (180 / Math.PI);
+        }
+        
+        function calculateSlope(point1, point2) {
+            if (point2.x - point1.x === 0) {
+                return Infinity;
+            }
+            return (point2.y - point1.y) / (point2.x - point1.x);
+        }
+        
+        function isParallel(slope1, slope2) {
+            if (slope1 === Infinity && slope2 === Infinity) {
+                return true;
+            }
+            if (slope1 === Infinity || slope2 === Infinity) {
+                return false;
+            }
+            return Math.abs(slope1 - slope2) < 0.1;
+        }
+        
+        function areAllEqual(arr) {
+            if (arr.length === 0) return true;
+            for (let i = 1; i < arr.length; i++) {
+                if (Math.abs(arr[i] - arr[0]) > 0.1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        function findIntersection(p1, p2, p3, p4) {
+            const d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+            
+            if (d === 0) {
+                return null; // Lines are parallel
+            }
+            
+            const x = ((p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x)) / d;
+            const y = ((p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x)) / d;
+            
+            return {x, y};
+        }
+        
+        function drawQuadrilateral(vertices) {
+            const canvas = document.getElementById('quadCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Find min and max values for scaling
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            
+            vertices.forEach(vertex => {
+                minX = Math.min(minX, vertex.x);
+                minY = Math.min(minY, vertex.y);
+                maxX = Math.max(maxX, vertex.x);
+                maxY = Math.max(maxY, vertex.y);
+            });
+            
+            // Add padding
+            const padding = 40;
+            
+            // Calculate scale
+            const scaleX = (canvas.width - 2 * padding) / Math.max(1, maxX - minX);
+            const scaleY = (canvas.height - 2 * padding) / Math.max(1, maxY - minY);
+            const scale = Math.min(scaleX, scaleY);
+            
+            // Calculate offset to center the drawing
+            const offsetX = padding + (canvas.width - 2 * padding - scale * (maxX - minX)) / 2 - scale * minX;
+            const offsetY = padding + (canvas.height - 2 * padding - scale * (maxY - minY)) / 2 - scale * minY;
+            
+            // Draw the quadrilateral
+            ctx.beginPath();
+            ctx.moveTo(offsetX + scale * vertices[0].x, offsetY + scale * vertices[0].y);
+            
+            for (let i = 1; i < vertices.length; i++) {
+                ctx.lineTo(offsetX + scale * vertices[i].x, offsetY + scale * vertices[i].y);
+            }
+            
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.2)';
+            ctx.fill();
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw vertex labels
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '12px Arial';
+            
+            for (let i = 0; i < vertices.length; i++) {
+                const x = offsetX + scale * vertices[i].x;
+                const y = offsetY + scale * vertices[i].y;
+                
+                ctx.fillText(`V${i+1}`, x + 5, y - 5);
+            }
+        }
+        
+        // Initialize by drawing the default quadrilateral
+        window.onload = function() {
+            calculateProperties();
+        };
+    </script>
+</body>
+</html>

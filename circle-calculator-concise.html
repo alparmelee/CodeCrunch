@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circle Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1 { text-align: center; color: #2c3e50; }
+    .calculator-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    h2 { color: #3498db; margin-top: 0; }
+    .form-group { margin-bottom: 10px; }
+    label { display: block; margin-bottom: 3px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: a10px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    .result p { margin: 5px 0; }
+    canvas { display: block; margin: 10px auto; border: 1px solid #ddd; background: white; }
+    .tabs { display: flex; margin-bottom: 10px; }
+    .tab { 
+      flex: 1; 
+      padding: 10px; 
+      text-align: center; 
+      background: #eee; 
+      cursor: pointer; 
+      border: 1px solid #ddd;
+    }
+    .tab.active { background: #3498db; color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .two-columns { display: flex; gap: 15px; }
+    .column { flex: 1; }
+  </style>
+</head>
+<body>
+  <h1>Circle Properties Calculator</h1>
+  
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0)">Basic</div>
+    <div class="tab" onclick="switchTab(1)">Arcs & Chords</div>
+    <div class="tab" onclick="switchTab(2)">Angles</div>
+    <div class="tab" onclick="switchTab(3)">Tangents</div>
+    <div class="tab" onclick="switchTab(4)">Equation</div>
+  </div>
+  
+  <div class="tab-content active">
+    <div class="calculator-section">
+      <h2>Basic Circle Properties</h2>
+      <div class="form-group">
+        <label for="radius">Radius (r):</label>
+        <input type="number" id="radius" step="any" min="0" placeholder="Enter radius">
+      </div>
+      <button onclick="calculateBasic()">Calculate</button>
+      <div id="basicResults" class="result"></div>
+      <canvas id="basicCanvas" width="250" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="calculator-section">
+      <h2>Arc and Chord Calculator</h2>
+      <div class="form-group">
+        <label for="arcRadius">Radius (r):</label>
+        <input type="number" id="arcRadius" step="any" min="0" placeholder="Enter radius">
+      </div>
+      <div class="form-group">
+        <label for="centralAngle">Central Angle (degrees):</label>
+        <input type="number" id="centralAngle" step="any" min="0" max="360" placeholder="Enter angle">
+      </div>
+      <button onclick="calculateArc()">Calculate</button>
+      <div id="arcResults" class="result"></div>
+      <canvas id="arcCanvas" width="250" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="calculator-section">
+      <h2>Circle Angles</h2>
+      <div class="form-group">
+        <label for="angleType">Angle Type:</label>
+        <select id="angleType">
+          <option value="central">Central Angle</option>
+          <option value="inscribed">Inscribed Angle</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="angleRadius">Radius (r):</label>
+        <input type="number" id="angleRadius" step="any" min="0" placeholder="Enter radius">
+      </div>
+      <div class="form-group">
+        <label for="angleDegrees">Angle (degrees):</label>
+        <input type="number" id="angleDegrees" step="any" min="0" max="360" placeholder="Enter angle">
+      </div>
+      <button onclick="calculateAngles()">Calculate</button>
+      <div id="angleResults" class="result"></div>
+      <canvas id="angleCanvas" width="250" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="calculator-section">
+      <h2>Tangents and Secants</h2>
+      <div class="form-group">
+        <label for="tangentRadius">Radius (r):</label>
+        <input type="number" id="tangentRadius" step="any" min="0" placeholder="Enter radius">
+      </div>
+      <div class="form-group">
+        <label for="pointDistance">Distance from Center to Point (d):</label>
+        <input type="number" id="pointDistance" step="any" min="0" placeholder="Enter distance">
+      </div>
+      <button onclick="calculateTangent()">Calculate</button>
+      <div id="tangentResults" class="result"></div>
+      <canvas id="tangentCanvas" width="250" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="calculator-section">
+      <h2>Circle Equation</h2>
+      <div class="form-group">
+        <label for="centerX">Center X-coordinate (h):</label>
+        <input type="number" id="centerX" step="any" placeholder="Enter x-coordinate">
+      </div>
+      <div class="form-group">
+        <label for="centerY">Center Y-coordinate (k):</label>
+        <input type="number" id="centerY" step="any" placeholder="Enter y-coordinate">
+      </div>
+      <div class="form-group">
+        <label for="eqRadius">Radius (r):</label>
+        <input type="number" id="eqRadius" step="any" min="0" placeholder="Enter radius">
+      </div>
+      <button onclick="calculateEquation()">Generate Equation</button>
+      <div id="equationResults" class="result"></div>
+      <canvas id="equationCanvas" width="250" height="250"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(index) {
+      document.querySelectorAll('.tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('.tab-content').forEach((content, i) => {
+        content.classList.toggle('active', i === index);
+      });
+    }
+
+    // Basic circle properties
+    function calculateBasic() {
+      const r = parseFloat(document.getElementById("radius").value);
+      if (isNaN(r) || r <= 0) return alert("Please enter a valid radius");
+      
+      const d = 2 * r;
+      const c = 2 * Math.PI * r;
+      const a = Math.PI * r * r;
+      
+      document.getElementById("basicResults").innerHTML = `
+        <p><strong>Diameter:</strong> ${d.toFixed(2)}</p>
+        <p><strong>Circumference:</strong> ${c.toFixed(2)}</p>
+        <p><strong>Area:</strong> ${a.toFixed(2)}</p>
+      `;
+      
+      // Draw circle
+      const canvas = document.getElementById("basicCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const scale = Math.min(cx, cy) / (r + 10);
+      const sr = r * scale;
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, sr, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#3498db";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Draw radius
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + sr, cy);
+      ctx.strokeStyle = "#e74c3c";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Label
+      ctx.fillStyle = "#333";
+      ctx.font = "14px Arial";
+      ctx.fillText("r", cx + sr/2, cy - 5);
+      
+      // Center point
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e74c3c";
+      ctx.fill();
+    }
+    
+    // Arc and chord calculation
+    function calculateArc() {
+      const r = parseFloat(document.getElementById("arcRadius").value);
+      const angle = parseFloat(document.getElementById("centralAngle").value);
+      
+      if (isNaN(r) || r <= 0 || isNaN(angle) || angle <= 0 || angle > 360)
+        return alert("Please enter valid values");
+      
+      const rad = angle * Math.PI / 180;
+      const arc = r * rad;
+      const chord = 2 * r * Math.sin(rad / 2);
+      const sector = 0.5 * r * r * rad;
+      const segment = sector - (0.5 * r * r * Math.sin(rad));
+      
+      document.getElementById("arcResults").innerHTML = `
+        <p><strong>Arc Length:</strong> ${arc.toFixed(2)}</p>
+        <p><strong>Chord Length:</strong> ${chord.toFixed(2)}</p>
+        <p><strong>Sector Area:</strong> ${sector.toFixed(2)}</p>
+        <p><strong>Segment Area:</strong> ${segment.toFixed(2)}</p>
+      `;
+      
+      // Draw arc and chord
+      const canvas = document.getElementById("arcCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const scale = Math.min(cx, cy) / (r + 10);
+      const sr = r * scale;
+      
+      // Draw circle (faded)
+      ctx.beginPath();
+      ctx.arc(cx, cy, sr, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#ccc";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      // Draw arc
+      ctx.beginPath();
+      ctx.arc(cx, cy, sr, -rad/2, rad/2);
+      ctx.strokeStyle = "#3498db";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Draw chord
+      ctx.beginPath();
+      ctx.moveTo(cx + sr * Math.cos(-rad/2), cy + sr * Math.sin(-rad/2));
+      ctx.lineTo(cx + sr * Math.cos(rad/2), cy + sr * Math.sin(rad/2));
+      ctx.strokeStyle = "#e74c3c";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Draw center
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e74c3c";
+      ctx.fill();
+    }
+    
+    // Angle calculation
+    function calculateAngles() {
+      const r = parseFloat(document.getElementById("angleRadius").value);
+      const angle = parseFloat(document.getElementById("angleDegrees").value);
+      const type = document.getElementById("angleType").value;
+      
+      if (isNaN(r) || r <= 0 || isNaN(angle) || angle <= 0 || angle > 360)
+        return alert("Please enter valid values");
+      
+      const rad = angle * Math.PI / 180;
+      const arc = r * rad;
+      let html = `<p><strong>Arc Length:</strong> ${arc.toFixed(2)}</p>`;
+      
+      if (type === "central") {
+        const chord = 2 * r * Math.sin(rad / 2);
+        html += `<p><strong>Chord Length:</strong> ${chord.toFixed(2)}</p>`;
+      } else if (type === "inscribed") {
+        const centralAngle = angle * 2;
+        html += `<p><strong>Corresponding Central Angle:</strong> ${centralAngle.toFixed(2)}°</p>
+                <p><strong>Inscribed angles in same arc are equal</strong></p>`;
+      }
+      
+      document.getElementById("angleResults").innerHTML = html;
+      
+      // Draw angle
+      const canvas = document.getElementById("angleCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const scale = Math.min(cx, cy) / (r + 10);
+      const sr = r * scale;
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, sr, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#3498db";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      if (type === "central") {
+        // Draw central angle
+        const startAngle = -rad/2;
+        const endAngle = rad/2;
+        
+        // Draw angle arc
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, 20, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(231, 76, 60, 0.3)";
+        ctx.fill();
+        
+        // Draw radii
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + sr * Math.cos(startAngle), cy + sr * Math.sin(startAngle));
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + sr * Math.cos(endAngle), cy + sr * Math.sin(endAngle));
+        ctx.strokeStyle = "#e74c3c";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else if (type === "inscribed") {
+        // Draw inscribed angle
+        const startAngle = -rad/2;
+        const endAngle = rad/2;
+        const px = cx + sr * Math.cos(Math.PI + (startAngle + endAngle)/2);
+        const py = cy + sr * Math.sin(Math.PI + (startAngle + endAngle)/2);
+        
+        const p1x = cx + sr * Math.cos(startAngle);
+        const p1y = cy + sr * Math.sin(startAngle);
+        const p2x = cx + sr * Math.cos(endAngle);
+        const p2y = cy + sr * Math.sin(endAngle);
+        
+        // Draw angle lines
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(p1x, p1y);
+        ctx.moveTo(px, py);
+        ctx.lineTo(p2x, p2y);
+        ctx.strokeStyle = "#e74c3c";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Draw arc
+        ctx.beginPath();
+        ctx.arc(cx, cy, sr, startAngle, endAngle);
+        ctx.strokeStyle = "#27ae60";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+      
+      // Draw center
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e74c3c";
+      ctx.fill();
+    }
+    
+    // Tangent calculation
+    function calculateTangent() {
+      const r = parseFloat(document.getElementById("tangentRadius").value);
+      const d = parseFloat(document.getElementById("pointDistance").value);
+      
+      if (isNaN(r) || r <= 0 || isNaN(d) || d <= 0)
+        return alert("Please enter valid values");
+      
+      let html = "";
+      
+      if (d < r) {
+        html = `<p>The point is inside the circle. No tangent exists.</p>`;
+      } else if (d === r) {
+        html = `<p>The point is on the circle. Tangent is perpendicular to radius.</p>`;
+      } else {
+        const tangentLength = Math.sqrt(d * d - r * r);
+        html = `
+          <p><strong>Tangent Length:</strong> ${tangentLength.toFixed(2)}</p>
+          <p><strong>Power of the Point:</strong> ${(tangentLength * tangentLength).toFixed(2)}</p>
+          <p><strong>For secants:</strong> PA × PB = PC × PD = ${(tangentLength * tangentLength).toFixed(2)}</p>
+        `;
+      }
+      
+      document.getElementById("tangentResults").innerHTML = html;
+      
+      // Draw tangents
+      const canvas = document.getElementById("tangentCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const maxDist = Math.max(r, d);
+      const scale = Math.min(cx, cy) / (maxDist + 10);
+      const sr = r * scale;
+      const sd = d * scale;
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, sr, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#3498db";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Draw point
+      const px = cx + sd;
+      const py = cy;
+      
+      ctx.beginPath();
+      ctx.arc(px, py, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e74c3c";
+      ctx.fill();
+      
+      // Draw line from center to point
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(px, py);
+      ctx.strokeStyle = "#95a5a6";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      if (d > r) {
+        // Calculate tangent points
+        const angle = Math.asin(r / d);
+        
+        const tp1x = cx + sr * Math.cos(Math.PI - angle);
+        const tp1y = cy + sr * Math.sin(Math.PI - angle);
+        const tp2x = cx + sr * Math.cos(Math.PI + angle);
+        const tp2y = cy + sr * Math.sin(Math.PI + angle);
+        
+        // Draw tangent lines
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(tp1x, tp1y);
+        ctx.moveTo(px, py);
+        ctx.lineTo(tp2x, tp2y);
+        ctx.strokeStyle = "#e74c3c";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Draw tangent points
+        ctx.beginPath();
+        ctx.arc(tp1x, tp1y, 3, 0, 2 * Math.PI);
+        ctx.arc(tp2x, tp2y, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = "#27ae60";
+        ctx.fill();
+      }
+      
+      // Draw center
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "#3498db";
+      ctx.fill();
+    }
+    
+    // Equation calculation
+    function calculateEquation() {
+      const h = parseFloat(document.getElementById("centerX").value) || 0;
+      const k = parseFloat(document.getElementById("centerY").value) || 0;
+      const r = parseFloat(document.getElementById("eqRadius").value);
+      
+      if (isNaN(r) || r <= 0)
+        return alert("Please enter a valid radius");
+      
+      let eq = "(x";
+      if (h !== 0) eq += h > 0 ? " - " + h : " + " + Math.abs(h);
+      eq += ")² + (y";
+      if (k !== 0) eq += k > 0 ? " - " + k : " + " + Math.abs(k);
+      eq += ")² = " + r + "²";
+      
+      let std = "x² + y²";
+      if (h !== 0) std += h > 0 ? " - " + (2*h) + "x" : " + " + (2*Math.abs(h)) + "x";
+      if (k !== 0) std += k > 0 ? " - " + (2*k) + "y" : " + " + (2*Math.abs(k)) + "y";
+      std += " + " + (h*h + k*k - r*r) + " = 0";
+      
+      document.getElementById("equationResults").innerHTML = `
+        <p><strong>Center-Radius Form:</strong> ${eq}</p>
+        <p><strong>Standard Form:</strong> ${std}</p>
+        <p><strong>Center:</strong> (${h}, ${k})</p>
+        <p><strong>Radius:</strong> ${r}</p>
+      `;
+      
+      // Draw circle
+      const canvas = document.getElementById("equationCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const maxCoord = Math.max(Math.abs(h) + r, Math.abs(k) + r, r * 2, 5);
+      const scale = Math.min(canvas.width, canvas.height) / (2.5 * maxCoord);
+      const cx = canvas.width / 2 + h * scale;
+      const cy = canvas.height / 2 - k * scale;  // Negative because canvas y is flipped
+      const sr = r * scale;
+      
+      // Draw axes
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.strokeStyle = "#95a5a6";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      // Draw axis labels
+      ctx.fillStyle = "#333";
+      ctx.font = "12px Arial";
+      ctx.fillText("x", canvas.width - 10, canvas.height / 2 - 5);
+      ctx.fillText("y", canvas.width / 2 + 5, 10);
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, sr, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#3498db";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Draw center point
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e74c3c";
+      ctx.fill();
+      
+      // Draw radius line
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + sr, cy);
+      ctx.strokeStyle = "#e74c3c";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  </script>
+</body>
+</html>
