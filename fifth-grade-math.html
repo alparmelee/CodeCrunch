@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5th Grade Math Guide</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .topic-select {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button.active {
+            background-color: #2c3e50;
+        }
+        .content {
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .formula {
+            background-color: #e8f4fc;
+            padding: 10px;
+            border-left: 5px solid #3498db;
+            margin: 15px 0;
+        }
+        .example {
+            background-color: #f0fff0;
+            padding: 10px;
+            border-left: 5px solid #27ae60;
+            margin: 15px 0;
+        }
+        .interactive {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        input {
+            padding: 8px;
+            width: 60px;
+            margin: 0 5px;
+        }
+        #result {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>5th Grade Math Guide</h1>
+        <div class="topic-select">
+            <button class="topic-btn active" data-topic="multiplication">Multiplication</button>
+            <button class="topic-btn" data-topic="fractions">Fractions</button>
+            <button class="topic-btn" data-topic="decimals">Decimals</button>
+            <button class="topic-btn" data-topic="coordinate">Coordinate Plane</button>
+            <button class="topic-btn" data-topic="volume">Volume</button>
+            <button class="topic-btn" data-topic="data">Data Analysis</button>
+        </div>
+        
+        <div class="content" id="content">
+            <!-- Content will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Define content for each topic
+        const topics = {
+            multiplication: `
+                <h2>Multiplication & Division of Larger Numbers</h2>
+                <p>In 5th grade, you'll work with larger numbers, often multiplying 2-3 digit numbers with other multi-digit numbers.</p>
+                
+                <div class="formula">
+                    <h3>Multiplication Strategy:</h3>
+                    <p>Standard Algorithm:</p>
+                    <pre>
+      2 3 4
+    ×    5 6
+    -------
+    1 4 0 4  (234 × 6)
+  1 1 7 0 0  (234 × 50)
+  -------
+  1 3 1 0 4  (Final product)
+                    </pre>
+                </div>
+                
+                <div class="formula">
+                    <h3>Division Strategy:</h3>
+                    <p>Long Division:</p>
+                    <pre>
+        2 4
+      ------
+    7 ) 1 6 8
+        1 4
+        ---
+          2 8
+          2 8
+          --
+           0
+                    </pre>
+                    <p>Step 1: Divide 16 by 7 = 2 remainder 2</p>
+                    <p>Step 2: Bring down 8. Divide 28 by 7 = 4 remainder 0</p>
+                    <p>Result: 168 ÷ 7 = 24</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>523 × 48 = ?</p>
+                    <p>First: 523 × 8 = 4,184</p>
+                    <p>Second: 523 × 40 = 20,920</p>
+                    <p>Total: 4,184 + 20,920 = 25,104</p>
+                </div>
+            `,
+            
+            fractions: `
+                <h2>Fraction Operations</h2>
+                <p>Working with fractions involves addition, subtraction, multiplication, and division.</p>
+                
+                <div class="formula">
+                    <h3>Adding & Subtracting Fractions:</h3>
+                    <p>1. Find a common denominator</p>
+                    <p>2. Convert fractions to equivalent fractions with the common denominator</p>
+                    <p>3. Add or subtract the numerators</p>
+                    <p>4. Simplify the result if possible</p>
+                    
+                    <p>Formula: <sup>a</sup>⁄<sub>b</sub> + <sup>c</sup>⁄<sub>d</sub> = <sup>ad + bc</sup>⁄<sub>bd</sub></p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Multiplying Fractions:</h3>
+                    <p>1. Multiply the numerators</p>
+                    <p>2. Multiply the denominators</p>
+                    <p>3. Simplify the result if possible</p>
+                    
+                    <p>Formula: <sup>a</sup>⁄<sub>b</sub> × <sup>c</sup>⁄<sub>d</sub> = <sup>a×c</sup>⁄<sub>b×d</sub></p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Dividing Fractions:</h3>
+                    <p>1. Flip (find the reciprocal of) the second fraction</p>
+                    <p>2. Multiply the first fraction by the reciprocal of the second</p>
+                    <p>3. Simplify the result if possible</p>
+                    
+                    <p>Formula: <sup>a</sup>⁄<sub>b</sub> ÷ <sup>c</sup>⁄<sub>d</sub> = <sup>a</sup>⁄<sub>b</sub> × <sup>d</sup>⁄<sub>c</sub> = <sup>a×d</sup>⁄<sub>b×c</sub></p>
+                </div>
+                
+                <div class="example">
+                    <h3>Examples:</h3>
+                    <p>Addition: <sup>1</sup>⁄<sub>4</sub> + <sup>2</sup>⁄<sub>3</sub> = <sup>3</sup>⁄<sub>12</sub> + <sup>8</sup>⁄<sub>12</sub> = <sup>11</sup>⁄<sub>12</sub></p>
+                    <p>Multiplication: <sup>2</sup>⁄<sub>5</sub> × <sup>3</sup>⁄<sub>4</sub> = <sup>6</sup>⁄<sub>20</sub> = <sup>3</sup>⁄<sub>10</sub></p>
+                    <p>Division: <sup>3</sup>⁄<sub>4</sub> ÷ <sup>1</sup>⁄<sub>2</sub> = <sup>3</sup>⁄<sub>4</sub> × <sup>2</sup>⁄<sub>1</sub> = <sup>6</sup>⁄<sub>4</sub> = <sup>3</sup>⁄<sub>2</sub> = 1<sup>1</sup>⁄<sub>2</sub></p>
+                </div>
+            `,
+            
+            decimals: `
+                <h2>Decimal Operations</h2>
+                <p>Decimals represent parts of a whole using place value positions to the right of the decimal point.</p>
+                
+                <div class="formula">
+                    <h3>Adding & Subtracting Decimals:</h3>
+                    <p>1. Line up the decimal points</p>
+                    <p>2. Add or subtract as with whole numbers</p>
+                    <p>3. Keep the decimal point in the same position in the answer</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Multiplying Decimals:</h3>
+                    <p>1. Multiply as if they were whole numbers</p>
+                    <p>2. Count decimal places in both factors</p>
+                    <p>3. Place the decimal point in the product so it has the same total number of decimal places</p>
+                    
+                    <p>Example: 0.3 × 0.4 = 0.12 (1 decimal place + 1 decimal place = 2 decimal places)</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Dividing Decimals:</h3>
+                    <p>1. Move the decimal point in the divisor to make it a whole number</p>
+                    <p>2. Move the decimal point in the dividend the same number of places</p>
+                    <p>3. Divide as with whole numbers</p>
+                    <p>4. Place the decimal point in the quotient directly above where it is in the dividend</p>
+                    
+                    <p>Example: 3.6 ÷ 0.9</p>
+                    <p>Step 1: 3.6 ÷ 0.9 = 36 ÷ 9 (moved both decimal points one place right)</p>
+                    <p>Step 2: 36 ÷ 9 = 4</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Examples:</h3>
+                    <p>Addition: 3.45 + 2.7 = 3.45 + 2.70 = 6.15</p>
+                    <p>Subtraction: 5.67 - 2.34 = 3.33</p>
+                    <p>Multiplication: 1.5 × 2.3 = 3.45</p>
+                    <p>Division: 4.2 ÷ 0.6 = 42 ÷ 6 = 7</p>
+                </div>
+            `,
+            
+            coordinate: `
+                <h2>Coordinate Plane Basics</h2>
+                <p>The coordinate plane helps locate points using ordered pairs (x, y).</p>
+                
+                <div class="formula">
+                    <h3>Key Components:</h3>
+                    <p>1. <strong>Origin:</strong> The point (0, 0) where the axes intersect</p>
+                    <p>2. <strong>x-axis:</strong> The horizontal line</p>
+                    <p>3. <strong>y-axis:</strong> The vertical line</p>
+                    <p>4. <strong>Quadrants:</strong> Four sections of the coordinate plane (in 5th grade, you'll focus mostly on Quadrant I with positive coordinates)</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Plotting Points:</h3>
+                    <p>For the point (x, y):</p>
+                    <p>- Start at the origin (0, 0)</p>
+                    <p>- Move x units horizontally (right if positive, left if negative)</p>
+                    <p>- Move y units vertically (up if positive, down if negative)</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>To plot the point (3, 4):</p>
+                    <p>1. Start at the origin (0, 0)</p>
+                    <p>2. Move 3 units to the right</p>
+                    <p>3. Move 4 units up</p>
+                    <p>4. Mark the point</p>
+                </div>
+            `,
+            
+            volume: `
+                <h2>Volume of Rectangular Prisms</h2>
+                <p>Volume measures the space inside a three-dimensional object.</p>
+                
+                <div class="formula">
+                    <h3>Volume Formula:</h3>
+                    <p><strong>V = l × w × h</strong></p>
+                    <p>where:</p>
+                    <p>V = volume</p>
+                    <p>l = length</p>
+                    <p>w = width</p>
+                    <p>h = height</p>
+                    <p>Unit: cubic units (e.g., cubic cm, cubic in)</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Alternative Formula:</h3>
+                    <p><strong>V = B × h</strong></p>
+                    <p>where:</p>
+                    <p>B = area of the base (l × w)</p>
+                    <p>h = height</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>Find the volume of a rectangular prism with length 5 cm, width 3 cm, and height 4 cm.</p>
+                    <p>V = l × w × h</p>
+                    <p>V = 5 cm × 3 cm × 4 cm</p>
+                    <p>V = 60 cubic cm</p>
+                </div>
+                
+                <div class="interactive">
+                    <h3>Try it!</h3>
+                    <p>Calculate the volume of a rectangular prism with dimensions:</p>
+                    <p>Length: <span id="vol-l">6</span> units</p>
+                    <p>Width: <span id="vol-w">2</span> units</p>
+                    <p>Height: <span id="vol-h">4</span> units</p>
+                    <p>Volume = <input type="number" id="vol-answer"> cubic units <button id="vol-check">Check</button></p>
+                    <p id="vol-result"></p>
+                </div>
+            `,
+            
+            data: `
+                <h2>Data Analysis</h2>
+                <p>Data analysis helps us understand, interpret, and summarize sets of data.</p>
+                
+                <div class="formula">
+                    <h3>Key Measures:</h3>
+                    <p><strong>Mean:</strong> The average of a set of numbers</p>
+                    <p>Formula: Mean = (Sum of all values) ÷ (Number of values)</p>
+                    
+                    <p><strong>Median:</strong> The middle value when the data is arranged in order</p>
+                    <p>- If there is an odd number of values, the median is the middle value</p>
+                    <p>- If there is an even number of values, the median is the average of the two middle values</p>
+                    
+                    <p><strong>Mode:</strong> The value that appears most frequently in the data</p>
+                    <p>- A data set can have one mode, multiple modes, or no mode</p>
+                    
+                    <p><strong>Range:</strong> The difference between the highest and lowest values</p>
+                    <p>Formula: Range = Maximum value - Minimum value</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>For the data set: 5, 8, 10, 8, 9, 12</p>
+                    <p><strong>Mean:</strong> (5 + 8 + 10 + 8 + 9 + 12) ÷ 6 = 52 ÷ 6 = 8.67</p>
+                    <p><strong>Median:</strong> When ordered: 5, 8, 8, 9, 10, 12</p>
+                    <p>Since there are 6 values (even), the median is the average of the 3rd and 4th values:</p>
+                    <p>(8 + 9) ÷ 2 = 8.5</p>
+                    <p><strong>Mode:</strong> 8 (appears twice, while all other values appear once)</p>
+                    <p><strong>Range:</strong> 12 - 5 = 7</p>
+                </div>
+                
+                <div class="interactive">
+                    <h3>Try it!</h3>
+                    <p>For the data set: 4, 7, 9, 7, 6, 5</p>
+                    <p>Calculate:</p>
+                    <p>Mean: <input type="number" step="0.01" id="mean-answer"> <button id="mean-check">Check</button> <span id="mean-result"></span></p>
+                    <p>Median: <input type="number" step="0.01" id="median-answer"> <button id="median-check">Check</button> <span id="median-result"></span></p>
+                    <p>Mode: <input type="number" id="mode-answer"> <button id="mode-check">Check</button> <span id="mode-result"></span></p>
+                </div>
+            `
+        };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial content
+            document.getElementById('content').innerHTML = topics.multiplication;
+            
+            // Add click listeners to topic buttons
+            document.querySelectorAll('.topic-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.topic-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update content
+                    const topic = this.getAttribute('data-topic');
+                    document.getElementById('content').innerHTML = topics[topic];
+                    
+                    // Initialize interactive elements
+                    setupInteractives();
+                });
+            });
+            
+            // Set up initial interactive elements
+            setupInteractives();
+        });
+        
+        function setupInteractives() {
+            // Volume calculator
+            const volCheck = document.getElementById('vol-check');
+            if (volCheck) {
+                volCheck.addEventListener('click', function() {
+                    const l = parseInt(document.getElementById('vol-l').textContent);
+                    const w = parseInt(document.getElementById('vol-w').textContent);
+                    const h = parseInt(document.getElementById('vol-h').textContent);
+                    const answer = parseInt(document.getElementById('vol-answer').value);
+                    
+                    const correctAnswer = l * w * h;
+                    
+                    if (answer === correctAnswer) {
+                        document.getElementById('vol-result').textContent = "Correct! " + l + " × " + w + " × " + h + " = " + correctAnswer;
+                    } else {
+                        document.getElementById('vol-result').textContent = "Try again. The correct answer is " + correctAnswer;
+                    }
+                });
+            }
+            
+            // Mean calculator
+            const meanCheck = document.getElementById('mean-check');
+            if (meanCheck) {
+                meanCheck.addEventListener('click', function() {
+                    const data = [4, 7, 9, 7, 6, 5];
+                    const sum = data.reduce((a, b) => a + b, 0);
+                    const correctMean = sum / data.length;
+                    const answer = parseFloat(document.getElementById('mean-answer').value);
+                    
+                    if (Math.abs(answer - correctMean) < 0.01) {
+                        document.getElementById('mean-result').textContent = "✓ Correct!";
+                    } else {
+                        document.getElementById('mean-result').textContent = "✗ Try again. The correct answer is " + correctMean.toFixed(2);
+                    }
+                });
+            }
+            
+            // Median calculator
+            const medianCheck = document.getElementById('median-check');
+            if (medianCheck) {
+                medianCheck.addEventListener('click', function() {
+                    const data = [4, 7, 9, 7, 6, 5];
+                    const sortedData = [...data].sort((a, b) => a - b);
+                    const mid = Math.floor(sortedData.length / 2);
+                    const correctMedian = sortedData.length % 2 === 0 
+                        ? (sortedData[mid-1] + sortedData[mid]) / 2 
+                        : sortedData[mid];
+                    
+                    const answer = parseFloat(document.getElementById('median-answer').value);
+                    
+                    if (Math.abs(answer - correctMedian) < 0.01) {
+                        document.getElementById('median-result').textContent = "✓ Correct!";
+                    } else {
+                        document.getElementById('median-result').textContent = "✗ Try again. The correct answer is " + correctMedian;
+                    }
+                });
+            }
+            
+            // Mode calculator
+            const modeCheck = document.getElementById('mode-check');
+            if (modeCheck) {
+                modeCheck.addEventListener('click', function() {
+                    const data = [4, 7, 9, 7, 6, 5];
+                    const counts = {};
+                    let maxCount = 0;
+                    let correctMode = null;
+                    
+                    // Find the mode
+                    for (const num of data) {
+                        counts[num] = (counts[num] || 0) + 1;
+                        if (counts[num] > maxCount) {
+                            maxCount = counts[num];
+                            correctMode = num;
+                        }
+                    }
+                    
+                    const answer = parseInt(document.getElementById('mode-answer').value);
+                    
+                    if (answer === correctMode) {
+                        document.getElementById('mode-result').textContent = "✓ Correct!";
+                    } else {
+                        document.getElementById('mode-result').textContent = "✗ Try again. The correct answer is " + correctMode;
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

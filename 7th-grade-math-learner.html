@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7th Grade Math Learning Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .topic-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .topic-button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .topic-button:hover {
+      background-color: #2980b9;
+    }
+    .content-section {
+      margin-top: 20px;
+    }
+    .formula {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-left: 3px solid #3498db;
+      margin: 10px 0;
+    }
+    .example {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-radius: 5px;
+    }
+    .practice {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #eee;
+      border-radius: 5px;
+    }
+    #practice-feedback {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .correct {
+      color: #27ae60;
+    }
+    .incorrect {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>7th Grade Math Learning Tool</h1>
+    
+    <div class="topic-list">
+      <button class="topic-button" onclick="showTopic('integers')">Integer Operations</button>
+      <button class="topic-button" onclick="showTopic('equations')">Multi-step Equations</button>
+      <button class="topic-button" onclick="showTopic('proportions')">Proportions & Percentages</button>
+      <button class="topic-button" onclick="showTopic('probability')">Probability & Statistics</button>
+      <button class="topic-button" onclick="showTopic('geometry')">Geometry</button>
+      <button class="topic-button" onclick="showTopic('exponents')">Square Roots & Exponents</button>
+      <button class="topic-button" onclick="showTopic('graphing')">Graphing Linear Equations</button>
+    </div>
+    
+    <div id="content" class="content-section">
+      <p>Select a topic above to learn about different 7th grade math concepts.</p>
+    </div>
+    
+    <div id="practice-section" class="practice" style="display: none;">
+      <h3>Practice Problem</h3>
+      <p id="practice-question"></p>
+      <input type="text" id="practice-answer" placeholder="Your answer">
+      <button onclick="checkAnswer()">Check Answer</button>
+      <div id="practice-feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    const topicContent = {
+      integers: {
+        title: "Integer Operations",
+        content: `
+          <p>Integer operations involve adding, subtracting, multiplying, and dividing positive and negative whole numbers.</p>
+          
+          <div class="formula">
+            <p><strong>Addition Rules:</strong></p>
+            <ul>
+              <li>Same signs: Add the absolute values and keep the sign</li>
+              <li>Different signs: Subtract the smaller absolute value from the larger and use the sign of the larger absolute value</li>
+            </ul>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Subtraction Rule:</strong></p>
+            <p>Subtracting a number is the same as adding its opposite: a - b = a + (-b)</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Multiplication/Division Rules:</strong></p>
+            <ul>
+              <li>Same signs: The result is positive</li>
+              <li>Different signs: The result is negative</li>
+            </ul>
+          </div>
+          
+          <div class="example">
+            <p><strong>Examples:</strong></p>
+            <p>Addition: 8 + (-5) = 3</p>
+            <p>Subtraction: -7 - 4 = -7 + (-4) = -11</p>
+            <p>Multiplication: -6 × 3 = -18</p>
+            <p>Division: -20 ÷ (-5) = 4</p>
+          </div>
+        `,
+        practice: {
+          question: "Calculate: (-8) × (-7) + 3 = ?",
+          answer: "59"
+        }
+      },
+      
+      equations: {
+        title: "Multi-step Equations and Inequalities",
+        content: `
+          <p>Multi-step equations require multiple operations to isolate the variable and find its value.</p>
+          
+          <div class="formula">
+            <p><strong>Solving Multi-step Equations:</strong></p>
+            <ol>
+              <li>Simplify both sides (combine like terms)</li>
+              <li>Use inverse operations to isolate the variable</li>
+              <li>Solve for the variable</li>
+            </ol>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Inequality Rules:</strong></p>
+            <p>Follow the same steps as equations, but remember:</p>
+            <p>When multiplying or dividing by a negative number, reverse the inequality sign</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Example Equation:</strong></p>
+            <p>3x - 5 = 2x + 7</p>
+            <p>3x - 2x = 7 + 5</p>
+            <p>x = 12</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Example Inequality:</strong></p>
+            <p>-2x + 3 > 7</p>
+            <p>-2x > 4</p>
+            <p>x < -2</p>
+          </div>
+        `,
+        practice: {
+          question: "Solve for x: 4x - 7 = 3x + 5",
+          answer: "12"
+        }
+      },
+      
+      proportions: {
+        title: "Proportions, Percentages, and Applications",
+        content: `
+          <p>Proportions compare ratios and are used to solve real-world problems involving percentages, scale, and rates.</p>
+          
+          <div class="formula">
+            <p><strong>Proportion Formula:</strong></p>
+            <p>If a/b = c/d, then ad = bc (Cross multiplication)</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Percentage Formulas:</strong></p>
+            <p>Part = Whole × Percent/100</p>
+            <p>Percent = (Part ÷ Whole) × 100</p>
+            <p>Whole = Part ÷ (Percent/100)</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Proportion Example:</strong></p>
+            <p>If 3 books cost $24, how much do 5 books cost?</p>
+            <p>3/24 = 5/x</p>
+            <p>3x = 24 × 5</p>
+            <p>3x = 120</p>
+            <p>x = $40</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Percentage Example:</strong></p>
+            <p>15% of 80 = 0.15 × 80 = 12</p>
+          </div>
+        `,
+        practice: {
+          question: "If 4 shirts cost $60, how much would 7 shirts cost?",
+          answer: "105"
+        }
+      },
+      
+      probability: {
+        title: "Probability and Statistics",
+        content: `
+          <p>Probability measures the likelihood of an event occurring, while statistics involves analyzing and interpreting data.</p>
+          
+          <div class="formula">
+            <p><strong>Probability Formula:</strong></p>
+            <p>P(event) = Number of favorable outcomes / Total number of possible outcomes</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Statistics Measures:</strong></p>
+            <p>Mean = Sum of values / Number of values</p>
+            <p>Median = Middle value when data is ordered</p>
+            <p>Mode = Most frequently occurring value</p>
+            <p>Range = Maximum value - Minimum value</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Probability Example:</strong></p>
+            <p>When rolling a die, P(rolling a 3) = 1/6</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Statistics Example:</strong></p>
+            <p>For the data set {4, 7, 10, 6, 4}:</p>
+            <p>Mean = (4 + 7 + 10 + 6 + 4) / 5 = 31/5 = 6.2</p>
+            <p>Median = 6</p>
+            <p>Mode = 4</p>
+            <p>Range = 10 - 4 = 6</p>
+          </div>
+        `,
+        practice: {
+          question: "What is the probability of drawing a red card from a standard deck of 52 cards? (Enter as a fraction in form x/y)",
+          answer: "26/52"
+        }
+      },
+      
+      geometry: {
+        title: "Geometry Concepts",
+        content: `
+          <p>Geometry studies shapes, sizes, properties, and dimensions of objects.</p>
+          
+          <div class="formula">
+            <p><strong>Angle Relationships:</strong></p>
+            <p>Complementary angles: Sum to 90°</p>
+            <p>Supplementary angles: Sum to 180°</p>
+            <p>Vertical angles: Equal measures</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Triangle Properties:</strong></p>
+            <p>Sum of angles = 180°</p>
+            <p>Area = (1/2) × base × height</p>
+            <p>Pythagorean Theorem (right triangles): a² + b² = c²</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Circle Properties:</strong></p>
+            <p>Circumference = 2πr</p>
+            <p>Area = πr²</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Triangle Example:</strong></p>
+            <p>If two angles in a triangle measure 35° and 65°, the third angle is:</p>
+            <p>180° - 35° - 65° = 80°</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Pythagorean Theorem Example:</strong></p>
+            <p>If a = 3 and b = 4, then c = √(3² + 4²) = √(9 + 16) = √25 = 5</p>
+          </div>
+        `,
+        practice: {
+          question: "What is the area of a circle with radius 5 units? (Use 3.14 for π and round to nearest whole number)",
+          answer: "79"
+        }
+      },
+      
+      exponents: {
+        title: "Square Roots and Exponents",
+        content: `
+          <p>Exponents represent repeated multiplication, while square roots find what number multiplied by itself equals a given value.</p>
+          
+          <div class="formula">
+            <p><strong>Exponent Rules:</strong></p>
+            <p>Product Rule: x^a × x^b = x^(a+b)</p>
+            <p>Quotient Rule: x^a ÷ x^b = x^(a-b)</p>
+            <p>Power Rule: (x^a)^b = x^(a×b)</p>
+            <p>Negative Exponent: x^(-a) = 1/x^a</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Square Root Properties:</strong></p>
+            <p>√(a × b) = √a × √b</p>
+            <p>√(a/b) = √a/√b</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Exponent Example:</strong></p>
+            <p>2^3 × 2^4 = 2^7 = 128</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Square Root Example:</strong></p>
+            <p>√49 = 7 (because 7² = 49)</p>
+          </div>
+        `,
+        practice: {
+          question: "Calculate: 3^2 × 3^3",
+          answer: "243"
+        }
+      },
+      
+      graphing: {
+        title: "Graphing Linear Equations",
+        content: `
+          <p>Linear equations represent straight lines and can be written in different forms.</p>
+          
+          <div class="formula">
+            <p><strong>Slope-Intercept Form:</strong></p>
+            <p>y = mx + b</p>
+            <p>m = slope (rate of change)</p>
+            <p>b = y-intercept (where the line crosses the y-axis)</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Point-Slope Form:</strong></p>
+            <p>y - y₁ = m(x - x₁)</p>
+            <p>Where (x₁, y₁) is a point on the line and m is the slope</p>
+          </div>
+          
+          <div class="formula">
+            <p><strong>Finding Slope:</strong></p>
+            <p>m = (y₂ - y₁)/(x₂ - x₁)</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Graphing Example:</strong></p>
+            <p>To graph y = 2x + 3:</p>
+            <p>1. Plot the y-intercept (0, 3)</p>
+            <p>2. Use the slope to find another point: from (0, 3), move right 1 and up 2 to reach (1, 5)</p>
+            <p>3. Draw a line through these points</p>
+          </div>
+        `,
+        practice: {
+          question: "What is the slope of a line passing through points (2, 5) and (4, 9)?",
+          answer: "2"
+        }
+      }
+    };
+
+    function showTopic(topic) {
+      const content = topicContent[topic];
+      document.getElementById('content').innerHTML = `
+        <h2>${content.title}</h2>
+        ${content.content}
+      `;
+      
+      // Show practice section
+      document.getElementById('practice-section').style.display = 'block';
+      document.getElementById('practice-question').textContent = content.practice.question;
+      document.getElementById('practice-answer').value = '';
+      document.getElementById('practice-feedback').textContent = '';
+      
+      // Store current topic for answer checking
+      currentTopic = topic;
+    }
+    
+    let currentTopic = '';
+    
+    function checkAnswer() {
+      const userAnswer = document.getElementById('practice-answer').value.trim();
+      const correctAnswer = topicContent[currentTopic].practice.answer;
+      const feedback = document.getElementById('practice-feedback');
+      
+      if (userAnswer === correctAnswer) {
+        feedback.textContent = "Correct! Well done!";
+        feedback.className = 'correct';
+      } else {
+        feedback.textContent = "Not quite. Try again!";
+        feedback.className = 'incorrect';
+      }
+    }
+  </script>
+</body>
+</html>

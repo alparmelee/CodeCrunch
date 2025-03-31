@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2nd Grade Math Explorer</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #f3e5f5;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: #7b1fa2;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    
+    .topic-selector {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .topic-btn {
+      background-color: #9c27b0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .topic-btn:hover {
+      transform: scale(1.05);
+      background-color: #6a1b9a;
+    }
+    
+    .game-area {
+      min-height: 300px;
+      margin: 20px 0;
+      padding: 20px;
+      border: 3px dashed #ce93d8;
+      border-radius: 15px;
+    }
+    
+    .question {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .option-btn {
+      background-color: #ba68c8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: transform 0.2s;
+      min-width: 60px;
+    }
+    
+    .option-btn:hover {
+      transform: scale(1.05);
+      background-color: #8e24aa;
+    }
+    
+    .feedback {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 20px 0;
+      height: 30px;
+    }
+    
+    .correct {
+      color: #4caf50;
+    }
+    
+    .incorrect {
+      color: #f44336;
+    }
+    
+    .progress {
+      width: 100%;
+      height: 15px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      width: 0%;
+      transition: width 0.5s;
+    }
+    
+    .score {
+      font-size: 1.2em;
+      color: #7b1fa2;
+      margin-bottom: 10px;
+    }
+
+    .visual-container {
+      margin: 20px auto;
+      max-width: 400px;
+    }
+
+    .clock {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+
+    .clock-face {
+      width: 100%;
+      height: 100%;
+      border: 5px solid #673ab7;
+      border-radius: 50%;
+      position: relative;
+      background-color: white;
+    }
+
+    .hand {
+      position: absolute;
+      background-color: #333;
+      transform-origin: bottom center;
+      left: 50%;
+      border-radius: 5px;
+    }
+
+    .hour-hand {
+      width: 6px;
+      height: 60px;
+      top: 40px;
+    }
+
+    .minute-hand {
+      width: 4px;
+      height: 80px;
+      top: 20px;
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color: #333;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .clock-numbers {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    .clock-number {
+      position: absolute;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .fraction-visual {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .fraction-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .fraction-part {
+      display: inline-block;
+      height: 100px;
+      margin: 0 5px;
+      background-color: #ce93d8;
+      border: 2px solid #9c27b0;
+    }
+
+    .highlighted {
+      background-color: #7b1fa2;
+    }
+
+    .number-box {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      margin: 5px;
+      background-color: #e1bee7;
+      border: 2px solid #9c27b0;
+      border-radius: 5px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .place-value-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .place-value-box {
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      margin: 0 5px;
+      background-color: #e1bee7;
+      border: 2px solid #9c27b0;
+      border-radius: 5px;
+      font-size: 1.8em;
+      font-weight: bold;
+    }
+
+    .place-value-label {
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+
+    .measurement-visual {
+      position: relative;
+      margin: 20px auto;
+      width: 300px;
+      height: 40px;
+    }
+
+    .ruler {
+      position: relative;
+      width: 100%;
+      height: 30px;
+      background-color: #f5f5f5;
+      border: 1px solid #9c27b0;
+    }
+
+    .ruler-mark {
+      position: absolute;
+      top: 0;
+      width: 1px;
+      height: 15px;
+      background-color: #9c27b0;
+    }
+
+    .ruler-number {
+      position: absolute;
+      top: 18px;
+      font-size: 10px;
+      transform: translateX(-50%);
+    }
+
+    .multiplication-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols), 40px);
+      grid-template-rows: repeat(var(--rows), 40px);
+      gap: 5px;
+      margin: 20px auto;
+      justify-content: center;
+    }
+
+    .grid-item {
+      width: 40px;
+      height: 40px;
+      background-color: #ba68c8;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>2nd Grade Math Explorer</h1>
+    <div class="topic-selector">
+      <button class="topic-btn" onclick="selectTopic('addition')">Addition</button>
+      <button class="topic-btn" onclick="selectTopic('subtraction')">Subtraction</button>
+      <button class="topic-btn" onclick="selectTopic('place-value')">Place Value</button>
+      <button class="topic-btn" onclick="selectTopic('multiplication')">Multiplication</button>
+      <button class="topic-btn" onclick="selectTopic('fractions')">Fractions</button>
+      <button class="topic-btn" onclick="selectTopic('time')">Time</button>
+      <button class="topic-btn" onclick="selectTopic('measurement')">Measurement</button>
+    </div>
+    <div class="progress">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+    <div class="score" id="score">Score: 0</div>
+    <div class="game-area" id="game-area">
+      <h2>Choose a topic to start learning!</h2>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    let currentTopic = '';
+    let score = 0;
+    let questionCount = 0;
+    let correctAnswers = 0;
+    
+    function selectTopic(topic) {
+      currentTopic = topic;
+      clearFeedback();
+      generateQuestion();
+    }
+    
+    function clearFeedback() {
+      document.getElementById('feedback').innerHTML = '';
+      document.getElementById('feedback').className = 'feedback';
+    }
+    
+    function generateQuestion() {
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = '';
+      
+      switch(currentTopic) {
+        case 'addition':
+          generateAdditionQuestion();
+          break;
+        case 'subtraction':
+          generateSubtractionQuestion();
+          break;
+        case 'place-value':
+          generatePlaceValueQuestion();
+          break;
+        case 'multiplication':
+          generateMultiplicationQuestion();
+          break;
+        case 'fractions':
+          generateFractionsQuestion();
+          break;
+        case 'time':
+          generateTimeQuestion();
+          break;
+        case 'measurement':
+          generateMeasurementQuestion();
+          break;
+      }
+    }
+    
+    function generateAdditionQuestion() {
+      let a = Math.floor(Math.random() * 90) + 10; // Two-digit number
+      let b = Math.floor(Math.random() * 90) + 10; // Two-digit number
+      let sum = a + b;
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">${a} + ${b} = ?</div>
+        <div class="visual-container">
+          <div class="place-value-container">
+            <div>
+              <div class="place-value-box">${Math.floor(a/10)}</div>
+              <div class="place-value-label">Tens</div>
+            </div>
+            <div>
+              <div class="place-value-box">${a % 10}</div>
+              <div class="place-value-label">Ones</div>
+            </div>
+          </div>
+          <div style="margin: 10px 0;">+</div>
+          <div class="place-value-container">
+            <div>
+              <div class="place-value-box">${Math.floor(b/10)}</div>
+              <div class="place-value-label">Tens</div>
+            </div>
+            <div>
+              <div class="place-value-box">${b % 10}</div>
+              <div class="place-value-label">Ones</div>
+            </div>
+          </div>
+        </div>
+        <div class="options">
+          ${generateOptions(sum, 200)}
+        </div>
+      `;
+    }
+    
+    function generateSubtractionQuestion() {
+      let a = Math.floor(Math.random() * 90) + 10; // Two-digit number
+      let b = Math.floor(Math.random() * a); // Smaller number than a
+      let difference = a - b;
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">${a} - ${b} = ?</div>
+        <div class="visual-container">
+          <div class="place-value-container">
+            <div>
+              <div class="place-value-box">${Math.floor(a/10)}</div>
+              <div class="place-value-label">Tens</div>
+            </div>
+            <div>
+              <div class="place-value-box">${a % 10}</div>
+              <div class="place-value-label">Ones</div>
+            </div>
+          </div>
+          <div style="margin: 10px 0;">-</div>
+          <div class="place-value-container">
+            <div>
+              <div class="place-value-box">${Math.floor(b/10)}</div>
+              <div class="place-value-label">Tens</div>
+            </div>
+            <div>
+              <div class="place-value-box">${b % 10}</div>
+              <div class="place-value-label">Ones</div>
+            </div>
+          </div>
+        </div>
+        <div class="options">
+          ${generateOptions(difference, 100)}
+        </div>
+      `;
+    }
+    
+    function generatePlaceValueQuestion() {
+      let num = Math.floor(Math.random() * 900) + 100; // Three-digit number
+      let hundreds = Math.floor(num / 100);
+      let tens = Math.floor((num % 100) / 10);
+      let ones = num % 10;
+      
+      let questionType = Math.floor(Math.random() * 3);
+      let correctAnswer;
+      let questionText;
+      
+      if (questionType === 0) {
+        questionText = `What is the value in the HUNDREDS place of ${num}?`;
+        correctAnswer = hundreds;
+      } else if (questionType === 1) {
+        questionText = `What is the value in the TENS place of ${num}?`;
+        correctAnswer = tens;
+      } else {
+        questionText = `What is the value in the ONES place of ${num}?`;
+        correctAnswer = ones;
+      }
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">${questionText}</div>
+        <div class="visual-container">
+          <div class="place-value-container">
+            <div>
+              <div class="place-value-box">${hundreds}</div>
+              <div class="place-value-label">Hundreds</div>
+            </div>
+            <div>
+              <div class="place-value-box">${tens}</div>
+              <div class="place-value-label">Tens</div>
+            </div>
+            <div>
+              <div class="place-value-box">${ones}</div>
+              <div class="place-value-label">Ones</div>
+            </div>
+          </div>
+        </div>
+        <div class="options">
+          ${generateOptions(correctAnswer, 9)}
+        </div>
+      `;
+    }
+    
+    function generateMultiplicationQuestion() {
+      let a = Math.floor(Math.random() * 5) + 1;
+      let b = Math.floor(Math.random() * 5) + 1;
+      let product = a * b;
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">${a} × ${b} = ?</div>
+        <div class="visual-container">
+          <div>Think of it as repeated addition:</div>
+          <div style="margin: 10px 0;">${a} + ${a} + ${a} + ... (${b} times)</div>
+          <div class="multiplication-grid" style="--rows: ${a}; --cols: ${b};"></div>
+        </div>
+        <div class="options">
+          ${generateOptions(product, 25)}
+        </div>
+      `;
+      
+      // Create grid visualization
+      const grid = document.querySelector('.multiplication-grid');
+      for (let i = 0; i < a * b; i++) {
+        const item = document.createElement('div');
+        item.className = 'grid-item';
+        item.textContent = '★';
+        grid.appendChild(item);
+      }
+    }
+    
+    function generateFractionsQuestion() {
+      let fractions = [
+        { name: 'half', numerator: 1, denominator: 2 },
+        { name: 'third', numerator: 1, denominator: 3 },
+        { name: 'fourth', numerator: 1, denominator: 4 }
+      ];
+      
+      let fraction = fractions[Math.floor(Math.random() * fractions.length)];
+      let questionType = Math.floor(Math.random() * 2);
+      
+      let gameArea = document.getElementById('game-area');
+      
+      if (questionType === 0) {
+        // Identify the fraction
+        gameArea.innerHTML = `
+          <div class="question">What fraction is shaded?</div>
+          <div class="fraction-container">
+            ${generateFractionVisual(fraction.numerator, fraction.denominator)}
+          </div>
+          <div class="options">
+            <button class="option-btn" onclick="checkAnswer('1/2', '${fraction.numerator}/${fraction.denominator}')">1/2</button>
+            <button class="option-btn" onclick="checkAnswer('1/3', '${fraction.numerator}/${fraction.denominator}')">1/3</button>
+            <button class="option-btn" onclick="checkAnswer('1/4', '${fraction.numerator}/${fraction.denominator}')">1/4</button>
+          </div>
+        `;
+      } else {
+        // Match term to fraction
+        gameArea.innerHTML = `
+          <div class="question">Which is one ${fraction.name}?</div>
+          <div class="options" style="justify-content: space-around;">
+            <div onclick="checkAnswer('1/2', '${fraction.numerator}/${fraction.denominator}')" style="cursor: pointer;">
+              ${generateFractionVisual(1, 2)}
+              <div>1/2</div>
+            </div>
+            <div onclick="checkAnswer('1/3', '${fraction.numerator}/${fraction.denominator}')" style="cursor: pointer;">
+              ${generateFractionVisual(1, 3)}
+              <div>1/3</div>
+            </div>
+            <div onclick="checkAnswer('1/4', '${fraction.numerator}/${fraction.denominator}')" style="cursor: pointer;">
+              ${generateFractionVisual(1, 4)}
+              <div>1/4</div>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    function generateFractionVisual(numerator, denominator) {
+      let html = '<div style="display: flex;">';
+      for (let i = 0; i < denominator; i++) {
+        let className = i < numerator ? 'fraction-part highlighted' : 'fraction-part';
+        html += `<div class="${className}" style="width: ${100/denominator}px;"></div>`;
+      }
+      html += '</div>';
+      return html;
+    }
+    
+    function generateTimeQuestion() {
+      let hour = Math.floor(Math.random() * 12) + 1;
+      let minuteOptions = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+      let minute = minuteOptions[Math.floor(Math.random() * minuteOptions.length)];
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">What time is shown on the clock?</div>
+        <div class="clock">
+          <div class="clock-face">
+            <div class="clock-numbers">
+              ${generateClockNumbers()}
+            </div>
+            <div class="hand hour-hand" id="hour-hand"></div>
+            <div class="hand minute-hand" id="minute-hand"></div>
+            <div class="center-dot"></div>
+          </div>
+        </div>
+        <div class="options" style="margin-top: 20px;">
+          ${generateTimeOptions(hour, minute)}
+        </div>
+      `;
+      
+      // Set clock hands
+      setTimeout(() => {
+        const hourHand = document.getElementById('hour-hand');
+        const minuteHand = document.getElementById('minute-hand');
+        
+        hourHand.style.transform = `translateX(-50%) rotate(${(hour % 12) * 30 + minute * 0.5}deg)`;
+        minuteHand.style.transform = `translateX(-50%) rotate(${minute * 6}deg)`;
+      }, 10);
+    }
+    
+    function generateClockNumbers() {
+      let html = '';
+      for (let i = 1; i <= 12; i++) {
+        const angle = (i - 3) * 30 * Math.PI / 180;
+        const x = 90 + 80 * Math.cos(angle);
+        const y = 90 + 80 * Math.sin(angle);
+        html += `<div class="clock-number" style="left: ${x}px; top: ${y}px;">${i}</div>`;
+      }
+      return html;
+    }
+    
+    function generateTimeOptions(correctHour, correctMinute) {
+      let correctTime = `${correctHour}:${correctMinute === 0 ? '00' : correctMinute.toString().padStart(2, '0')}`;
+      let options = [correctTime];
+      
+      // Generate wrong options
+      while (options.length < 3) {
+        let h = Math.floor(Math.random() * 12) + 1;
+        let m = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55][Math.floor(Math.random() * 12)];
+        let time = `${h}:${m === 0 ? '00' : m.toString().padStart(2, '0')}`;
+        
+        if (!options.includes(time)) {
+          options.push(time);
+        }
+      }
+      
+      // Shuffle options
+      options.sort(() => Math.random() - 0.5);
+      
+      let html = '';
+      for (let option of options) {
+        html += `<button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('${option}', '${correctTime}')">${option}</button>`;
+      }
+      
+      return html;
+    }
+    
+    function generateMeasurementQuestion() {
+      let types = ['length', 'weight', 'capacity'];
+      let type = types[Math.floor(Math.random() * types.length)];
+      let gameArea = document.getElementById('game-area');
+      
+      if (type === 'length') {
+        let items = [
+          { name: 'pencil', unit: 'inches' },
+          { name: 'classroom', unit: 'feet' },
+          { name: 'football field', unit: 'yards' }
+        ];
+        let item = items[Math.floor(Math.random() * items.length)];
+        
+        gameArea.innerHTML = `
+          <div class="question">Which unit would you use to measure a ${item.name}?</div>
+          <div class="measurement-visual">
+            <div class="ruler">
+              ${generateRulerMarks()}
+            </div>
+          </div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('inches', '${item.unit}')">inches</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('feet', '${item.unit}')">feet</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('yards', '${item.unit}')">yards</button>
+          </div>
+        `;
+      } else if (type === 'weight') {
+        let items = [
+          { name: 'book', unit: 'pounds' },
+          { name: 'pencil', unit: 'ounces' },
+          { name: 'elephant', unit: 'tons' }
+        ];
+        let item = items[Math.floor(Math.random() * items.length)];
+        
+        gameArea.innerHTML = `
+          <div class="question">Which unit would you use to measure the weight of a ${item.name}?</div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('ounces', '${item.unit}')">ounces</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('pounds', '${item.unit}')">pounds</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('tons', '${item.unit}')">tons</button>
+          </div>
+        `;
+      } else {
+        let items = [
+          { name: 'bathtub', unit: 'gallons' },
+          { name: 'water bottle', unit: 'cups' },
+          { name: 'medicine', unit: 'milliliters' }
+        ];
+        let item = items[Math.floor(Math.random() * items.length)];
+        
+        gameArea.innerHTML = `
+          <div class="question">Which unit would you use to measure the capacity of a ${item.name}?</div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('cups', '${item.unit}')">cups</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('gallons', '${item.unit}')">gallons</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('milliliters', '${item.unit}')">milliliters</button>
+          </div>
+        `;
+      }
+    }
+    
+    function generateRulerMarks() {
+      let html = '';
+      for (let i = 0; i <= 10; i++) {
+        let position = i * 30;
+        html += `
+          <div class="ruler-mark" style="left: ${position}px;"></div>
+          <div class="ruler-number" style="left: ${position}px;">${i}</div>
+        `;
+      }
+      return html;
+    }
+    
+    function generateOptions(correct, max) {
+      let options = [correct];
+      
+      while (options.length < 4) {
+        let option;
+        if (correct < 10) {
+          option = Math.floor(Math.random() * max) + 1;
+        } else {
+          // For larger numbers, stay somewhat close to the correct answer
+          const range = Math.floor(correct * 0.5);
+          option = correct - range + Math.floor(Math.random() * (range * 2));
+          if (option < 1) option = 1;
+          if (option > max) option = max;
+        }
+        
+        if (!options.includes(option)) {
+          options.push(option);
+        }
+      }
+      
+      // Shuffle options
+      options.sort(() => Math.random() - 0.5);
+      
+      let html = '';
+      for (let option of options) {
+        html += `<button class="option-btn" onclick="checkAnswer(${option}, ${correct})">${option}</button>`;
+      }
+      
+      return html;
+    }
+    
+    function checkAnswer(userAnswer, correctAnswer) {
+      questionCount++;
+      let feedback = document.getElementById('feedback');
+      
+      if (userAnswer == correctAnswer) {
+        feedback.innerHTML = '🎉 Correct! Great job!';
+        feedback.className = 'feedback correct';
+        score += 10;
+        correctAnswers++;
+      } else {
+        feedback.innerHTML = `❌ Not quite. The answer is ${correctAnswer}.`;
+        feedback.className = 'feedback incorrect';
+      }
+      
+      document.getElementById('score').innerHTML = `Score: ${score}`;
+      document.getElementById('progress').style.width = `${(correctAnswers / questionCount) * 100}%`;
+      
+      setTimeout(() => {
+        generateQuestion();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

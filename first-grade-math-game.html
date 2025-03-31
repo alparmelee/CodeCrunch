@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1st Grade Math Adventure</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: #ff6b6b;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    
+    .topic-selector {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .topic-btn {
+      background-color: #4ecdc4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .topic-btn:hover {
+      transform: scale(1.05);
+      background-color: #ff6b6b;
+    }
+    
+    .game-area {
+      min-height: 300px;
+      margin: 20px 0;
+      padding: 20px;
+      border: 3px dashed #ffd166;
+      border-radius: 15px;
+    }
+    
+    .question {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .option-btn {
+      background-color: #06d6a0;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .option-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .shape {
+      display: inline-block;
+      margin: 10px;
+    }
+    
+    .feedback {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 20px 0;
+      height: 30px;
+    }
+    
+    .correct {
+      color: #06d6a0;
+    }
+    
+    .incorrect {
+      color: #ef476f;
+    }
+    
+    .progress {
+      width: 100%;
+      height: 15px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background-color: #06d6a0;
+      width: 0%;
+      transition: width 0.5s;
+    }
+    
+    .score {
+      font-size: 1.2em;
+      color: #118ab2;
+      margin-bottom: 10px;
+    }
+
+    .clock, .money-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+
+    .clock-face {
+      width: 100%;
+      height: 100%;
+      border: 5px solid #333;
+      border-radius: 50%;
+      position: relative;
+      background-color: white;
+    }
+
+    .hand {
+      position: absolute;
+      background-color: #333;
+      transform-origin: bottom center;
+      left: 50%;
+      border-radius: 5px;
+    }
+
+    .hour-hand {
+      width: 6px;
+      height: 60px;
+      top: 40px;
+    }
+
+    .minute-hand {
+      width: 4px;
+      height: 80px;
+      top: 20px;
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color: #333;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .coin {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 5px;
+      text-align: center;
+      line-height: 60px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .penny {
+      background-color: #b87333;
+    }
+    .nickel {
+      background-color: #a8a9ad;
+    }
+    .dime {
+      background-color: #c0c0c0;
+    }
+    .quarter {
+      background-color: #a0a0a0;
+    }
+    .dollar {
+      width: 80px;
+      height: 40px;
+      border-radius: 5px;
+      background-color: #85bb65;
+      display: inline-block;
+      margin: 5px;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .place-value-box {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      border: 2px solid #333;
+      margin: 10px;
+      font-size: 2em;
+      line-height: 80px;
+      font-weight: bold;
+    }
+
+    .ruler {
+      height: 40px;
+      background-color: #f8f9fa;
+      border: 1px solid #333;
+      position: relative;
+      margin: 20px auto;
+    }
+
+    .ruler-mark {
+      position: absolute;
+      top: 0;
+      width: 1px;
+      height: 20px;
+      background-color: #333;
+    }
+
+    .ruler-text {
+      position: absolute;
+      top: 25px;
+      font-size: 10px;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>1st Grade Math Adventure</h1>
+    <div class="topic-selector">
+      <button class="topic-btn" onclick="selectTopic('numbers')">Numbers</button>
+      <button class="topic-btn" onclick="selectTopic('addition')">Addition</button>
+      <button class="topic-btn" onclick="selectTopic('subtraction')">Subtraction</button>
+      <button class="topic-btn" onclick="selectTopic('place-value')">Place Value</button>
+      <button class="topic-btn" onclick="selectTopic('measurement')">Measurement</button>
+      <button class="topic-btn" onclick="selectTopic('shapes')">Shapes</button>
+      <button class="topic-btn" onclick="selectTopic('time')">Time</button>
+      <button class="topic-btn" onclick="selectTopic('money')">Money</button>
+    </div>
+    <div class="progress">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+    <div class="score" id="score">Score: 0</div>
+    <div class="game-area" id="game-area">
+      <h2>Choose a topic to start learning!</h2>
+    </div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    let currentTopic = '';
+    let score = 0;
+    let questionCount = 0;
+    let correctAnswers = 0;
+    
+    function selectTopic(topic) {
+      currentTopic = topic;
+      clearFeedback();
+      generateQuestion();
+    }
+    
+    function clearFeedback() {
+      document.getElementById('feedback').innerHTML = '';
+      document.getElementById('feedback').className = 'feedback';
+    }
+    
+    function generateQuestion() {
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = '';
+      
+      switch(currentTopic) {
+        case 'numbers':
+          generateNumbersQuestion();
+          break;
+        case 'addition':
+          generateAdditionQuestion();
+          break;
+        case 'subtraction':
+          generateSubtractionQuestion();
+          break;
+        case 'place-value':
+          generatePlaceValueQuestion();
+          break;
+        case 'measurement':
+          generateMeasurementQuestion();
+          break;
+        case 'shapes':
+          generateShapesQuestion();
+          break;
+        case 'time':
+          generateTimeQuestion();
+          break;
+        case 'money':
+          generateMoneyQuestion();
+          break;
+      }
+    }
+    
+    function generateNumbersQuestion() {
+      let gameArea = document.getElementById('game-area');
+      let num = Math.floor(Math.random() * 100);
+      let questionType = Math.floor(Math.random() * 2);
+      
+      if (questionType === 0) {
+        // Number recognition
+        gameArea.innerHTML = `
+          <div class="question">What number is this?</div>
+          <div style="font-size: 3em; margin: 20px;">${num}</div>
+          <input type="text" id="number-input" style="padding: 10px; font-size: 1.2em;">
+          <button onclick="checkNumberAnswer(${num})" style="margin-left: 10px; padding: 10px; background-color: #4ecdc4; color: white; border: none; border-radius: 5px; cursor: pointer;">Check</button>
+        `;
+      } else {
+        // Counting
+        let countTo = Math.floor(Math.random() * 10) + 1;
+        gameArea.innerHTML = `
+          <div class="question">Count the objects:</div>
+          <div style="margin: 20px;">
+            ${generateObjects(countTo)}
+          </div>
+          <div>How many objects are there?</div>
+          <div class="options">
+            ${generateNumberOptions(countTo)}
+          </div>
+        `;
+      }
+    }
+    
+    function generateObjects(count) {
+      let objects = '';
+      let symbols = ['🍎', '🚗', '🐶', '🎈', '⭐', '🎁'];
+      let symbol = symbols[Math.floor(Math.random() * symbols.length)];
+      
+      for (let i = 0; i < count; i++) {
+        objects += `<span style="font-size: 2em; margin: 5px;">${symbol}</span>`;
+      }
+      
+      return objects;
+    }
+    
+    function generateNumberOptions(correct) {
+      let options = [correct];
+      
+      while (options.length < 4) {
+        let option = Math.floor(Math.random() * 10) + 1;
+        if (!options.includes(option)) {
+          options.push(option);
+        }
+      }
+      
+      // Shuffle options
+      options.sort(() => Math.random() - 0.5);
+      
+      let html = '';
+      for (let option of options) {
+        html += `<button class="option-btn" onclick="checkAnswer(${option}, ${correct})">${option}</button>`;
+      }
+      
+      return html;
+    }
+    
+    function generateAdditionQuestion() {
+      let a = Math.floor(Math.random() * 10);
+      let b = Math.floor(Math.random() * 10);
+      let sum = a + b;
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">${a} + ${b} = ?</div>
+        <div class="options">
+          ${generateOptions(sum, 20)}
+        </div>
+      `;
+    }
+    
+    function generateSubtractionQuestion() {
+      let a = Math.floor(Math.random() * 10) + 10;
+      let b = Math.floor(Math.random() * a);
+      let difference = a - b;
+      
+      let gameArea = document.getElementById('game-area');
+      gameArea.innerHTML = `
+        <div class="question">${a} - ${b} = ?</div>
+        <div class="options">
+          ${generateOptions(difference, 10)}
+        </div>
+      `;
+    }
+    
+    function generatePlaceValueQuestion() {
+      let num = Math.floor(Math.random() * 90) + 10; // Two-digit number
+      let tens = Math.floor(num / 10);
+      let ones = num % 10;
+      
+      let questionType = Math.floor(Math.random() * 2);
+      let gameArea = document.getElementById('game-area');
+      
+      if (questionType === 0) {
+        gameArea.innerHTML = `
+          <div class="question">What is the value of the tens place in ${num}?</div>
+          <div class="options">
+            ${generateOptions(tens, 9)}
+          </div>
+        `;
+      } else {
+        gameArea.innerHTML = `
+          <div class="question">What is the value of the ones place in ${num}?</div>
+          <div class="options">
+            ${generateOptions(ones, 9)}
+          </div>
+        `;
+      }
+    }
+    
+    function generateMeasurementQuestion() {
+      let types = ['length', 'weight', 'volume'];
+      let type = types[Math.floor(Math.random() * types.length)];
+      let gameArea = document.getElementById('game-area');
+      
+      if (type === 'length') {
+        let objects = [
+          { name: 'pencil', unit: 'inches' },
+          { name: 'book', unit: 'inches' },
+          { name: 'door', unit: 'feet' }
+        ];
+        let obj = objects[Math.floor(Math.random() * objects.length)];
+        
+        gameArea.innerHTML = `
+          <div class="question">Which unit would you use to measure the length of a ${obj.name}?</div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('inches', '${obj.unit}')">Inches</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('feet', '${obj.unit}')">Feet</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('yards', '${obj.unit}')">Yards</button>
+          </div>
+        `;
+      } else if (type === 'weight') {
+        gameArea.innerHTML = `
+          <div class="question">Which weighs more?</div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('elephant', 'elephant')">Elephant</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('apple', 'elephant')">Apple</button>
+          </div>
+        `;
+      } else {
+        gameArea.innerHTML = `
+          <div class="question">Which holds more liquid?</div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('cup', 'bucket')">Cup</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('bucket', 'bucket')">Bucket</button>
+          </div>
+        `;
+      }
+    }
+    
+    function generateShapesQuestion() {
+      let shapes = [
+        { name: 'circle', draw: (ctx) => { ctx.beginPath(); ctx.arc(50, 50, 40, 0, 2 * Math.PI); ctx.stroke(); } },
+        { name: 'square', draw: (ctx) => { ctx.strokeRect(10, 10, 80, 80); } },
+        { name: 'triangle', draw: (ctx) => { ctx.beginPath(); ctx.moveTo(50, 10); ctx.lineTo(10, 90); ctx.lineTo(90, 90); ctx.closePath(); ctx.stroke(); } }
+      ];
+      
+      let shape = shapes[Math.floor(Math.random() * shapes.length)];
+      let gameArea = document.getElementById('game-area');
+      
+      gameArea.innerHTML = `
+        <div class="question">What shape is this?</div>
+        <canvas id="shape-canvas" width="100" height="100" style="border: 1px solid #ddd;"></canvas>
+        <div class="options">
+          <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('circle', '${shape.name}')">Circle</button>
+          <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('square', '${shape.name}')">Square</button>
+          <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('triangle', '${shape.name}')">Triangle</button>
+        </div>
+      `;
+      
+      let canvas = document.getElementById('shape-canvas');
+      let ctx = canvas.getContext('2d');
+      shape.draw(ctx);
+    }
+    
+    function generateTimeQuestion() {
+      let hour = Math.floor(Math.random() * 12) + 1;
+      let minute = Math.floor(Math.random() * 4) * 15;
+      let gameArea = document.getElementById('game-area');
+      
+      gameArea.innerHTML = `
+        <div class="question">What time is shown on the clock?</div>
+        <div class="clock">
+          <div class="clock-face">
+            <div class="hand hour-hand" id="hour-hand"></div>
+            <div class="hand minute-hand" id="minute-hand"></div>
+            <div class="center-dot"></div>
+          </div>
+        </div>
+        <div class="options" style="margin-top: 20px;">
+          <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('${hour}:${minute === 0 ? '00' : minute}', '${hour}:${minute === 0 ? '00' : minute}')">
+            ${hour}:${minute === 0 ? '00' : minute}
+          </button>
+          <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('${(hour % 12) + 1}:${minute === 0 ? '00' : minute}', '${hour}:${minute === 0 ? '00' : minute}')">
+            ${(hour % 12) + 1}:${minute === 0 ? '00' : minute}
+          </button>
+          <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer('${hour}:${(minute + 15) % 60 === 0 ? '00' : (minute + 15) % 60}', '${hour}:${minute === 0 ? '00' : minute}')">
+            ${hour}:${(minute + 15) % 60 === 0 ? '00' : (minute + 15) % 60}
+          </button>
+        </div>
+      `;
+      
+      // Set clock hands
+      setTimeout(() => {
+        const hourHand = document.getElementById('hour-hand');
+        const minuteHand = document.getElementById('minute-hand');
+        
+        hourHand.style.transform = `translateX(-50%) rotate(${(hour % 12) * 30 + minute * 0.5}deg)`;
+        minuteHand.style.transform = `translateX(-50%) rotate(${minute * 6}deg)`;
+      }, 10);
+    }
+    
+    function generateMoneyQuestion() {
+      let coins = [
+        { name: 'penny', value: 1 },
+        { name: 'nickel', value: 5 },
+        { name: 'dime', value: 10 },
+        { name: 'quarter', value: 25 }
+      ];
+      
+      let questionType = Math.floor(Math.random() * 2);
+      let gameArea = document.getElementById('game-area');
+      
+      if (questionType === 0) {
+        let coin = coins[Math.floor(Math.random() * coins.length)];
+        
+        gameArea.innerHTML = `
+          <div class="question">How much is a ${coin.name} worth?</div>
+          <div class="money-container">
+            <div class="coin ${coin.name}">${coin.name[0].toUpperCase()}</div>
+          </div>
+          <div class="options">
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer(1, ${coin.value})">1¢</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer(5, ${coin.value})">5¢</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer(10, ${coin.value})">10¢</button>
+            <button class="option-btn" style="width: auto; padding: 0 15px;" onclick="checkAnswer(25, ${coin.value})">25¢</button>
+          </div>
+        `;
+      } else {
+        let selectedCoins = [];
+        let total = 0;
+        
+        for (let i = 0; i < Math.floor(Math.random() * 3) + 1; i++) {
+          let coin = coins[Math.floor(Math.random() * coins.length)];
+          selectedCoins.push(coin);
+          total += coin.value;
+        }
+        
+        let coinsHTML = '';
+        for (let coin of selectedCoins) {
+          coinsHTML += `<div class="coin ${coin.name}">${coin.name[0].toUpperCase()}</div>`;
+        }
+        
+        gameArea.innerHTML = `
+          <div class="question">How much money is shown?</div>
+          <div class="money-container" style="height: auto;">
+            ${coinsHTML}
+          </div>
+          <div class="options">
+            ${generateOptions(total, 99)}
+          </div>
+        `;
+      }
+    }
+    
+    function generateOptions(correct, max) {
+      let options = [correct];
+      
+      while (options.length < 4) {
+        let option = Math.floor(Math.random() * max) + 1;
+        if (!options.includes(option)) {
+          options.push(option);
+        }
+      }
+      
+      // Shuffle options
+      options.sort(() => Math.random() - 0.5);
+      
+      let html = '';
+      for (let option of options) {
+        html += `<button class="option-btn" onclick="checkAnswer(${option}, ${correct})">${option}</button>`;
+      }
+      
+      return html;
+    }
+    
+    function checkAnswer(userAnswer, correctAnswer) {
+      questionCount++;
+      let feedback = document.getElementById('feedback');
+      
+      if (userAnswer == correctAnswer) {
+        feedback.innerHTML = '🎉 Correct! Well done!';
+        feedback.className = 'feedback correct';
+        score += 10;
+        correctAnswers++;
+      } else {
+        feedback.innerHTML = `❌ Not quite. The answer is ${correctAnswer}.`;
+        feedback.className = 'feedback incorrect';
+      }
+      
+      document.getElementById('score').innerHTML = `Score: ${score}`;
+      document.getElementById('progress').style.width = `${(correctAnswers / questionCount) * 100}%`;
+      
+      setTimeout(() => {
+        generateQuestion();
+      }, 2000);
+    }
+    
+    function checkNumberAnswer(correctAnswer) {
+      questionCount++;
+      let userAnswer = document.getElementById('number-input').value;
+      let feedback = document.getElementById('feedback');
+      
+      if (parseInt(userAnswer) === correctAnswer) {
+        feedback.innerHTML = '🎉 Correct! Well done!';
+        feedback.className = 'feedback correct';
+        score += 10;
+        correctAnswers++;
+      } else {
+        feedback.innerHTML = `❌ Not quite. The answer is ${correctAnswer}.`;
+        feedback.className = 'feedback incorrect';
+      }
+      
+      document.getElementById('score').innerHTML = `Score: ${score}`;
+      document.getElementById('progress').style.width = `${(correctAnswers / questionCount) * 100}%`;
+      
+      setTimeout(() => {
+        generateQuestion();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

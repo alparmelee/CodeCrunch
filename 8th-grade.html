@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8th Grade Math Guide</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .topic-select {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button.active {
+            background-color: #2c3e50;
+        }
+        .content {
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .formula {
+            background-color: #e8f4fc;
+            padding: 10px;
+            border-left: 5px solid #3498db;
+            margin: 15px 0;
+        }
+        .example {
+            background-color: #f0fff0;
+            padding: 10px;
+            border-left: 5px solid #27ae60;
+            margin: 15px 0;
+        }
+        .interactive {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        input {
+            padding: 8px;
+            width: 60px;
+            margin: 0 5px;
+        }
+        #result {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>8th Grade Math Guide</h1>
+        <div class="topic-select">
+            <button class="topic-btn active" data-topic="equations">Solving Equations</button>
+            <button class="topic-btn" data-topic="inequalities">Inequalities</button>
+            <button class="topic-btn" data-topic="functions">Functions & Slope</button>
+            <button class="topic-btn" data-topic="systems">Systems of Equations</button>
+            <button class="topic-btn" data-topic="exponents">Exponents</button>
+            <button class="topic-btn" data-topic="irrational">Irrational Numbers</button>
+            <button class="topic-btn" data-topic="geometry">Volume & Surface Area</button>
+            <button class="topic-btn" data-topic="transformations">Transformations</button>
+        </div>
+        
+        <div class="content" id="content">
+            <!-- Content will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Define content for each topic
+        const topics = {
+            equations: `
+                <h2>Solving Equations</h2>
+                <p>An equation is a mathematical statement that shows two expressions are equal. To solve an equation, isolate the variable.</p>
+                
+                <div class="formula">
+                    <h3>Key Rules:</h3>
+                    <p>1. What you do to one side, you must do to the other.</p>
+                    <p>2. Use inverse operations to isolate the variable:</p>
+                    <ul>
+                        <li>Addition ↔ Subtraction</li>
+                        <li>Multiplication ↔ Division</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>Solve: 3x + 5 = 20</p>
+                    <p>Step 1: Subtract 5 from both sides<br>3x = 15</p>
+                    <p>Step 2: Divide both sides by 3<br>x = 5</p>
+                </div>
+                
+                <div class="interactive">
+                    <h3>Try it!</h3>
+                    <p>Solve: <span id="eq-num1">2</span>x + <span id="eq-num2">4</span> = <span id="eq-num3">12</span></p>
+                    <p>x = <input type="number" id="eq-answer"> <button id="eq-check">Check</button></p>
+                    <p id="eq-result"></p>
+                </div>
+            `,
+            
+            inequalities: `
+                <h2>Inequalities</h2>
+                <p>Inequalities compare expressions using >, <, ≥, or ≤ instead of equals.</p>
+                
+                <div class="formula">
+                    <h3>Key Rules:</h3>
+                    <p>1. Follow the same steps as solving equations.</p>
+                    <p>2. When multiplying or dividing by a negative number, flip the inequality symbol.</p>
+                    <ul>
+                        <li>3x < 9 → x < 3 (divided by positive 3)</li>
+                        <li>-2x < 8 → x > -4 (divided by negative 2, flipped symbol)</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>Solve: 5x - 3 > 12</p>
+                    <p>Step 1: Add 3 to both sides<br>5x > 15</p>
+                    <p>Step 2: Divide both sides by 5<br>x > 3</p>
+                </div>
+            `,
+            
+            functions: `
+                <h2>Functions & Slope-Intercept Form</h2>
+                <p>A function is a relation where each input has exactly one output. The slope-intercept form is y = mx + b.</p>
+                
+                <div class="formula">
+                    <h3>Slope-Intercept Form: y = mx + b</h3>
+                    <p>m = slope (rate of change)</p>
+                    <p>b = y-intercept (where line crosses y-axis)</p>
+                    <p>Slope formula: m = (y₂ - y₁) / (x₂ - x₁)</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>For the line y = 2x + 3:</p>
+                    <ul>
+                        <li>Slope (m) = 2</li>
+                        <li>Y-intercept (b) = 3</li>
+                        <li>This means the line rises 2 units for every 1 unit right</li>
+                    </ul>
+                </div>
+                
+                <div class="interactive">
+                    <h3>Try it!</h3>
+                    <p>If a line passes through (1,3) and (3,7), what is its slope?</p>
+                    <p>m = <input type="number" id="slope-answer"> <button id="slope-check">Check</button></p>
+                    <p id="slope-result"></p>
+                </div>
+            `,
+            
+            systems: `
+                <h2>Systems of Equations</h2>
+                <p>A system of equations has two or more equations with the same variables. The solution satisfies all equations.</p>
+                
+                <div class="formula">
+                    <h3>Solving Methods:</h3>
+                    <p>1. <strong>Substitution:</strong> Solve for one variable in one equation and substitute into the other.</p>
+                    <p>2. <strong>Elimination:</strong> Add or subtract equations to eliminate a variable.</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example (Substitution):</h3>
+                    <p>Solve: { y = 2x + 1<br>{ x + y = 5</p>
+                    <p>Step 1: Substitute y = 2x + 1 into x + y = 5<br>x + (2x + 1) = 5</p>
+                    <p>Step 2: Solve for x<br>3x + 1 = 5<br>3x = 4<br>x = 4/3</p>
+                    <p>Step 3: Find y by substituting x = 4/3<br>y = 2(4/3) + 1 = 8/3 + 1 = 11/3</p>
+                    <p>Solution: (4/3, 11/3)</p>
+                </div>
+            `,
+            
+            exponents: `
+                <h2>Exponents & Scientific Notation</h2>
+                <p>Exponents represent repeated multiplication. Scientific notation expresses very large or small numbers.</p>
+                
+                <div class="formula">
+                    <h3>Exponent Rules:</h3>
+                    <p>1. Product rule: x<sup>a</sup> · x<sup>b</sup> = x<sup>a+b</sup></p>
+                    <p>2. Quotient rule: x<sup>a</sup> ÷ x<sup>b</sup> = x<sup>a-b</sup></p>
+                    <p>3. Power rule: (x<sup>a</sup>)<sup>b</sup> = x<sup>a·b</sup></p>
+                    <p>4. Negative exponent: x<sup>-a</sup> = 1/x<sup>a</sup></p>
+                    <p>5. Zero exponent: x<sup>0</sup> = 1</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Scientific Notation:</h3>
+                    <p>Format: a × 10<sup>b</sup> where 1 ≤ a < 10 and b is an integer</p>
+                    <p>Example: 4,500,000 = 4.5 × 10<sup>6</sup></p>
+                    <p>Example: 0.00024 = 2.4 × 10<sup>-4</sup></p>
+                </div>
+            `,
+            
+            irrational: `
+                <h2>Irrational Numbers & Pythagorean Theorem</h2>
+                <p>Irrational numbers cannot be expressed as fractions. The Pythagorean theorem relates the sides of a right triangle.</p>
+                
+                <div class="formula">
+                    <h3>Irrational Numbers:</h3>
+                    <p>Numbers that cannot be written as a/b where a, b are integers (b≠0)</p>
+                    <p>Examples: π, √2, √3</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Pythagorean Theorem:</h3>
+                    <p>In a right triangle with legs a and b and hypotenuse c:</p>
+                    <p>a² + b² = c²</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>Find the hypotenuse of a right triangle with legs 3 and 4.</p>
+                    <p>c² = 3² + 4² = 9 + 16 = 25</p>
+                    <p>c = √25 = 5</p>
+                </div>
+                
+                <div class="interactive">
+                    <h3>Try it!</h3>
+                    <p>Find the hypotenuse of a right triangle with legs <span id="pyth-a">6</span> and <span id="pyth-b">8</span>.</p>
+                    <p>c = <input type="number" id="pyth-answer"> <button id="pyth-check">Check</button></p>
+                    <p id="pyth-result"></p>
+                </div>
+            `,
+            
+            geometry: `
+                <h2>Volume & Surface Area</h2>
+                <p>Volume measures the space inside a 3D shape. Surface area measures the total area of all faces.</p>
+                
+                <div class="formula">
+                    <h3>Volume Formulas:</h3>
+                    <p>1. Rectangular Prism: V = l × w × h</p>
+                    <p>2. Cylinder: V = πr²h</p>
+                    <p>3. Cone: V = ⅓πr²h</p>
+                    <p>4. Sphere: V = ⁴⁄₃πr³</p>
+                </div>
+                
+                <div class="formula">
+                    <h3>Surface Area Formulas:</h3>
+                    <p>1. Rectangular Prism: SA = 2(lw + lh + wh)</p>
+                    <p>2. Cylinder: SA = 2πr² + 2πrh</p>
+                    <p>3. Sphere: SA = 4πr²</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>Find the volume and surface area of a cylinder with radius 3 and height 5.</p>
+                    <p>Volume: V = πr²h = π × 3² × 5 = 45π ≈ 141.4 cubic units</p>
+                    <p>Surface Area: SA = 2πr² + 2πrh = 2π × 3² + 2π × 3 × 5 = 18π + 30π = 48π ≈ 150.8 square units</p>
+                </div>
+            `,
+            
+            transformations: `
+                <h2>Transformations on the Coordinate Plane</h2>
+                <p>Transformations change the position, size, or orientation of a figure.</p>
+                
+                <div class="formula">
+                    <h3>Types of Transformations:</h3>
+                    <p>1. <strong>Translation:</strong> Slides a figure without changing its size or shape. (x,y) → (x+h, y+k)</p>
+                    <p>2. <strong>Reflection:</strong> Flips a figure across a line.</p>
+                    <ul>
+                        <li>Across x-axis: (x,y) → (x,-y)</li>
+                        <li>Across y-axis: (x,y) → (-x,y)</li>
+                    </ul>
+                    <p>3. <strong>Rotation:</strong> Turns a figure around a point.</p>
+                    <p>4. <strong>Dilation:</strong> Resizes a figure from a center point. (x,y) → (kx,ky) where k is the scale factor</p>
+                </div>
+                
+                <div class="example">
+                    <h3>Example:</h3>
+                    <p>Translate the point (3,2) by 4 units right and 1 unit down.</p>
+                    <p>(3,2) → (3+4, 2-1) = (7,1)</p>
+                </div>
+            `
+        };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial content
+            document.getElementById('content').innerHTML = topics.equations;
+            
+            // Add click listeners to topic buttons
+            document.querySelectorAll('.topic-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.topic-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update content
+                    const topic = this.getAttribute('data-topic');
+                    document.getElementById('content').innerHTML = topics[topic];
+                    
+                    // Initialize interactive elements
+                    setupInteractives();
+                });
+            });
+            
+            // Set up initial interactive elements
+            setupInteractives();
+        });
+        
+        function setupInteractives() {
+            // Equation solver interactive
+            const eqCheck = document.getElementById('eq-check');
+            if (eqCheck) {
+                eqCheck.addEventListener('click', function() {
+                    const num1 = parseInt(document.getElementById('eq-num1').textContent);
+                    const num2 = parseInt(document.getElementById('eq-num2').textContent);
+                    const num3 = parseInt(document.getElementById('eq-num3').textContent);
+                    const answer = parseFloat(document.getElementById('eq-answer').value);
+                    
+                    const correctAnswer = (num3 - num2) / num1;
+                    
+                    if (Math.abs(answer - correctAnswer) < 0.001) {
+                        document.getElementById('eq-result').textContent = "Correct! " + num1 + "x + " + num2 + " = " + num3 + " → x = " + correctAnswer;
+                    } else {
+                        document.getElementById('eq-result').textContent = "Try again. The correct answer is x = " + correctAnswer;
+                    }
+                });
+            }
+            
+            // Slope calculator interactive
+            const slopeCheck = document.getElementById('slope-check');
+            if (slopeCheck) {
+                slopeCheck.addEventListener('click', function() {
+                    const answer = parseFloat(document.getElementById('slope-answer').value);
+                    const correctAnswer = 2; // (7-3)/(3-1) = 4/2 = 2
+                    
+                    if (Math.abs(answer - correctAnswer) < 0.001) {
+                        document.getElementById('slope-result').textContent = "Correct! m = (7-3)/(3-1) = 4/2 = 2";
+                    } else {
+                        document.getElementById('slope-result').textContent = "Try again. The correct answer is m = 2";
+                    }
+                });
+            }
+            
+            // Pythagorean theorem interactive
+            const pythCheck = document.getElementById('pyth-check');
+            if (pythCheck) {
+                pythCheck.addEventListener('click', function() {
+                    const a = parseInt(document.getElementById('pyth-a').textContent);
+                    const b = parseInt(document.getElementById('pyth-b').textContent);
+                    const answer = parseFloat(document.getElementById('pyth-answer').value);
+                    
+                    const correctAnswer = Math.sqrt(a*a + b*b);
+                    
+                    if (Math.abs(answer - correctAnswer) < 0.001) {
+                        document.getElementById('pyth-result').textContent = "Correct! c = √(" + a + "² + " + b + "²) = √" + (a*a + b*b) + " = " + correctAnswer;
+                    } else {
+                        document.getElementById('pyth-result').textContent = "Try again. The correct answer is c = " + correctAnswer;
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

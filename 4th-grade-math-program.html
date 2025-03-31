@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4th Grade Math Adventure</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    
+    h1 {
+      color: #4b0082;
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .topic-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    
+    .topic-btn {
+      background-color: #9370db;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .topic-btn:hover {
+      background-color: #8a2be2;
+      transform: scale(1.05);
+    }
+    
+    .problem-area {
+      background-color: #e6e6fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    
+    .visualization {
+      margin: 10px 0;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .controls button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .controls button:hover {
+      background-color: #45a049;
+    }
+    
+    .answer-input {
+      padding: 10px;
+      font-size: 1.2rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      width: 150px;
+      text-align: center;
+    }
+    
+    .score-display {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      color: #4b0082;
+    }
+    
+    .feedback {
+      height: 30px;
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    
+    .correct {
+      color: #4caf50;
+    }
+    
+    .incorrect {
+      color: #f44336;
+    }
+    
+    #stars-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .star {
+      color: gold;
+      font-size: 1.5rem;
+      margin: 0 2px;
+    }
+    
+    .angle-visualization {
+      width: 150px;
+      height: 150px;
+      position: relative;
+      margin: 0 auto;
+    }
+    
+    .angle-arm {
+      position: absolute;
+      top: 75px;
+      left: 75px;
+      width: 75px;
+      height: 2px;
+      background-color: black;
+      transform-origin: left center;
+    }
+    
+    .angle-label {
+      position: absolute;
+      left: 65px;
+      top: 45px;
+      font-size: 1rem;
+    }
+    
+    .symmetry-shape {
+      width: 200px;
+      height: 100px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .symmetry-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: red;
+      left: 50%;
+    }
+    
+    .fraction-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .fraction-box {
+      display: flex;
+      width: 200px;
+      height: 50px;
+      border: 1px solid #333;
+    }
+    
+    .fraction-segment {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .decimal-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .decimal-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 1px;
+      width: 200px;
+      height: 80px;
+      margin-top: 5px;
+    }
+    
+    .decimal-cell {
+      border: 1px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.7rem;
+    }
+    
+    .highlighted {
+      background-color: #9370db;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>4th Grade Math Adventure</h1>
+    
+    <div class="topic-selector">
+      <button class="topic-btn" data-topic="multiplication">Multiplication</button>
+      <button class="topic-btn" data-topic="division">Division</button>
+      <button class="topic-btn" data-topic="place-value">Place Value</button>
+      <button class="topic-btn" data-topic="fractions">Fractions</button>
+      <button class="topic-btn" data-topic="decimals">Decimals</button>
+      <button class="topic-btn" data-topic="angles">Angles</button>
+      <button class="topic-btn" data-topic="symmetry">Symmetry</button>
+      <button class="topic-btn" data-topic="factors">Factors & Multiples</button>
+    </div>
+    
+    <div class="problem-area">
+      <div id="problem-text">Choose a topic to start practicing!</div>
+      <div id="visualization" class="visualization"></div>
+    </div>
+    
+    <div class="controls">
+      <input type="text" id="answer-input" class="answer-input" placeholder="Your answer">
+      <button id="check-btn">Check Answer</button>
+      <button id="next-btn">Next Problem</button>
+    </div>
+    
+    <div id="feedback" class="feedback"></div>
+    
+    <div class="score-display">
+      Score: <span id="score">0</span>
+      <div id="stars-container"></div>
+    </div>
+  </div>
+
+  <script>
+    // State variables
+    let currentTopic = '';
+    let currentProblem = {};
+    let score = 0;
+    let stars = 0;
+    
+    // DOM elements
+    const problemText = document.getElementById('problem-text');
+    const visualization = document.getElementById('visualization');
+    const answerInput = document.getElementById('answer-input');
+    const checkBtn = document.getElementById('check-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const feedback = document.getElementById('feedback');
+    const scoreDisplay = document.getElementById('score');
+    const starsContainer = document.getElementById('stars-container');
+    const topicButtons = document.querySelectorAll('.topic-btn');
+    
+    // Add event listeners
+    topicButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        currentTopic = button.getAttribute('data-topic');
+        generateProblem();
+      });
+    });
+    
+    checkBtn.addEventListener('click', checkAnswer);
+    nextBtn.addEventListener('click', generateProblem);
+    
+    answerInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        checkAnswer();
+      }
+    });
+    
+    // Problem generators
+    function generateProblem() {
+      answerInput.value = '';
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      
+      switch(currentTopic) {
+        case 'multiplication':
+          generateMultiplicationProblem();
+          break;
+        case 'division':
+          generateDivisionProblem();
+          break;
+        case 'place-value':
+          generatePlaceValueProblem();
+          break;
+        case 'fractions':
+          generateFractionProblem();
+          break;
+        case 'decimals':
+          generateDecimalProblem();
+          break;
+        case 'angles':
+          generateAngleProblem();
+          break;
+        case 'symmetry':
+          generateSymmetryProblem();
+          break;
+        case 'factors':
+          generateFactorsProblem();
+          break;
+        default:
+          problemText.textContent = 'Choose a topic to start practicing!';
+          visualization.innerHTML = '';
+      }
+    }
+    
+    function generateMultiplicationProblem() {
+      const num1 = Math.floor(Math.random() * 90) + 10; // 2-digit number
+      const num2 = Math.floor(Math.random() * 90) + 10; // 2-digit number
+      
+      currentProblem = {
+        question: `${num1} × ${num2} = ?`,
+        answer: num1 * num2
+      };
+      
+      problemText.textContent = currentProblem.question;
+      
+      // Clear previous visualization
+      visualization.innerHTML = '';
+    }
+    
+    function generateDivisionProblem() {
+      const divisor = Math.floor(Math.random() * 9) + 2; // 2-10
+      const quotient = Math.floor(Math.random() * 10) + 1; // 1-10
+      const dividend = divisor * quotient;
+      
+      currentProblem = {
+        question: `${dividend} ÷ ${divisor} = ?`,
+        answer: quotient
+      };
+      
+      problemText.textContent = currentProblem.question;
+      visualization.innerHTML = '';
+    }
+    
+    function generatePlaceValueProblem() {
+      const number = Math.floor(Math.random() * 999999) + 1000; // 4-6 digit number
+      const places = ['ones', 'tens', 'hundreds', 'thousands', 'ten thousands', 'hundred thousands', 'millions'];
+      const placeIndex = Math.floor(Math.random() * 6); // 0-6
+      
+      const strNum = number.toString();
+      const digit = strNum[strNum.length - 1 - placeIndex] || '0';
+      
+      currentProblem = {
+        question: `What is the digit in the ${places[placeIndex]} place of ${number}?`,
+        answer: parseInt(digit)
+      };
+      
+      problemText.textContent = currentProblem.question;
+      
+      // Create place value visualization
+      visualization.innerHTML = '';
+      const placeValueDiv = document.createElement('div');
+      placeValueDiv.style.display = 'flex';
+      placeValueDiv.style.justifyContent = 'center';
+      placeValueDiv.style.gap = '5px';
+      placeValueDiv.style.marginTop = '10px';
+      
+      for (let i = 0; i < strNum.length; i++) {
+        const digitBox = document.createElement('div');
+        digitBox.style.width = '40px';
+        digitBox.style.height = '40px';
+        digitBox.style.border = '1px solid #333';
+        digitBox.style.display = 'flex';
+        digitBox.style.flexDirection = 'column';
+        digitBox.style.alignItems = 'center';
+        digitBox.style.justifyContent = 'center';
+        
+        const digitSpan = document.createElement('span');
+        digitSpan.textContent = strNum[i];
+        digitSpan.style.fontSize = '1.2rem';
+        
+        const placeSpan = document.createElement('span');
+        const place = places[strNum.length - 1 - i];
+        placeSpan.textContent = place;
+        placeSpan.style.fontSize = '0.7rem';
+        
+        digitBox.appendChild(digitSpan);
+        digitBox.appendChild(placeSpan);
+        placeValueDiv.appendChild(digitBox);
+      }
+      
+      visualization.appendChild(placeValueDiv);
+    }
+    
+    function generateFractionProblem() {
+      const denominator = Math.floor(Math.random() * 8) + 2; // 2-9
+      const numerator1 = Math.floor(Math.random() * (denominator - 1)) + 1; // 1 to denominator-1
+      const numerator2 = Math.floor(Math.random() * (denominator - numerator1)) + 1; // Ensure sum < denominator
+      
+      const operation = Math.random() > 0.5 ? '+' : '-';
+      let answer;
+      
+      if (operation === '+') {
+        answer = (numerator1 + numerator2) / denominator;
+        currentProblem = {
+          question: `${numerator1}/${denominator} + ${numerator2}/${denominator} = ?`,
+          answer: `${numerator1 + numerator2}/${denominator}`
+        };
+      } else {
+        if (numerator1 < numerator2) {
+          // Swap to ensure first number is larger
+          const temp = numerator1;
+          numerator1 = numerator2;
+          numerator2 = temp;
+        }
+        answer = (numerator1 - numerator2) / denominator;
+        currentProblem = {
+          question: `${numerator1}/${denominator} - ${numerator2}/${denominator} = ?`,
+          answer: `${numerator1 - numerator2}/${denominator}`
+        };
+      }
+      
+      problemText.textContent = currentProblem.question;
+      
+      // Create fraction visualization
+      visualization.innerHTML = '';
+      const fractionVisual = document.createElement('div');
+      fractionVisual.className = 'fraction-visual';
+      
+      // First fraction
+      const fraction1 = document.createElement('div');
+      fraction1.className = 'fraction-box';
+      
+      for (let i = 0; i < denominator; i++) {
+        const segment = document.createElement('div');
+        segment.className = 'fraction-segment';
+        segment.style.width = `${100 / denominator}%`;
+        segment.style.backgroundColor = i < numerator1 ? '#9370db' : 'white';
+        segment.style.border = '1px solid #333';
+        fraction1.appendChild(segment);
+      }
+      
+      // Second fraction
+      const fraction2 = document.createElement('div');
+      fraction2.className = 'fraction-box';
+      
+      for (let i = 0; i < denominator; i++) {
+        const segment = document.createElement('div');
+        segment.className = 'fraction-segment';
+        segment.style.width = `${100 / denominator}%`;
+        segment.style.backgroundColor = i < numerator2 ? '#4caf50' : 'white';
+        segment.style.border = '1px solid #333';
+        fraction2.appendChild(segment);
+      }
+      
+      const operationDiv = document.createElement('div');
+      operationDiv.textContent = operation;
+      operationDiv.style.fontSize = '1.5rem';
+      
+      fractionVisual.appendChild(fraction1);
+      fractionVisual.appendChild(operationDiv);
+      fractionVisual.appendChild(fraction2);
+      
+      visualization.appendChild(fractionVisual);
+    }
+    
+    function generateDecimalProblem() {
+      const wholeNumber = Math.floor(Math.random() * 10);
+      const tenths = Math.floor(Math.random() * 10);
+      const hundredths = Math.floor(Math.random() * 10);
+      
+      const decimal = wholeNumber + tenths/10 + hundredths/100;
+      const questionType = Math.floor(Math.random() * 3);
+      
+      switch(questionType) {
+        case 0:
+          currentProblem = {
+            question: `What is the value of the tenths place in ${decimal.toFixed(2)}?`,
+            answer: tenths
+          };
+          break;
+        case 1:
+          currentProblem = {
+            question: `What is the value of the hundredths place in ${decimal.toFixed(2)}?`,
+            answer: hundredths
+          };
+          break;
+        case 2:
+          currentProblem = {
+            question: `Write ${wholeNumber} and ${tenths}/10 and ${hundredths}/100 as a decimal.`,
+            answer: decimal.toFixed(2)
+          };
+          break;
+      }
+      
+      problemText.textContent = currentProblem.question;
+      
+      // Create decimal visualization
+      visualization.innerHTML = '';
+      const decimalVisual = document.createElement('div');
+      decimalVisual.className = 'decimal-visual';
+      
+      const decimalValue = document.createElement('div');
+      decimalValue.textContent = decimal.toFixed(2);
+      decimalValue.style.fontSize = '1.5rem';
+      decimalValue.style.fontWeight = 'bold';
+      
+      const gridContainer = document.createElement('div');
+      gridContainer.className = 'decimal-grid';
+      
+      // Create 10x10 grid for hundredths
+      for (let i = 0; i < 100; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'decimal-cell';
+        
+        if (i < wholeNumber * 100 + tenths * 10 + hundredths) {
+          cell.classList.add('highlighted');
+        }
+        
+        gridContainer.appendChild(cell);
+      }
+      
+      decimalVisual.appendChild(decimalValue);
+      decimalVisual.appendChild(gridContainer);
+      
+      visualization.appendChild(decimalVisual);
+    }
+    
+    function generateAngleProblem() {
+      const angleTypes = [
+        { name: 'acute', min: 10, max: 85 },
+        { name: 'right', value: 90 },
+        { name: 'obtuse', min: 95, max: 175 },
+        { name: 'straight', value: 180 }
+      ];
+      
+      const angleTypeIndex = Math.floor(Math.random() * angleTypes.length);
+      const angleType = angleTypes[angleTypeIndex];
+      
+      let angle;
+      if ('value' in angleType) {
+        angle = angleType.value;
+      } else {
+        angle = Math.floor(Math.random() * (angleType.max - angleType.min + 1)) + angleType.min;
+      }
+      
+      const questionType = Math.floor(Math.random() * 2);
+      
+      if (questionType === 0) {
+        currentProblem = {
+          question: `What type of angle is ${angle}°? (acute, right, obtuse, or straight)`,
+          answer: angleType.name
+        };
+      } else {
+        currentProblem = {
+          question: `What is the measure of this ${angleType.name} angle?`,
+          answer: angle
+        };
+      }
+      
+      problemText.textContent = currentProblem.question;
+      
+      // Create angle visualization
+      visualization.innerHTML = '';
+      const angleVisualization = document.createElement('div');
+      angleVisualization.className = 'angle-visualization';
+      
+      const arm1 = document.createElement('div');
+      arm1.className = 'angle-arm';
+      
+      const arm2 = document.createElement('div');
+      arm2.className = 'angle-arm';
+      arm2.style.transform = `rotate(${angle}deg)`;
+      
+      const angleLabel = document.createElement('div');
+      angleLabel.className = 'angle-label';
+      angleLabel.textContent = questionType === 0 ? `${angle}°` : '?°';
+      
+      angleVisualization.appendChild(arm1);
+      angleVisualization.appendChild(arm2);
+      angleVisualization.appendChild(angleLabel);
+      
+      visualization.appendChild(angleVisualization);
+    }
+    
+    function generateSymmetryProblem() {
+      const shapes = [
+        { name: 'rectangle', symmetryLines: 2 },
+        { name: 'square', symmetryLines: 4 },
+        { name: 'circle', symmetryLines: 'infinite' },
+        { name: 'triangle (equilateral)', symmetryLines: 3 },
+        { name: 'triangle (isosceles)', symmetryLines: 1 },
+        { name: 'heart', symmetryLines: 1 },
+        { name: 'letter H', symmetryLines: 2 },
+        { name: 'letter O', symmetryLines: 2 }
+      ];
+      
+      const shapeIndex = Math.floor(Math.random() * shapes.length);
+      const shape = shapes[shapeIndex];
+      
+      currentProblem = {
+        question: `How many lines of symmetry does a ${shape.name} have?`,
+        answer: shape.symmetryLines
+      };
+      
+      problemText.textContent = currentProblem.question;
+      
+      // Create symmetry visualization
+      visualization.innerHTML = '';
+      const symmetryShape = document.createElement('div');
+      symmetryShape.className = 'symmetry-shape';
+      
+      let shapeHTML = '';
+      switch(shape.name) {
+        case 'rectangle':
+          symmetryShape.style.border = '3px solid black';
+          break;
+        case 'square':
+          symmetryShape.style.border = '3px solid black';
+          symmetryShape.style.width = '100px';
+          symmetryShape.style.height = '100px';
+          break;
+        case 'circle':
+          symmetryShape.style.border = '3px solid black';
+          symmetryShape.style.borderRadius = '50%';
+          symmetryShape.style.width = '100px';
+          symmetryShape.style.height = '100px';
+          break;
+        case 'triangle (equilateral)':
+          symmetryShape.style.width = '0';
+          symmetryShape.style.height = '0';
+          symmetryShape.style.borderLeft = '50px solid transparent';
+          symmetryShape.style.borderRight = '50px solid transparent';
+          symmetryShape.style.borderBottom = '100px solid black';
+          break;
+        case 'triangle (isosceles)':
+          symmetryShape.style.width = '0';
+          symmetryShape.style.height = '0';
+          symmetryShape.style.borderLeft = '60px solid transparent';
+          symmetryShape.style.borderRight = '60px solid transparent';
+          symmetryShape.style.borderBottom = '100px solid black';
+          break;
+        case 'heart':
+          symmetryShape.innerHTML = '❤️';
+          symmetryShape.style.fontSize = '80px';
+          symmetryShape.style.textAlign = 'center';
+          break;
+        case 'letter H':
+          symmetryShape.innerHTML = 'H';
+          symmetryShape.style.fontSize = '80px';
+          symmetryShape.style.fontWeight = 'bold';
+          symmetryShape.style.textAlign = 'center';
+          break;
+        case 'letter O':
+          symmetryShape.innerHTML = 'O';
+          symmetryShape.style.fontSize = '80px';
+          symmetryShape.style.fontWeight = 'bold';
+          symmetryShape.style.textAlign = 'center';
+          break;
+      }
+      
+      // Add vertical line of symmetry for visualization
+      if (shape.symmetryLines >= 1 && shape.symmetryLines !== 'infinite') {
+        const symmetryLine = document.createElement('div');
+        symmetryLine.className = 'symmetry-line';
+        symmetryShape.appendChild(symmetryLine);
+      }
+      
+      visualization.appendChild(symmetryShape);
+    }
+    
+    function generateFactorsProblem() {
+      const problemTypes = ['factors', 'multiples', 'prime'];
+      const problemType = problemTypes[Math.floor(Math.random() * problemTypes.length)];
+      
+      switch(problemType) {
+        case 'factors':
+          const number = Math.floor(Math.random() * 41) + 10; // 10-50
+          const factors = [];
+          for (let i = 1; i <= number; i++) {
+            if (number % i === 0) {
+              factors.push(i);
+            }
+          }
+          
+          currentProblem = {
+            question: `List all the factors of ${number}.`,
+            answer: factors.join(', ')
+          };
+          break;
+          
+        case 'multiples':
+          const baseNumber = Math.floor(Math.random() * 10) + 2; // 2-11
+          const multiples = [];
+          for (let i = 1; i <= 5; i++) {
+            multiples.push(baseNumber * i);
+          }
+          
+          currentProblem = {
+            question: `List the first 5 multiples of ${baseNumber}.`,
+            answer: multiples.join(', ')
+          };
+          break;
+          
+        case 'prime':
+          const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
+          const composites = [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 22, 24, 25];
+          
+          const isPrime = Math.random() > 0.5;
+          const testNumber = isPrime ? 
+            primes[Math.floor(Math.random() * primes.length)] : 
+            composites[Math.floor(Math.random() * composites.length)];
+          
+          currentProblem = {
+            question: `Is ${testNumber} a prime number? (yes/no)`,
+            answer: isPrime ? 'yes' : 'no'
+          };
+          break;
+      }
+      
+      problemText.textContent = currentProblem.question;
+      visualization.innerHTML = '';
+    }
+    
+    function checkAnswer() {
+      if (!currentProblem.answer) return;
+      
+      const userAnswer = answerInput.value.trim().toLowerCase();
+      let correctAnswer = String(currentProblem.answer).toLowerCase();
+      
+      let isCorrect = false;
+      
+      // Special handling for fraction answers
+      if (typeof currentProblem.answer === 'string' && currentProblem.answer.includes('/')) {
+        // Handle both reduced and unreduced forms
+        const [numerator, denominator] = currentProblem.answer.split('/');
+        const decimalValue = parseInt(numerator) / parseInt(denominator);
+        
+        if (userAnswer.includes('/')) {
+          const [userNum, userDenom] = userAnswer.split('/');
+          const userDecimal = parseInt(userNum) / parseInt(userDenom);
+          isCorrect = Math.abs(userDecimal - decimalValue) < 0.0001;
+        } else if (!isNaN(userAnswer)) {
+          isCorrect = Math.abs(parseFloat(userAnswer) - decimalValue) < 0.0001;
+        }
+      } else if (correctAnswer === 'infinite' && (userAnswer === 'infinite' || userAnswer === 'infinity' || userAnswer === '∞')) {
+        isCorrect = true;
+      } else if (currentTopic === 'factors' || currentTopic === 'multiples') {
+        // Handle lists of numbers
+        const correctList = correctAnswer.split(',').map(item => item.trim());
+        const userList = userAnswer.split(',').map(item => item.trim());
+        
+        isCorrect = correctList.length === userList.length && 
+                   correctList.every(item => userList.includes(item));
+      } else {
+        // Standard comparison
+        isCorrect = userAnswer === correctAnswer;
+      }
+      
+      if (isCorrect) {
+        feedback.textContent = 'Correct! Great job!';
+        feedback.className = 'feedback correct';
+        score += 10;
+        scoreDisplay.textContent = score;
+        
+        // Add stars for achievements
+        if (score % 50 === 0) {
+          stars++;
+          updateStars();
+        }
+      } else {
+        feedback.textContent = `Not quite! The answer is ${currentProblem.answer}. Try again!`;
+        feedback.className = 'feedback incorrect';
+      }
+    }
+    
+    function updateStars() {
+      starsContainer.innerHTML = '';
+      for (let i = 0; i < stars; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.textContent = '★';
+        starsContainer.appendChild(star);
+      }
+    }
+  </script>
+</body>
+</html>

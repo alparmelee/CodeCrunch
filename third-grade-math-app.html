@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3rd Grade Math Adventure</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            max-width: 800px;
+        }
+        h1 {
+            color: #4b0082;
+            text-align: center;
+            font-size: 2.2em;
+        }
+        h2 {
+            color: #9370db;
+            margin-top: 10px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .topic-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .topic-btn {
+            background-color: #9370db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .topic-btn:hover {
+            background-color: #4b0082;
+        }
+        .question-container {
+            text-align: center;
+            margin: 20px 0;
+            min-height: 100px;
+        }
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .option-btn {
+            background-color: #e0e0ff;
+            border: 2px solid #9370db;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .option-btn:hover {
+            background-color: #d0d0ff;
+        }
+        .result {
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            min-height: 1.5em;
+        }
+        .correct { color: #008000; }
+        .incorrect { color: #ff0000; }
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        .visual-aid {
+            margin: 15px auto;
+            max-width: 300px;
+            height: 150px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 2px solid #9370db;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hidden { display: none; }
+        .input-answer {
+            font-size: 1.2em;
+            padding: 8px;
+            border: 2px solid #9370db;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 100px;
+            margin: 0 auto;
+            display: block;
+        }
+        .submit-btn, .next-btn {
+            background-color: #4b0082;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+        }
+        .submit-btn { background-color: #4caf50; }
+        .fraction-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3rd Grade Math Adventure</h1>
+        <div class="topic-selector">
+            <button class="topic-btn" data-topic="multiplication">Multiplication</button>
+            <button class="topic-btn" data-topic="division">Division</button>
+            <button class="topic-btn" data-topic="place-value">Place Value</button>
+            <button class="topic-btn" data-topic="fractions">Fractions</button>
+            <button class="topic-btn" data-topic="area-perimeter">Area & Perimeter</button>
+            <button class="topic-btn" data-topic="word-problems">Word Problems</button>
+            <button class="topic-btn" data-topic="graphs">Graphs</button>
+        </div>
+        <div class="score">Score: <span id="score">0</span> / <span id="total">0</span></div>
+    </div>
+    
+    <div class="container" id="question-area">
+        <h2 id="topic-title">Select a topic to start!</h2>
+        <div class="question-container">
+            <div class="question" id="question-text"></div>
+            <div id="input-container"></div>
+            <div id="visual-aid" class="visual-aid hidden"></div>
+        </div>
+        <div class="result" id="result"></div>
+        <button class="next-btn hidden" id="next-btn">Next Question</button>
+    </div>
+    
+    <script>
+        const topicButtons = document.querySelectorAll('.topic-btn');
+        const questionText = document.getElementById('question-text');
+        const topicTitle = document.getElementById('topic-title');
+        const inputContainer = document.getElementById('input-container');
+        const resultDisplay = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score');
+        const totalDisplay = document.getElementById('total');
+        const visualAid = document.getElementById('visual-aid');
+        const nextButton = document.getElementById('next-btn');
+        
+        let currentTopic = '';
+        let score = 0;
+        let total = 0;
+        let currentAnswer = null;
+        
+        // Add event listeners
+        topicButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                currentTopic = button.getAttribute('data-topic');
+                topicTitle.textContent = button.textContent;
+                generateQuestion();
+                nextButton.classList.add('hidden');
+                resultDisplay.textContent = '';
+                resultDisplay.className = 'result';
+            });
+        });
+        
+        nextButton.addEventListener('click', () => {
+            generateQuestion();
+            nextButton.classList.add('hidden');
+            resultDisplay.textContent = '';
+            resultDisplay.className = 'result';
+        });
+        
+        // Generate questions based on topic
+        function generateQuestion() {
+            inputContainer.innerHTML = '';
+            visualAid.innerHTML = '';
+            visualAid.classList.add('hidden');
+            
+            switch(currentTopic) {
+                case 'multiplication':
+                    const num1 = Math.floor(Math.random() * 12) + 1;
+                    const num2 = Math.floor(Math.random() * 12) + 1;
+                    questionText.textContent = `${num1} × ${num2} = ?`;
+                    currentAnswer = num1 * num2;
+                    createInputField();
+                    createMultiplicationVisual(num1, num2);
+                    break;
+                case 'division':
+                    const divisor = Math.floor(Math.random() * 12) + 1;
+                    const quotient = Math.floor(Math.random() * 12) + 1;
+                    const dividend = divisor * quotient;
+                    questionText.textContent = `${dividend} ÷ ${divisor} = ?`;
+                    currentAnswer = quotient;
+                    createInputField();
+                    createDivisionVisual(divisor, quotient);
+                    break;
+                case 'place-value':
+                    const num = Math.floor(Math.random() * 9000) + 1000;
+                    const placeOptions = ['ones', 'tens', 'hundreds', 'thousands'];
+                    const placeIndex = Math.floor(Math.random() * 4);
+                    questionText.textContent = `What is the value of the ${placeOptions[placeIndex]} digit in ${num}?`;
+                    const digit = parseInt(num.toString()[3 - placeIndex]);
+                    currentAnswer = digit * Math.pow(10, placeIndex);
+                    createInputField();
+                    createPlaceValueVisual(num, placeIndex);
+                    break;
+                case 'fractions':
+                    generateFractionsQuestion();
+                    break;
+                case 'area-perimeter':
+                    const isArea = Math.random() > 0.5;
+                    const length = Math.floor(Math.random() * 8) + 3;
+                    const width = Math.floor(Math.random() * 5) + 2;
+                    if (isArea) {
+                        questionText.textContent = `Find the area of a rectangle with length ${length} units and width ${width} units.`;
+                        currentAnswer = length * width;
+                    } else {
+                        questionText.textContent = `Find the perimeter of a rectangle with length ${length} units and width ${width} units.`;
+                        currentAnswer = 2 * (length + width);
+                    }
+                    createInputField();
+                    createRectangleVisual(length, width, isArea);
+                    break;
+                case 'word-problems':
+                    generateWordProblem();
+                    break;
+                case 'graphs':
+                    generateGraphQuestion();
+                    break;
+            }
+        }
+        
+        // Create input field with submit button
+        function createInputField() {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'input-answer';
+            input.placeholder = 'Your answer';
+            
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'submit-btn';
+            submitBtn.textContent = 'Submit';
+            submitBtn.addEventListener('click', checkAnswer);
+            
+            inputContainer.appendChild(input);
+            inputContainer.appendChild(submitBtn);
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+        }
+        
+        // Create multiple choice options
+        function createMultipleChoiceOptions(options) {
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options-container';
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.addEventListener('click', function() {
+                    checkMultipleChoiceAnswer(option);
+                });
+                optionsDiv.appendChild(button);
+            });
+            
+            inputContainer.appendChild(optionsDiv);
+        }
+        
+        // Check answer from input field
+        function checkAnswer() {
+            const input = document.querySelector('.input-answer');
+            const userAnswer = input.value.trim();
+            
+            if (userAnswer === '') return;
+            
+            total++;
+            totalDisplay.textContent = total;
+            
+            if (parseInt(userAnswer) === currentAnswer) {
+                resultDisplay.textContent = 'Correct! Great job!';
+                resultDisplay.className = 'result correct';
+                score++;
+                scoreDisplay.textContent = score;
+            } else {
+                resultDisplay.textContent = `Not quite. The answer is ${currentAnswer}.`;
+                resultDisplay.className = 'result incorrect';
+            }
+            
+            nextButton.classList.remove('hidden');
+        }
+        
+        // Check multiple choice answer
+        function checkMultipleChoiceAnswer(selectedOption) {
+            total++;
+            totalDisplay.textContent = total;
+            
+            if (selectedOption === currentAnswer) {
+                resultDisplay.textContent = 'Correct! Great job!';
+                resultDisplay.className = 'result correct';
+                score++;
+                scoreDisplay.textContent = score;
+            } else {
+                resultDisplay.textContent = `Not quite. The answer is ${currentAnswer}.`;
+                resultDisplay.className = 'result incorrect';
+            }
+            
+            nextButton.classList.remove('hidden');
+        }
+        
+        // Visual helpers
+        function createMultiplicationVisual(a, b) {
+            visualAid.classList.remove('hidden');
+            visualAid.innerHTML = '';
+            
+            const grid = document.createElement('div');
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = `repeat(${b}, 20px)`;
+            grid.style.gap = '4px';
+            
+            for (let i = 0; i < a * b; i++) {
+                const dot = document.createElement('div');
+                dot.style.width = '20px';
+                dot.style.height = '20px';
+                dot.style.backgroundColor = '#9370db';
+                dot.style.borderRadius = '50%';
+                grid.appendChild(dot);
+            }
+            
+            visualAid.appendChild(grid);
+        }
+        
+        function createDivisionVisual(divisor, quotient) {
+            visualAid.classList.remove('hidden');
+            visualAid.style.flexWrap = 'wrap';
+            
+            for (let i = 0; i < divisor; i++) {
+                const group = document.createElement('div');
+                group.style.margin = '5px';
+                group.style.padding = '5px';
+                group.style.border = '1px dashed #9370db';
+                group.style.borderRadius = '5px';
+                group.style.display = 'flex';
+                
+                for (let j = 0; j < quotient; j++) {
+                    const dot = document.createElement('div');
+                    dot.style.width = '15px';
+                    dot.style.height = '15px';
+                    dot.style.backgroundColor = '#9370db';
+                    dot.style.borderRadius = '50%';
+                    dot.style.margin = '2px';
+                    group.appendChild(dot);
+                }
+                
+                visualAid.appendChild(group);
+            }
+        }
+        
+        function createPlaceValueVisual(num, placeIndex) {
+            visualAid.classList.remove('hidden');
+            const numStr = num.toString();
+            
+            const placeValueDiv = document.createElement('div');
+            placeValueDiv.style.display = 'flex';
+            placeValueDiv.style.justifyContent = 'center';
+            placeValueDiv.style.gap = '10px';
+            placeValueDiv.style.fontSize = '24px';
+            
+            for (let i = 0; i < numStr.length; i++) {
+                const digitDiv = document.createElement('div');
+                digitDiv.textContent = numStr[i];
+                digitDiv.style.padding = '10px';
+                digitDiv.style.border = '1px solid #9370db';
+                
+                if (i === 3 - placeIndex) {
+                    digitDiv.style.backgroundColor = '#9370db';
+                    digitDiv.style.color = 'white';
+                }
+                
+                placeValueDiv.appendChild(digitDiv);
+            }
+            
+            visualAid.appendChild(placeValueDiv);
+        }
+        
+        function createRectangleVisual(length, width, isArea) {
+            visualAid.classList.remove('hidden');
+            
+            const container = document.createElement('div');
+            container.style.position = 'relative';
+            container.style.width = `${Math.min(length * 20, 280)}px`;
+            container.style.height = `${width * 20}px`;
+            container.style.border = '2px solid #9370db';
+            container.style.margin = '0 auto';
+            
+            if (isArea) {
+                container.textContent = `Area = ${length} × ${width} = ${length * width} square units`;
+            } else {
+                container.textContent = `Perimeter = 2(${length} + ${width}) = ${2 * (length + width)} units`;
+            }
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'center';
+            
+            visualAid.appendChild(container);
+        }
+        
+        function generateFractionsQuestion() {
+            const denominator = Math.floor(Math.random() * 5) + 2;
+            const numerator1 = Math.floor(Math.random() * denominator) + 1;
+            let numerator2 = Math.floor(Math.random() * denominator) + 1;
+            
+            questionText.textContent = `Which fraction is greater: ${numerator1}/${denominator} or ${numerator2}/${denominator}?`;
+            
+            const options = [`${numerator1}/${denominator}`, `${numerator2}/${denominator}`];
+            currentAnswer = numerator1 > numerator2 ? options[0] : options[1];
+            
+            createMultipleChoiceOptions(options);
+            createSimpleFractionVisual(numerator1, numerator2, denominator);
+        }
+        
+        function createSimpleFractionVisual(num1, num2, denom) {
+            visualAid.classList.remove('hidden');
+            visualAid.innerHTML = `
+                <div style="display: flex; justify-content: space-around; width: 100%;">
+                    <div>
+                        <div class="fraction-circle" style="background: linear-gradient(to bottom, #9370db ${num1/denom*100}%, white ${num1/denom*100}%)"></div>
+                        <div style="text-align: center; margin-top: 5px;">${num1}/${denom}</div>
+                    </div>
+                    <div>
+                        <div class="fraction-circle" style="background: linear-gradient(to bottom, #9370db ${num2/denom*100}%, white ${num2/denom*100}%)"></div>
+                        <div style="text-align: center; margin-top: 5px;">${num2}/${denom}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generateWordProblem() {
+            const types = ['addition', 'subtraction', 'multiplication'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            let problem, answer;
+            
+            if (type === 'addition') {
+                const num1 = Math.floor(Math.random() * 50) + 10;
+                const num2 = Math.floor(Math.random() * 50) + 10;
+                problem = `Sarah had ${num1} stickers. Her friend gave her ${num2} more stickers. How many stickers does Sarah have now?`;
+                answer = num1 + num2;
+            } else if (type === 'subtraction') {
+                const total = Math.floor(Math.random() * 50) + 50;
+                const part = Math.floor(Math.random() * 30) + 10;
+                problem = `Max had ${total} marbles. He gave ${part} marbles to his sister. How many marbles does Max have left?`;
+                answer = total - part;
+            } else {
+                const a = Math.floor(Math.random() * 8) + 2;
+                const b = Math.floor(Math.random() * 8) + 2;
+                problem = `There are ${a} rows of apples. Each row has ${b} apples. How many apples are there in total?`;
+                answer = a * b;
+            }
+            
+            questionText.textContent = problem;
+            currentAnswer = answer;
+            createInputField();
+        }
+        
+        function generateGraphQuestion() {
+            const data = [];
+            const labels = ['Math', 'Reading', 'Science', 'Art', 'Music'];
+            const selectedLabels = labels.slice(0, Math.floor(Math.random() * 2) + 3);
+            
+            selectedLabels.forEach(label => {
+                data.push({
+                    label: label,
+                    value: Math.floor(Math.random() * 20) + 5
+                });
+            });
+            
+            const highestValue = Math.max(...data.map(item => item.value));
+            const questionType = Math.random() > 0.5 ? 'highest' : 'total';
+            
+            if (questionType === 'highest') {
+                const highestLabel = data.find(item => item.value === highestValue).label;
+                questionText.textContent = `Looking at the graph, which subject has the most students?`;
+                currentAnswer = highestLabel;
+                const options = [...selectedLabels];
+                createMultipleChoiceOptions(options);
+            } else {
+                const total = data.reduce((sum, item) => sum + item.value, 0);
+                questionText.textContent = `What is the total number of students shown in the graph?`;
+                currentAnswer = total;
+                createInputField();
+            }
+            
+            createBarGraph(data);
+        }
+        
+        function createBarGraph(data) {
+            visualAid.classList.remove('hidden');
+            visualAid.innerHTML = '';
+            visualAid.style.height = '200px';
+            
+            const graph = document.createElement('div');
+            graph.style.display = 'flex';
+            graph.style.alignItems = 'flex-end';
+            graph.style.height = '150px';
+            graph.style.width = '100%';
+            graph.style.justifyContent = 'space-around';
+            graph.style.borderBottom = '2px solid black';
+            graph.style.borderLeft = '2px solid black';
+            
+            data.forEach(item => {
+                const barContainer = document.createElement('div');
+                barContainer.style.display = 'flex';
+                barContainer.style.flexDirection = 'column';
+                barContainer.style.alignItems = 'center';
+                
+                const bar = document.createElement('div');
+                bar.style.width = '30px';
+                bar.style.height = `${item.value * 5}px`;
+                bar.style.backgroundColor = '#9370db';
+                bar.style.marginTop = '5px';
+                
+                const label = document.createElement('div');
+                label.textContent = item.label;
+                label.style.marginTop = '5px';
+                label.style.fontSize = '12px';
+                
+                const value = document.createElement('div');
+                value.textContent = item.value;
+                value.style.marginTop = '5px';
+                
+                barContainer.appendChild(value);
+                barContainer.appendChild(bar);
+                barContainer.appendChild(label);
+                graph.appendChild(barContainer);
+            });
+            
+            visualAid.appendChild(graph);
+            
+            const title = document.createElement('div');
+            title.textContent = 'Number of Students by Subject';
+            title.style.textAlign = 'center';
+            title.style.marginTop = '10px';
+            visualAid.appendChild(title);
+        }
+    </script>
+</body>
+</html>

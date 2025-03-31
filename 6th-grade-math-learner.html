@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6th Grade Math Learning Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .topic-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .topic-button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .topic-button:hover {
+      background-color: #2980b9;
+    }
+    .content-section {
+      margin-top: 20px;
+    }
+    .formula {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-left: 3px solid #3498db;
+      margin: 10px 0;
+    }
+    .example {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #e8f4f8;
+      border-radius: 5px;
+    }
+    .practice {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #eee;
+      border-radius: 5px;
+    }
+    #practice-feedback {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .correct {
+      color: #27ae60;
+    }
+    .incorrect {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>6th Grade Math Learning Tool</h1>
+    
+    <div class="topic-list">
+      <button class="topic-button" onclick="showTopic('ratios')">Ratios & Proportions</button>
+      <button class="topic-button" onclick="showTopic('fractions')">Fractions & Decimals</button>
+      <button class="topic-button" onclick="showTopic('negatives')">Negative Numbers</button>
+      <button class="topic-button" onclick="showTopic('algebra')">Basic Algebra</button>
+      <button class="topic-button" onclick="showTopic('percentages')">Percentages</button>
+      <button class="topic-button" onclick="showTopic('geometry')">Area & Volume</button>
+      <button class="topic-button" onclick="showTopic('data')">Data Representation</button>
+    </div>
+    
+    <div id="content" class="content-section">
+      <p>Select a topic above to learn about different 6th grade math concepts.</p>
+    </div>
+    
+    <div id="practice-section" class="practice" style="display: none;">
+      <h3>Practice Problem</h3>
+      <p id="practice-question"></p>
+      <input type="text" id="practice-answer" placeholder="Your answer">
+      <button onclick="checkAnswer()">Check Answer</button>
+      <div id="practice-feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    const topicContent = {
+      ratios: {
+        title: "Ratios and Proportions",
+        content: `
+          <p>Ratios compare two or more quantities, while proportions are equations stating that two ratios are equal.</p>
+          
+          <div class="formula">
+            <p><strong>Ratio:</strong> a:b or a/b</p>
+            <p><strong>Proportion:</strong> a/b = c/d</p>
+            <p><strong>Cross multiplication:</strong> If a/b = c/d, then ad = bc</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Example:</strong></p>
+            <p>If 3 pencils cost $0.75, how much do 12 pencils cost?</p>
+            <p>Set up the proportion: 3/0.75 = 12/x</p>
+            <p>Cross multiply: 3x = 0.75 × 12</p>
+            <p>3x = 9</p>
+            <p>x = $3.00</p>
+          </div>
+        `,
+        practice: {
+          question: "If 4 oranges cost $2.00, how much would 10 oranges cost?",
+          answer: "5"
+        }
+      },
+      
+      fractions: {
+        title: "Operations with Fractions and Decimals",
+        content: `
+          <p>Fractions represent parts of a whole, while decimals use place value to represent fractions with denominators of powers of 10.</p>
+          
+          <div class="formula">
+            <p><strong>Adding/Subtracting Fractions:</strong></p>
+            <p>Find common denominator first: a/c ± b/c = (a±b)/c</p>
+            
+            <p><strong>Multiplying Fractions:</strong></p>
+            <p>(a/b) × (c/d) = (a×c)/(b×d)</p>
+            
+            <p><strong>Dividing Fractions:</strong></p>
+            <p>(a/b) ÷ (c/d) = (a/b) × (d/c)</p>
+            
+            <p><strong>Converting Between Fractions and Decimals:</strong></p>
+            <p>Fraction to decimal: Divide numerator by denominator</p>
+            <p>Decimal to fraction: Write as numerator over power of 10, then simplify</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Examples:</strong></p>
+            <p>2/3 + 1/4 = 8/12 + 3/12 = 11/12</p>
+            <p>2/3 × 3/4 = 6/12 = 1/2</p>
+            <p>2/3 ÷ 3/4 = 2/3 × 4/3 = 8/9</p>
+            <p>3/4 = 0.75</p>
+            <p>0.25 = 25/100 = 1/4</p>
+          </div>
+        `,
+        practice: {
+          question: "Calculate 2/5 + 3/10 as a fraction in lowest terms (write as a/b)",
+          answer: "7/10"
+        }
+      },
+      
+      negatives: {
+        title: "Negative Numbers and the Number Line",
+        content: `
+          <p>Negative numbers represent values less than zero and are located to the left of zero on the number line.</p>
+          
+          <div class="formula">
+            <p><strong>Adding/Subtracting Integers:</strong></p>
+            <p>Same signs: Add absolute values and keep the sign</p>
+            <p>Different signs: Subtract smaller absolute value from larger and use sign of larger absolute value</p>
+            <p>Subtracting: a - b = a + (-b)</p>
+            
+            <p><strong>Multiplying/Dividing Integers:</strong></p>
+            <p>Same signs: Result is positive</p>
+            <p>Different signs: Result is negative</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Examples:</strong></p>
+            <p>5 + (-3) = 2</p>
+            <p>-4 - 5 = -4 + (-5) = -9</p>
+            <p>-3 × 4 = -12</p>
+            <p>-12 ÷ (-3) = 4</p>
+            <p>|-7| = 7 (absolute value)</p>
+          </div>
+        `,
+        practice: {
+          question: "Calculate: -5 - (-8) × 2",
+          answer: "11"
+        }
+      },
+      
+      algebra: {
+        title: "Basic Algebraic Expressions and Equations",
+        content: `
+          <p>Algebra uses symbols (usually letters) to represent numbers and express relationships between quantities.</p>
+          
+          <div class="formula">
+            <p><strong>Expression terms:</strong></p>
+            <p>Variable: A letter representing an unknown value</p>
+            <p>Coefficient: The number multiplied by a variable</p>
+            <p>Term: A number, variable, or product of numbers and variables</p>
+            <p>Like terms: Terms with the same variables raised to the same powers</p>
+            
+            <p><strong>Solving One-Step Equations:</strong></p>
+            <p>Addition/Subtraction: Add/subtract the same value from both sides</p>
+            <p>Multiplication/Division: Multiply/divide both sides by the same value</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Examples:</strong></p>
+            <p>Simplify: 3x + 2y - 5x + y = -2x + 3y</p>
+            <p>Solve: x + 5 = 12 → x = 7</p>
+            <p>Solve: 3x = 15 → x = 5</p>
+          </div>
+        `,
+        practice: {
+          question: "Solve for x: 2x - 7 = 9",
+          answer: "8"
+        }
+      },
+      
+      percentages: {
+        title: "Introduction to Percentages",
+        content: `
+          <p>A percentage is a number expressed as a fraction of 100, representing a part of a whole.</p>
+          
+          <div class="formula">
+            <p><strong>Converting:</strong></p>
+            <p>Percent to decimal: Divide by 100 (move decimal point left 2 places)</p>
+            <p>Decimal to percent: Multiply by 100 (move decimal point right 2 places)</p>
+            <p>Fraction to percent: Divide numerator by denominator, then multiply by 100</p>
+            
+            <p><strong>Percent Formulas:</strong></p>
+            <p>Part = Whole × Percent/100</p>
+            <p>Percent = (Part ÷ Whole) × 100</p>
+            <p>Whole = Part ÷ (Percent/100)</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Examples:</strong></p>
+            <p>25% = 0.25 = 1/4</p>
+            <p>Find 30% of 80: 80 × 0.30 = 24</p>
+            <p>15 is what percent of 60? (15 ÷ 60) × 100 = 25%</p>
+            <p>If 35% of a number is 28, find the number: 28 ÷ 0.35 = 80</p>
+          </div>
+        `,
+        practice: {
+          question: "What is 40% of 75?",
+          answer: "30"
+        }
+      },
+      
+      geometry: {
+        title: "Area, Surface Area, and Volume",
+        content: `
+          <p>These geometric measurements describe the size of shapes in different dimensions.</p>
+          
+          <div class="formula">
+            <p><strong>Area Formulas (2D):</strong></p>
+            <p>Rectangle: A = l × w</p>
+            <p>Square: A = s²</p>
+            <p>Triangle: A = (1/2) × b × h</p>
+            <p>Circle: A = πr²</p>
+            
+            <p><strong>Surface Area Formulas (3D):</strong></p>
+            <p>Cube: SA = 6s²</p>
+            <p>Rectangular Prism: SA = 2(lw + lh + wh)</p>
+            
+            <p><strong>Volume Formulas (3D):</strong></p>
+            <p>Cube: V = s³</p>
+            <p>Rectangular Prism: V = l × w × h</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Examples:</strong></p>
+            <p>Area of a rectangle with length 7 cm and width 4 cm: A = 7 × 4 = 28 cm²</p>
+            <p>Volume of a cube with side length 3 cm: V = 3³ = 27 cm³</p>
+            <p>Surface area of a rectangular prism with l=5, w=3, h=2: SA = 2(5×3 + 5×2 + 3×2) = 2(15 + 10 + 6) = 2(31) = 62 units²</p>
+          </div>
+        `,
+        practice: {
+          question: "What is the volume of a rectangular prism with length 4 cm, width 3 cm, and height 5 cm?",
+          answer: "60"
+        }
+      },
+      
+      data: {
+        title: "Data Representation",
+        content: `
+          <p>Data representation helps visualize and analyze information using different types of graphs and plots.</p>
+          
+          <div class="formula">
+            <p><strong>Histograms:</strong></p>
+            <p>Used for continuous data grouped into intervals</p>
+            <p>Shows frequency distributions</p>
+            <p>Bars touch each other (no gaps)</p>
+            
+            <p><strong>Box Plots (Box-and-Whisker):</strong></p>
+            <p>Shows five-number summary: minimum, first quartile (Q1), median (Q2), third quartile (Q3), maximum</p>
+            <p>InterQuartile Range (IQR) = Q3 - Q1</p>
+            <p>Outliers are typically values below Q1 - 1.5×IQR or above Q3 + 1.5×IQR</p>
+            
+            <p><strong>Statistical Measures:</strong></p>
+            <p>Mean = Sum of all values ÷ Number of values</p>
+            <p>Median = Middle value when data is ordered</p>
+            <p>Mode = Most frequently occurring value</p>
+            <p>Range = Maximum - Minimum</p>
+          </div>
+          
+          <div class="example">
+            <p><strong>Example:</strong></p>
+            <p>For the data set {4, 7, 8, 9, 10, 12, 15}:</p>
+            <p>Minimum = 4</p>
+            <p>Q1 = 7</p>
+            <p>Median = 9</p>
+            <p>Q3 = 12</p>
+            <p>Maximum = 15</p>
+            <p>IQR = 12 - 7 = 5</p>
+            <p>Mean = (4 + 7 + 8 + 9 + 10 + 12 + 15) ÷ 7 = 65 ÷ 7 ≈ 9.29</p>
+          </div>
+        `,
+        practice: {
+          question: "For the data set {5, 8, 8, 10, 12, 14, 15}, find the median value.",
+          answer: "10"
+        }
+      }
+    };
+
+    function showTopic(topic) {
+      const content = topicContent[topic];
+      document.getElementById('content').innerHTML = `
+        <h2>${content.title}</h2>
+        ${content.content}
+      `;
+      
+      // Show practice section
+      document.getElementById('practice-section').style.display = 'block';
+      document.getElementById('practice-question').textContent = content.practice.question;
+      document.getElementById('practice-answer').value = '';
+      document.getElementById('practice-feedback').textContent = '';
+      
+      // Store current topic for answer checking
+      currentTopic = topic;
+    }
+    
+    let currentTopic = '';
+    
+    function checkAnswer() {
+      const userAnswer = document.getElementById('practice-answer').value.trim();
+      const correctAnswer = topicContent[currentTopic].practice.answer;
+      const feedback = document.getElementById('practice-feedback');
+      
+      if (userAnswer === correctAnswer) {
+        feedback.textContent = "Correct! Well done!";
+        feedback.className = 'correct';
+      } else {
+        feedback.textContent = "Not quite. Try again!";
+        feedback.className = 'incorrect';
+      }
+    }
+  </script>
+</body>
+</html>
