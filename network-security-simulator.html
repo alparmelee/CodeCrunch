@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Network Security Concepts Simulator</title>
+    <title>Network Security Concepts Database</title>
     <style>
         :root {
             --primary-color: #2196F3;
-            --secondary-color: #4CAF50;
             --background-light: #f4f4f4;
             --white: #ffffff;
             --text-dark: #333;
         }
         body {
             font-family: 'Arial', sans-serif;
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
@@ -29,340 +28,361 @@
         h1 {
             color: var(--primary-color);
             text-align: center;
-            margin-bottom: 30px;
-        }
-        .scenario {
             margin-bottom: 20px;
-            padding: 15px;
-            background-color: #e9e9e9;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
-        .scenario::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg, 
-                transparent, 
-                rgba(33, 150, 243, 0.1), 
-                transparent
-            );
-            transform: rotate(-45deg);
-            transition: all 0.5s ease;
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
         }
-        .scenario:hover::before {
-            transform: rotate(45deg);
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
-        .scenario:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-        button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+        .filter-btn {
+            padding: 8px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn.active {
             background-color: var(--primary-color);
             color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg, 
-                transparent, 
-                rgba(255,255,255,0.3), 
-                transparent
-            );
-            transition: all 0.5s ease;
+        .filter-btn:hover {
+            background-color: #d0d0d0;
         }
-        button:hover::before {
-            left: 100%;
-        }
-        button:hover {
+        .filter-btn.active:hover {
             background-color: #1976D2;
-            transform: scale(1.02);
         }
-        #output {
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
-            padding: 20px;
-            background-color: #f1f1f1;
-            border-radius: 10px;
-            min-height: 250px;
+        }
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
             position: relative;
-            overflow: hidden;
         }
-        #output::before {
-            content: '🔒';
+        th:hover {
+            background-color: #1976D2;
+        }
+        th::after {
+            content: '↕';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(0deg);
-            font-size: 100px;
-            opacity: 0.1;
-            z-index: 1;
-            transition: transform 5s linear infinite;
-        }
-        #output:hover::before {
-            transform: translate(-50%, -50%) rotate(360deg);
-        }
-        .security-icon {
-            position: absolute;
-            top: 10px;
             right: 10px;
-            font-size: 24px;
             opacity: 0.5;
         }
-        .quiz-option {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #fff;
-            border: 2px solid var(--primary-color);
-            border-radius: 6px;
-            text-align: left;
-            transition: all 0.3s ease;
+        th.asc::after {
+            content: '↑';
+            opacity: 1;
         }
-        .quiz-option:hover {
-            background-color: var(--primary-color);
+        th.desc::after {
+            content: '↓';
+            opacity: 1;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
             color: white;
-            transform: translateX(10px);
+            background-color: #888;
+        }
+        .category-hacker {
+            background-color: #9C27B0;
+        }
+        .category-social {
+            background-color: #FF9800;
+        }
+        .category-network {
+            background-color: #F44336;
+        }
+        .category-malware {
+            background-color: #4CAF50;
+        }
+        .category-policy {
+            background-color: #607D8B;
+        }
+        .icon-cell {
+            font-size: 24px;
+            text-align: center;
+            width: 60px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🛡️ Network Security Concept Simulator</h1>
+        <h1>🛡️ Network Security Concepts Database</h1>
         
-        <div class="scenario">
-            <h2>Hacker Type Identification</h2>
-            <span class="security-icon">🕵️</span>
-            <button onclick="identifyHacker()">Identify Hacker Type</button>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for security concepts..." onkeyup="filterTable()">
         </div>
-
-        <div class="scenario">
-            <h2>Social Engineering Detection</h2>
-            <span class="security-icon">🎭</span>
-            <button onclick="detectSocialEngineering()">Detect Social Engineering Attempt</button>
+        
+        <div class="filter-container">
+            <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">All</button>
+            <button class="filter-btn" data-category="hacker" onclick="filterByCategory('hacker')">Hacker Types</button>
+            <button class="filter-btn" data-category="social" onclick="filterByCategory('social')">Social Engineering</button>
+            <button class="filter-btn" data-category="network" onclick="filterByCategory('network')">Network Attacks</button>
+            <button class="filter-btn" data-category="malware" onclick="filterByCategory('malware')">Malware</button>
+            <button class="filter-btn" data-category="policy" onclick="filterByCategory('policy')">Security Policies</button>
         </div>
-
-        <div class="scenario">
-            <h2>Network Attack Simulator</h2>
-            <span class="security-icon">🚨</span>
-            <button onclick="simulateNetworkAttack()">Simulate Network Attack</button>
-        </div>
-
-        <div class="scenario">
-            <h2>Malware Type Identifier</h2>
-            <span class="security-icon">🦠</span>
-            <button onclick="identifyMalware()">Identify Malware Type</button>
-        </div>
-
-        <div class="scenario">
-            <h2>Security Policy Quiz</h2>
-            <span class="security-icon">❓</span>
-            <button onclick="startSecurityPolicyQuiz()">Take Security Policy Quiz</button>
-        </div>
-
-        <div id="output"></div>
+        
+        <table id="security-table">
+            <thead>
+                <tr>
+                    <th class="icon-cell">Icon</th>
+                    <th onclick="sortTable(1)">Type</th>
+                    <th onclick="sortTable(2)">Category</th>
+                    <th onclick="sortTable(3)">Description</th>
+                    <th onclick="sortTable(4)">Additional Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Hacker Types -->
+                <tr data-category="hacker">
+                    <td class="icon-cell">🤍</td>
+                    <td>White Hat Hacker</td>
+                    <td><span class="category-badge category-hacker">Hacker Type</span></td>
+                    <td>An ethical hacker hired by organizations to identify security vulnerabilities. They help improve system security with permission.</td>
+                    <td>Security Insight: Always verify the intent and authorization of system interactions.</td>
+                </tr>
+                <tr data-category="hacker">
+                    <td class="icon-cell">⚫</td>
+                    <td>Black Hat Hacker</td>
+                    <td><span class="category-badge category-hacker">Hacker Type</span></td>
+                    <td>Malicious hackers who exploit systems for personal gain, steal data, or cause damage without authorization.</td>
+                    <td>Security Insight: Always verify the intent and authorization of system interactions.</td>
+                </tr>
+                <tr data-category="hacker">
+                    <td class="icon-cell">🔘</td>
+                    <td>Gray Hat Hacker</td>
+                    <td><span class="category-badge category-hacker">Hacker Type</span></td>
+                    <td>Hackers who operate in a moral gray area. They might break laws but claim to have good intentions like exposing vulnerabilities.</td>
+                    <td>Security Insight: Always verify the intent and authorization of system interactions.</td>
+                </tr>
+                
+                <!-- Social Engineering -->
+                <tr data-category="social">
+                    <td class="icon-cell">🎣</td>
+                    <td>Phishing</td>
+                    <td><span class="category-badge category-social">Social Engineering</span></td>
+                    <td>Fraudulent attempt to obtain sensitive information by disguising as a trustworthy entity in digital communication.</td>
+                    <td>Prevention Tip: Always verify the source and be cautious of unsolicited requests for information.</td>
+                </tr>
+                <tr data-category="social">
+                    <td class="icon-cell">🚪</td>
+                    <td>Tailgating</td>
+                    <td><span class="category-badge category-social">Social Engineering</span></td>
+                    <td>An attacker follows an authorized person into a restricted area without proper authentication.</td>
+                    <td>Prevention Tip: Always verify the source and be cautious of unsolicited requests for information.</td>
+                </tr>
+                <tr data-category="social">
+                    <td class="icon-cell">🎁</td>
+                    <td>Baiting</td>
+                    <td><span class="category-badge category-social">Social Engineering</span></td>
+                    <td>Leaving a malware-infected physical device or digital file in a place where someone will likely pick it up and use it.</td>
+                    <td>Prevention Tip: Always verify the source and be cautious of unsolicited requests for information.</td>
+                </tr>
+                <tr data-category="social">
+                    <td class="icon-cell">🤝</td>
+                    <td>Quid Pro Quo</td>
+                    <td><span class="category-badge category-social">Social Engineering</span></td>
+                    <td>Offering a service or benefit in exchange for information or system access.</td>
+                    <td>Prevention Tip: Always verify the source and be cautious of unsolicited requests for information.</td>
+                </tr>
+                
+                <!-- Network Attacks -->
+                <tr data-category="network">
+                    <td class="icon-cell">💥</td>
+                    <td>Denial of Service (DoS)</td>
+                    <td><span class="category-badge category-network">Network Attack</span></td>
+                    <td>Overwhelms a system's resources, making it unavailable to legitimate users.</td>
+                    <td>Potential Impact: High disruption to network services<br>Mitigation: Use encryption, monitor network traffic, and implement robust firewall rules.</td>
+                </tr>
+                <tr data-category="network">
+                    <td class="icon-cell">🕵️</td>
+                    <td>Man-in-the-Middle (MitM)</td>
+                    <td><span class="category-badge category-network">Network Attack</span></td>
+                    <td>Intercepts communication between two parties to steal or manipulate data.</td>
+                    <td>Potential Impact: Potential data breach and information compromise<br>Mitigation: Use encryption, monitor network traffic, and implement robust firewall rules.</td>
+                </tr>
+                <tr data-category="network">
+                    <td class="icon-cell">🌐</td>
+                    <td>DNS Spoofing</td>
+                    <td><span class="category-badge category-network">Network Attack</span></td>
+                    <td>Redirects traffic from legitimate websites to malicious ones by altering DNS records.</td>
+                    <td>Potential Impact: Potential phishing and data theft<br>Mitigation: Use encryption, monitor network traffic, and implement robust firewall rules.</td>
+                </tr>
+                
+                <!-- Malware Types -->
+                <tr data-category="malware">
+                    <td class="icon-cell">🦠</td>
+                    <td>Virus</td>
+                    <td><span class="category-badge category-malware">Malware</span></td>
+                    <td>Malicious program that replicates itself and spreads to other computers.</td>
+                    <td>Transmission: Through network connections or external storage<br>Prevention: Keep software updated, use reputable antivirus software, be cautious of downloads and email attachments</td>
+                </tr>
+                <tr data-category="malware">
+                    <td class="icon-cell">🔒</td>
+                    <td>Ransomware</td>
+                    <td><span class="category-badge category-malware">Malware</span></td>
+                    <td>Encrypts user's data and demands payment for decryption.</td>
+                    <td>Transmission: Often through phishing emails or compromised websites<br>Prevention: Keep software updated, use reputable antivirus software, be cautious of downloads and email attachments</td>
+                </tr>
+                <tr data-category="malware">
+                    <td class="icon-cell">🐴</td>
+                    <td>Trojan Horse</td>
+                    <td><span class="category-badge category-malware">Malware</span></td>
+                    <td>Malware disguised as legitimate software to trick users.</td>
+                    <td>Transmission: Downloaded from untrusted sources<br>Prevention: Keep software updated, use reputable antivirus software, be cautious of downloads and email attachments</td>
+                </tr>
+                
+                <!-- Security Policies -->
+                <tr data-category="policy">
+                    <td class="icon-cell">📱</td>
+                    <td>BYOD</td>
+                    <td><span class="category-badge category-policy">Security Policy</span></td>
+                    <td>Bring Your Own Device - Policy allowing employees to use personal devices for work purposes.</td>
+                    <td>Best Practice: Implement device management solutions and clear usage policies.</td>
+                </tr>
+                <tr data-category="policy">
+                    <td class="icon-cell">🔑</td>
+                    <td>Principle of Least Privilege</td>
+                    <td><span class="category-badge category-policy">Security Policy</span></td>
+                    <td>Give users minimal access needed to perform their job.</td>
+                    <td>Best Practice: Regularly audit user permissions and adjust access rights as needed.</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <script>
-        const output = document.getElementById('output');
+        let currentCategory = 'all';
+        let currentSortColumn = -1;
+        let sortDirection = 'asc';
 
-        function identifyHacker() {
-            const hackerTypes = [
-                {
-                    type: 'White Hat Hacker',
-                    description: 'An ethical hacker hired by organizations to identify security vulnerabilities. They help improve system security with permission.',
-                    icon: '🤍'
-                },
-                {
-                    type: 'Black Hat Hacker',
-                    description: 'Malicious hackers who exploit systems for personal gain, steal data, or cause damage without authorization.',
-                    icon: '⚫'
-                },
-                {
-                    type: 'Gray Hat Hacker',
-                    description: 'Hackers who operate in a moral gray area. They might break laws but claim to have good intentions like exposing vulnerabilities.',
-                    icon: '🔘'
+        function filterTable() {
+            const input = document.getElementById('search-input');
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById('security-table');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                let showRow = false;
+                const cells = rows[i].getElementsByTagName('td');
+                
+                for (let j = 0; j < cells.length; j++) {
+                    const cell = cells[j];
+                    if (cell) {
+                        const textValue = cell.textContent || cell.innerText;
+                        if (textValue.toUpperCase().indexOf(filter) > -1) {
+                            showRow = true;
+                            break;
+                        }
+                    }
                 }
-            ];
-
-            const randomHacker = hackerTypes[Math.floor(Math.random() * hackerTypes.length)];
-            
-            output.innerHTML = `
-                <h3>${randomHacker.icon} Hacker Identified: ${randomHacker.type}</h3>
-                <p>${randomHacker.description}</p>
-                <p><strong>Security Insight:</strong> Always verify the intent and authorization of system interactions.</p>
-            `;
-        }
-
-        function detectSocialEngineering() {
-            const socialEngineeringTypes = [
-                {
-                    type: 'Phishing',
-                    description: 'Fraudulent attempt to obtain sensitive information by disguising as a trustworthy entity in digital communication.',
-                    icon: '🎣'
-                },
-                {
-                    type: 'Tailgating',
-                    description: 'An attacker follows an authorized person into a restricted area without proper authentication.',
-                    icon: '🚪'
-                },
-                {
-                    type: 'Baiting',
-                    description: 'Leaving a malware-infected physical device or digital file in a place where someone will likely pick it up and use it.',
-                    icon: '🎁'
-                },
-                {
-                    type: 'Quid Pro Quo',
-                    description: 'Offering a service or benefit in exchange for information or system access.',
-                    icon: '🤝'
+                
+                // Only show rows that match both the search term and the selected category
+                if (currentCategory === 'all' || rows[i].getAttribute('data-category') === currentCategory) {
+                    rows[i].style.display = showRow ? '' : 'none';
+                } else {
+                    rows[i].style.display = 'none';
                 }
-            ];
-
-            const randomAttack = socialEngineeringTypes[Math.floor(Math.random() * socialEngineeringTypes.length)];
-            
-            output.innerHTML = `
-                <h3>${randomAttack.icon} Social Engineering Detected: ${randomAttack.type}</h3>
-                <p>${randomAttack.description}</p>
-                <p><strong>Prevention Tip:</strong> Always verify the source and be cautious of unsolicited requests for information.</p>
-            `;
-        }
-
-        function simulateNetworkAttack() {
-            const networkAttacks = [
-                {
-                    type: 'Denial of Service (DoS)',
-                    description: 'Overwhelms a system\'s resources, making it unavailable to legitimate users.',
-                    impact: 'High disruption to network services',
-                    icon: '💥'
-                },
-                {
-                    type: 'Man-in-the-Middle (MitM)',
-                    description: 'Intercepts communication between two parties to steal or manipulate data.',
-                    impact: 'Potential data breach and information compromise',
-                    icon: '🕵️'
-                },
-                {
-                    type: 'DNS Spoofing',
-                    description: 'Redirects traffic from legitimate websites to malicious ones by altering DNS records.',
-                    impact: 'Potential phishing and data theft',
-                    icon: '🌐'
-                }
-            ];
-
-            const randomAttack = networkAttacks[Math.floor(Math.random() * networkAttacks.length)];
-            
-            output.innerHTML = `
-                <h3>${randomAttack.icon} Network Attack Simulation: ${randomAttack.type}</h3>
-                <p>${randomAttack.description}</p>
-                <p><strong>Potential Impact:</strong> ${randomAttack.impact}</p>
-                <p><strong>Mitigation Strategy:</strong> Use encryption, monitor network traffic, and implement robust firewall rules.</p>
-            `;
-        }
-
-        function identifyMalware() {
-            const malwareTypes = [
-                {
-                    type: 'Virus',
-                    description: 'Malicious program that replicates itself and spreads to other computers.',
-                    transmission: 'Through network connections or external storage',
-                    icon: '🦠'
-                },
-                {
-                    type: 'Ransomware',
-                    description: 'Encrypts user\'s data and demands payment for decryption.',
-                    transmission: 'Often through phishing emails or compromised websites',
-                    icon: '🔒'
-                },
-                {
-                    type: 'Trojan Horse',
-                    description: 'Malware disguised as legitimate software to trick users.',
-                    transmission: 'Downloaded from untrusted sources',
-                    icon: '🐴'
-                }
-            ];
-
-            const randomMalware = malwareTypes[Math.floor(Math.random() * malwareTypes.length)];
-            
-            output.innerHTML = `
-                <h3>${randomMalware.icon} Malware Identified: ${randomMalware.type}</h3>
-                <p>${randomMalware.description}</p>
-                <p><strong>Transmission Method:</strong> ${randomMalware.transmission}</p>
-                <p><strong>Prevention:</strong> 
-                    - Keep software updated
-                    - Use reputable antivirus software
-                    - Be cautious of downloads and email attachments
-                </p>
-            `;
-        }
-
-        function startSecurityPolicyQuiz() {
-            const quizQuestions = [
-                {
-                    question: 'What does BYOD stand for?',
-                    options: [
-                        'Bring Your Own Device',
-                        'Bring Your Own Data',
-                        'Build Your Own Database'
-                    ],
-                    correctAnswer: 'Bring Your Own Device'
-                },
-                {
-                    question: 'What is the Principle of Least Privilege?',
-                    options: [
-                        'Give users maximum access',
-                        'Give users minimal access needed to perform their job',
-                        'No access for anyone'
-                    ],
-                    correctAnswer: 'Give users minimal access needed to perform their job'
-                }
-            ];
-
-            const currentQuestion = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
-            
-            let optionsHTML = currentQuestion.options.map(option => 
-                `<button class="quiz-option" onclick="checkAnswer('${option}', '${currentQuestion.correctAnswer}')">${option}</button>`
-            ).join('');
-
-            output.innerHTML = `
-                <h3>🛡️ Security Policy Quiz</h3>
-                <p>${currentQuestion.question}</p>
-                ${optionsHTML}
-            `;
-        }
-
-        function checkAnswer(selectedAnswer, correctAnswer) {
-            if (selectedAnswer === correctAnswer) {
-                output.innerHTML += `
-                    <p style="color: green; font-weight: bold;">Correct! 🎉</p>
-                    <p>Your answer matches the security best practice.</p>
-                `;
-            } else {
-                output.innerHTML += `
-                    <p style="color: red; font-weight: bold;">Incorrect 😕</p>
-                    <p>The correct answer is: ${correctAnswer}</p>
-                `;
             }
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            
+            // Update active button
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-category') === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Filter table
+            const table = document.getElementById('security-table');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                if (category === 'all' || rows[i].getAttribute('data-category') === category) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+            
+            // Apply search filter on top of category filter
+            filterTable();
+        }
+
+        function sortTable(column) {
+            const table = document.getElementById('security-table');
+            const headers = table.getElementsByTagName('th');
+            
+            // Reset all headers
+            for (let i = 0; i < headers.length; i++) {
+                headers[i].classList.remove('asc', 'desc');
+            }
+            
+            // Update sort direction
+            if (currentSortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortDirection = 'asc';
+                currentSortColumn = column;
+            }
+            
+            // Add sorting indicator
+            headers[column].classList.add(sortDirection);
+            
+            const rows = Array.from(table.rows).slice(1); // Skip header row
+            
+            // Sort the rows
+            rows.sort((a, b) => {
+                const aValue = a.cells[column].textContent.trim();
+                const bValue = b.cells[column].textContent.trim();
+                
+                if (sortDirection === 'asc') {
+                    return aValue.localeCompare(bValue);
+                } else {
+                    return bValue.localeCompare(aValue);
+                }
+            });
+            
+            // Reorder table
+            const tbody = table.getElementsByTagName('tbody')[0];
+            rows.forEach(row => tbody.appendChild(row));
+            
+            // Re-apply filters
+            filterByCategory(currentCategory);
         }
     </script>
 </body>
