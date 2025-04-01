@@ -2,260 +2,624 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Virtualization & Cloud Computing Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Virtualization and Cloud Computing - Definitions Grid</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            max-width: 800px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.6;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f5f5f5;
         }
-        .container {
-            background-color: white;
-            border-radius: 8px;
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 8px;
         }
-        .section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
         }
-        .concept-selector {
+        
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        .categories {
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-        .concept-btn {
-            padding: 10px;
+        
+        .category-btn {
+            padding: 8px 16px;
             background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 1em;
+            transition: background-color 0.3s;
         }
-        .concept-btn:hover {
+        
+        .category-btn:hover {
             background-color: #2980b9;
-            transform: scale(1.05);
         }
-        .concept-btn.active {
+        
+        .category-btn.active {
             background-color: #2c3e50;
         }
-        #conceptDetails {
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            padding: 15px;
-            position: relative;
+        
+        .search-container {
+            margin-bottom: 20px;
         }
-        #conceptDiagram {
-            width: 100%;
-            max-height: 300px;
-            margin-top: 15px;
-            background-color: #e6f2ff;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .vm-card {
-            background-color: #ecf0f1;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .vm-card:hover {
-            transform: scale(1.05);
-        }
-        #virtualizationSimulator {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        #vmContainer {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .network-diagram {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: #e8f4f8;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-        .network-node {
-            background-color: #3498db;
-            color: white;
+        
+        #search {
             padding: 10px;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .definition-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .definition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .definition-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .definition-card p {
+            margin-bottom: 0;
+        }
+        
+        .category-label {
+            display: inline-block;
+            background-color: #e6f7ff;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
+        
+        footer {
             text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Virtualization & Cloud Computing Explorer</h1>
-        
-        <div class="section">
-            <h2>Explore Key Concepts</h2>
-            <div class="concept-selector" id="conceptButtons"></div>
-            <div id="conceptDetails"></div>
-            <div id="conceptDiagram"></div>
-        </div>
-
-        <div class="section">
-            <h2>Interactive Virtualization Simulator</h2>
-            <div id="virtualizationSimulator">
-                <label for="vmCount">Number of Virtual Machines:</label>
-                <input type="number" id="vmCount" min="1" max="10" value="1">
-                <button onclick="createVirtualMachines()">Create VMs</button>
-                <div id="vmContainer"></div>
-            </div>
-        </div>
+    <header>
+        <h1>Chapter 7: Virtualization and Cloud Computing</h1>
+        <p>Definitions Grid - CNT3004 Computer Network Concepts</p>
+    </header>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for definitions...">
     </div>
-
+    
+    <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="virtualization-basics">Virtualization Basics</button>
+        <button class="category-btn" data-category="network-virtualization">Network Virtualization</button>
+        <button class="category-btn" data-category="cloud-computing">Cloud Computing</button>
+        <button class="category-btn" data-category="encryption">Encryption Protocols</button>
+        <button class="category-btn" data-category="remote-access">Remote Access</button>
+        <button class="category-btn" data-category="vpn">VPN Technologies</button>
+    </div>
+    
+    <div class="grid-container" id="definitions-grid"></div>
+    
+    <footer>
+        <p>Based on material from Chapter 7 - Virtualization and Cloud Computing</p>
+    </footer>
+    
     <script>
-        const concepts = [
+        // Definitions data structure
+        const definitions = [
+            // Virtualization Basics
             {
-                title: "Virtualization Basics",
-                description: "Virtualization creates logical, virtual versions of physical resources. A hypervisor manages virtual machines (VMs) on a host computer.",
-                diagramHTML: `
-                    <div class="network-diagram">
-                        <div class="network-node">Host Computer</div>
-                        <div style="font-size: 24px;">➡️</div>
-                        <div class="network-node">Hypervisor</div>
-                        <div style="font-size: 24px;">➡️</div>
-                        <div class="network-node">Multiple VMs</div>
-                    </div>
-                `
+                term: "Virtualization",
+                definition: "🖥️ A virtual, or logical, version of something rather than the actual, or physical, version.",
+                category: "virtualization-basics"
             },
             {
-                title: "Hypervisor Types",
-                description: "Two types of hypervisors: Type 1 (Bare-metal) installs directly on hardware, Type 2 (Hosted) runs as an application on an existing OS.",
-                diagramHTML: `
-                    <div class="network-diagram">
-                        <div class="network-node">Type 1\n(Bare-metal)</div>
-                        <div class="network-node">Type 2\n(Hosted)</div>
-                    </div>
-                `
+                term: "Host",
+                definition: "🏠 Physical computer 'hosting' a virtual machine.",
+                category: "virtualization-basics"
             },
             {
-                title: "Network Connection Types",
-                description: "VMs can connect to networks through different modes: Bridged, NAT, and Host-only.",
-                diagramHTML: `
-                    <div class="network-diagram">
-                        <div class="network-node">Bridged</div>
-                        <div class="network-node">NAT</div>
-                        <div class="network-node">Host-only</div>
-                    </div>
-                `
+                term: "Guest",
+                definition: "👤 Each virtual machine running on a host system.",
+                category: "virtualization-basics"
             },
             {
-                title: "Cloud Computing Models",
-                description: "Cloud services include IaaS, PaaS, SaaS, and XaaS, providing different levels of infrastructure, platforms, and applications.",
-                diagramHTML: `
-                    <div class="network-diagram">
-                        <div class="network-node">IaaS</div>
-                        <div class="network-node">PaaS</div>
-                        <div class="network-node">SaaS</div>
-                        <div class="network-node">XaaS</div>
-                    </div>
-                `
+                term: "Hypervisor",
+                definition: "🔄 Software that creates and manages VMs and manages resource allocation and sharing between a host and any of its guest VMs.",
+                category: "virtualization-basics"
             },
             {
-                title: "Cloud Deployment Models",
-                description: "Cloud services can be deployed as Public, Private, Community, or Hybrid clouds.",
-                diagramHTML: `
-                    <div class="network-diagram">
-                        <div class="network-node">Public</div>
-                        <div class="network-node">Private</div>
-                        <div class="network-node">Community</div>
-                        <div class="network-node">Hybrid</div>
-                    </div>
-                `
+                term: "Type 1 Hypervisor",
+                definition: "💻 Installs on a computer before any OS and is called a bare-metal hypervisor.",
+                category: "virtualization-basics"
             },
             {
-                title: "Encryption Protocols",
-                description: "Encryption keeps data private using techniques like IPsec, SSL/TLS, and key encryption methods.",
-                diagramHTML: `
-                    <div class="network-diagram">
-                        <div class="network-node">IPsec</div>
-                        <div class="network-node">SSL/TLS</div>
-                        <div class="network-node">Key Encryption</div>
-                    </div>
-                `
+                term: "Type 2 Hypervisor",
+                definition: "🖱️ Installs in a host OS as an application and is called a hosted hypervisor.",
+                category: "virtualization-basics"
+            },
+            {
+                term: "vNIC (Virtual NIC)",
+                definition: "🔌 Network interface card for a virtual machine that connects the VM to other machines and operates at the Data Link layer.",
+                category: "virtualization-basics"
+            },
+            
+            // Network Virtualization
+            {
+                term: "Virtual Switch (vSwitch)",
+                definition: "🔀 Connection between a VM and the host that might be called a bridge or switch, controlled by the hypervisor.",
+                category: "network-virtualization"
+            },
+            {
+                term: "Bridged Mode",
+                definition: "🌉 Network mode where vNIC accesses physical network using host machine's NIC, obtaining its own IP address from the physical LAN.",
+                category: "network-virtualization"
+            },
+            {
+                term: "NAT Mode",
+                definition: "🔄 Network mode where vNIC relies on host machine to act as NAT device, obtaining IP addressing information from host.",
+                category: "network-virtualization"
+            },
+            {
+                term: "Host-Only Mode",
+                definition: "🔒 Network mode where VMs on one host can exchange data with each other and the host but cannot communicate with nodes beyond the host.",
+                category: "network-virtualization"
+            },
+            {
+                term: "NFV (Network Functions Virtualization)",
+                definition: "🌐 Merging physical and virtual network architectures to provide flexible, cost-saving options for many types of network devices.",
+                category: "network-virtualization"
+            },
+            {
+                term: "Virtual Firewall",
+                definition: "🔥 A firewall's OS installed in a VM on an inexpensive server instead of purchasing dedicated hardware.",
+                category: "network-virtualization"
+            },
+            {
+                term: "Virtual Router",
+                definition: "📶 A router VM installed on a server instead of purchasing expensive hardware router.",
+                category: "network-virtualization"
+            },
+            {
+                term: "SDN (Software-Defined Networking)",
+                definition: "🧠 Virtualization of network services where an SDN controller manages services instead of services being directly managed by hardware devices.",
+                category: "network-virtualization"
+            },
+            {
+                term: "Control Plane",
+                definition: "🎮 The protocols that handle the process of making decisions in SDN.",
+                category: "network-virtualization"
+            },
+            {
+                term: "Data Plane",
+                definition: "📦 The physical devices that make actual contact with data transmissions as they traverse the network in SDN.",
+                category: "network-virtualization"
+            },
+            
+            // Cloud Computing
+            {
+                term: "Cloud Computing",
+                definition: "☁️ Flexible provision of data storage, applications, and services to multiple clients over a network.",
+                category: "cloud-computing"
+            },
+            {
+                term: "On-Demand Service",
+                definition: "⚡ Feature of cloud computing allowing users to access resources whenever needed without human interaction with the service provider.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Resource Pooling",
+                definition: "🔄 Feature of cloud computing where provider's resources are pooled to serve multiple consumers using a multi-tenant model.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Elastic Services",
+                definition: "📏 Feature of cloud computing where storage capacity and services can quickly or automatically be scaled up or down as needed.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Metered Service",
+                definition: "⏱️ Feature of cloud computing where resource usage can be monitored, controlled, and reported providing transparency for both provider and consumer.",
+                category: "cloud-computing"
+            },
+            {
+                term: "IaaS (Infrastructure as a Service)",
+                definition: "🏗️ Cloud service model where hardware services and network infrastructure devices are provided virtually.",
+                category: "cloud-computing"
+            },
+            {
+                term: "PaaS (Platform as a Service)",
+                definition: "⚙️ Cloud service model providing OS, runtime libraries, and hardware on which the OS runs.",
+                category: "cloud-computing"
+            },
+            {
+                term: "SaaS (Software as a Service)",
+                definition: "📱 Cloud service model providing applications to users.",
+                category: "cloud-computing"
+            },
+            {
+                term: "XaaS (Anything as a Service)",
+                definition: "🔄 Broader cloud service model that can provide any combination of functions.",
+                category: "cloud-computing"
+            },
+            {
+                term: "HVD (Hosted Virtual Desktop)",
+                definition: "🖥️ Operating environments hosted virtually in the cloud, allowing users to access their desktop from anywhere.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Public Cloud",
+                definition: "🌐 Cloud deployment model where service is provided over public transmission lines.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Private Cloud",
+                definition: "🏢 Cloud deployment model where service is established on an organization's own servers in its own data center.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Community Cloud",
+                definition: "👥 Cloud deployment model where service is shared between multiple organizations.",
+                category: "cloud-computing"
+            },
+            {
+                term: "Hybrid Cloud",
+                definition: "🔄 Cloud deployment model combining other service models into a single deployment.",
+                category: "cloud-computing"
+            },
+            {
+                term: "BYOC (Bring Your Own Cloud)",
+                definition: "📱 Practice where employees use personal cloud services for work-related tasks, potentially creating security risks.",
+                category: "cloud-computing"
+            },
+            
+            // Encryption
+            {
+                term: "Encryption",
+                definition: "🔐 Use of mathematical code, called a cipher, to scramble data into a format that can be read only by reversing the cipher.",
+                category: "encryption"
+            },
+            {
+                term: "CIA Triad",
+                definition: "🛡️ Standard security model consisting of Confidentiality, Integrity, and Availability principles.",
+                category: "encryption"
+            },
+            {
+                term: "Key",
+                definition: "🔑 Random string of characters woven into original data's bits to generate unique ciphertext.",
+                category: "encryption"
+            },
+            {
+                term: "Ciphertext",
+                definition: "📝 The encrypted data created when plaintext is combined with an encryption key.",
+                category: "encryption"
+            },
+            {
+                term: "Private Key Encryption",
+                definition: "🔒 Encryption using single key known only by sender and receiver.",
+                category: "encryption"
+            },
+            {
+                term: "Symmetric Encryption",
+                definition: "🔄 Encryption where the same key is used during both encryption and decryption.",
+                category: "encryption"
+            },
+            {
+                term: "Public Key Encryption",
+                definition: "🔓 Encryption using two keys - a private key known only to the user and a public key that anyone may request.",
+                category: "encryption"
+            },
+            {
+                term: "Asymmetric Encryption",
+                definition: "↔️ Encryption requiring two different keys for encryption and decryption.",
+                category: "encryption"
+            },
+            {
+                term: "Digital Certificate",
+                definition: "📜 Document that holds identification information and the user's public key.",
+                category: "encryption"
+            },
+            {
+                term: "CA (Certificate Authority)",
+                definition: "🏛️ Entity that issues and maintains digital certificates.",
+                category: "encryption"
+            },
+            {
+                term: "PKI (Public Key Infrastructure)",
+                definition: "🔐 Use of certificate authorities to associate public keys with certain users.",
+                category: "encryption"
+            },
+            {
+                term: "IPsec (Internet Protocol Security)",
+                definition: "🛡️ Encryption protocol suite that defines rules for encryption, authentication, and key management for TCP/IP transmissions.",
+                category: "encryption"
+            },
+            {
+                term: "SSL (Secure Sockets Layer)",
+                definition: "🔒 Method of encrypting TCP/IP transmissions, including Web pages and form data.",
+                category: "encryption"
+            },
+            {
+                term: "TLS (Transport Layer Security)",
+                definition: "🔒 Modern version of SSL for encrypting TCP/IP transmissions between client and server.",
+                category: "encryption"
+            },
+            {
+                term: "DTLS (Datagram Transport Layer Security)",
+                definition: "📊 A variant of TLS designed specifically for streaming communications and delay-sensitive applications.",
+                category: "encryption"
+            },
+            
+            // Remote Access
+            {
+                term: "Remote Access",
+                definition: "🔌 Service allowing a client to connect with and log on to a server, LAN, or WAN in a different geographical location.",
+                category: "remote-access"
+            },
+            {
+                term: "RAS (Remote Access Server)",
+                definition: "🖥️ Dedicated device or software running on a server that provides remote access services.",
+                category: "remote-access"
+            },
+            {
+                term: "Terminal Emulation",
+                definition: "💻 Also called remote virtual computing, allows a user on one computer to control another computer across a network connection.",
+                category: "remote-access"
+            },
+            {
+                term: "PPP (Point-to-Point Protocol)",
+                definition: "🔗 Data Link layer protocol that directly connects two WAN endpoints.",
+                category: "remote-access"
+            },
+            {
+                term: "Telnet",
+                definition: "⌨️ Terminal emulation utility with poor authentication and no encryption.",
+                category: "remote-access"
+            },
+            {
+                term: "SSH (Secure Shell)",
+                definition: "🔐 Collection of protocols providing secure authentication and encryption for remote connections.",
+                category: "remote-access"
+            },
+            {
+                term: "Port Forwarding",
+                definition: "🔄 SSH feature that redirects traffic from an insecure port to a SSH-secured port.",
+                category: "remote-access"
+            },
+            {
+                term: "RDP (Remote Desktop Protocol)",
+                definition: "🖥️ Microsoft proprietary protocol used to connect to and control a remote computer.",
+                category: "remote-access"
+            },
+            {
+                term: "VNC (Virtual Network Computing)",
+                definition: "🖱️ Remote control system using RFB protocol to remotely control a workstation or server.",
+                category: "remote-access"
+            },
+            {
+                term: "RFB (Remote Frame Buffer)",
+                definition: "🖼️ Cross-platform protocol used by VNC to remotely control a workstation.",
+                category: "remote-access"
+            },
+            {
+                term: "Out-of-Band Management",
+                definition: "🔌 Remote management relying on a dedicated connection between the administrator's computer and each network device.",
+                category: "remote-access"
+            },
+            {
+                term: "FTP (File Transfer Protocol)",
+                definition: "📁 Protocol for transferring files between computers on a network.",
+                category: "remote-access"
+            },
+            {
+                term: "FTPS (FTP Security)",
+                definition: "🔒 Secured version of FTP that adds support for TLS and SSL.",
+                category: "remote-access"
+            },
+            {
+                term: "SFTP (Secure FTP)",
+                definition: "🔐 File transfer protocol running over SSH that provides secure file access, transfer, and management.",
+                category: "remote-access"
+            },
+            {
+                term: "TFTP (Trivial FTP)",
+                definition: "📋 Simplified version of FTP that uses UDP instead of TCP and lacks authentication features.",
+                category: "remote-access"
+            },
+            
+            // VPN Technologies
+            {
+                term: "VPN (Virtual Private Network)",
+                definition: "🔐 Network connection encrypted from end to end that creates a private connection to a remote network.",
+                category: "vpn"
+            },
+            {
+                term: "Tunnel",
+                definition: "🚇 Term often used to describe a VPN connection due to its secure encapsulation of data.",
+                category: "vpn"
+            },
+            {
+                term: "Site-to-Site VPN",
+                definition: "🏢 VPN connecting entire networks to each other, typically maintained by network devices like routers.",
+                category: "vpn"
+            },
+            {
+                term: "Client-to-Site VPN",
+                definition: "👤 VPN connecting individual clients to a remote network, also called host-to-site or remote-access VPN.",
+                category: "vpn"
+            },
+            {
+                term: "Host-to-Host VPN",
+                definition: "💻 VPN connecting individual computers to each other for secure communication.",
+                category: "vpn"
+            },
+            {
+                term: "VPN Concentrator",
+                definition: "🔄 Device that authenticates VPN clients, establishes tunnels, and manages encryption for VPN transmissions.",
+                category: "vpn"
+            },
+            {
+                term: "DMVPN (Dynamic Multipoint VPN)",
+                definition: "🌐 Enterprise VPN type using Cisco devices that dynamically creates VPN tunnels between branch locations as needed.",
+                category: "vpn"
+            },
+            {
+                term: "Tunneling",
+                definition: "📦 Process where VPN protocols encapsulate higher-layer protocols to securely carry all types of data.",
+                category: "vpn"
+            },
+            {
+                term: "PPTP (Point-to-Point Tunneling Protocol)",
+                definition: "🔗 Older Layer 2 protocol that supports encryption, authentication, and access services provided by the VPN server.",
+                category: "vpn"
+            },
+            {
+                term: "L2TP (Layer 2 Tunneling Protocol)",
+                definition: "🔄 Protocol that encapsulates PPP data and can connect a VPN using a mix of equipment types.",
+                category: "vpn"
+            },
+            {
+                term: "GRE (Generic Routing Encapsulation)",
+                definition: "📨 Protocol used to transmit PPP, IP and other kinds of messages through the tunnel, often used with IPsec.",
+                category: "vpn"
+            },
+            {
+                term: "OpenVPN",
+                definition: "🔓 Open-source VPN protocol that uses a custom security protocol called OpenSSL for encryption.",
+                category: "vpn"
+            },
+            {
+                term: "IKEv2",
+                definition: "⚡ Component of the IPsec protocol suite offering fast throughput and good stability when moving between wireless hotspots.",
+                category: "vpn"
             }
         ];
-
-        function renderConceptButtons() {
-            const buttonContainer = document.getElementById('conceptButtons');
-            concepts.forEach((concept, index) => {
-                const button = document.createElement('button');
-                button.textContent = concept.title;
-                button.classList.add('concept-btn');
-                button.onclick = () => showConceptDetails(index);
-                buttonContainer.appendChild(button);
+        
+        // Function to render the definitions grid
+        function renderDefinitions(filteredDefinitions) {
+            const grid = document.getElementById('definitions-grid');
+            grid.innerHTML = '';
+            
+            if (filteredDefinitions.length === 0) {
+                grid.innerHTML = '<p>No definitions found matching your search.</p>';
+                return;
+            }
+            
+            filteredDefinitions.forEach(def => {
+                const card = document.createElement('div');
+                card.className = 'definition-card';
+                card.setAttribute('data-category', def.category);
+                
+                card.innerHTML = `
+                    <h3>${def.term}</h3>
+                    <p>${def.definition}</p>
+                    <span class="category-label">${getCategoryName(def.category)}</span>
+                `;
+                
+                grid.appendChild(card);
             });
         }
-
-        function showConceptDetails(index) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.concept-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Function to get readable category name
+        function getCategoryName(categoryCode) {
+            const categoryNames = {
+                'virtualization-basics': 'Virtualization Basics',
+                'network-virtualization': 'Network Virtualization',
+                'cloud-computing': 'Cloud Computing',
+                'encryption': 'Encryption Protocols',
+                'remote-access': 'Remote Access',
+                'vpn': 'VPN Technologies'
+            };
             
-            // Add active class to selected button
-            document.getElementsByClassName('concept-btn')[index].classList.add('active');
-
-            const detailsContainer = document.getElementById('conceptDetails');
-            const diagramContainer = document.getElementById('conceptDiagram');
-            const concept = concepts[index];
-            
-            detailsContainer.innerHTML = `
-                <h3>${concept.title}</h3>
-                <p>${concept.description}</p>
-            `;
-            
-            diagramContainer.innerHTML = concept.diagramHTML;
+            return categoryNames[categoryCode] || categoryCode;
         }
-
-        function createVirtualMachines() {
-            const vmCount = document.getElementById('vmCount').value;
-            const vmContainer = document.getElementById('vmContainer');
-            vmContainer.innerHTML = ''; // Clear previous VMs
-
-            for (let i = 1; i <= vmCount; i++) {
-                const vmElement = document.createElement('div');
-                vmElement.classList.add('vm-card');
-                vmElement.innerHTML = `
-                    <h4>Virtual Machine ${i}</h4>
-                    <p>🖥️ OS: Custom Linux</p>
-                    <p>🧠 RAM: 4GB</p>
-                    <p>💾 Storage: 50GB</p>
-                    <p>🌐 Network: Bridged</p>
-                `;
-                vmContainer.appendChild(vmElement);
-            }
+        
+        // Filter definitions by category and search term
+        function filterDefinitions() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            return definitions.filter(def => {
+                const matchesCategory = activeCategory === 'all' || def.category === activeCategory;
+                const matchesSearch = def.term.toLowerCase().includes(searchTerm) || 
+                                    def.definition.toLowerCase().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
         }
-
-        // Initialize the page
-        renderConceptButtons();
-        showConceptDetails(0); // Show first concept by default
+        
+        // Initialize the grid
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render all definitions initially
+            renderDefinitions(definitions);
+            
+            // Add event listeners for category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    // Filter and render definitions
+                    renderDefinitions(filterDefinitions());
+                });
+            });
+            
+            // Add event listener for search input
+            document.getElementById('search').addEventListener('input', () => {
+                renderDefinitions(filterDefinitions());
+            });
+        });
     </script>
 </body>
 </html>
