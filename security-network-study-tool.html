@@ -332,158 +332,159 @@
   
   <script>
     // Network security definitions
-    const definitions = [
-      {
-        term: "DMZ (Demilitarized Zone)",
-        definition: "A network area that sits between a trusted internal network and an untrusted external network, usually the internet, providing a layer of security.",
-        category: "zones"
-      },
-      {
-        term: "Firewall",
-        definition: "A network security device that monitors and filters incoming and outgoing network traffic based on predetermined security rules.",
-        category: "security-devices"
-      },
-      {
-        term: "IDS (Intrusion Detection System)",
-        definition: "A system that monitors network traffic for suspicious activity and issues alerts when such activity is discovered.",
-        category: "security-devices"
-      },
-      {
-        term: "IPS (Intrusion Prevention System)",
-        definition: "A network security application that monitors network traffic for malicious activities and can take automated actions to prevent attacks.",
-        category: "security-devices"
-      },
-      {
-        term: "VPN (Virtual Private Network)",
-        definition: "A secure connection established over a public infrastructure that provides remote access to a private network through encrypted tunnels.",
-        category: "network-architecture"
-      },
-      {
-        term: "VLAN (Virtual Local Area Network)",
-        definition: "A custom network created from one or more LANs, allowing networks to be segmented logically without relying on physical connections.",
-        category: "network-architecture"
-      },
-      {
-        term: "NAT (Network Address Translation)",
-        definition: "The process of modifying IP address information while in transit, typically used to allow multiple devices to access the internet through a single public IP address.",
-        category: "protocols"
-      },
-      {
-        term: "PAT (Port Address Translation)",
-        definition: "A form of NAT that translates multiple private IP addresses to a single public IP address by using different ports.",
-        category: "protocols"
-      },
-      {
-        term: "Proxy Server",
-        definition: "An intermediary server between client devices and the internet that can provide additional functionality, security, and privacy.",
-        category: "security-devices"
-      },
-      {
-        term: "Bastion Host",
-        definition: "A specially designated computer designed to withstand attacks and provide access to a private network from an external network.",
-        category: "security-devices"
-      },
-      {
-        term: "Network Segmentation",
-        definition: "The practice of dividing a computer network into subnetworks to improve security and performance.",
-        category: "network-architecture"
-      },
-      {
-        term: "Defense in Depth",
-        definition: "A cybersecurity strategy that employs multiple layers of security controls throughout a system to protect assets even if one layer is compromised.",
-        category: "attack-defenses"
-      },
-      {
-        term: "Zero Trust Network",
-        definition: "A security concept based on the principle of 'never trust, always verify,' which requires strict identity verification for every person and device accessing resources.",
-        category: "network-architecture"
-      },
-      {
-        term: "Honeypot",
-        definition: "A decoy computer system intended to attract cyberattacks to study attacker behavior or divert attention from legitimate targets.",
-        category: "attack-defenses"
-      },
-      {
-        term: "ACL (Access Control List)",
-        definition: "A set of rules that grants or denies specific permissions for users or system processes.",
-        category: "security-devices"
-      },
-      {
-        term: "NGFW (Next-Generation Firewall)",
-        definition: "A firewall that combines traditional firewall capabilities with other network device filtering functions, such as application inspection and IPS.",
-        category: "security-devices"
-      },
-      {
-        term: "SDN (Software-Defined Networking)",
-        definition: "An approach to network management that enables dynamic, programmatically efficient network configuration to improve performance and monitoring.",
-        category: "network-architecture"
-      },
-      {
-        term: "IPsec (Internet Protocol Security)",
-        definition: "A protocol suite for securing IP communications by authenticating and encrypting each IP packet in a data stream.",
-        category: "protocols"
-      },
-      {
-        term: "SSL/TLS (Secure Sockets Layer/Transport Layer Security)",
-        definition: "Cryptographic protocols designed to provide communications security over a computer network.",
-        category: "protocols"
-      },
-      {
-        term: "WAF (Web Application Firewall)",
-        definition: "A firewall that monitors, filters, and blocks HTTP traffic to and from a web application, protecting against attacks such as cross-site scripting and SQL injection.",
-        category: "security-devices"
-      },
-      {
-        term: "Intranet",
-        definition: "A private network accessible only to an organization's staff, often used for internal communication and sharing resources.",
-        category: "zones"
-      },
-      {
-        term: "Extranet",
-        definition: "A controlled private network that allows access to partners, vendors, suppliers, or other authorized users outside of the organization.",
-        category: "zones"
-      },
-      {
-        term: "Subnet",
-        definition: "A logical subdivision of an IP network that allows for more efficient routing and improved security.",
-        category: "network-architecture"
-      },
-      {
-        term: "SIEM (Security Information and Event Management)",
-        definition: "A system that collects and analyzes log data to monitor critical activities in an organization's IT environment and provide real-time analysis of security alerts.",
-        category: "security-devices"
-      },
-      {
-        term: "Air Gap",
-        definition: "A security measure where a computer or network is physically isolated from unsecured networks to prevent unauthorized access.",
-        category: "network-architecture"
-      },
-      {
-        term: "Data Diode",
-        definition: "A network device that allows data to travel in only one direction, enhancing security by preventing data exfiltration.",
-        category: "security-devices"
-      },
-      {
-        term: "Jump Server",
-        definition: "A hardened and monitored server that provides access to a secure zone in a network, typically used for system administration.",
-        category: "security-devices"
-      },
-      {
-        term: "Microsegmentation",
-        definition: "A security technique that divides the data center into distinct security segments down to the individual workload level for greater attack protection.",
-        category: "network-architecture"
-      },
-      {
-        term: "DDoS Mitigation",
-        definition: "Techniques used to resist distributed denial-of-service attacks that aim to make an online service unavailable by overwhelming it with traffic.",
-        category: "attack-defenses"
-      },
-      {
-        term: "SNORT",
-        definition: "An open-source network intrusion detection and prevention system capable of performing real-time traffic analysis and packet logging.",
-        category: "security-devices"
-      }
-    ];
+    // Network security definitions
+const definitions = [
+  {
+    term: "DMZ (Demilitarized Zone)",
+    definition: "🛡️ A network area that sits between a trusted internal network and an untrusted external network, usually the internet, providing a layer of security.",
+    category: "zones"
+  },
+  {
+    term: "Firewall",
+    definition: "🔥 A network security device that monitors and filters incoming and outgoing network traffic based on predetermined security rules.",
+    category: "security-devices"
+  },
+  {
+    term: "IDS (Intrusion Detection System)",
+    definition: "🕵️ A system that monitors network traffic for suspicious activity and issues alerts when such activity is discovered.",
+    category: "security-devices"
+  },
+  {
+    term: "IPS (Intrusion Prevention System)",
+    definition: "🛑 A network security application that monitors network traffic for malicious activities and can take automated actions to prevent attacks.",
+    category: "security-devices"
+  },
+  {
+    term: "VPN (Virtual Private Network)",
+    definition: "🔒 A secure connection established over a public infrastructure that provides remote access to a private network through encrypted tunnels.",
+    category: "network-architecture"
+  },
+  {
+    term: "VLAN (Virtual Local Area Network)",
+    definition: "🌐 A custom network created from one or more LANs, allowing networks to be segmented logically without relying on physical connections.",
+    category: "network-architecture"
+  },
+  {
+    term: "NAT (Network Address Translation)",
+    definition: "🔄 The process of modifying IP address information while in transit, typically used to allow multiple devices to access the internet through a single public IP address.",
+    category: "protocols"
+  },
+  {
+    term: "PAT (Port Address Translation)",
+    definition: "🔌 A form of NAT that translates multiple private IP addresses to a single public IP address by using different ports.",
+    category: "protocols"
+  },
+  {
+    term: "Proxy Server",
+    definition: "👥 An intermediary server between client devices and the internet that can provide additional functionality, security, and privacy.",
+    category: "security-devices"
+  },
+  {
+    term: "Bastion Host",
+    definition: "🏰 A specially designated computer designed to withstand attacks and provide access to a private network from an external network.",
+    category: "security-devices"
+  },
+  {
+    term: "Network Segmentation",
+    definition: "✂️ The practice of dividing a computer network into subnetworks to improve security and performance.",
+    category: "network-architecture"
+  },
+  {
+    term: "Defense in Depth",
+    definition: "🧅 A cybersecurity strategy that employs multiple layers of security controls throughout a system to protect assets even if one layer is compromised.",
+    category: "attack-defenses"
+  },
+  {
+    term: "Zero Trust Network",
+    definition: "🚫 A security concept based on the principle of 'never trust, always verify,' which requires strict identity verification for every person and device accessing resources.",
+    category: "network-architecture"
+  },
+  {
+    term: "Honeypot",
+    definition: "🍯 A decoy computer system intended to attract cyberattacks to study attacker behavior or divert attention from legitimate targets.",
+    category: "attack-defenses"
+  },
+  {
+    term: "ACL (Access Control List)",
+    definition: "📝 A set of rules that grants or denies specific permissions for users or system processes.",
+    category: "security-devices"
+  },
+  {
+    term: "NGFW (Next-Generation Firewall)",
+    definition: "🔥➕ A firewall that combines traditional firewall capabilities with other network device filtering functions, such as application inspection and IPS.",
+    category: "security-devices"
+  },
+  {
+    term: "SDN (Software-Defined Networking)",
+    definition: "💻 An approach to network management that enables dynamic, programmatically efficient network configuration to improve performance and monitoring.",
+    category: "network-architecture"
+  },
+  {
+    term: "IPsec (Internet Protocol Security)",
+    definition: "🔐 A protocol suite for securing IP communications by authenticating and encrypting each IP packet in a data stream.",
+    category: "protocols"
+  },
+  {
+    term: "SSL/TLS (Secure Sockets Layer/Transport Layer Security)",
+    definition: "🔏 Cryptographic protocols designed to provide communications security over a computer network.",
+    category: "protocols"
+  },
+  {
+    term: "WAF (Web Application Firewall)",
+    definition: "🌐🔥 A firewall that monitors, filters, and blocks HTTP traffic to and from a web application, protecting against attacks such as cross-site scripting and SQL injection.",
+    category: "security-devices"
+  },
+  {
+    term: "Intranet",
+    definition: "🏢 A private network accessible only to an organization's staff, often used for internal communication and sharing resources.",
+    category: "zones"
+  },
+  {
+    term: "Extranet",
+    definition: "🤝 A controlled private network that allows access to partners, vendors, suppliers, or other authorized users outside of the organization.",
+    category: "zones"
+  },
+  {
+    term: "Subnet",
+    definition: "🧩 A logical subdivision of an IP network that allows for more efficient routing and improved security.",
+    category: "network-architecture"
+  },
+  {
+    term: "SIEM (Security Information and Event Management)",
+    definition: "📊 A system that collects and analyzes log data to monitor critical activities in an organization's IT environment and provide real-time analysis of security alerts.",
+    category: "security-devices"
+  },
+  {
+    term: "Air Gap",
+    definition: "💨 A security measure where a computer or network is physically isolated from unsecured networks to prevent unauthorized access.",
+    category: "network-architecture"
+  },
+  {
+    term: "Data Diode",
+    definition: "⏩ A network device that allows data to travel in only one direction, enhancing security by preventing data exfiltration.",
+    category: "security-devices"
+  },
+  {
+    term: "Jump Server",
+    definition: "🦘 A hardened and monitored server that provides access to a secure zone in a network, typically used for system administration.",
+    category: "security-devices"
+  },
+  {
+    term: "Microsegmentation",
+    definition: "🔬 A security technique that divides the data center into distinct security segments down to the individual workload level for greater attack protection.",
+    category: "network-architecture"
+  },
+  {
+    term: "DDoS Mitigation",
+    definition: "🛡️🌊 Techniques used to resist distributed denial-of-service attacks that aim to make an online service unavailable by overwhelming it with traffic.",
+    category: "attack-defenses"
+  },
+  {
+    term: "SNORT",
+    definition: "👃 An open-source network intrusion detection and prevention system capable of performing real-time traffic analysis and packet logging.",
+    category: "security-devices"
+  }
+];
     
     // Quiz questions
     const quizQuestions = [
