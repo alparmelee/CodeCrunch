@@ -2,261 +2,449 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Network Segmentation and VLAN Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: Subnets and VLANs - Definitions Grid</title>
     <style>
-        :root {
-            --primary-color: #2196F3;
-            --secondary-color: #4CAF50;
-            --background-light: #f4f4f4;
-            --white: #ffffff;
-        }
         body {
-            font-family: 'Arial', sans-serif;
-            max-width: 900px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.6;
-            background-color: var(--background-light);
-            color: #333;
+            background-color: #f5f5f5;
         }
-        .section {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 8px;
         }
-        .section:hover {
-            transform: translateY(-5px);
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
         }
-        .subnet-calculator input, 
-        .vlan-configurator select {
-            margin: 10px 0;
+        
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        
+        .category-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .category-btn.active {
+            background-color: #2c3e50;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        #search {
             padding: 10px;
             width: 100%;
             border: 1px solid #ddd;
-            border-radius: 6px;
-            transition: border-color 0.3s ease;
+            border-radius: 4px;
+            font-size: 1em;
         }
-        .subnet-calculator input:focus,
-        .vlan-configurator select:focus {
-            border-color: var(--primary-color);
-            outline: none;
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            text-align: center;
-            font-size: 16px;
-            margin: 10px 0;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        button:hover {
-            background-color: #1976D2;
-            transform: scale(1.05);
-        }
-        #subnet-result, 
-        #vlan-result {
-            background-color: #e7f3fe;
-            border-left: 6px solid var(--primary-color);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 6px;
-        }
-        .network-diagram {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: #f1f1f1;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 15px;
-        }
-        .network-segment {
-            background-color: var(--white);
-            border: 2px solid var(--secondary-color);
-            padding: 15px;
-            margin: 10px;
-            text-align: center;
+        
+        .definition-card {
+            background-color: white;
             border-radius: 8px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 150px;
-        }
-        .network-segment:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .network-segmentation-info ul {
-            display: flex;
-            justify-content: space-between;
-            padding: 0;
-            list-style-type: none;
-        }
-        .network-segmentation-info li {
-            background-color: #e7f3fe;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             padding: 15px;
-            border-radius: 8px;
-            width: 30%;
+            transition: transform 0.3s;
+        }
+        
+        .definition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .definition-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .definition-card p {
+            margin-bottom: 0;
+        }
+        
+        .category-label {
+            display: inline-block;
+            background-color: #e6f7ff;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
+        
+        footer {
             text-align: center;
-            transition: transform 0.3s ease;
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9em;
         }
-        .network-segmentation-info li:hover {
-            transform: translateY(-10px);
-        }
-        #ip-visualization {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-            background-color: #f1f1f1;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .ip-block {
-            background-color: var(--white);
-            border: 2px solid var(--primary-color);
-            padding: 10px;
-            margin: 0 5px;
-            text-align: center;
-            border-radius: 6px;
+        
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Network Segmentation and VLAN Learning Tool</h1>
-
-    <div class="section subnet-calculator">
-        <h2>Subnet Calculator</h2>
-        <p>Calculate subnet details based on an IP address and subnet mask</p>
-        
-        <label>IP Address:</label>
-        <input type="text" id="ip-address" placeholder="e.g., 192.168.1.0">
-        
-        <label>Subnet Mask:</label>
-        <input type="text" id="subnet-mask" placeholder="e.g., 255.255.255.0">
-        
-        <button onclick="calculateSubnet()">Calculate Subnet</button>
-        
-        <div id="subnet-result"></div>
-        <div id="ip-visualization"></div>
+    <header>
+        <h1>Chapter 8: Subnets and VLANs</h1>
+        <p>Definitions Grid - CNT3004 Computer Network Concepts</p>
+    </header>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for definitions...">
     </div>
-
-    <div class="section vlan-configurator">
-        <h2>VLAN Configuration Simulator</h2>
-        <p>Simulate VLAN segmentation</p>
-        
-        <label>Number of VLANs:</label>
-        <select id="vlan-count">
-            <option value="2">2 VLANs</option>
-            <option value="3">3 VLANs</option>
-            <option value="4">4 VLANs</option>
-        </select>
-        
-        <label>VLAN Purpose:</label>
-        <select id="vlan-type">
-            <option value="data">Data VLAN</option>
-            <option value="voice">Voice VLAN</option>
-            <option value="management">Management VLAN</option>
-        </select>
-        
-        <button onclick="configureVLAN()">Configure VLAN</button>
-        
-        <div id="vlan-result"></div>
-        <div id="network-diagram" class="network-diagram"></div>
+    
+    <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="segmentation">Network Segmentation</button>
+        <button class="category-btn" data-category="subnets">Subnetting</button>
+        <button class="category-btn" data-category="ipv4">IPv4 Addressing</button>
+        <button class="category-btn" data-category="ipv6">IPv6 Addressing</button>
+        <button class="category-btn" data-category="vlans">VLANs</button>
+        <button class="category-btn" data-category="switches">Switch Technologies</button>
     </div>
-
-    <div class="section network-segmentation-info">
-        <h2>Network Segmentation Benefits</h2>
-        <ul>
-            <li>Enhanced Security: Isolate different network segments</li>
-            <li>Improved Performance: Reduce broadcast domain size</li>
-            <li>Simplified Troubleshooting: Easier to identify and resolve network issues</li>
-        </ul>
-    </div>
-
+    
+    <div class="grid-container" id="definitions-grid"></div>
+    
+    <footer>
+        <p>Based on material from Chapter 8 - Subnets and VLANs</p>
+    </footer>
+    
     <script>
-        function calculateSubnet() {
-            const ipAddress = document.getElementById('ip-address').value;
-            const subnetMask = document.getElementById('subnet-mask').value;
-            const resultDiv = document.getElementById('subnet-result');
-            const visualDiv = document.getElementById('ip-visualization');
-
-            if (!ipAddress || !subnetMask) {
-                resultDiv.innerHTML = 'Please enter both IP address and subnet mask.';
+        // Definitions data structure
+        const definitions = [
+            // Network Segmentation
+            {
+                term: "Network Segmentation",
+                definition: "🔄 The process of dividing a network into multiple smaller networks, each functioning as its own broadcast domain to enhance security, improve performance, and simplify troubleshooting.",
+                category: "segmentation"
+            },
+            {
+                term: "Broadcast Domain",
+                definition: "📢 A network segment where any broadcast packet sent by a device will be received by all other devices in that segment.",
+                category: "segmentation"
+            },
+            {
+                term: "Common Segmentation Groupings",
+                definition: "🗂️ Networks are typically segmented based on geographic locations, departmental boundaries, or device types.",
+                category: "segmentation"
+            },
+            
+            // Subnetting
+            {
+                term: "Subnet",
+                definition: "🧩 A logical division of an IP network into multiple, smaller network segments to better manage network traffic and improve efficiency.",
+                category: "subnets"
+            },
+            {
+                term: "Subnetting",
+                definition: "✂️ The technique of dividing a pool of IP addresses into multiple groups or subnets to create multiple logical networks within a single network address space.",
+                category: "subnets"
+            },
+            {
+                term: "Classless Addressing",
+                definition: "📝 Addressing scheme that alters the rules of classful IPv4 addressing to borrow bits from the host portion for network identification.",
+                category: "subnets"
+            },
+            {
+                term: "VLSM (Variable Length Subnet Mask)",
+                definition: "📏 A technique that allows subnets to be further subdivided into smaller and smaller groupings until each subnet is about the same size as the necessary IP address space.",
+                category: "subnets"
+            },
+            {
+                term: "Subnet Calculation",
+                definition: "🧮 The process of determining subnet ranges by borrowing bits from the host portion of an IP address to create additional network identifiers.",
+                category: "subnets"
+            },
+            {
+                term: "DHCP Relay Agent",
+                definition: "🔄 A network device that receives DHCP requests from clients in one broadcast domain and forwards them to a DHCP server in a different broadcast domain.",
+                category: "subnets"
+            },
+            
+            // IPv4 Addressing
+            {
+                term: "IPv4 Address",
+                definition: "🔢 A 32-bit numeric address written as four decimal numbers separated by periods, divided into network ID and host ID portions.",
+                category: "ipv4"
+            },
+            {
+                term: "Subnet Mask",
+                definition: "🎭 A 32-bit number used to differentiate the network ID portion from the host ID portion in an IP address, represented as dotted decimal or CIDR notation.",
+                category: "ipv4"
+            },
+            {
+                term: "Network ID",
+                definition: "🏠 The portion of an IP address that identifies the network to which a device belongs.",
+                category: "ipv4"
+            },
+            {
+                term: "Host ID",
+                definition: "👤 The portion of an IP address that identifies a specific device within a network.",
+                category: "ipv4"
+            },
+            {
+                term: "CIDR (Classless Interdomain Routing)",
+                definition: "📋 A notation that takes the network ID or a host's IP address and follows it with a forward slash (/) and the number of bits used for the network ID.",
+                category: "ipv4"
+            },
+            {
+                term: "CIDR Block",
+                definition: "📦 An IP address range specified in CIDR notation (e.g., 192.168.89.0/24), indicating the network address and subnet mask length.",
+                category: "ipv4"
+            },
+            {
+                term: "Class A Network",
+                definition: "🔝 IPv4 network with first bit of 0, providing 8 bits for network ID and 24 bits for host ID, with default subnet mask 255.0.0.0.",
+                category: "ipv4"
+            },
+            {
+                term: "Class B Network",
+                definition: "🔝 IPv4 network with first two bits of 10, providing 16 bits for network ID and 16 bits for host ID, with default subnet mask 255.255.0.0.",
+                category: "ipv4"
+            },
+            {
+                term: "Class C Network",
+                definition: "🔝 IPv4 network with first three bits of 110, providing 24 bits for network ID and 8 bits for host ID, with default subnet mask 255.255.255.0.",
+                category: "ipv4"
+            },
+            
+            // IPv6 Addressing
+            {
+                term: "IPv6 Address",
+                definition: "📚 A 128-bit address written as eight blocks of four hexadecimal characters, with the first four blocks typically identifying the network (network prefix).",
+                category: "ipv6"
+            },
+            {
+                term: "IPv6 Network Prefix",
+                definition: "🌐 The first four blocks of an IPv6 address that identify the network, also called the site prefix or global routing prefix.",
+                category: "ipv6"
+            },
+            {
+                term: "IPv6 Interface ID",
+                definition: "💻 The last four blocks of an IPv6 address that identify the specific interface on the network.",
+                category: "ipv6"
+            },
+            {
+                term: "IPv6 Subnetting",
+                definition: "🧩 Process of creating subnets in IPv6 by altering the fourth hexadecimal block in the site prefix, simpler than IPv4 subnetting.",
+                category: "ipv6"
+            },
+            
+            // VLANs
+            {
+                term: "VLAN (Virtual Local Area Network)",
+                definition: "🌈 A logical grouping of network devices that allows a switch to partition traffic, creating multiple broadcast domains regardless of physical connection locations.",
+                category: "vlans"
+            },
+            {
+                term: "802.1Q",
+                definition: "🏷️ The IEEE standard that specifies how VLAN information appears in frames and how switches interpret that information, often called 'VLAN tagging'.",
+                category: "vlans"
+            },
+            {
+                term: "Default VLAN",
+                definition: "🏠 A VLAN that is typically preconfigured on a switch and initially includes all switch ports.",
+                category: "vlans"
+            },
+            {
+                term: "Native VLAN",
+                definition: "🧠 A VLAN that receives all untagged frames from untagged ports.",
+                category: "vlans"
+            },
+            {
+                term: "Data VLAN",
+                definition: "💼 A VLAN that carries user-generated traffic, such as email, web browsing, or database updates.",
+                category: "vlans"
+            },
+            {
+                term: "Management VLAN",
+                definition: "🔧 A VLAN that can be used to provide administrative access to a switch.",
+                category: "vlans"
+            },
+            {
+                term: "Voice VLAN",
+                definition: "📞 A VLAN dedicated to supporting VoIP traffic.",
+                category: "vlans"
+            },
+            {
+                term: "VLAN Hopping",
+                definition: "🦘 A security exploit where an attacker generates transmissions that appear to belong to a protected VLAN, potentially accessing sensitive data.",
+                category: "vlans"
+            },
+            {
+                term: "Double Tagging",
+                definition: "🏷️🏷️ A VLAN hopping technique where an attacker stacks VLAN tags in Ethernet frames to trick a switch into forwarding transmissions to restricted VLANs.",
+                category: "vlans"
+            },
+            {
+                term: "Switch Spoofing",
+                definition: "🎭 A VLAN hopping technique where an attacker connects to a switch and makes the connection appear as if it's a trunk line.",
+                category: "vlans"
+            },
+            
+            // Switch Technologies
+            {
+                term: "Managed Switch",
+                definition: "🎛️ A switch that can be configured via a command-line interface or a web-based management GUI, typically assigned an IP address and capable of implementing VLANs.",
+                category: "switches"
+            },
+            {
+                term: "Unmanaged Switch",
+                definition: "🔌 A switch that provides plug-and-play simplicity with minimal configuration and has no IP address assigned to it.",
+                category: "switches"
+            },
+            {
+                term: "Access Port",
+                definition: "🖥️ A port on a switch that is used for connecting a single node and belongs to a single VLAN.",
+                category: "switches"
+            },
+            {
+                term: "Trunk Port",
+                definition: "🔌 A port on a switch that is capable of managing traffic among multiple VLANs.",
+                category: "switches"
+            },
+            {
+                term: "Trunk",
+                definition: "🌉 A single physical connection between switches through which many logical VLANs can transmit and receive data.",
+                category: "switches"
+            },
+            {
+                term: "VTP (VLAN Trunking Protocol)",
+                definition: "📡 Cisco's protocol for exchanging VLAN information over trunks, allowing changes to the VLAN database on one switch to be communicated to all other switches.",
+                category: "switches"
+            },
+            {
+                term: "Stack Master",
+                definition: "👑 The primary switch in a network where changes to the VLAN database are made and then communicated to other switches via VTP.",
+                category: "switches"
+            },
+            {
+                term: "VLAN Tag",
+                definition: "🔖 Information added to Ethernet frames by a switch to identify the VLAN to which the frame belongs.",
+                category: "switches"
+            }
+        ];
+        
+        // Function to render the definitions grid
+        function renderDefinitions(filteredDefinitions) {
+            const grid = document.getElementById('definitions-grid');
+            grid.innerHTML = '';
+            
+            if (filteredDefinitions.length === 0) {
+                grid.innerHTML = '<p>No definitions found matching your search.</p>';
                 return;
             }
-
-            // Basic subnet calculation logic
-            const ipParts = ipAddress.split('.');
-            const maskParts = subnetMask.split('.');
-
-            const networkId = ipParts.map((part, index) => 
-                parseInt(part) & parseInt(maskParts[index])
-            ).join('.');
-
-            const hostBits = maskParts.map(part => 
-                (255 - parseInt(part))
-            );
-
-            const totalHosts = hostBits.reduce((a, b) => a * b, 1) - 2; // Subtract network and broadcast addresses
-
-            const broadcastAddress = ipParts.map((part, index) => 
-                parseInt(part) | (255 - parseInt(maskParts[index]))
-            ).join('.');
-
-            resultDiv.innerHTML = `
-                <strong>Network Details:</strong>
-                <p>Network ID: ${networkId}</p>
-                <p>Broadcast Address: ${broadcastAddress}</p>
-                <p>Total Usable Hosts: ${totalHosts}</p>
-                <p>First Host: ${networkId.split('.').slice(0, 3).concat([parseInt(networkId.split('.')[3]) + 1]).join('.')}</p>
-                <p>Last Host: ${broadcastAddress.split('.').slice(0, 3).concat([parseInt(broadcastAddress.split('.')[3]) - 1]).join('.')}</p>
-            `;
-
-            // IP Visualization
-            visualDiv.innerHTML = '';
-            ipParts.forEach((part, index) => {
-                const block = document.createElement('div');
-                block.className = 'ip-block';
-                block.innerHTML = `
-                    <strong>Octet ${index + 1}</strong>
-                    <p>${part}</p>
-                    <small>Mask: ${maskParts[index]}</small>
+            
+            filteredDefinitions.forEach(def => {
+                const card = document.createElement('div');
+                card.className = 'definition-card';
+                card.setAttribute('data-category', def.category);
+                
+                card.innerHTML = `
+                    <h3>${def.term}</h3>
+                    <p>${def.definition}</p>
+                    <span class="category-label">${getCategoryName(def.category)}</span>
                 `;
-                visualDiv.appendChild(block);
+                
+                grid.appendChild(card);
             });
         }
-
-        function configureVLAN() {
-            const vlanCount = document.getElementById('vlan-count').value;
-            const vlanType = document.getElementById('vlan-type').value;
-            const resultDiv = document.getElementById('vlan-result');
-            const diagramDiv = document.getElementById('network-diagram');
-
-            resultDiv.innerHTML = `Configured ${vlanCount} ${vlanType.toUpperCase()} VLANs`;
-
-            // Create network diagram
-            diagramDiv.innerHTML = '';
-            for (let i = 1; i <= vlanCount; i++) {
-                const segment = document.createElement('div');
-                segment.className = 'network-segment';
-                segment.innerHTML = `
-                    <strong>VLAN ${i}</strong>
-                    <p>${vlanType.toUpperCase()} Network</p>
-                    <small>Segment: 192.168.${i}.0/24</small>
-                `;
-                diagramDiv.appendChild(segment);
-            }
+        
+        // Function to get readable category name
+        function getCategoryName(categoryCode) {
+            const categoryNames = {
+                'segmentation': 'Network Segmentation',
+                'subnets': 'Subnetting',
+                'ipv4': 'IPv4 Addressing',
+                'ipv6': 'IPv6 Addressing',
+                'vlans': 'VLANs',
+                'switches': 'Switch Technologies'
+            };
+            
+            return categoryNames[categoryCode] || categoryCode;
         }
-
-        // Initialize with some default calculations
-        calculateSubnet();
-        configureVLAN();
+        
+        // Filter definitions by category and search term
+        function filterDefinitions() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            return definitions.filter(def => {
+                const matchesCategory = activeCategory === 'all' || def.category === activeCategory;
+                const matchesSearch = def.term.toLowerCase().includes(searchTerm) || 
+                                    def.definition.toLowerCase().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+        }
+        
+        // Initialize the grid
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render all definitions initially
+            renderDefinitions(definitions);
+            
+            // Add event listeners for category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    // Filter and render definitions
+                    renderDefinitions(filterDefinitions());
+                });
+            });
+            
+            // Add event listener for search input
+            document.getElementById('search').addEventListener('input', () => {
+                renderDefinitions(filterDefinitions());
+            });
+        });
     </script>
 </body>
 </html>
