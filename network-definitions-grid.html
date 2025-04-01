@@ -113,6 +113,11 @@
             background-color: white;
             border-radius: 8px;
         }
+        
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -140,356 +145,424 @@
     </div>
 
     <script>
-        // Definition data organized by category
+        // Definition data organized by category with emojis
         const definitions = [
             // Monitoring Category
             {
                 term: "Network Management",
                 definition: "Assess, monitor, and maintain all network aspects, including controlling user access to resources, checking for hardware faults, ensuring optimized QoS, and maintaining records of network assets.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "🔍"
             },
             {
                 term: "Network Monitor",
                 definition: "Tool that continually monitors network traffic that a single device encounters.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "📊"
             },
             {
                 term: "Protocol Analyzer",
                 definition: "Tool that can monitor traffic at a specific interface between a server or client and the network, and can monitor traffic patterns throughout a particular network.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "🔬"
             },
             {
                 term: "Port Mirroring",
                 definition: "All traffic sent to any port on a switch can be sent to a mirrored port, which can be connected to a computer running monitoring software.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "🪞"
             },
             {
                 term: "In-line Monitoring",
                 definition: "Installing a device, called a network TAP (test access point) or packet sniffer, in line with network traffic.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "🔌"
             },
             {
                 term: "Log",
                 definition: "Contains recorded conditions recognized by operating system.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "📝"
             },
             {
                 term: "Event Log",
                 definition: "Windows-based computer log containing monitored device information.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "📒"
             },
             {
                 term: "Syslog",
                 definition: "Standard for generating, storing, and processing messages about events on Linux or UNIX.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "🐧"
             },
             {
                 term: "NMS (Network Management System)",
                 definition: "Collects data from multiple managed devices at regular intervals in a process called polling.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "📡"
             },
             {
                 term: "MIB (Management Information Base)",
                 definition: "Contains managed devices definition and data, designed in a top-down, hierarchical tree structure.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "🌲"
             },
             {
                 term: "SNMP (Simple Network Management Protocol)",
                 definition: "Used to communicate managed device information as part of the TCP/IP suite.",
-                category: "monitoring"
+                category: "monitoring",
+                emoji: "💬"
             },
             
             // Performance Category
             {
                 term: "Baseline",
                 definition: "Report of network's current operation state, including measurements like network backbone utilization rate, number of users logged on, error statistics, etc.",
-                category: "performance"
+                category: "performance",
+                emoji: "📏"
             },
             {
                 term: "Traffic Shaping (Packet Shaping)",
                 definition: "Manipulating packet, data stream, and connection characteristics to manage type and amount of traffic traversing network.",
-                category: "performance"
+                category: "performance",
+                emoji: "🚦"
             },
             {
                 term: "Traffic Policing",
                 definition: "Limiting traffic volume flowing in and out of interface during specified time period or limiting momentary throughput rate for an interface.",
-                category: "performance"
+                category: "performance",
+                emoji: "👮"
             },
             {
                 term: "Traffic Prioritization",
                 definition: "Treating more important traffic preferentially based on characteristics like protocol, IP address, user group, or VLAN tag.",
-                category: "performance"
+                category: "performance",
+                emoji: "⭐"
             },
             {
                 term: "QoS (Quality of Service)",
                 definition: "A group of techniques for adjusting the priority a network assigns to various types of transmissions.",
-                category: "performance"
+                category: "performance",
+                emoji: "🥇"
             },
             {
                 term: "DiffServ (Differentiated Service)",
                 definition: "Addresses QoS issues through traffic prioritization at Layer 3, using the DiffServ field in IPv4 or Traffic Class field in IPv6.",
-                category: "performance"
+                category: "performance",
+                emoji: "🔄"
             },
             {
                 term: "EF (Expedited Forwarding)",
                 definition: "Data stream assigned minimum departure rate to circumvent delays.",
-                category: "performance"
+                category: "performance",
+                emoji: "⚡"
             },
             {
                 term: "AF (Assured Forwarding)",
                 definition: "Data streams assigned different router resource levels, prioritizing data handling but without guarantee of on-time, in-sequence packet arrival.",
-                category: "performance"
+                category: "performance",
+                emoji: "🔃"
             },
             {
                 term: "CoS (Class of Service)",
                 definition: "Refers to techniques performed at Layer 2 on Ethernet frames, most often used to route Ethernet traffic between VLANs.",
-                category: "performance"
+                category: "performance",
+                emoji: "🏆"
             },
             {
                 term: "Priority Code Point (PCP)",
                 definition: "A 3-bit field in the frame header of a frame that has been tagged (addressed to a specific VLAN), set to one of eight levels ranging from 0 to 7.",
-                category: "performance"
+                category: "performance",
+                emoji: "🎯"
             },
             
             // Availability Category
             {
                 term: "Availability",
                 definition: "How consistently and reliably a file or system can be accessed.",
-                category: "availability"
+                category: "availability",
+                emoji: "✅"
             },
             {
                 term: "HA (High Availability)",
                 definition: "Refers to a system that functions reliably nearly all the time.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔝"
             },
             {
                 term: "Uptime",
                 definition: "Measure of time functioning normally between failures.",
-                category: "availability"
+                category: "availability",
+                emoji: "⏱️"
             },
             {
                 term: "Fault Tolerance",
                 definition: "Capacity for system to continue performing despite unexpected hardware or software malfunction.",
-                category: "availability"
+                category: "availability",
+                emoji: "🛡️"
             },
             {
                 term: "Failure",
                 definition: "Deviation from specified system performance level given time period.",
-                category: "availability"
+                category: "availability",
+                emoji: "❌"
             },
             {
                 term: "Fault",
                 definition: "Malfunction of one system component that can result in failure.",
-                category: "availability"
+                category: "availability",
+                emoji: "⚠️"
             },
             {
                 term: "MTBF (Mean Time Between Failures)",
                 definition: "Average amount of time that will pass for devices exactly like this one before the next failure is expected to occur.",
-                category: "availability"
+                category: "availability",
+                emoji: "⏳"
             },
             {
                 term: "MTTR (Mean Time To Repair)",
                 definition: "Average amount of time required to repair the device.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔧"
             },
             {
                 term: "Redundancy",
                 definition: "Using two or more of the same item, service, or connection filling the same role on the network so if one fails, the other takes over.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔄"
             },
             {
                 term: "Automatic Failover",
                 definition: "The ability to immediately assume the duties of an identical component in case of failure.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔁"
             },
             {
                 term: "Hot-swappable",
                 definition: "Refers to identical components that can be changed while a machine is running.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔥"
             },
             {
                 term: "Hot Spare",
                 definition: "Duplicate component that is already installed in a device and can assume function in case the original component fails.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔥"
             },
             {
                 term: "Cold Spare",
                 definition: "Duplicate component that is not installed, but can be installed in case of a failure.",
-                category: "availability"
+                category: "availability",
+                emoji: "❄️"
             },
             {
                 term: "Link Aggregation (Port Aggregation)",
                 definition: "Combination of multiple network interfaces to act as one logical interface, providing increased throughput and automatic failover.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔗"
             },
             {
                 term: "Load Balancing",
                 definition: "Traffic distribution over multiple components or links to optimize performance and fault tolerance.",
-                category: "availability"
+                category: "availability",
+                emoji: "⚖️"
             },
             {
                 term: "LACP (Link Aggregation Control Protocol)",
                 definition: "Dynamically coordinates communications between hosts on aggregated connections.",
-                category: "availability"
+                category: "availability",
+                emoji: "🤝"
             },
             {
                 term: "Load Balancer",
                 definition: "A dedicated device that distributes traffic among multiple computers.",
-                category: "availability"
+                category: "availability",
+                emoji: "🧮"
             },
             {
                 term: "Clustering",
                 definition: "The technique of grouping multiple devices so they appear as a single device, usually accompanying load balancing.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔄"
             },
             {
                 term: "VIP (Virtual IP Address)",
                 definition: "Used to represent an entire cluster of devices.",
-                category: "availability"
+                category: "availability",
+                emoji: "🎭"
             },
             {
                 term: "CARP (Common Address Redundancy Protocol)",
                 definition: "Allows a pool of computers or interfaces to share one or more IP addresses. The pool is known as a redundancy group.",
-                category: "availability"
+                category: "availability",
+                emoji: "🔢"
             },
             {
                 term: "Distributed Switching",
                 definition: "Centralizes control of VMs, simplifies network operations, and minimizes chances for configuration errors.",
-                category: "availability"
+                category: "availability",
+                emoji: "🌐"
             },
             
             // Backup & Storage Category
             {
                 term: "Backup",
                 definition: "Copies of data or program files created for archiving and safekeeping.",
-                category: "backup"
+                category: "backup",
+                emoji: "💾"
             },
             {
                 term: "Snapshot",
                 definition: "A frequently saved, incremental backup of the data's state at a specific point in time.",
-                category: "backup"
+                category: "backup",
+                emoji: "📸"
             },
             {
                 term: "NAS (Network Attached Storage)",
                 definition: "A specialized storage device or group of storage devices that provides centralized fault tolerant data storage for a network.",
-                category: "backup"
+                category: "backup",
+                emoji: "🗄️"
             },
             {
                 term: "RAID (Redundant Array of Independent Disks)",
                 definition: "A technology that combines multiple disk drive components into a logical unit for data redundancy or performance improvement.",
-                category: "backup"
+                category: "backup",
+                emoji: "💽"
             },
             {
                 term: "RAID 0",
                 definition: "Data is striped/written across multiple disks for improved performance but no redundancy.",
-                category: "backup"
+                category: "backup",
+                emoji: "⚡"
             },
             {
                 term: "RAID 1",
                 definition: "Data is mirrored/duplicated on multiple disks for redundancy.",
-                category: "backup"
+                category: "backup",
+                emoji: "🪞"
             },
             {
                 term: "RAID 5",
                 definition: "Data is striped across three or more drives and parity information is added to the data for redundancy.",
-                category: "backup"
+                category: "backup",
+                emoji: "🧩"
             },
             {
                 term: "RAID 10",
                 definition: "Data is mirrored within each pair of disks (uses four or more disks) and then striped to multiple pairs of disks.",
-                category: "backup"
+                category: "backup",
+                emoji: "🔄"
             },
             {
                 term: "SAN (Storage Area Network)",
                 definition: "A network of storage devices that communicate directly with each other and with other networks, using a type of architecture similar to mesh topology.",
-                category: "backup"
+                category: "backup",
+                emoji: "🌐"
             },
             {
                 term: "FC (Fibre Channel)",
                 definition: "A technology used in SANs for high-speed data transfer.",
-                category: "backup"
+                category: "backup",
+                emoji: "🔌"
             },
             {
                 term: "FCoE (Fibre Channel over Ethernet)",
                 definition: "A technology used in SANs that encapsulates Fibre Channel frames over Ethernet networks.",
-                category: "backup"
+                category: "backup",
+                emoji: "📦"
             },
             {
                 term: "iSCSI (Internet SCSI)",
                 definition: "A technology used in SANs that allows SCSI commands to be sent over IP networks.",
-                category: "backup"
+                category: "backup",
+                emoji: "🌐"
             },
             {
                 term: "IB (InfiniBand)",
                 definition: "A computer networking communications standard used in SANs for high-performance computing.",
-                category: "backup"
+                category: "backup",
+                emoji: "⚡"
             },
             {
                 term: "UPS (Uninterruptible Power Supply)",
                 definition: "A battery-operated power source directly attached to devices and to a power supply that prevents undesired fluctuations of power.",
-                category: "backup"
+                category: "backup",
+                emoji: "🔋"
             },
             {
                 term: "Standby UPS",
                 definition: "Provides continuous voltage to a device by switching to the battery when it detects a loss of power from the wall outlet.",
-                category: "backup"
+                category: "backup",
+                emoji: "🔌"
             },
             {
                 term: "Online UPS",
                 definition: "Uses the AC power from the wall outlet to continuously charge its battery, while providing power to the device through its battery.",
-                category: "backup"
+                category: "backup",
+                emoji: "⚡"
             },
             
             // Disaster Recovery Category
             {
                 term: "Incident",
                 definition: "Any event that has adverse effects on a network's availability or resources, could be a security breach, infection, or an environmental issue.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "⚠️"
             },
             {
                 term: "Disaster",
                 definition: "An extreme type of incident involving a network outage that affects more than a single system.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "🌪️"
             },
             {
                 term: "Incident Response Policies",
                 definition: "Specifically define the characteristics of an event that qualifies as a formal incident and the steps that should be followed.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "📋"
             },
             {
                 term: "Disaster Recovery",
                 definition: "Process of restoring critical functionality and data affecting more than a single system or a limited group of users.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "🔄"
             },
             {
                 term: "Business Continuity",
                 definition: "Ability to continue doing business with the least amount of interruption.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "🏢"
             },
             {
                 term: "Cold Site",
                 definition: "Components necessary to rebuild network exist but are not appropriately configured, updated, or connected.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "❄️"
             },
             {
                 term: "Warm Site",
                 definition: "Components necessary to rebuild network exist with some appropriately configured, updated, and connected.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "🔆"
             },
             {
                 term: "Hot Site",
                 definition: "Components exist and match network's current state, all appropriately configured, updated, and connected.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "🔥"
             },
             {
                 term: "Data Preservation",
                 definition: "Process of collecting data in such a way that it can be presented in a court of law.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "📂"
             },
             {
                 term: "Chain of Custody",
                 definition: "Documentation of who has handled evidence and data, ensuring its integrity for legal proceedings.",
-                category: "recovery"
+                category: "recovery",
+                emoji: "🔗"
             }
         ];
 
@@ -498,7 +571,7 @@
             return `
                 <div class="card" data-category="${def.category}">
                     <span class="category-label">${getCategoryName(def.category)}</span>
-                    <h3>${def.term}</h3>
+                    <h3><span class="emoji">${def.emoji}</span>${def.term}</h3>
                     <p>${def.definition}</p>
                 </div>
             `;
@@ -586,4 +659,5 @@
         });
     </script>
 </body>
+</html>
 </html>
