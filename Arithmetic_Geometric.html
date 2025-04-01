@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Sequences</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f7f9fc;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .formula {
+            font-family: 'Cambria Math', Georgia, serif;
+            background-color: #f0f4f8;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            background-color: #e9ecef;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 4px 4px 4px;
+            background-color: white;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .visualization {
+            margin: 20px 0;
+            height: 300px;
+            position: relative;
+        }
+        
+        .bar {
+            position: absolute;
+            bottom: 0;
+            background-color: #3498db;
+            width: 40px;
+            transition: height 0.5s;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .control-panel {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        input, select, button {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .example {
+            background-color: #e8f4f8;
+            border-left: 4px solid #5bc0de;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Understanding Sequences</h1>
+    
+    <div class="container">
+        <h2>What is a Sequence?</h2>
+        <p>A sequence is an ordered list of numbers. Each number in the sequence is called a term.</p>
+        
+        <div class="example">
+            <p>Examples of sequences:</p>
+            <ul>
+                <li>Even numbers: 2, 4, 6, 8, 10, ...</li>
+                <li>Odd numbers: 1, 3, 5, 7, 9, ...</li>
+                <li>Multiples of 5: 0, 5, 10, 15, 20, ...</li>
+                <li>Perfect squares: 1, 4, 9, 16, 25, ...</li>
+            </ul>
+        </div>
+        
+        <h3>Sequence Notation</h3>
+        <p>Terms of a sequence are represented using variables with indices:</p>
+        <ul>
+            <li><span class="formula">a₀, a₁, a₂, a₃, ...</span> - Terms starting from index 0</li>
+            <li><span class="formula">a₁, a₂, a₃, a₄, ...</span> - Terms starting from index 1</li>
+        </ul>
+        <p>The general term is often written as <span class="formula">aₙ</span>, where n is the position in the sequence.</p>
+    </div>
+    
+    <div class="container">
+        <h2>Defining Sequences</h2>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="closed">Closed Formula</div>
+            <div class="tab" data-tab="recursive">Recursive Definition</div>
+            <div class="tab" data-tab="compare">Comparison</div>
+        </div>
+        
+        <div class="tab-content active" id="closed">
+            <h3>Closed Formula</h3>
+            <p>A closed formula expresses any term of a sequence directly using its position (n).</p>
+            <p>It allows you to calculate any term independently, without needing previous terms.</p>
+            
+            <div class="example">
+                <p>For the sequence 0, 5, 10, 15, 20, ... the closed formula is:</p>
+                <p class="formula">aₙ = 5n</p>
+                <p>Example calculations:</p>
+                <ul>
+                    <li>a₀ = 5(0) = 0</li>
+                    <li>a₁ = 5(1) = 5</li>
+                    <li>a₂ = 5(2) = 10</li>
+                </ul>
+            </div>
+            
+            <h3>Try It: Closed Formula Calculator</h3>
+            <div class="control-panel">
+                <select id="closedFormulaSelect">
+                    <option value="5n">Multiples of 5: aₙ = 5n</option>
+                    <option value="n^2">Perfect Squares: aₙ = n²</option>
+                    <option value="n(n+1)/2">Triangular Numbers: aₙ = n(n+1)/2</option>
+                    <option value="2n">Powers of 2: aₙ = 2ⁿ</option>
+                </select>
+                <label for="closedTermInput">Calculate term:</label>
+                <input type="number" id="closedTermInput" min="0" max="20" value="5">
+                <button id="calculateClosedBtn">Calculate</button>
+                <div id="closedResult" class="formula"></div>
+            </div>
+            
+            <div class="visualization" id="closedVisualization"></div>
+        </div>
+        
+        <div class="tab-content" id="recursive">
+            <h3>Recursive Definition</h3>
+            <p>A recursive definition describes a sequence by:</p>
+            <ol>
+                <li><strong>Initial Condition(s):</strong> The starting term(s)</li>
+                <li><strong>Recurrence Relation:</strong> A rule that defines each term based on previous terms</li>
+            </ol>
+            
+            <div class="example">
+                <p>For the sequence 1, 2, 4, 8, 16, ... (powers of 2):</p>
+                <p><strong>Initial Condition:</strong> <span class="formula">a₀ = 1</span></p>
+                <p><strong>Recurrence Relation:</strong> <span class="formula">aₙ = 2·aₙ₋₁</span> for n ≥ 1</p>
+            </div>
+            
+            <div class="example">
+                <p>For the Fibonacci sequence 1, 1, 2, 3, 5, 8, 13, ...:</p>
+                <p><strong>Initial Conditions:</strong> <span class="formula">a₁ = 1, a₂ = 1</span></p>
+                <p><strong>Recurrence Relation:</strong> <span class="formula">aₙ = aₙ₋₁ + aₙ₋₂</span> for n ≥ 3</p>
+            </div>
+            
+            <h3>Try It: Recursive Sequence Generator</h3>
+            <div class="control-panel">
+                <select id="recursiveFormulaSelect">
+                    <option value="powers">Powers of 2: aₙ = 2·aₙ₋₁, a₀ = 1</option>
+                    <option value="fibonacci">Fibonacci: aₙ = aₙ₋₁ + aₙ₋₂, a₁ = a₂ = 1</option>
+                    <option value="arithmetic">Arithmetic: aₙ = aₙ₋₁ + 3, a₀ = 1</option>
+                    <option value="geometric">Geometric: aₙ = 3·aₙ₋₁, a₀ = 2</option>
+                </select>
+                <label for="recursiveCountInput">Generate terms:</label>
+                <input type="number" id="recursiveCountInput" min="1" max="15" value="8">
+                <button id="generateRecursiveBtn">Generate</button>
+            </div>
+            
+            <div id="recursiveResult"></div>
+            <div class="visualization" id="recursiveVisualization"></div>
+        </div>
+        
+        <div class="tab-content" id="compare">
+            <h3>Closed Formula vs. Recursive Definition</h3>
+            
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Closed Formula</th>
+                    <th>Recursive Definition</th>
+                </tr>
+                <tr>
+                    <td>Calculation method</td>
+                    <td>Direct calculation using position (n)</td>
+                    <td>Uses previous terms to calculate next terms</td>
+                </tr>
+                <tr>
+                    <td>Efficiency for single terms</td>
+                    <td>Highly efficient - can directly compute any term</td>
+                    <td>Must calculate all previous terms first</td>
+                </tr>
+                <tr>
+                    <td>Finding patterns</td>
+                    <td>May be hard to derive from a few terms</td>
+                    <td>Often easier to identify from patterns</td>
+                </tr>
+                <tr>
+                    <td>Example</td>
+                    <td>aₙ = n²</td>
+                    <td>aₙ = aₙ₋₁ + 2n - 1, a₀ = 0</td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                <p><strong>Key Insight:</strong> Both approaches describe the same sequence but in different ways. Some sequences are more naturally expressed with one method than the other.</p>
+            </div>
+            
+            <h3>Compare Calculation Methods</h3>
+            <div class="control-panel">
+                <select id="compareSequenceSelect">
+                    <option value="squares">Perfect Squares</option>
+                    <option value="triangular">Triangular Numbers</option>
+                </select>
+                <label for="compareTermInput">Term to calculate:</label>
+                <input type="number" id="compareTermInput" min="1" max="10" value="6">
+                <button id="compareBtn">Compare Methods</button>
+            </div>
+            
+            <div id="compareResult"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>Common Sequences</h2>
+        
+        <table>
+            <tr>
+                <th>Sequence Name</th>
+                <th>First Few Terms</th>
+                <th>Closed Formula</th>
+                <th>Recursive Definition</th>
+            </tr>
+            <tr>
+                <td>Arithmetic (d=3)</td>
+                <td>1, 4, 7, 10, 13, ...</td>
+                <td>aₙ = 1 + 3n</td>
+                <td>aₙ = aₙ₋₁ + 3, a₀ = 1</td>
+            </tr>
+            <tr>
+                <td>Geometric (r=2)</td>
+                <td>1, 2, 4, 8, 16, ...</td>
+                <td>aₙ = 2ⁿ</td>
+                <td>aₙ = 2·aₙ₋₁, a₀ = 1</td>
+            </tr>
+            <tr>
+                <td>Perfect Squares</td>
+                <td>1, 4, 9, 16, 25, ...</td>
+                <td>aₙ = n²</td>
+                <td>aₙ = aₙ₋₁ + 2n - 1, a₀ = 0</td>
+            </tr>
+            <tr>
+                <td>Triangular Numbers</td>
+                <td>1, 3, 6, 10, 15, ...</td>
+                <td>aₙ = n(n+1)/2</td>
+                <td>aₙ = aₙ₋₁ + n, a₀ = 0</td>
+            </tr>
+            <tr>
+                <td>Fibonacci</td>
+                <td>1, 1, 2, 3, 5, 8, 13, ...</td>
+                <td>No simple closed form</td>
+                <td>aₙ = aₙ₋₁ + aₙ₋₂, a₁ = a₂ = 1</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // Tab Navigation
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.getAttribute('data-tab');
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+        
+        // Closed Formula Calculator
+        const closedFormulaSelect = document.getElementById('closedFormulaSelect');
+        const closedTermInput = document.getElementById('closedTermInput');
+        const calculateClosedBtn = document.getElementById('calculateClosedBtn');
+        const closedResult = document.getElementById('closedResult');
+        const closedVisualization = document.getElementById('closedVisualization');
+        
+        function evaluateClosedFormula(formula, n) {
+            // Simple formula evaluator
+            if (formula === "n^2") return n * n;
+            if (formula === "5n") return 5 * n;
+            if (formula === "n(n+1)/2") return n * (n + 1) / 2;
+            if (formula === "2n") return Math.pow(2, n);
+            return 0;
+        }
+        
+        function visualizeClosed(formula, terms = 10) {
+            closedVisualization.innerHTML = '';
+            
+            for (let i = 0; i <= terms; i++) {
+                const value = evaluateClosedFormula(formula, i);
+                const barWidth = 40;
+                const spacing = 10;
+                const maxHeight = 250;
+                
+                // Ensure bars don't get too tall
+                const height = Math.min(value * 10, maxHeight);
+                
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${height}px`;
+                bar.style.left = `${i * (barWidth + spacing)}px`;
+                bar.textContent = value;
+                
+                closedVisualization.appendChild(bar);
+            }
+        }
+        
+        calculateClosedBtn.addEventListener('click', () => {
+            const formula = closedFormulaSelect.value;
+            const n = parseInt(closedTermInput.value);
+            
+            if (n >= 0) {
+                const result = evaluateClosedFormula(formula, n);
+                closedResult.textContent = `a${n} = ${result}`;
+                visualizeClosed(formula);
+            }
+        });
+        
+        // Recursive Sequence Generator
+        const recursiveFormulaSelect = document.getElementById('recursiveFormulaSelect');
+        const recursiveCountInput = document.getElementById('recursiveCountInput');
+        const generateRecursiveBtn = document.getElementById('generateRecursiveBtn');
+        const recursiveResult = document.getElementById('recursiveResult');
+        const recursiveVisualization = document.getElementById('recursiveVisualization');
+        
+        function generateRecursiveSequence(type, count) {
+            let sequence = [];
+            
+            switch(type) {
+                case 'powers':
+                    sequence.push(1); // a₀ = 1
+                    for (let i = 1; i < count; i++) {
+                        sequence.push(2 * sequence[i - 1]);
+                    }
+                    break;
+                case 'fibonacci':
+                    sequence.push(1, 1); // a₁ = a₂ = 1
+                    for (let i = 2; i < count; i++) {
+                        sequence.push(sequence[i - 1] + sequence[i - 2]);
+                    }
+                    break;
+                case 'arithmetic':
+                    sequence.push(1); // a₀ = 1
+                    for (let i = 1; i < count; i++) {
+                        sequence.push(sequence[i - 1] + 3);
+                    }
+                    break;
+                case 'geometric':
+                    sequence.push(2); // a₀ = 2
+                    for (let i = 1; i < count; i++) {
+                        sequence.push(3 * sequence[i - 1]);
+                    }
+                    break;
+            }
+            
+            return sequence;
+        }
+        
+        function visualizeRecursive(sequence) {
+            recursiveVisualization.innerHTML = '';
+            
+            for (let i = 0; i < sequence.length; i++) {
+                const value = sequence[i];
+                const barWidth = 40;
+                const spacing = 10;
+                const maxHeight = 250;
+                
+                // Scale height to make visualization reasonable
+                const scale = getScaleFactor(sequence);
+                const height = Math.min(value * scale, maxHeight);
+                
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${height}px`;
+                bar.style.left = `${i * (barWidth + spacing)}px`;
+                bar.textContent = value;
+                
+                recursiveVisualization.appendChild(bar);
+            }
+        }
+        
+        function getScaleFactor(sequence) {
+            const max = Math.max(...sequence);
+            if (max > 200) return 1;
+            if (max > 100) return 2;
+            if (max > 50) return 4;
+            return 10;
+        }
+        
+        generateRecursiveBtn.addEventListener('click', () => {
+            const type = recursiveFormulaSelect.value;
+            const count = parseInt(recursiveCountInput.value);
+            
+            if (count > 0) {
+                const sequence = generateRecursiveSequence(type, count);
+                recursiveResult.innerHTML = `<p>Generated sequence: ${sequence.join(', ')}</p>`;
+                visualizeRecursive(sequence);
+                
+                // Show the steps for the first few terms
+                let steps = '<p><strong>Calculation steps:</strong></p><ul>';
+                
+                if (type === 'powers') {
+                    steps += `<li>a₀ = 1 (initial condition)</li>`;
+                    for (let i = 1; i < Math.min(count, 5); i++) {
+                        steps += `<li>a${i} = 2 × a${i-1} = 2 × ${sequence[i-1]} = ${sequence[i]}</li>`;
+                    }
+                } else if (type === 'fibonacci') {
+                    steps += `<li>a₁ = 1, a₂ = 1 (initial conditions)</li>`;
+                    for (let i = 2; i < Math.min(count, 5); i++) {
+                        steps += `<li>a${i+1} = a${i} + a${i-1} = ${sequence[i-1]} + ${sequence[i-2]} = ${sequence[i]}</li>`;
+                    }
+                } else if (type === 'arithmetic') {
+                    steps += `<li>a₀ = 1 (initial condition)</li>`;
+                    for (let i = 1; i < Math.min(count, 5); i++) {
+                        steps += `<li>a${i} = a${i-1} + 3 = ${sequence[i-1]} + 3 = ${sequence[i]}</li>`;
+                    }
+                } else if (type === 'geometric') {
+                    steps += `<li>a₀ = 2 (initial condition)</li>`;
+                    for (let i = 1; i < Math.min(count, 5); i++) {
+                        steps += `<li>a${i} = 3 × a${i-1} = 3 × ${sequence[i-1]} = ${sequence[i]}</li>`;
+                    }
+                }
+                
+                steps += '</ul>';
+                recursiveResult.innerHTML += steps;
+            }
+        });
+        
+        // Comparison Calculator
+        const compareSequenceSelect = document.getElementById('compareSequenceSelect');
+        const compareTermInput = document.getElementById('compareTermInput');
+        const compareBtn = document.getElementById('compareBtn');
+        const compareResult = document.getElementById('compareResult');
+        
+        compareBtn.addEventListener('click', () => {
+            const sequence = compareSequenceSelect.value;
+            const n = parseInt(compareTermInput.value);
+            
+            let closedFormula, recursiveDefinition;
+            let closedSteps = '', recursiveSteps = '';
+            let closedResult, recursiveResult;
+            
+            if (sequence === 'squares') {
+                // Perfect squares
+                closedFormula = `a<sub>n</sub> = n²`;
+                recursiveDefinition = `a<sub>0</sub> = 0, a<sub>n</sub> = a<sub>n-1</sub> + 2n - 1`;
+                
+                closedResult = n * n;
+                closedSteps = `a<sub>${n}</sub> = ${n}² = ${closedResult}`;
+                
+                // Recursive calculation
+                let terms = [0]; // a₀ = 0
+                for (let i = 1; i <= n; i++) {
+                    terms.push(terms[i-1] + 2*i - 1);
+                }
+                recursiveResult = terms[n];
+                
+                recursiveSteps = `a<sub>0</sub> = 0<br>`;
+                for (let i = 1; i <= n; i++) {
+                    recursiveSteps += `a<sub>${i}</sub> = a<sub>${i-1}</sub> + 2×${i} - 1 = ${terms[i-1]} + ${2*i - 1} = ${terms[i]}<br>`;
+                }
+            } else if (sequence === 'triangular') {
+                // Triangular numbers
+                closedFormula = `a<sub>n</sub> = n(n+1)/2`;
+                recursiveDefinition = `a<sub>0</sub> = 0, a<sub>n</sub> = a<sub>n-1</sub> + n`;
+                
+                closedResult = (n * (n + 1)) / 2;
+                closedSteps = `a<sub>${n}</sub> = ${n}(${n}+1)/2 = ${n}×${n+1}/2 = ${n*(n+1)}/2 = ${closedResult}`;
+                
+                // Recursive calculation
+                let terms = [0]; // a₀ = 0
+                for (let i = 1; i <= n; i++) {
+                    terms.push(terms[i-1] + i);
+                }
+                recursiveResult = terms[n];
+                
+                recursiveSteps = `a<sub>0</sub> = 0<br>`;
+                for (let i = 1; i <= n; i++) {
+                    recursiveSteps += `a<sub>${i}</sub> = a<sub>${i-1}</sub> + ${i} = ${terms[i-1]} + ${i} = ${terms[i]}<br>`;
+                }
+            }
+            
+            compareResult.innerHTML = `
+                <div class="example">
+                    <h4>Closed Formula Approach</h4>
+                    <p>${closedFormula}</p>
+                    <p>${closedSteps}</p>
+                    <p>Result: a<sub>${n}</sub> = ${closedResult}</p>
+                </div>
+                
+                <div class="example">
+                    <h4>Recursive Approach</h4>
+                    <p>${recursiveDefinition}</p>
+                    <p>${recursiveSteps}</p>
+                    <p>Result: a<sub>${n}</sub> = ${recursiveResult}</p>
+                </div>
+                
+                <div class="note">
+                    <p>Both methods yield the same result: a<sub>${n}</sub> = ${closedResult}</p>
+                    <p>The closed formula is more efficient for calculating a single term, while the recursive definition shows the step-by-step building of the sequence.</p>
+                </div>
+            `;
+        });
+        
+        // Initialize visualizations
+        visualizeClosed(closedFormulaSelect.value);
+        const initialSequence = generateRecursiveSequence(recursiveFormulaSelect.value, 8);
+        visualizeRecursive(initialSequence);
+    </script>
+</body>
+</html>

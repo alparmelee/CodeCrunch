@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Induction Explainer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .proof-step {
+            background-color: white;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .proof-step h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        
+        .example {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 25px 0;
+        }
+        
+        .example h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 10px;
+        }
+        
+        .math {
+            font-style: italic;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .interactive {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 25px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .interactive-output {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 80px;
+            margin-top: 15px;
+        }
+        
+        .formula {
+            text-align: center;
+            padding: 10px;
+            font-size: 1.2em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .highlight {
+            background-color: #ffff99;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .step-by-step {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Understanding Mathematical Induction</h1>
+    
+    <p>Mathematical induction is a powerful proof technique used to establish that a statement is true for all natural numbers. Think of it like climbing a ladder: first, you make sure you can reach the first rung, then you prove that if you can reach any rung, you can always reach the next one.</p>
+    
+    <div class="proof-step">
+        <h3>Step 1: Base Case</h3>
+        <p>Prove that the statement P(n) is true for the smallest value of n (usually n = 0 or n = 1).</p>
+        <p>This is like confirming you can climb onto the first rung of the ladder.</p>
+    </div>
+    
+    <div class="proof-step">
+        <h3>Step 2: Inductive Hypothesis</h3>
+        <p>Assume that P(k) is true for some arbitrary k ≥ initial value.</p>
+        <p>This means we assume we've already reached the k-th rung of the ladder.</p>
+    </div>
+    
+    <div class="proof-step">
+        <h3>Step 3: Inductive Step</h3>
+        <p>Prove that if P(k) is true, then P(k+1) is also true.</p>
+        <p>This demonstrates that if you can reach the k-th rung, you can always climb to the next rung.</p>
+    </div>
+    
+    <div class="proof-step">
+        <h3>Step 4: Conclusion</h3>
+        <p>Conclude that P(n) is true for all valid values of n by the principle of mathematical induction.</p>
+        <p>Since you can reach the first rung, and from any rung you can reach the next one, you can climb the entire ladder!</p>
+    </div>
+    
+    <div class="example">
+        <h3>Example 1: Sum of the First n Odd Numbers</h3>
+        <p class="formula">Prove: 1 + 3 + 5 + ... + (2n-1) = n² for all n ≥ 1</p>
+        
+        <h4>Step 1: Base Case (n = 1)</h4>
+        <p>For n = 1: The left side is just the first odd number: 1</p>
+        <p>The right side is 1² = 1</p>
+        <p>Since 1 = 1, the base case is true.</p>
+        
+        <h4>Step 2: Inductive Hypothesis</h4>
+        <p>Assume the statement is true for n = k:</p>
+        <p class="formula">1 + 3 + 5 + ... + (2k-1) = k²</p>
+        
+        <h4>Step 3: Inductive Step</h4>
+        <p>We need to prove it's true for n = k+1:</p>
+        <p class="formula">1 + 3 + 5 + ... + (2k-1) + (2(k+1)-1) = (k+1)²</p>
+        <p>Using our inductive hypothesis:</p>
+        <p class="formula">k² + (2k+1) = (k+1)²</p>
+        <p class="formula">k² + 2k + 1 = k² + 2k + 1</p>
+        <p>This is true! So P(k+1) is true when P(k) is true.</p>
+        
+        <h4>Step 4: Conclusion</h4>
+        <p>By mathematical induction, the formula is true for all n ≥ 1.</p>
+    </div>
+    
+    <div class="interactive">
+        <h3>Interactive Example: Sum of Odd Numbers</h3>
+        <p>See the pattern for yourself!</p>
+        <button id="nextStep">Show Next Value of n</button>
+        <button id="reset">Reset</button>
+        <div class="interactive-output" id="oddNumbersOutput">
+            <p>Click "Show Next Value of n" to begin the demonstration.</p>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Example 2: Divisibility by 6</h3>
+        <p class="formula">Prove: n³ - n is divisible by 6 for all n ≥ 1</p>
+        
+        <h4>Step 1: Base Case (n = 1)</h4>
+        <p>For n = 1: n³ - n = 1³ - 1 = 1 - 1 = 0</p>
+        <p>0 is divisible by 6, so the base case is true.</p>
+        
+        <h4>Step 2: Inductive Hypothesis</h4>
+        <p>Assume the statement is true for n = k:</p>
+        <p class="formula">k³ - k is divisible by 6</p>
+        <p>This means k³ - k = 6m for some integer m.</p>
+        
+        <h4>Step 3: Inductive Step</h4>
+        <p>We need to prove it's true for n = k+1:</p>
+        <p class="formula">(k+1)³ - (k+1) is divisible by 6</p>
+        
+        <button id="showSteps">Show Step-by-Step Calculation</button>
+        <div class="step-by-step" id="calculationSteps">
+            <p>(k+1)³ - (k+1)</p>
+            <p>= k³ + 3k² + 3k + 1 - k - 1</p>
+            <p>= k³ + 3k² + 2k</p>
+            <p>= (k³ - k) + 3k² + 3k</p>
+            <p>= 6m + 3k(k + 1)</p>
+            <p>Since k and k+1 are consecutive integers, one of them must be even, so k(k+1) is always even.</p>
+            <p>This means 3k(k+1) is always divisible by 6.</p>
+            <p>Therefore, 6m + 3k(k+1) is divisible by 6.</p>
+        </div>
+        
+        <h4>Step 4: Conclusion</h4>
+        <p>By mathematical induction, n³ - n is divisible by 6 for all n ≥ 1.</p>
+    </div>
+    
+    <div class="interactive">
+        <h3>Interactive Example: Divisibility by 6</h3>
+        <p>Check the divisibility of n³ - n for different values of n:</p>
+        <button id="checkNext">Check Next Number</button>
+        <button id="resetDivisibility">Reset</button>
+        <div class="interactive-output" id="divisibilityOutput">
+            <p>Click "Check Next Number" to begin the demonstration.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Interactive Example 1: Sum of Odd Numbers
+        let currentN = 0;
+        const oddNumbersOutput = document.getElementById('oddNumbersOutput');
+        
+        document.getElementById('nextStep').addEventListener('click', function() {
+            currentN++;
+            let sum = 0;
+            let oddNumbers = [];
+            
+            for (let i = 1; i <= currentN; i++) {
+                const oddNumber = 2 * i - 1;
+                oddNumbers.push(oddNumber);
+                sum += oddNumber;
+            }
+            
+            let html = `<p><strong>n = ${currentN}</strong></p>`;
+            html += `<p>Odd numbers: ${oddNumbers.join(' + ')}</p>`;
+            html += `<p>Sum = ${sum}</p>`;
+            html += `<p>n² = ${currentN}² = ${currentN * currentN}</p>`;
+            
+            if (sum === currentN * currentN) {
+                html += `<p><strong>Verification:</strong> ${sum} = ${currentN * currentN} ✓</p>`;
+            }
+            
+            oddNumbersOutput.innerHTML = html;
+        });
+        
+        document.getElementById('reset').addEventListener('click', function() {
+            currentN = 0;
+            oddNumbersOutput.innerHTML = '<p>Click "Show Next Value of n" to begin the demonstration.</p>';
+        });
+        
+        // Show step-by-step calculation
+        document.getElementById('showSteps').addEventListener('click', function() {
+            const steps = document.getElementById('calculationSteps');
+            if (steps.style.display === 'block') {
+                steps.style.display = 'none';
+                this.textContent = 'Show Step-by-Step Calculation';
+            } else {
+                steps.style.display = 'block';
+                this.textContent = 'Hide Step-by-Step Calculation';
+            }
+        });
+        
+        // Interactive Example 2: Divisibility by 6
+        let currentNum = 0;
+        const divisibilityOutput = document.getElementById('divisibilityOutput');
+        
+        document.getElementById('checkNext').addEventListener('click', function() {
+            currentNum++;
+            const result = Math.pow(currentNum, 3) - currentNum;
+            const isDivisible = result % 6 === 0;
+            
+            let html = `<p><strong>n = ${currentNum}</strong></p>`;
+            html += `<p>n³ - n = ${currentNum}³ - ${currentNum} = ${result}</p>`;
+            
+            if (isDivisible) {
+                const quotient = result / 6;
+                html += `<p>${result} ÷ 6 = ${quotient} (an integer)</p>`;
+                html += `<p><strong>Result:</strong> ${result} is divisible by 6 ✓</p>`;
+            } else {
+                html += `<p><strong>Result:</strong> ${result} is NOT divisible by 6 ✗</p>`;
+            }
+            
+            divisibilityOutput.innerHTML = html;
+        });
+        
+        document.getElementById('resetDivisibility').addEventListener('click', function() {
+            currentNum = 0;
+            divisibilityOutput.innerHTML = '<p>Click "Check Next Number" to begin the demonstration.</p>';
+        });
+    </script>
+</body>
+</html>

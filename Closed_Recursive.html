@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Explainer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .example {
+            background-color: #f1f8ff;
+            border-left: 4px solid #4285f4;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .formula {
+            background-color: #eaf5ea;
+            border-left: 4px solid #34a853;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100px;
+        }
+        
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #3367d6;
+        }
+        
+        .sequence-display {
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .highlight {
+            color: #ea4335;
+            font-weight: bold;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f0fe;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sequence Explainer</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab(0)">Arithmetic Sequences</div>
+        <div class="tab" onclick="switchTab(1)">Geometric Sequences</div>
+    </div>
+    
+    <div class="tab-content active" id="arithmetic">
+        <div class="container">
+            <h2>Arithmetic Sequences</h2>
+            <p>An arithmetic sequence is a sequence of numbers where each term differs from the previous one by a constant value, called the <strong>common difference (d)</strong>.</p>
+            
+            <div class="formula">
+                <h3>Formulas:</h3>
+                <p>• Recursive: a<sub>n</sub> = a<sub>n-1</sub> + d, where a<sub>1</sub> = first term</p>
+                <p>• Closed Form: a<sub>n</sub> = a<sub>1</sub> + d(n-1)</p>
+            </div>
+            
+            <div class="example">
+                <h3>Example:</h3>
+                <p>For the sequence: 5, 9, 13, 17, 21, ...</p>
+                <p>• First term (a<sub>1</sub>) = 5</p>
+                <p>• Common difference (d) = 4</p>
+                <p>• Closed formula: a<sub>n</sub> = 5 + 4(n-1)</p>
+            </div>
+            
+            <h3>Try it yourself:</h3>
+            <div class="input-group">
+                <label for="arith-first">First term (a<sub>1</sub>):</label>
+                <input type="number" id="arith-first" value="5">
+            </div>
+            
+            <div class="input-group">
+                <label for="arith-diff">Common difference (d):</label>
+                <input type="number" id="arith-diff" value="4">
+            </div>
+            
+            <div class="input-group">
+                <label for="arith-terms">Number of terms to display:</label>
+                <input type="number" id="arith-terms" value="10" min="2" max="20">
+            </div>
+            
+            <button onclick="generateArithmeticSequence()">Generate Sequence</button>
+            
+            <div class="sequence-display" id="arith-sequence"></div>
+            
+            <h3>Check if a number is in the sequence:</h3>
+            <div class="input-group">
+                <label for="arith-check">Number to check:</label>
+                <input type="number" id="arith-check" value="2013">
+            </div>
+            
+            <button onclick="checkArithmeticNumber()">Check</button>
+            
+            <div class="result" id="arith-result"></div>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="geometric">
+        <div class="container">
+            <h2>Geometric Sequences</h2>
+            <p>A geometric sequence is a sequence of numbers where each term is obtained by multiplying the previous term by a constant value, called the <strong>common ratio (r)</strong>.</p>
+            
+            <div class="formula">
+                <h3>Formulas:</h3>
+                <p>• Recursive: a<sub>n</sub> = a<sub>n-1</sub> × r, where a<sub>1</sub> = first term</p>
+                <p>• Closed Form: a<sub>n</sub> = a<sub>1</sub> × r<sup>n-1</sup></p>
+            </div>
+            
+            <div class="example">
+                <h3>Example:</h3>
+                <p>For the sequence: 5, 10, 20, 40, 80, ...</p>
+                <p>• First term (a<sub>1</sub>) = 5</p>
+                <p>• Common ratio (r) = 2</p>
+                <p>• Closed formula: a<sub>n</sub> = 5 × 2<sup>n-1</sup></p>
+            </div>
+            
+            <h3>Try it yourself:</h3>
+            <div class="input-group">
+                <label for="geo-first">First term (a<sub>1</sub>):</label>
+                <input type="number" id="geo-first" value="5">
+            </div>
+            
+            <div class="input-group">
+                <label for="geo-ratio">Common ratio (r):</label>
+                <input type="number" id="geo-ratio" value="2" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="geo-terms">Number of terms to display:</label>
+                <input type="number" id="geo-terms" value="10" min="2" max="20">
+            </div>
+            
+            <button onclick="generateGeometricSequence()">Generate Sequence</button>
+            
+            <div class="sequence-display" id="geo-sequence"></div>
+            
+            <h3>Find missing terms in a geometric sequence:</h3>
+            <p>Given first term, fourth term, and assuming it's a geometric sequence:</p>
+            <div class="input-group">
+                <label for="geo-first-term">First term:</label>
+                <input type="number" id="geo-first-term" value="5">
+            </div>
+            
+            <div class="input-group">
+                <label for="geo-fourth-term">Fourth term:</label>
+                <input type="number" id="geo-fourth-term" value="40">
+            </div>
+            
+            <button onclick="findMissingGeometricTerms()">Find Missing Terms</button>
+            
+            <div class="result" id="geo-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Switch between tabs
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                    tabContents[i].classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                    tabContents[i].classList.remove('active');
+                }
+            });
+        }
+        
+        // Generate arithmetic sequence
+        function generateArithmeticSequence() {
+            const firstTerm = parseFloat(document.getElementById('arith-first').value);
+            const commonDiff = parseFloat(document.getElementById('arith-diff').value);
+            const numTerms = parseInt(document.getElementById('arith-terms').value);
+            
+            let sequence = [];
+            for (let i = 1; i <= numTerms; i++) {
+                const term = firstTerm + (i - 1) * commonDiff;
+                sequence.push(term);
+            }
+            
+            document.getElementById('arith-sequence').textContent = sequence.join(', ');
+            
+            // Show closed formula
+            const formulaHtml = `<strong>Closed formula:</strong> a<sub>n</sub> = ${firstTerm} + ${commonDiff}(n-1)`;
+            document.getElementById('arith-sequence').innerHTML += `<br><br>${formulaHtml}`;
+        }
+        
+        // Check if a number is in the arithmetic sequence
+        function checkArithmeticNumber() {
+            const firstTerm = parseFloat(document.getElementById('arith-first').value);
+            const commonDiff = parseFloat(document.getElementById('arith-diff').value);
+            const numberToCheck = parseFloat(document.getElementById('arith-check').value);
+            
+            // Check if it's in the sequence
+            const diff = numberToCheck - firstTerm;
+            
+            if (diff % commonDiff === 0 && diff / commonDiff >= 0) {
+                const position = diff / commonDiff + 1;
+                const resultElement = document.getElementById('arith-result');
+                resultElement.innerHTML = `<strong>${numberToCheck}</strong> is a term in the sequence!<br>It is the <strong>${position}${getOrdinal(position)}</strong> term.`;
+                resultElement.style.display = 'block';
+            } else {
+                const resultElement = document.getElementById('arith-result');
+                resultElement.innerHTML = `<strong>${numberToCheck}</strong> is not a term in this arithmetic sequence.`;
+                resultElement.style.display = 'block';
+            }
+        }
+        
+        // Generate geometric sequence
+        function generateGeometricSequence() {
+            const firstTerm = parseFloat(document.getElementById('geo-first').value);
+            const commonRatio = parseFloat(document.getElementById('geo-ratio').value);
+            const numTerms = parseInt(document.getElementById('geo-terms').value);
+            
+            let sequence = [];
+            for (let i = 1; i <= numTerms; i++) {
+                const term = firstTerm * Math.pow(commonRatio, i - 1);
+                sequence.push(term.toFixed(2));
+            }
+            
+            document.getElementById('geo-sequence').textContent = sequence.join(', ');
+            
+            // Show closed formula
+            const formulaHtml = `<strong>Closed formula:</strong> a<sub>n</sub> = ${firstTerm} × ${commonRatio}<sup>n-1</sup>`;
+            document.getElementById('geo-sequence').innerHTML += `<br><br>${formulaHtml}`;
+        }
+        
+        // Find missing terms in a geometric sequence
+        function findMissingGeometricTerms() {
+            const firstTerm = parseFloat(document.getElementById('geo-first-term').value);
+            const fourthTerm = parseFloat(document.getElementById('geo-fourth-term').value);
+            
+            // Calculate the common ratio
+            const r = Math.pow(fourthTerm / firstTerm, 1/3);
+            
+            // Calculate the missing terms
+            const secondTerm = firstTerm * r;
+            const thirdTerm = secondTerm * r;
+            
+            const resultElement = document.getElementById('geo-result');
+            resultElement.innerHTML = `
+                <strong>Results:</strong><br>
+                Common ratio (r) = ${r.toFixed(4)}<br>
+                Second term = ${secondTerm.toFixed(4)}<br>
+                Third term = ${thirdTerm.toFixed(4)}<br>
+                Complete sequence: ${firstTerm}, ${secondTerm.toFixed(4)}, ${thirdTerm.toFixed(4)}, ${fourthTerm}
+            `;
+            resultElement.style.display = 'block';
+        }
+        
+        // Helper function to get ordinal suffix
+        function getOrdinal(n) {
+            const s = ["th", "st", "nd", "rd"];
+            const v = n % 100;
+            return (s[(v - 20) % 10] || s[v] || s[0]);
+        }
+        
+        // Initialize with default sequences
+        document.addEventListener('DOMContentLoaded', function() {
+            generateArithmeticSequence();
+            generateGeometricSequence();
+        });
+    </script>
+</body>
+</html>
