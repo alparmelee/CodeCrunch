@@ -156,7 +156,7 @@
     
     <script>
         // Definitions data structure
-const definitions = [
+        const definitions = [
     // WAN Basics
     {
         term: "WAN (Wide Area Network) 🌍",
@@ -334,8 +334,136 @@ const definitions = [
     },
     {
         term: "SONET (Synchronous Optical Network) 💡",
-        definition: "A high-bandwidth WAN signaling technique with strengths in interoperability, fast data transfer, simple link management
-
+        definition: "A high-bandwidth WAN signaling technique with strengths in interoperability, fast data transfer, simple link management, and fault tolerance.",
+        category: "layer1"
+    },
+    {
+        term: "SDH (Synchronous Digital Hierarchy) 🌐",
+        definition: "The international name for SONET, used outside North America.",
+        category: "layer1"
+    },
+    {
+        term: "OC (Optical Carrier) Level 🔝",
+        definition: "Indicates the data rate of a SONET connection.",
+        category: "layer1"
+    },
+    
+    // Layer 2 Technologies
+    {
+        term: "Frame Relay ⚡",
+        definition: "A group of Layer 2 protocols originally designed as a fast packet-switched network over ISDN, now used as the Data Link protocol for various circuit interfaces and media.",
+        category: "layer2"
+    },
+    {
+        term: "DLCI (Data-Link Connection Identifier) 🔑",
+        definition: "An identifier routers read to determine which circuit to use for the frame in Frame Relay networks.",
+        category: "layer2"
+    },
+    {
+        term: "ATM (Asynchronous Transfer Mode) 📦",
+        definition: "A Data Link layer technology with fixed packet size (cells) of 48 data bytes plus 5-byte header, using asynchronous communications method.",
+        category: "layer2"
+    },
+    {
+        term: "QoS (Quality of Service) ⭐",
+        definition: "A guarantee of network performance, important for time-sensitive applications in ATM networks.",
+        category: "layer2"
+    },
+    {
+        term: "MPLS (Multiprotocol Label Switching) 🔄",
+        definition: "A technology enabling multiple types of Layer 3 protocols to travel over any of several connection-oriented Layer 2 protocols.",
+        category: "layer2"
+    },
+    
+    // Wireless WANs
+    {
+        term: "Cellular Technology 📱",
+        definition: "Initially designed for analog phone service, now delivering data and voice over generations from 1G to 5G with increasing data rates.",
+        category: "wireless"
+    },
+    {
+        term: "GSM (Global System for Mobile Communications) 📞",
+        definition: "One of two competing voice technologies used in cellular networks.",
+        category: "wireless"
+    },
+    {
+        term: "CDMA (Code Division Multiple Access) 📱",
+        definition: "One of two competing voice technologies used in cellular networks.",
+        category: "wireless"
+    },
+    {
+        term: "MSC (Mobile Switching Center) 🏢",
+        definition: "Also called an MTSO, connects to base stations by wireless links or fiber-optic cabling in cellular networks.",
+        category: "wireless"
+    },
+    {
+        term: "HSPA+ (High Speed Packet Access Plus) 🚀",
+        definition: "A 3G technology used in cellular networks.",
+        category: "wireless"
+    },
+    {
+        term: "LTE (Long-Term Evolution) ⚡",
+        definition: "A 4G technology used in cellular networks.",
+        category: "wireless"
+    },
+    {
+        term: "Satellite 🛰️",
+        definition: "Used for transmitting consumer voice, video, music, and data across long distances using orbiting satellites.",
+        category: "wireless"
+    },
+    {
+        term: "Geosynchronous Earth Orbit (GEO) 🌍",
+        definition: "Satellite orbit where satellites orbit at the same rate the Earth turns, most popular for communications.",
+        category: "wireless"
+    },
+    {
+        term: "Transponder 📡",
+        definition: "Device on a satellite that transmits signal to an Earth-based transmitter, with unique downlink frequencies.",
+        category: "wireless"
+    },
+    
+    // Equipment
+    {
+        term: "NIU (Network Interface Unit) 🔌",
+        definition: "The termination point at the customer's demarcation point for PSTN connections.",
+        category: "equipment"
+    },
+    {
+        term: "Smart Jack 💡",
+        definition: "A more intelligent version of an NIU that can provide diagnostic information and terminates a T-carrier line at the customer's demark.",
+        category: "equipment"
+    },
+    {
+        term: "Line Driver 🏎️",
+        definition: "A device commonly found at or near the demark that strengthens signals over long distances.",
+        category: "equipment"
+    },
+    {
+        term: "CSU/DSU (Channel Service Unit/Data Service Unit) 🔌",
+        definition: "Serves as the DTE or endpoint device for a leased line, with CSU providing termination for the digital signal and DSU converting frames between T-carrier and LAN formats.",
+        category: "equipment"
+    },
+    {
+        term: "Multiplexer 🧳",
+        definition: "Combines multiple signals from a LAN for transport over the T-carrier line and separates incoming combined channels into individual signals.",
+        category: "equipment"
+    },
+    {
+        term: "Cable Modem 📶",
+        definition: "Modulates and demodulates transmission and reception signals via cable wiring, operating at Physical and Data Link layers.",
+        category: "equipment"
+    },
+    {
+        term: "DSL Modem 🌐",
+        definition: "Device that forwards modulated signal to local loop in DSL connections, may be internal or external.",
+        category: "equipment"
+    },
+    {
+        term: "Splitter 🔌",
+        definition: "Separates incoming voice and data signals in DSL connections or at carrier's remote switching facility.",
+        category: "equipment"
+    }
+];
 
         
         // Function to render the definitions grid
@@ -416,4 +544,5 @@ const definitions = [
     </script>
 </body>
 </html>
+
 
