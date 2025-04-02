@@ -1,491 +1,342 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OSI Model Interactive Diagram</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #f0f4f8;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-    }
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 30px;
-    }
-    .container {
-      display: flex;
-      width: 100%;
-      max-width: 1000px;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-    .osi-stack {
-      width: 300px;
-      flex-shrink: 0;
-    }
-    .layer {
-      padding: 15px;
-      margin-bottom: 2px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .layer:hover {
-      transform: translateX(5px);
-    }
-    .layer.active {
-      transform: translateX(15px);
-      font-weight: bold;
-    }
-    .layer-num {
-      font-weight: bold;
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.5);
-    }
-    .info-panel {
-      flex: 1;
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      min-width: 300px;
-      overflow: auto;
-    }
-    .info-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
-    }
-    .info-content {
-      margin-bottom: 20px;
-    }
-    .data-unit {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 20px;
-      border-left: 4px solid #4CAF50;
-    }
-    .visual-container {
-      display: flex;
-      flex-direction: column;
-      margin-top: 20px;
-      width: 100%;
-    }
-    .visual-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #2c3e50;
-    }
-    .data-visualization {
-      height: 120px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background: #f0f4f8;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .protocol-examples {
-      margin-top: 15px;
-      background: #e6f7ff;
-      padding: 10px 15px;
-      border-radius: 4px;
-    }
-    .protocol-examples ul {
-      margin: 5px 0;
-      padding-left: 20px;
-    }
-    
-    /* Colors for each layer */
-    .layer-7 { background-color: #FF9AA2; }
-    .layer-6 { background-color: #FFB7B2; }
-    .layer-5 { background-color: #FFDAC1; }
-    .layer-4 { background-color: #E2F0CB; }
-    .layer-3 { background-color: #B5EAD7; }
-    .layer-2 { background-color: #C7CEEA; }
-    .layer-1 { background-color: #F2D5F8; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Addressing Definitions Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 250px;
+        }
+        .category-selection {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button.active {
+            background-color: #2c3e50;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+        .card p {
+            margin-top: 10px;
+        }
+        .category-label {
+            display: inline-block;
+            font-size: 12px;
+            background-color: #e7f4ff;
+            color: #3498db;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 8px;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-  <h1>OSI Model Interactive Diagram</h1>
-  
-  <div class="container">
-    <div class="osi-stack">
-      <div class="layer layer-7" onclick="selectLayer(7)">
-        <span>Application Layer</span>
-        <span class="layer-num">7</span>
-      </div>
-      <div class="layer layer-6" onclick="selectLayer(6)">
-        <span>Presentation Layer</span>
-        <span class="layer-num">6</span>
-      </div>
-      <div class="layer layer-5" onclick="selectLayer(5)">
-        <span>Session Layer</span>
-        <span class="layer-num">5</span>
-      </div>
-      <div class="layer layer-4" onclick="selectLayer(4)">
-        <span>Transport Layer</span>
-        <span class="layer-num">4</span>
-      </div>
-      <div class="layer layer-3" onclick="selectLayer(3)">
-        <span>Network Layer</span>
-        <span class="layer-num">3</span>
-      </div>
-      <div class="layer layer-2" onclick="selectLayer(2)">
-        <span>Data Link Layer</span>
-        <span class="layer-num">2</span>
-      </div>
-      <div class="layer layer-1" onclick="selectLayer(1)">
-        <span>Physical Layer</span>
-        <span class="layer-num">1</span>
-      </div>
-    </div>
-    
-    <div class="info-panel" id="info-panel">
-      <div class="info-header">
-        <h2 id="layer-title">Select a Layer</h2>
-        <span id="data-unit-label"></span>
-      </div>
-      <div class="info-content" id="layer-description">
-        Click on any layer to see details about its function, data units, and protocols.
-      </div>
-      <div class="data-unit" id="data-unit-info" style="display: none;">
-        <h3>Data Unit: <span id="data-unit-name"></span></h3>
-        <p id="data-unit-description"></p>
-      </div>
-      <div class="protocol-examples" id="protocol-examples" style="display: none;">
-        <h3>Common Protocols:</h3>
-        <ul id="protocols-list"></ul>
-      </div>
-      <div class="visual-container">
-        <div class="visual-title">Data Encapsulation</div>
-        <div class="data-visualization" id="data-visualization">
-          <svg width="100%" height="100%" id="data-svg"></svg>
+    <div class="container">
+        <header>
+            <h1>Network Addressing Definitions</h1>
+            <p>From "Addressing on Networks" (Chapter 3)</p>
+        </header>
+        
+        <div class="controls">
+            <input type="text" id="search" placeholder="Search definitions...">
+            <div class="category-selection">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="mac">MAC Addressing</button>
+                <button class="category-btn" data-category="ipv4">IPv4 Addressing</button>
+                <button class="category-btn" data-category="ipv6">IPv6 Addressing</button>
+                <button class="category-btn" data-category="ports">Ports & Sockets</button>
+                <button class="category-btn" data-category="dns">DNS & Domain Names</button>
+            </div>
         </div>
-      </div>
+        
+        <div class="grid" id="definitions-grid">
+            <!-- Cards will be inserted here by JavaScript -->
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Layer information
-    const layerInfo = {
-      1: {
-        title: "Physical Layer (Layer 1)",
-        description: "The Physical Layer is responsible for the transmission and reception of raw bitstreams over a physical medium. It defines the electrical, mechanical, procedural, and functional specifications for activating, maintaining, and deactivating the physical link between communicating networks.",
-        dataUnit: {
-          name: "Bits",
-          description: "Raw streams of 1s and 0s are transmitted over the physical medium."
-        },
-        protocols: [
-          "Ethernet physical layer",
-          "USB",
-          "Bluetooth",
-          "DSL",
-          "IEEE 802.11 (Wi-Fi physical layer)"
-        ]
-      },
-      2: {
-        title: "Data Link Layer (Layer 2)",
-        description: "The Data Link Layer provides node-to-node data transfer—a link between two directly connected nodes. It detects and possibly corrects errors that may occur in the Physical layer. It defines the protocol to establish and terminate a connection between two physically connected devices.",
-        dataUnit: {
-          name: "Frames",
-          description: "Data is packaged into frames with headers containing physical addresses (MAC) and trailers with error checking information."
-        },
-        protocols: [
-          "Ethernet (IEEE 802.3)",
-          "Wi-Fi (IEEE 802.11)",
-          "Point-to-Point Protocol (PPP)",
-          "HDLC",
-          "ATM"
-        ]
-      },
-      3: {
-        title: "Network Layer (Layer 3)",
-        description: "The Network Layer provides the functional and procedural means of transferring variable length data sequences from a source host on one network to a destination host on a different network, while maintaining the quality of service. It performs network routing functions and might also perform fragmentation and reassembly.",
-        dataUnit: {
-          name: "Packets",
-          description: "Data is organized into packets containing logical addressing (IP) information for routing between different networks."
-        },
-        protocols: [
-          "IP (IPv4, IPv6)",
-          "ICMP",
-          "IGMP",
-          "IPsec",
-          "OSPF"
-        ]
-      },
-      4: {
-        title: "Transport Layer (Layer 4)",
-        description: "The Transport Layer provides end-to-end communication services for applications. It establishes process-to-process communications and provides reliable or unreliable data transfer, flow control, segmentation, and error control.",
-        dataUnit: {
-          name: "Segments",
-          description: "Data is divided into segments with port numbers identifying the sending and receiving applications."
-        },
-        protocols: [
-          "TCP",
-          "UDP",
-          "SCTP",
-          "DCCP",
-          "TLS/SSL"
-        ]
-      },
-      5: {
-        title: "Session Layer (Layer 5)",
-        description: "The Session Layer controls the dialogues (connections) between computers. It establishes, manages, and terminates connections between local and remote applications. It provides for full-duplex, half-duplex, or simplex operation, and establishes checkpointing, adjournment, termination, and restart procedures.",
-        dataUnit: {
-          name: "Data",
-          description: "Data at this layer maintains session information and may include checkpoints for recovery."
-        },
-        protocols: [
-          "NetBIOS",
-          "RPC",
-          "SOCKS",
-          "SQL",
-          "SSH"
-        ]
-      },
-      6: {
-        title: "Presentation Layer (Layer 6)",
-        description: "The Presentation Layer establishes a context between Application Layer entities. It transforms data into the form that the application accepts. This layer formats and encrypts data to be sent across a network, providing freedom from compatibility problems.",
-        dataUnit: {
-          name: "Data",
-          description: "Data is formatted, possibly encrypted, compressed, or otherwise transformed for presentation to the Application Layer."
-        },
-        protocols: [
-          "MIME",
-          "XDR",
-          "TLS/SSL",
-          "ASCII/EBCDIC conversion",
-          "JPEG, GIF, PNG (encoding formats)"
-        ]
-      },
-      7: {
-        title: "Application Layer (Layer 7)",
-        description: "The Application Layer is the OSI layer closest to the end user, which means both the OSI application layer and the user interact directly with the software application. This layer interacts with software applications that implement a communicating component.",
-        dataUnit: {
-          name: "Data",
-          description: "Raw user data in the form the application understands."
-        },
-        protocols: [
-          "HTTP/HTTPS",
-          "FTP",
-          "SMTP",
-          "DNS",
-          "DHCP",
-          "SSH",
-          "Telnet"
-        ]
-      }
-    };
+    <script>
+        const definitions = [
+            // MAC Addressing
+            {
+                term: "MAC Address",
+                definition: "A 48-bit address organized as six hex numbers separated by colons. Also called a physical address, it identifies network interfaces at the Data Link layer.",
+                category: "mac",
+                emoji: "💻"
+            },
+            {
+                term: "OUI",
+                definition: "Organizationally Unique Identifier. The first 24 bits of a MAC address that identify the manufacturer. Assigned by the IEEE.",
+                category: "mac",
+                emoji: "🏭"
+            },
+            {
+                term: "Device ID",
+                definition: "The last 24 bits of a MAC address that make up the extension identifier. Assigned by manufacturers to ensure each NIC has a unique ID.",
+                category: "mac",
+                emoji: "🔢"
+            },
+            
+            // IPv4 Addressing
+            {
+                term: "IPv4 Address",
+                definition: "A 32-bit address organized into four groups of 8 bits each (octets). Each octet can be any number from 0 to 255.",
+                category: "ipv4",
+                emoji: "🌐"
+            },
+            {
+                term: "Static IP Address",
+                definition: "An IP address assigned manually by the network administrator.",
+                category: "ipv4",
+                emoji: "📌"
+            },
+            {
+                term: "Dynamic IP Address",
+                definition: "An IP address automatically assigned by a DHCP (Dynamic Host Configuration Protocol) server.",
+                category: "ipv4",
+                emoji: "🔄"
+            },
+            {
+                term: "Subnet Mask",
+                definition: "Used to indicate what portion of an IP address is the network portion (network ID) and what part is the host portion (host ID).",
+                category: "ipv4",
+                emoji: "🔍"
+            },
+            {
+                term: "Gateway",
+                definition: "Device that nodes use for access to the outside world or other networks.",
+                category: "ipv4",
+                emoji: "🚪"
+            },
+            {
+                term: "NAT",
+                definition: "Network Address Translation. A technique designed to conserve public IP addresses by substituting private IP addresses with a public address when accessing external networks.",
+                category: "ipv4",
+                emoji: "🔄"
+            },
+            
+            // IPv6 Addressing
+            {
+                term: "IPv6 Address",
+                definition: "A 128-bit address written as eight blocks of hexadecimal numbers separated by colons. Example: 2001:0000:0B80:0000:0000:00D3:9C5A:00CC",
+                category: "ipv6",
+                emoji: "🔢"
+            },
+            {
+                term: "Link Local Address",
+                definition: "An IPv6 address beginning with FE80 that can be used for communicating with nodes in the same link.",
+                category: "ipv6",
+                emoji: "🔗"
+            },
+            {
+                term: "Global Unicast Address",
+                definition: "An IPv6 address that can be routed on the Internet. Begins with 2000::/3.",
+                category: "ipv6",
+                emoji: "🌍"
+            },
+            
+            // Ports & Sockets
+            {
+                term: "Port Number",
+                definition: "Ensures data is transmitted to the correct process among multiple processes running on a computer.",
+                category: "ports",
+                emoji: "🚢"
+            },
+            {
+                term: "Socket",
+                definition: "Consists of a host's IP address and the port number of an application running on the host, separated by a colon (e.g., 10.43.3.87:23).",
+                category: "ports",
+                emoji: "🔌"
+            },
+            {
+                term: "Well-Known Ports",
+                definition: "Port numbers from 0 to 1023 reserved for common services and applications.",
+                category: "ports",
+                emoji: "🔰"
+            },
+            
+            // DNS & Domain Names
+            {
+                term: "DNS",
+                definition: "Domain Name System. An Application layer client-server system of computers and databases that translates domain names to IP addresses.",
+                category: "dns",
+                emoji: "📖"
+            },
+            {
+                term: "FQDN",
+                definition: "Fully Qualified Domain Name. A unique character-based name that identifies a host on a network.",
+                category: "dns",
+                emoji: "📝"
+            },
+            {
+                term: "Name Resolution",
+                definition: "The process of discovering the IP address of a host when you know its FQDN.",
+                category: "dns",
+                emoji: "🔎"
+            },
+            {
+                term: "Primary DNS Server",
+                definition: "The authoritative name server for an organization that holds the authoritative DNS database for the organization's zones.",
+                category: "dns",
+                emoji: "🥇"
+            }
+        ];
 
-    // SVG visualization settings
-    const colors = {
-      1: "#F2D5F8", // Physical
-      2: "#C7CEEA", // Data Link
-      3: "#B5EAD7", // Network
-      4: "#E2F0CB", // Transport
-      5: "#FFDAC1", // Session
-      6: "#FFB7B2", // Presentation
-      7: "#FF9AA2"  // Application
-    };
+        function createCard(def) {
+            return `
+                <div class="card" data-category="${def.category}">
+                    <span class="category-label">${getCategoryName(def.category)}</span>
+                    <h3><span class="emoji">${def.emoji}</span>${def.term}</h3>
+                    <p>${def.definition}</p>
+                </div>
+            `;
+        }
 
-    // Initialize SVG
-    const svg = document.getElementById('data-svg');
-    svg.innerHTML = `
-      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="14px">
-        Select a layer to view data encapsulation
-      </text>
-    `;
+        function getCategoryName(category) {
+            const names = {
+                'mac': 'MAC Addressing',
+                'ipv4': 'IPv4 Addressing',
+                'ipv6': 'IPv6 Addressing',
+                'ports': 'Ports & Sockets',
+                'dns': 'DNS & Domain Names'
+            };
+            return names[category] || category;
+        }
 
-    function selectLayer(layerNum) {
-      // Remove active class from all layers
-      document.querySelectorAll('.layer').forEach(layer => {
-        layer.classList.remove('active');
-      });
-      
-      // Add active class to selected layer
-      document.querySelector(`.layer-${layerNum}`).classList.add('active');
-      
-      // Update info panel
-      const info = layerInfo[layerNum];
-      document.getElementById('layer-title').textContent = info.title;
-      document.getElementById('layer-description').textContent = info.description;
-      
-      // Update data unit info
-      const dataUnitInfo = document.getElementById('data-unit-info');
-      dataUnitInfo.style.display = 'block';
-      document.getElementById('data-unit-name').textContent = info.dataUnit.name;
-      document.getElementById('data-unit-description').textContent = info.dataUnit.description;
-      document.getElementById('data-unit-label').textContent = info.dataUnit.name;
-      
-      // Update protocols
-      const protocolsDiv = document.getElementById('protocol-examples');
-      protocolsDiv.style.display = 'block';
-      const protocolsList = document.getElementById('protocols-list');
-      protocolsList.innerHTML = '';
-      info.protocols.forEach(protocol => {
-        const li = document.createElement('li');
-        li.textContent = protocol;
-        protocolsList.appendChild(li);
-      });
-      
-      // Update visualization
-      updateVisualization(layerNum);
-    }
+        function renderCards(filteredDefs = null) {
+            const grid = document.getElementById('definitions-grid');
+            const defsToRender = filteredDefs || definitions;
+            
+            if (defsToRender.length === 0) {
+                grid.innerHTML = '<div class="no-results">No definitions found matching your search.</div>';
+                return;
+            }
+            
+            grid.innerHTML = defsToRender.map(createCard).join('');
+        }
 
-    function updateVisualization(layerNum) {
-      const svg = document.getElementById('data-svg');
-      svg.innerHTML = '';
-      
-      const width = svg.clientWidth;
-      const height = svg.clientHeight;
-      const padding = 20;
-      const availableWidth = width - (padding * 2);
-      
-      // Draw data encapsulation
-      if (layerNum === 7) {
-        // Just raw data for Application layer
-        drawDataBlock(svg, padding, height/2 - 15, availableWidth, 30, colors[7], "Application Data");
-      } else if (layerNum === 6) {
-        // Presentation adds encoding
-        drawDataBlock(svg, padding + 10, height/2 - 20, availableWidth - 20, 40, colors[6], "Encoded/Encrypted Data");
-        drawDataBlock(svg, padding + 30, height/2 - 15, availableWidth - 60, 30, colors[7], "Application Data");
-      } else if (layerNum === 5) {
-        // Session adds session info
-        drawDataBlock(svg, padding, height/2 - 25, availableWidth, 50, colors[5], "Session Control");
-        drawDataBlock(svg, padding + 20, height/2 - 20, availableWidth - 40, 40, colors[6], "Encoded Data");
-        drawDataBlock(svg, padding + 40, height/2 - 15, availableWidth - 80, 30, colors[7], "Application Data");
-      } else if (layerNum === 4) {
-        // Transport adds segment header
-        drawDataBlock(svg, padding, height/2 - 30, 60, 60, colors[4], "TCP/UDP Header");
-        drawDataBlock(svg, padding + 60, height/2 - 30, availableWidth - 60, 60, colors[5], "Session Data");
-        // Inner layers
-        drawDataBlock(svg, padding + 70, height/2 - 25, availableWidth - 80, 50, colors[6], "Encoded Data");
-        drawDataBlock(svg, padding + 80, height/2 - 20, availableWidth - 100, 40, colors[7], "Application Data");
-      } else if (layerNum === 3) {
-        // Network adds packet header
-        drawDataBlock(svg, padding, height/2 - 35, 60, 70, colors[3], "IP Header");
-        drawDataBlock(svg, padding + 60, height/2 - 35, availableWidth - 60, 70, colors[4], "Segment");
-        // Inner layers
-        drawDataBlock(svg, padding + 70, height/2 - 30, 60, 60, colors[4], "TCP/UDP");
-        drawDataBlock(svg, padding + 130, height/2 - 30, availableWidth - 140, 60, colors[5], "Session Data");
-        drawDataBlock(svg, padding + 140, height/2 - 25, availableWidth - 160, 50, colors[6], "Encoded Data");
-        drawDataBlock(svg, padding + 150, height/2 - 20, availableWidth - 180, 40, colors[7], "App Data");
-      } else if (layerNum === 2) {
-        // Data Link adds frame header and trailer
-        drawDataBlock(svg, padding, height/2 - 40, 60, 80, colors[2], "MAC Header");
-        drawDataBlock(svg, padding + 60, height/2 - 40, availableWidth - 120, 80, colors[3], "Packet");
-        drawDataBlock(svg, padding + availableWidth - 60, height/2 - 40, 60, 80, colors[2], "FCS");
-        // Show packet contents as smaller blocks inside
-        drawDataBlock(svg, padding + 70, height/2 - 35, 50, 70, colors[3], "IP");
-        drawDataBlock(svg, padding + 120, height/2 - 35, availableWidth - 190, 70, colors[4], "Segment");
-      } else if (layerNum === 1) {
-        // Physical layer just shows bits
-        drawBitstream(svg, padding, height/2 - 10, availableWidth, 20);
-      }
-    }
+        renderCards();
 
-    function drawDataBlock(svg, x, y, width, height, color, label) {
-      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      rect.setAttribute("x", x);
-      rect.setAttribute("y", y);
-      rect.setAttribute("width", width);
-      rect.setAttribute("height", height);
-      rect.setAttribute("fill", color);
-      rect.setAttribute("stroke", "#333");
-      rect.setAttribute("stroke-width", "1");
-      rect.setAttribute("rx", "3");
-      svg.appendChild(rect);
-      
-      if (width > 40) {
-        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        text.setAttribute("x", x + width/2);
-        text.setAttribute("y", y + height/2);
-        text.setAttribute("text-anchor", "middle");
-        text.setAttribute("dominant-baseline", "middle");
-        text.setAttribute("font-size", Math.min(10, width/8) + "px");
-        text.setAttribute("font-weight", "bold");
-        text.setAttribute("fill", "#333");
-        text.textContent = label || "";
-        svg.appendChild(text);
-      }
-    }
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                const searchText = document.getElementById('search').value.toLowerCase();
+                
+                let filtered;
+                if (category === 'all') {
+                    filtered = definitions.filter(def => 
+                        def.term.toLowerCase().includes(searchText) || 
+                        def.definition.toLowerCase().includes(searchText)
+                    );
+                } else {
+                    filtered = definitions.filter(def => 
+                        def.category === category && 
+                        (def.term.toLowerCase().includes(searchText) || 
+                         def.definition.toLowerCase().includes(searchText))
+                    );
+                }
+                
+                renderCards(filtered);
+            });
+        });
 
-    function drawBitstream(svg, x, y, width, height) {
-      // Create bit background
-      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      rect.setAttribute("x", x);
-      rect.setAttribute("y", y);
-      rect.setAttribute("width", width);
-      rect.setAttribute("height", height);
-      rect.setAttribute("fill", colors[1]);
-      rect.setAttribute("stroke", "#333");
-      rect.setAttribute("stroke-width", "1");
-      svg.appendChild(rect);
-      
-      // Create binary pattern
-      const binaryText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      binaryText.setAttribute("x", x + 10);
-      binaryText.setAttribute("y", y + height/2);
-      binaryText.setAttribute("dominant-baseline", "middle");
-      binaryText.setAttribute("font-family", "monospace");
-      binaryText.setAttribute("font-size", "12px");
-      binaryText.setAttribute("fill", "#333");
-      
-      // Generate random binary sequence
-      const binarySequence = generateBinarySequence(Math.floor(width / 10));
-      binaryText.textContent = binarySequence;
-      svg.appendChild(binaryText);
-      
-      // Add label
-      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      label.setAttribute("x", x + width/2);
-      label.setAttribute("y", y - 10);
-      label.setAttribute("text-anchor", "middle");
-      label.setAttribute("font-size", "10px");
-      label.setAttribute("fill", "#666");
-      label.textContent = "Physical Bitstream";
-      svg.appendChild(label);
-    }
-
-    function generateBinarySequence(length) {
-      let sequence = "";
-      for (let i = 0; i < length; i++) {
-        sequence += Math.round(Math.random()) ? "1" : "0";
-        if (i % 8 === 7 && i < length - 1) sequence += " ";
-      }
-      return sequence;
-    }
-
-    // Select Layer 7 by default
-    window.onload = function() {
-      selectLayer(7);
-    };
-  </script>
+        document.getElementById('search').addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            let filtered;
+            if (activeCategory === 'all') {
+                filtered = definitions.filter(def => 
+                    def.term.toLowerCase().includes(searchText) || 
+                    def.definition.toLowerCase().includes(searchText)
+                );
+            } else {
+                filtered = definitions.filter(def => 
+                    def.category === activeCategory && 
+                    (def.term.toLowerCase().includes(searchText) || 
+                     def.definition.toLowerCase().includes(searchText))
+                );
+            }
+            
+            renderCards(filtered);
+        });
+    </script>
 </body>
 </html>
