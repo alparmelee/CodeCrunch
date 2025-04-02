@@ -156,394 +156,175 @@
     
     <script>
         // Definitions data structure
-        const definitions = [
-            // Virtualization Basics
-            {
-                term: "Virtualization",
-                definition: "🖥️ A virtual, or logical, version of something rather than the actual, or physical, version.",
-                category: "virtualization-basics"
-            },
-            {
-                term: "Host",
-                definition: "🏠 Physical computer 'hosting' a virtual machine.",
-                category: "virtualization-basics"
-            },
-            {
-                term: "Guest",
-                definition: "👤 Each virtual machine running on a host system.",
-                category: "virtualization-basics"
-            },
-            {
-                term: "Hypervisor",
-                definition: "🔄 Software that creates and manages VMs and manages resource allocation and sharing between a host and any of its guest VMs.",
-                category: "virtualization-basics"
-            },
-            {
-                term: "Type 1 Hypervisor",
-                definition: "💻 Installs on a computer before any OS and is called a bare-metal hypervisor.",
-                category: "virtualization-basics"
-            },
-            {
-                term: "Type 2 Hypervisor",
-                definition: "🖱️ Installs in a host OS as an application and is called a hosted hypervisor.",
-                category: "virtualization-basics"
-            },
-            {
-                term: "vNIC (Virtual NIC)",
-                definition: "🔌 Network interface card for a virtual machine that connects the VM to other machines and operates at the Data Link layer.",
-                category: "virtualization-basics"
-            },
-            
-            // Network Virtualization
-            {
-                term: "Virtual Switch (vSwitch)",
-                definition: "🔀 Connection between a VM and the host that might be called a bridge or switch, controlled by the hypervisor.",
-                category: "network-virtualization"
-            },
-            {
-                term: "Bridged Mode",
-                definition: "🌉 Network mode where vNIC accesses physical network using host machine's NIC, obtaining its own IP address from the physical LAN.",
-                category: "network-virtualization"
-            },
-            {
-                term: "NAT Mode",
-                definition: "🔄 Network mode where vNIC relies on host machine to act as NAT device, obtaining IP addressing information from host.",
-                category: "network-virtualization"
-            },
-            {
-                term: "Host-Only Mode",
-                definition: "🔒 Network mode where VMs on one host can exchange data with each other and the host but cannot communicate with nodes beyond the host.",
-                category: "network-virtualization"
-            },
-            {
-                term: "NFV (Network Functions Virtualization)",
-                definition: "🌐 Merging physical and virtual network architectures to provide flexible, cost-saving options for many types of network devices.",
-                category: "network-virtualization"
-            },
-            {
-                term: "Virtual Firewall",
-                definition: "🔥 A firewall's OS installed in a VM on an inexpensive server instead of purchasing dedicated hardware.",
-                category: "network-virtualization"
-            },
-            {
-                term: "Virtual Router",
-                definition: "📶 A router VM installed on a server instead of purchasing expensive hardware router.",
-                category: "network-virtualization"
-            },
-            {
-                term: "SDN (Software-Defined Networking)",
-                definition: "🧠 Virtualization of network services where an SDN controller manages services instead of services being directly managed by hardware devices.",
-                category: "network-virtualization"
-            },
-            {
-                term: "Control Plane",
-                definition: "🎮 The protocols that handle the process of making decisions in SDN.",
-                category: "network-virtualization"
-            },
-            {
-                term: "Data Plane",
-                definition: "📦 The physical devices that make actual contact with data transmissions as they traverse the network in SDN.",
-                category: "network-virtualization"
-            },
-            
-            // Cloud Computing
-            {
-                term: "Cloud Computing",
-                definition: "☁️ Flexible provision of data storage, applications, and services to multiple clients over a network.",
-                category: "cloud-computing"
-            },
-            {
-                term: "On-Demand Service",
-                definition: "⚡ Feature of cloud computing allowing users to access resources whenever needed without human interaction with the service provider.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Resource Pooling",
-                definition: "🔄 Feature of cloud computing where provider's resources are pooled to serve multiple consumers using a multi-tenant model.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Elastic Services",
-                definition: "📏 Feature of cloud computing where storage capacity and services can quickly or automatically be scaled up or down as needed.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Metered Service",
-                definition: "⏱️ Feature of cloud computing where resource usage can be monitored, controlled, and reported providing transparency for both provider and consumer.",
-                category: "cloud-computing"
-            },
-            {
-                term: "IaaS (Infrastructure as a Service)",
-                definition: "🏗️ Cloud service model where hardware services and network infrastructure devices are provided virtually.",
-                category: "cloud-computing"
-            },
-            {
-                term: "PaaS (Platform as a Service)",
-                definition: "⚙️ Cloud service model providing OS, runtime libraries, and hardware on which the OS runs.",
-                category: "cloud-computing"
-            },
-            {
-                term: "SaaS (Software as a Service)",
-                definition: "📱 Cloud service model providing applications to users.",
-                category: "cloud-computing"
-            },
-            {
-                term: "XaaS (Anything as a Service)",
-                definition: "🔄 Broader cloud service model that can provide any combination of functions.",
-                category: "cloud-computing"
-            },
-            {
-                term: "HVD (Hosted Virtual Desktop)",
-                definition: "🖥️ Operating environments hosted virtually in the cloud, allowing users to access their desktop from anywhere.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Public Cloud",
-                definition: "🌐 Cloud deployment model where service is provided over public transmission lines.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Private Cloud",
-                definition: "🏢 Cloud deployment model where service is established on an organization's own servers in its own data center.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Community Cloud",
-                definition: "👥 Cloud deployment model where service is shared between multiple organizations.",
-                category: "cloud-computing"
-            },
-            {
-                term: "Hybrid Cloud",
-                definition: "🔄 Cloud deployment model combining other service models into a single deployment.",
-                category: "cloud-computing"
-            },
-            {
-                term: "BYOC (Bring Your Own Cloud)",
-                definition: "📱 Practice where employees use personal cloud services for work-related tasks, potentially creating security risks.",
-                category: "cloud-computing"
-            },
-            
-            // Encryption
-            {
-                term: "Encryption",
-                definition: "🔐 Use of mathematical code, called a cipher, to scramble data into a format that can be read only by reversing the cipher.",
-                category: "encryption"
-            },
-            {
-                term: "CIA Triad",
-                definition: "🛡️ Standard security model consisting of Confidentiality, Integrity, and Availability principles.",
-                category: "encryption"
-            },
-            {
-                term: "Key",
-                definition: "🔑 Random string of characters woven into original data's bits to generate unique ciphertext.",
-                category: "encryption"
-            },
-            {
-                term: "Ciphertext",
-                definition: "📝 The encrypted data created when plaintext is combined with an encryption key.",
-                category: "encryption"
-            },
-            {
-                term: "Private Key Encryption",
-                definition: "🔒 Encryption using single key known only by sender and receiver.",
-                category: "encryption"
-            },
-            {
-                term: "Symmetric Encryption",
-                definition: "🔄 Encryption where the same key is used during both encryption and decryption.",
-                category: "encryption"
-            },
-            {
-                term: "Public Key Encryption",
-                definition: "🔓 Encryption using two keys - a private key known only to the user and a public key that anyone may request.",
-                category: "encryption"
-            },
-            {
-                term: "Asymmetric Encryption",
-                definition: "↔️ Encryption requiring two different keys for encryption and decryption.",
-                category: "encryption"
-            },
-            {
-                term: "Digital Certificate",
-                definition: "📜 Document that holds identification information and the user's public key.",
-                category: "encryption"
-            },
-            {
-                term: "CA (Certificate Authority)",
-                definition: "🏛️ Entity that issues and maintains digital certificates.",
-                category: "encryption"
-            },
-            {
-                term: "PKI (Public Key Infrastructure)",
-                definition: "🔐 Use of certificate authorities to associate public keys with certain users.",
-                category: "encryption"
-            },
-            {
-                term: "IPsec (Internet Protocol Security)",
-                definition: "🛡️ Encryption protocol suite that defines rules for encryption, authentication, and key management for TCP/IP transmissions.",
-                category: "encryption"
-            },
-            {
-                term: "SSL (Secure Sockets Layer)",
-                definition: "🔒 Method of encrypting TCP/IP transmissions, including Web pages and form data.",
-                category: "encryption"
-            },
-            {
-                term: "TLS (Transport Layer Security)",
-                definition: "🔒 Modern version of SSL for encrypting TCP/IP transmissions between client and server.",
-                category: "encryption"
-            },
-            {
-                term: "DTLS (Datagram Transport Layer Security)",
-                definition: "📊 A variant of TLS designed specifically for streaming communications and delay-sensitive applications.",
-                category: "encryption"
-            },
-            
-            // Remote Access
-            {
-                term: "Remote Access",
-                definition: "🔌 Service allowing a client to connect with and log on to a server, LAN, or WAN in a different geographical location.",
-                category: "remote-access"
-            },
-            {
-                term: "RAS (Remote Access Server)",
-                definition: "🖥️ Dedicated device or software running on a server that provides remote access services.",
-                category: "remote-access"
-            },
-            {
-                term: "Terminal Emulation",
-                definition: "💻 Also called remote virtual computing, allows a user on one computer to control another computer across a network connection.",
-                category: "remote-access"
-            },
-            {
-                term: "PPP (Point-to-Point Protocol)",
-                definition: "🔗 Data Link layer protocol that directly connects two WAN endpoints.",
-                category: "remote-access"
-            },
-            {
-                term: "Telnet",
-                definition: "⌨️ Terminal emulation utility with poor authentication and no encryption.",
-                category: "remote-access"
-            },
-            {
-                term: "SSH (Secure Shell)",
-                definition: "🔐 Collection of protocols providing secure authentication and encryption for remote connections.",
-                category: "remote-access"
-            },
-            {
-                term: "Port Forwarding",
-                definition: "🔄 SSH feature that redirects traffic from an insecure port to a SSH-secured port.",
-                category: "remote-access"
-            },
-            {
-                term: "RDP (Remote Desktop Protocol)",
-                definition: "🖥️ Microsoft proprietary protocol used to connect to and control a remote computer.",
-                category: "remote-access"
-            },
-            {
-                term: "VNC (Virtual Network Computing)",
-                definition: "🖱️ Remote control system using RFB protocol to remotely control a workstation or server.",
-                category: "remote-access"
-            },
-            {
-                term: "RFB (Remote Frame Buffer)",
-                definition: "🖼️ Cross-platform protocol used by VNC to remotely control a workstation.",
-                category: "remote-access"
-            },
-            {
-                term: "Out-of-Band Management",
-                definition: "🔌 Remote management relying on a dedicated connection between the administrator's computer and each network device.",
-                category: "remote-access"
-            },
-            {
-                term: "FTP (File Transfer Protocol)",
-                definition: "📁 Protocol for transferring files between computers on a network.",
-                category: "remote-access"
-            },
-            {
-                term: "FTPS (FTP Security)",
-                definition: "🔒 Secured version of FTP that adds support for TLS and SSL.",
-                category: "remote-access"
-            },
-            {
-                term: "SFTP (Secure FTP)",
-                definition: "🔐 File transfer protocol running over SSH that provides secure file access, transfer, and management.",
-                category: "remote-access"
-            },
-            {
-                term: "TFTP (Trivial FTP)",
-                definition: "📋 Simplified version of FTP that uses UDP instead of TCP and lacks authentication features.",
-                category: "remote-access"
-            },
-            
-            // VPN Technologies
-            {
-                term: "VPN (Virtual Private Network)",
-                definition: "🔐 Network connection encrypted from end to end that creates a private connection to a remote network.",
-                category: "vpn"
-            },
-            {
-                term: "Tunnel",
-                definition: "🚇 Term often used to describe a VPN connection due to its secure encapsulation of data.",
-                category: "vpn"
-            },
-            {
-                term: "Site-to-Site VPN",
-                definition: "🏢 VPN connecting entire networks to each other, typically maintained by network devices like routers.",
-                category: "vpn"
-            },
-            {
-                term: "Client-to-Site VPN",
-                definition: "👤 VPN connecting individual clients to a remote network, also called host-to-site or remote-access VPN.",
-                category: "vpn"
-            },
-            {
-                term: "Host-to-Host VPN",
-                definition: "💻 VPN connecting individual computers to each other for secure communication.",
-                category: "vpn"
-            },
-            {
-                term: "VPN Concentrator",
-                definition: "🔄 Device that authenticates VPN clients, establishes tunnels, and manages encryption for VPN transmissions.",
-                category: "vpn"
-            },
-            {
-                term: "DMVPN (Dynamic Multipoint VPN)",
-                definition: "🌐 Enterprise VPN type using Cisco devices that dynamically creates VPN tunnels between branch locations as needed.",
-                category: "vpn"
-            },
-            {
-                term: "Tunneling",
-                definition: "📦 Process where VPN protocols encapsulate higher-layer protocols to securely carry all types of data.",
-                category: "vpn"
-            },
-            {
-                term: "PPTP (Point-to-Point Tunneling Protocol)",
-                definition: "🔗 Older Layer 2 protocol that supports encryption, authentication, and access services provided by the VPN server.",
-                category: "vpn"
-            },
-            {
-                term: "L2TP (Layer 2 Tunneling Protocol)",
-                definition: "🔄 Protocol that encapsulates PPP data and can connect a VPN using a mix of equipment types.",
-                category: "vpn"
-            },
-            {
-                term: "GRE (Generic Routing Encapsulation)",
-                definition: "📨 Protocol used to transmit PPP, IP and other kinds of messages through the tunnel, often used with IPsec.",
-                category: "vpn"
-            },
-            {
-                term: "OpenVPN",
-                definition: "🔓 Open-source VPN protocol that uses a custom security protocol called OpenSSL for encryption.",
-                category: "vpn"
-            },
-            {
-                term: "IKEv2",
-                definition: "⚡ Component of the IPsec protocol suite offering fast throughput and good stability when moving between wireless hotspots.",
-                category: "vpn"
-            }
-        ];
+        // Definitions data structure
+const definitions = [
+    // Virtualization Basics
+    {
+        term: "Virtualization",
+        definition: "🖥️ A virtual, or logical, version of something rather than the actual, or physical, version.",
+        category: "virtualization-basics"
+    },
+    {
+        term: "Host",
+        definition: "🏠 Physical computer 'hosting' a virtual machine.",
+        category: "virtualization-basics"
+    },
+    {
+        term: "Guest",
+        definition: "👤 Each virtual machine running on a host system.",
+        category: "virtualization-basics"
+    },
+    {
+        term: "Hypervisor",
+        definition: "🔄 Software that creates and manages VMs and manages resource allocation and sharing between a host and any of its guest VMs.",
+        category: "virtualization-basics"
+    },
+    {
+        term: "Type 1 Hypervisor",
+        definition: "💻 Installs on a computer before any OS and is called a bare-metal hypervisor.",
+        category: "virtualization-basics"
+    },
+    {
+        term: "Type 2 Hypervisor",
+        definition: "🖱️ Installs in a host OS as an application and is called a hosted hypervisor.",
+        category: "virtualization-basics"
+    },
+    
+    // Network Virtualization
+    {
+        term: "Virtual Switch (vSwitch)",
+        definition: "🔀 Connection between a VM and the host that might be called a bridge or switch, controlled by the hypervisor.",
+        category: "network-virtualization"
+    },
+    {
+        term: "NFV (Network Functions Virtualization)",
+        definition: "🌐 Merging physical and virtual network architectures to provide flexible, cost-saving options for many types of network devices.",
+        category: "network-virtualization"
+    },
+    {
+        term: "SDN (Software-Defined Networking)",
+        definition: "🧠 Virtualization of network services where an SDN controller manages services instead of services being directly managed by hardware devices.",
+        category: "network-virtualization"
+    },
+    
+    // Cloud Computing
+    {
+        term: "Cloud Computing",
+        definition: "☁️ Flexible provision of data storage, applications, and services to multiple clients over a network.",
+        category: "cloud-computing"
+    },
+    {
+        term: "On-Demand Service",
+        definition: "⚡ Feature of cloud computing allowing users to access resources whenever needed without human interaction with the service provider.",
+        category: "cloud-computing"
+    },
+    {
+        term: "Elastic Services",
+        definition: "📏 Feature of cloud computing where storage capacity and services can quickly or automatically be scaled up or down as needed.",
+        category: "cloud-computing"
+    },
+    {
+        term: "IaaS (Infrastructure as a Service)",
+        definition: "🏗️ Cloud service model where hardware services and network infrastructure devices are provided virtually.",
+        category: "cloud-computing"
+    },
+    {
+        term: "PaaS (Platform as a Service)",
+        definition: "⚙️ Cloud service model providing OS, runtime libraries, and hardware on which the OS runs.",
+        category: "cloud-computing"
+    },
+    {
+        term: "SaaS (Software as a Service)",
+        definition: "📱 Cloud service model providing applications to users.",
+        category: "cloud-computing"
+    },
+    {
+        term: "Public Cloud",
+        definition: "🌐 Cloud deployment model where service is provided over public transmission lines.",
+        category: "cloud-computing"
+    },
+    {
+        term: "Private Cloud",
+        definition: "🏢 Cloud deployment model where service is established on an organization's own servers in its own data center.",
+        category: "cloud-computing"
+    },
+    {
+        term: "Hybrid Cloud",
+        definition: "🔄 Cloud deployment model combining other service models into a single deployment.",
+        category: "cloud-computing"
+    },
+    
+    // Encryption
+    {
+        term: "Encryption",
+        definition: "🔐 Use of mathematical code, called a cipher, to scramble data into a format that can be read only by reversing the cipher.",
+        category: "encryption"
+    },
+    {
+        term: "CIA Triad",
+        definition: "🛡️ Standard security model consisting of Confidentiality, Integrity, and Availability principles.",
+        category: "encryption"
+    },
+    {
+        term: "Symmetric Encryption",
+        definition: "🔄 Encryption where the same key is used during both encryption and decryption.",
+        category: "encryption"
+    },
+    {
+        term: "Asymmetric Encryption",
+        definition: "↔️ Encryption requiring two different keys for encryption and decryption.",
+        category: "encryption"
+    },
+    {
+        term: "TLS (Transport Layer Security)",
+        definition: "🔒 Modern version of SSL for encrypting TCP/IP transmissions between client and server.",
+        category: "encryption"
+    },
+    
+    // Remote Access
+    {
+        term: "Remote Access",
+        definition: "🔌 Service allowing a client to connect with and log on to a server, LAN, or WAN in a different geographical location.",
+        category: "remote-access"
+    },
+    {
+        term: "SSH (Secure Shell)",
+        definition: "🔐 Collection of protocols providing secure authentication and encryption for remote connections.",
+        category: "remote-access"
+    },
+    {
+        term: "RDP (Remote Desktop Protocol)",
+        definition: "🖥️ Microsoft proprietary protocol used to connect to and control a remote computer.",
+        category: "remote-access"
+    },
+    {
+        term: "VNC (Virtual Network Computing)",
+        definition: "🖱️ Remote control system using RFB protocol to remotely control a workstation or server.",
+        category: "remote-access"
+    },
+    
+    // VPN Technologies
+    {
+        term: "VPN (Virtual Private Network)",
+        definition: "🔐 Network connection encrypted from end to end that creates a private connection to a remote network.",
+        category: "vpn"
+    },
+    {
+        term: "Site-to-Site VPN",
+        definition: "🏢 VPN connecting entire networks to each other, typically maintained by network devices like routers.",
+        category: "vpn"
+    },
+    {
+        term: "Client-to-Site VPN",
+        definition: "👤 VPN connecting individual clients to a remote network, also called host-to-site or remote-access VPN.",
+        category: "vpn"
+    },
+    {
+        term: "OpenVPN",
+        definition: "🔓 Open-source VPN protocol that uses a custom security protocol called OpenSSL for encryption.",
+        category: "vpn"
+    }
+];
         
         // Function to render the definitions grid
         function renderDefinitions(filteredDefinitions) {
