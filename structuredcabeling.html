@@ -3,677 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIA/EIA-568 Structured Cabling Visualizer</title>
+    <title>Chapter 5: Network Cabling - Definitions Grid</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: #f0f2f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            padding: 20px;
-        }
-
-        .container {
+            color: #333;
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
-
+        
         header {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
             text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 8px;
         }
-
+        
         h1 {
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: 2.2em;
         }
-
-        .intro {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .visualization {
+        
+        .categories {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-        }
-
-        .diagram {
-            width: 100%;
-            height: 500px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            position: relative;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
-            width: 100%;
+            flex-wrap: wrap;
         }
-
-        .btn {
+        
+        .category-btn {
             padding: 8px 16px;
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            font-size: 1em;
+            transition: background-color 0.3s;
         }
-
-        .btn:hover {
+        
+        .category-btn:hover {
             background-color: #2980b9;
         }
-
-        .btn.active {
+        
+        .category-btn.active {
             background-color: #2c3e50;
         }
-
-        .info-panel {
-            width: 100%;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border: 1px solid #ddd;
+        
+        .search-container {
+            margin-bottom: 20px;
         }
-
-        .info-panel h3 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-
-        /* Network elements */
-        .network-element {
-            position: absolute;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .network-element:hover {
-            transform: scale(1.05);
-        }
-
-        .network-element.active {
-            transform: scale(1.1);
-            z-index: 10;
-        }
-
-        /* Connection lines */
-        .connection {
-            position: absolute;
-            background-color: #3498db;
-            height: 2px;
-            transform-origin: left center;
-            z-index: 1;
-        }
-
-        /* Specific network elements */
-        .demark {
-            top: 50px;
-            left: 50px;
-            width: 80px;
-            height: 80px;
-            background-color: #e74c3c;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .mdf {
-            top: 50px;
-            left: 200px;
-            width: 100px;
-            height: 100px;
-            background-color: #f39c12;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .idf {
-            width: 80px;
-            height: 80px;
-            background-color: #9b59b6;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .idf-1 {
-            top: 200px;
-            left: 100px;
-        }
-
-        .idf-2 {
-            top: 200px;
-            left: 300px;
-        }
-
-        .idf-3 {
-            top: 200px;
-            left: 500px;
-        }
-
-        .workstation {
-            width: 60px;
-            height: 60px;
-            background-color: #3498db;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            font-size: 12px;
-        }
-
-        /* Legend */
-        .legend {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
+        
+        #search {
             padding: 10px;
-            border-radius: 5px;
+            width: 100%;
             border: 1px solid #ddd;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 1em;
         }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
-
-        .legend-color {
-            width: 15px;
-            height: 15px;
-            margin-right: 8px;
-            border-radius: 3px;
+        
+        .definition-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s;
         }
-
-        .legend-color.demark-color {
-            background-color: #e74c3c;
+        
+        .definition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
-        .legend-color.mdf-color {
-            background-color: #f39c12;
+        
+        .definition-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
         }
-
-        .legend-color.idf-color {
-            background-color: #9b59b6;
+        
+        .definition-card p {
+            margin-bottom: 0;
         }
-
-        .legend-color.workstation-color {
-            background-color: #3498db;
+        
+        .category-label {
+            display: inline-block;
+            background-color: #e6f7ff;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-top: 10px;
         }
-
-        .legend-color.backbone-color {
-            background-color: #2ecc71;
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 0.9em;
         }
-
-        .legend-color.horizontal-color {
-            background-color: #1abc9c;
-        }
-
-        .cable-type-backbone {
-            background-color: #2ecc71 !important;
-        }
-
-        .cable-type-horizontal {
-            background-color: #1abc9c !important;
-        }
-
-        @media (max-width: 768px) {
-            .diagram {
-                height: 400px;
+        
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>TIA/EIA-568 Structured Cabling Visualizer</h1>
-            <p>Interactive diagram of network cabling standards</p>
-        </header>
-
-        <section class="intro">
-            <p>The TIA/EIA-568 Commercial Building Wiring Standard defines how to design, build, and manage structured cabling systems. This interactive visualization demonstrates the key components and connections in a typical network infrastructure.</p>
-        </section>
-
-        <section class="visualization">
-            <div class="controls">
-                <button class="btn" id="overview-btn">Overview</button>
-                <button class="btn" id="horizontal-btn">Horizontal Cabling</button>
-                <button class="btn" id="backbone-btn">Backbone Cabling</button>
-                <button class="btn" id="workstation-btn">Workstation Connectivity</button>
-                <button class="btn" id="reset-btn">Reset View</button>
-            </div>
-
-            <div class="diagram" id="diagram">
-                <!-- Network elements will be added here via JavaScript -->
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-color demark-color"></div>
-                        <div>Demark (Entrance Facility)</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color mdf-color"></div>
-                        <div>MDF (Main Distribution Frame)</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color idf-color"></div>
-                        <div>IDF (Intermediate Distribution Frame)</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color workstation-color"></div>
-                        <div>Workstation</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color backbone-color"></div>
-                        <div>Backbone Cabling</div>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color horizontal-color"></div>
-                        <div>Horizontal Cabling</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="info-panel" id="info-panel">
-                <h3>TIA/EIA-568 Structured Cabling</h3>
-                <p>Click on any element in the diagram to learn more about it. Use the buttons above to highlight different aspects of the network infrastructure.</p>
-            </div>
-        </section>
+    <header>
+        <h1>Chapter 5: Network Cabling</h1>
+        <p>Definitions Grid - CNT3004 Computer Network Concepts</p>
+    </header>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for definitions...">
     </div>
-
+    
+    <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="basics">Transmission Basics</button>
+        <button class="category-btn" data-category="copper">Copper Cable</button>
+        <button class="category-btn" data-category="fiber">Fiber-Optic Cable</button>
+        <button class="category-btn" data-category="connectors">Connectors</button>
+        <button class="category-btn" data-category="troubleshooting">Troubleshooting</button>
+    </div>
+    
+    <div class="grid-container" id="definitions-grid"></div>
+    
+    <footer>
+        <p>Based on material from Chapter 5 - Network Cabling</p>
+    </footer>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const diagram = document.getElementById('diagram');
-            const infoPanel = document.getElementById('info-panel');
-            const overviewBtn = document.getElementById('overview-btn');
-            const horizontalBtn = document.getElementById('horizontal-btn');
-            const backboneBtn = document.getElementById('backbone-btn');
-            const workstationBtn = document.getElementById('workstation-btn');
-            const resetBtn = document.getElementById('reset-btn');
-
-            // Network elements data
-            const networkElements = [
-                { id: 'demark', type: 'demark', label: 'Demark', x: 50, y: 50, width: 80, height: 80 },
-                { id: 'mdf', type: 'mdf', label: 'MDF', x: 200, y: 50, width: 100, height: 100 },
-                { id: 'idf-1', type: 'idf', label: 'IDF 1', x: 100, y: 200, width: 80, height: 80 },
-                { id: 'idf-2', type: 'idf', label: 'IDF 2', x: 300, y: 200, width: 80, height: 80 },
-                { id: 'idf-3', type: 'idf', label: 'IDF 3', x: 500, y: 200, width: 80, height: 80 },
-                { id: 'ws-1', type: 'workstation', label: 'WS 1', x: 50, y: 350, width: 60, height: 60 },
-                { id: 'ws-2', type: 'workstation', label: 'WS 2', x: 150, y: 350, width: 60, height: 60 },
-                { id: 'ws-3', type: 'workstation', label: 'WS 3', x: 250, y: 350, width: 60, height: 60 },
-                { id: 'ws-4', type: 'workstation', label: 'WS 4', x: 350, y: 350, width: 60, height: 60 },
-                { id: 'ws-5', type: 'workstation', label: 'WS 5', x: 450, y: 350, width: 60, height: 60 },
-                { id: 'ws-6', type: 'workstation', label: 'WS 6', x: 550, y: 350, width: 60, height: 60 },
-            ];
-
-            // Connection data
-            const connections = [
-                { id: 'conn-1', from: 'demark', to: 'mdf', type: 'backbone' },
-                { id: 'conn-2', from: 'mdf', to: 'idf-1', type: 'backbone' },
-                { id: 'conn-3', from: 'mdf', to: 'idf-2', type: 'backbone' },
-                { id: 'conn-4', from: 'mdf', to: 'idf-3', type: 'backbone' },
-                { id: 'conn-5', from: 'idf-1', to: 'ws-1', type: 'horizontal' },
-                { id: 'conn-6', from: 'idf-1', to: 'ws-2', type: 'horizontal' },
-                { id: 'conn-7', from: 'idf-2', to: 'ws-3', type: 'horizontal' },
-                { id: 'conn-8', from: 'idf-2', to: 'ws-4', type: 'horizontal' },
-                { id: 'conn-9', from: 'idf-3', to: 'ws-5', type: 'horizontal' },
-                { id: 'conn-10', from: 'idf-3', to: 'ws-6', type: 'horizontal' },
-            ];
-
-            // Descriptions for network elements
-            const elementDescriptions = {
-                'demark': {
-                    title: 'Demark (Entrance Facility)',
-                    description: 'The demarcation point is where the service provider\'s responsibility ends and the customer\'s begins. It\'s the entry point for telecommunications services into a building and typically contains equipment from both the service provider and the customer.',
-                    standards: 'TIA/EIA-568 specifies requirements for the entrance facility, including protection, termination, and grounding of cables.'
-                },
-                'mdf': {
-                    title: 'Main Distribution Frame (MDF)',
-                    description: 'The MDF is the central connection point for a building\'s telecommunications system. It houses critical equipment like core switches, routers, and servers, and distributes connectivity to intermediate distribution frames (IDFs).',
-                    standards: 'TIA/EIA-568 defines specifications for the MDF room size, security, fire protection, air conditioning, and cable management.'
-                },
-                'idf': {
-                    title: 'Intermediate Distribution Frame (IDF)',
-                    description: 'IDFs are distribution points located throughout the building that connect to the MDF via backbone cabling. They contain switches and patch panels that service nearby workstations through horizontal cabling.',
-                    standards: 'TIA/EIA-568 specifies requirements for IDF rooms including size, location, power, cooling, and rack arrangement.'
-                },
-                'workstation': {
-                    title: 'Workstation Outlet',
-                    description: 'The workstation outlet is the termination point for horizontal cabling and provides connectivity for end-user devices like computers, phones, and printers.',
-                    standards: 'TIA/EIA-568 defines specifications for outlet configurations, cable termination methods, and testing requirements.'
-                }
-            };
-
-            // Connection descriptions
-            const connectionDescriptions = {
-                'backbone': {
-                    title: 'Backbone Cabling',
-                    description: 'Backbone cabling provides interconnection between entrance facilities, equipment rooms, and telecommunications rooms. It typically uses fiber optic cables for their high bandwidth and long-distance capabilities.',
-                    standards: 'TIA/EIA-568 specifies fiber optic cable types (multimode or single-mode), performance categories, and maximum distances for backbone links.'
-                },
-                'horizontal': {
-                    title: 'Horizontal Cabling',
-                    description: 'Horizontal cabling runs from the telecommunications room (IDF) to individual work areas. It typically uses twisted pair copper cabling, though fiber may be used for higher performance requirements.',
-                    standards: 'TIA/EIA-568 specifies Category 5e, 6, or 6A twisted pair cabling for horizontal runs with a maximum distance of 90 meters, plus 10 meters for patch cords.'
-                }
-            };
-
-            // Create network elements
-            networkElements.forEach(element => {
-                const el = document.createElement('div');
-                el.id = element.id;
-                el.className = `network-element ${element.type} ${element.type}-${element.id.split('-')[1] || ''}`;
-                el.style.left = `${element.x}px`;
-                el.style.top = `${element.y}px`;
-                el.innerHTML = element.label;
-                
-                el.addEventListener('click', function() {
-                    // Remove active class from all elements
-                    document.querySelectorAll('.network-element').forEach(el => {
-                        el.classList.remove('active');
-                    });
-                    
-                    // Add active class to clicked element
-                    el.classList.add('active');
-                    
-                    // Update info panel
-                    const type = element.type.split('-')[0]; // Get base type without number
-                    const info = elementDescriptions[type];
-                    
-                    infoPanel.innerHTML = `
-                        <h3>${info.title}</h3>
-                        <p><strong>Description:</strong> ${info.description}</p>
-                        <p><strong>Standards:</strong> ${info.standards}</p>
-                    `;
-                });
-                
-                diagram.appendChild(el);
-            });
-
-            // Create connections
-            connections.forEach(connection => {
-                const fromElement = networkElements.find(el => el.id === connection.from);
-                const toElement = networkElements.find(el => el.id === connection.to);
-                
-                // Calculate connection position and dimensions
-                const fromX = fromElement.x + fromElement.width / 2;
-                const fromY = fromElement.y + fromElement.height / 2;
-                const toX = toElement.x + toElement.width / 2;
-                const toY = toElement.y + toElement.height / 2;
-                
-                const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
-                const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
-                
-                const conn = document.createElement('div');
-                conn.id = connection.id;
-                conn.className = `connection cable-type-${connection.type}`;
-                conn.dataset.type = connection.type;
-                conn.style.left = `${fromX}px`;
-                conn.style.top = `${fromY}px`;
-                conn.style.width = `${length}px`;
-                conn.style.transform = `rotate(${angle}deg)`;
-                
-                conn.addEventListener('click', function() {
-                    // Update info panel with connection information
-                    const info = connectionDescriptions[connection.type];
-                    
-                    infoPanel.innerHTML = `
-                        <h3>${info.title}</h3>
-                        <p><strong>Description:</strong> ${info.description}</p>
-                        <p><strong>Standards:</strong> ${info.standards}</p>
-                    `;
-                });
-                
-                diagram.appendChild(conn);
-            });
-
-            // Button functionality
-            function clearHighlights() {
-                document.querySelectorAll('.btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                document.querySelectorAll('.network-element').forEach(el => {
-                    el.style.opacity = '1';
-                });
-                
-                document.querySelectorAll('.connection').forEach(conn => {
-                    conn.style.opacity = '1';
-                    conn.style.height = '2px';
-                });
-            }
-
-            overviewBtn.addEventListener('click', function() {
-                clearHighlights();
-                this.classList.add('active');
-                
-                // Update info panel
-                infoPanel.innerHTML = `
-                    <h3>TIA/EIA-568 Structured Cabling Overview</h3>
-                    <p>The TIA/EIA-568 standard defines six subsystems of structured cabling:</p>
-                    <ol>
-                        <li><strong>Entrance Facility (Demark):</strong> The point where outside cabling connects to the building's internal cabling.</li>
-                        <li><strong>Equipment Room (MDF):</strong> Houses equipment and wiring consolidation points for the network.</li>
-                        <li><strong>Backbone Cabling:</strong> Provides connections between MDFs, IDFs, and entrance facilities.</li>
-                        <li><strong>Telecommunications Rooms (IDFs):</strong> Houses telecommunications equipment and cable terminations for specific areas.</li>
-                        <li><strong>Horizontal Cabling:</strong> The cabling between the telecommunications room and the work areas.</li>
-                        <li><strong>Work Area Components:</strong> The connecting hardware, computers, and other devices in the work area.</li>
-                    </ol>
-                `;
-            });
-
-            horizontalBtn.addEventListener('click', function() {
-                clearHighlights();
-                this.classList.add('active');
-                
-                // Highlight horizontal connections
-                document.querySelectorAll('.connection').forEach(conn => {
-                    if (conn.dataset.type === 'horizontal') {
-                        conn.style.height = '4px';
-                        conn.style.zIndex = '5';
-                    } else {
-                        conn.style.opacity = '0.3';
-                    }
-                });
-                
-                // Highlight relevant elements
-                document.querySelectorAll('.network-element').forEach(el => {
-                    if (!el.classList.contains('idf') && !el.classList.contains('workstation')) {
-                        el.style.opacity = '0.3';
-                    }
-                });
-                
-                // Update info panel
-                const info = connectionDescriptions['horizontal'];
-                infoPanel.innerHTML = `
-                    <h3>${info.title}</h3>
-                    <p><strong>Description:</strong> ${info.description}</p>
-                    <p><strong>Standards:</strong> ${info.standards}</p>
-                    <p><strong>Key Requirements:</strong></p>
-                    <ul>
-                        <li>Maximum horizontal cable length: 90 meters</li>
-                        <li>Maximum patch cord length: 10 meters (5m at the IDF + 5m at the workstation)</li>
-                        <li>Minimum Category 5e cabling, though Category 6/6A is recommended for new installations</li>
-                        <li>Each work area must have at least two outlets (voice and data)</li>
-                        <li>4-pair UTP (unshielded twisted pair) is the most common media type</li>
-                    </ul>
-                `;
-            });
-
-            backboneBtn.addEventListener('click', function() {
-                clearHighlights();
-                this.classList.add('active');
-                
-                // Highlight backbone connections
-                document.querySelectorAll('.connection').forEach(conn => {
-                    if (conn.dataset.type === 'backbone') {
-                        conn.style.height = '4px';
-                        conn.style.zIndex = '5';
-                    } else {
-                        conn.style.opacity = '0.3';
-                    }
-                });
-                
-                // Highlight relevant elements
-                document.querySelectorAll('.network-element').forEach(el => {
-                    if (!el.classList.contains('demark') && !el.classList.contains('mdf') && !el.classList.contains('idf')) {
-                        el.style.opacity = '0.3';
-                    }
-                });
-                
-                // Update info panel
-                const info = connectionDescriptions['backbone'];
-                infoPanel.innerHTML = `
-                    <h3>${info.title}</h3>
-                    <p><strong>Description:</strong> ${info.description}</p>
-                    <p><strong>Standards:</strong> ${info.standards}</p>
-                    <p><strong>Key Requirements:</strong></p>
-                    <ul>
-                        <li>Maximum backbone distance for fiber: 300-2000 meters (depending on fiber type and application)</li>
-                        <li>Maximum backbone distance for copper: 90 meters</li>
-                        <li>Backbone cabling should be designed to accommodate future growth</li>
-                        <li>Typically uses fiber optic cable for higher bandwidth and longer distances</li>
-                        <li>Star topology is required, with all IDFs connecting back to the MDF</li>
-                    </ul>
-                `;
-            });
-
-            workstationBtn.addEventListener('click', function() {
-                clearHighlights();
-                this.classList.add('active');
-                
-                // Highlight workstations and their connections
-                document.querySelectorAll('.connection').forEach(conn => {
-                    if (conn.id.includes('ws')) {
-                        conn.style.height = '4px';
-                        conn.style.zIndex = '5';
-                    } else {
-                        conn.style.opacity = '0.3';
-                    }
-                });
-                
-                // Highlight relevant elements
-                document.querySelectorAll('.network-element').forEach(el => {
-                    if (!el.classList.contains('workstation')) {
-                        el.style.opacity = '0.3';
-                    }
-                });
-                
-                // Update info panel
-                const info = elementDescriptions['workstation'];
-                infoPanel.innerHTML = `
-                    <h3>${info.title}</h3>
-                    <p><strong>Description:</strong> ${info.description}</p>
-                    <p><strong>Standards:</strong> ${info.standards}</p>
-                    <p><strong>Key Requirements:</strong></p>
-                    <ul>
-                        <li>Minimum of two outlets per work area (typically one for voice, one for data)</li>
-                        <li>Each outlet should be labeled according to the administration standard</li>
-                        <li>Must use 8-pin modular jacks (RJ45) for twisted-pair cabling</li>
-                        <li>Maximum length of work area cables (patch cords): 5 meters</li>
-                        <li>Should support all typical workstation applications (data, voice, video)</li>
-                    </ul>
-                `;
-            });
-
-            resetBtn.addEventListener('click', function() {
-                clearHighlights();
-                
-                // Reset info panel
-                infoPanel.innerHTML = `
-                    <h3>TIA/EIA-568 Structured Cabling</h3>
-                    <p>Click on any element in the diagram to learn more about it. Use the buttons above to highlight different aspects of the network infrastructure.</p>
-                `;
-            });
-
-            // Initialize with overview selected
-            overviewBtn.click();
-
-            // Make diagram responsive
-            function repositionElements() {
-                const diagramWidth = diagram.clientWidth;
-                const diagramHeight = diagram.clientHeight;
-                const scaleX = diagramWidth / 600;
-                const scaleY = diagramHeight / 400;
-
-                // Reposition elements based on current diagram size
-                networkElements.forEach(element => {
-                    const el = document.getElementById(element.id);
-                    if (el) {
-                        el.style.left = `${element.x * scaleX}px`;
-                        el.style.top = `${element.y * scaleY}px`;
-                    }
-                });
-
-                // Recalculate and reposition connections
-                connections.forEach(connection => {
-                    const conn = document.getElementById(connection.id);
-                    const fromElement = networkElements.find(el => el.id === connection.from);
-                    const toElement = networkElements.find(el => el.id === connection.to);
-                    
-                    if (conn && fromElement && toElement) {
-                        const fromX = fromElement.x * scaleX + fromElement.width / 2;
-                        const fromY = fromElement.y * scaleY + fromElement.height / 2;
-                        const toX = toElement.x * scaleX + toElement.width / 2;
-                        const toY = toElement.y * scaleY + toElement.height / 2;
-                        
-                        const length = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
-                        const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
-                        
-                        conn.style.left = `${fromX}px`;
-                        conn.style.top = `${fromY}px`;
-                        conn.style.width = `${length}px`;
-                        conn.style.transform = `rotate(${angle}deg)`;
-                    }
-                });
-            }
-
-            // Handle window resize
-            window.addEventListener('resize', repositionElements);
+        // Definitions data structure
+        const definitions = [
+            // Transmission Basics
+            {
+                term: "Bandwidth",
+                definition: "📊 The amount of data that could be theoretically transmitted during a given period of time, commonly expressed as bits per second.",
+                category: "basics"
+            },
+            {
+                term: "Throughput",
+                definition: "📈 A measure of how much data is actually transmitted during a given time period, often lower than theoretical bandwidth due to overhead.",
+                category: "basics"
+            },
+            {
+                term: "Noise",
+                definition: "🔊 Any undesirable influence that degrades or distorts a signal, measured in decibels (dB).",
+                category: "basics"
+            },
+            {
+                term: "EMI (Electromagnetic Interference)",
+                definition: "⚡ A type of noise caused by motors, power lines, televisions, copiers, and fluorescent lights that can disrupt network signals.",
+                category: "basics"
+            },
+            {
+                term: "Cross-talk",
+                definition: "↔️ A type of noise where the signal on one wire infringes on or affects the signal on an adjacent wire.",
+                category: "basics"
+            },
+            {
+                term: "Attenuation",
+                definition: "📉 Loss of a signal's strength as it travels away from its source, which can be counteracted by repeaters or amplifiers.",
+                category: "basics"
+            },
+            {
+                term: "Latency",
+                definition: "⏱️ The delay between signal transmission and receipt, which may cause network transmission errors.",
+                category: "basics"
+            },
+            {
+                term: "Jitter",
+                definition: "🔄 Also called packet delay variation (PDV), occurs when packets experience varying amounts of delay, causing them to arrive out of order.",
+                category: "basics"
+            },
+            {
+                term: "Full-duplex",
+                definition: "↔️ A communication method where signals can travel in both directions over a medium simultaneously.",
+                category: "basics"
+            },
+            {
+                term: "Half-duplex",
+                definition: "↩️ A communication method where signals may travel in both directions but only in one direction at a time.",
+                category: "basics"
+            },
+            {
+                term: "Simplex",
+                definition: "➡️ A communication method where signals may travel in only one direction, sometimes called one-way or unidirectional communication.",
+                category: "basics"
+            },
+            {
+                term: "Multiplexing",
+                definition: "🔀 A form of transmission that allows multiple signals to travel simultaneously over one medium through the use of subchannels.",
+                category: "basics"
+            },
+            {
+                term: "TDM (Time Division Multiplexing)",
+                definition: "🕒 A multiplexing technique that divides a channel into multiple time intervals to transmit different signals.",
+                category: "basics"
+            },
+            {
+                term: "FDM (Frequency Division Multiplexing)",
+                definition: "📡 A multiplexing technique that assigns a different frequency band for each communications subchannel.",
+                category: "basics"
+            },
+            {
+                term: "WDM (Wavelength Division Multiplexing)",
+                definition: "🌈 A multiplexing technique used with fiber-optic cable that carries multiple light signals simultaneously by dividing a light beam into different wavelengths or colors.",
+                category: "basics"
+            },
             
-            // Initial positioning
-            repositionElements();
+            // Copper Cable
+            {
+                term: "Coaxial Cable",
+                definition: "📺 A legacy cable type consisting of a central conductor surrounded by insulation, a braided metal shield, and an outer jacket.",
+                category: "copper"
+            },
+            {
+                term: "Twisted-Pair Cable",
+                definition: "🔄 A cable type containing color-coded insulated copper wire pairs (0.4–0.8 mm diameter) twisted together and encased in a plastic sheath.",
+                category: "copper"
+            },
+            {
+                term: "STP (Shielded Twisted Pair)",
+                definition: "🛡️ Twisted-pair cable that is surrounded by metallic substance shielding (foil) which acts as a barrier to external electromagnetic forces.",
+                category: "copper"
+            },
+            {
+                term: "UTP (Unshielded Twisted Pair)",
+                definition: "🔌 Twisted-pair cable with one or more insulated wire pairs encased in a plastic sheath without additional shielding, making it less expensive but also less noise-resistant than STP.",
+                category: "copper"
+            },
+            {
+                term: "Straight-through Cable",
+                definition: "➖ Also called patch cable, a cable where RJ-45 plugs at both ends are terminated identically according to the same wiring standard.",
+                category: "copper"
+            },
+            {
+                term: "Crossover Cable",
+                definition: "❌ A cable where the transmit and receive wires on one end are reversed compared to the other end, used for direct connection between similar devices.",
+                category: "copper"
+            },
+            {
+                term: "Rollover Cable",
+                definition: "🔄 Also called console cable, a cable where all wires are reversed (terminations are mirror images), used to connect a computer to the console port of a router for configuration changes.",
+                category: "copper"
+            },
+            {
+                term: "PoE (Power over Ethernet)",
+                definition: "⚡ IEEE 802.3af standard which specifies a method for supplying electrical power over twisted-pair Ethernet connections, providing up to 15.4 watts for standard devices.",
+                category: "copper"
+            },
+            {
+                term: "PoE+ (Power over Ethernet Plus)",
+                definition: "⚡+ IEEE 802.3at standard which provides up to 25.5 watts of power over twisted-pair Ethernet connections.",
+                category: "copper"
+            },
+            
+            // Fiber-Optic Cable
+            {
+                term: "Fiber-Optic Cable",
+                definition: "🔆 A cable containing one or more glass or plastic fibers at its center (core) that transmits data as pulses of light sent from a laser or LED through the central fibers.",
+                category: "fiber"
+            },
+            {
+                term: "Core",
+                definition: "🧵 The central part of a fiber-optic cable, made of glass or plastic, through which light signals travel.",
+                category: "fiber"
+            },
+            {
+                term: "Cladding",
+                definition: "🧪 A layer of glass or plastic surrounding the core of fiber-optic cable with a different density, which reflects light back to the core and allows the fiber to bend.",
+                category: "fiber"
+            },
+            {
+                term: "SMF (Single Mode Fiber)",
+                definition: "🔍 Fiber-optic cable with a narrow core (8–10 microns in diameter) where laser-generated light travels over one path with little reflection, allowing signals to travel many miles before repeating is required.",
+                category: "fiber"
+            },
+            {
+                term: "MMF (Multimode Fiber)",
+                definition: "🔍🔍 Fiber-optic cable containing a core with a larger diameter (50 or 62.5 microns) than single mode fiber, where light pulses travel at different angles, resulting in greater attenuation.",
+                category: "fiber"
+            },
+            {
+                term: "Ferrule",
+                definition: "🔌 The extended tip of a fiber connector that makes contact with the receptacle in the jack.",
+                category: "fiber"
+            },
+            {
+                term: "BiDi Transceivers",
+                definition: "↔️ Transceivers that allow bidirectional transmission on both ports, meaning a fiber cable can carry data in both directions.",
+                category: "fiber"
+            },
+            
+            // Connectors
+            {
+                term: "RJ-45",
+                definition: "🔌 The standard connector used for twisted-pair Ethernet networks, containing eight pins that make contact with the eight wires in the cable.",
+                category: "connectors"
+            },
+            {
+                term: "TIA/EIA 568A",
+                definition: "🧩 One of two standards specified by TIA/EIA for inserting wires into RJ-45 plugs, defining a specific color code pattern.",
+                category: "connectors"
+            },
+            {
+                term: "TIA/EIA 568B",
+                definition: "🧩 The second standard specified by TIA/EIA for inserting wires into RJ-45 plugs, with a different color code pattern than 568A but no functional difference.",
+                category: "connectors"
+            },
+            {
+                term: "LC (Local Connector)",
+                definition: "🔌 The most common 1.25-mm ferrule connector used for SMF fiber-optic cables.",
+                category: "connectors"
+            },
+            {
+                term: "SC (Standard Connector)",
+                definition: "🔌 A common 2.5-mm ferrule connector used for SMF fiber-optic cables.",
+                category: "connectors"
+            },
+            {
+                term: "ST (Straight Tip)",
+                definition: "🔌 A 2.5-mm ferrule connector used for SMF fiber-optic cables, still found in existing fiber networks.",
+                category: "connectors"
+            },
+            {
+                term: "MTRJ",
+                definition: "🔌 The most common connector used for MMF fiber-optic cables.",
+                category: "connectors"
+            },
+            {
+                term: "Media Converter",
+                definition: "🔄 Hardware that enables networks or segments running on different media to interconnect and exchange signals, converting electrical signals from copper cable to light wave signals for fiber.",
+                category: "connectors"
+            },
+            {
+                term: "GBIC (Gigabit Interface Converter)",
+                definition: "🔄 A standard type of modular interface designed for Gigabit Ethernet connections, now largely replaced by newer transceiver types.",
+                category: "connectors"
+            },
+            {
+                term: "SFP (Small Form-factor Pluggable)",
+                definition: "🔄 A newer, smaller transceiver that has replaced the GBIC, designed for network switches and routers.",
+                category: "connectors"
+            },
+            
+            // Troubleshooting
+            {
+                term: "Toner and Probe Kit",
+                definition: "🔍 A combination of a tone generator (toner) that issues a signal on a wire pair and a tone locator (probe) that emits a tone when electrical activity is detected, used to determine where a wired pair terminates.",
+                category: "troubleshooting"
+            },
+            {
+                term: "Multimeter",
+                definition: "📊 A device that measures various characteristics of an electric circuit, including resistance, voltage, and impedance, used to verify cable conductivity and test for shorts or open circuits.",
+                category: "troubleshooting"
+            },
+            {
+                term: "Cable Continuity Tester",
+                definition: "🔌 A tool that tests whether a cable carries a signal to its destination, consisting of a base unit that generates voltage and a remote unit that detects voltage.",
+                category: "troubleshooting"
+            },
+            {
+                term: "Cable Performance Tester",
+                definition: "📈 Also called a line tester or certifier, a sophisticated tool that can measure distance to connectivity devices, attenuation, NEXT, termination resistance, and impedance.",
+                category: "troubleshooting"
+            },
+            {
+                term: "TDR (Time Domain Reflectometer)",
+                definition: "📡 A feature in advanced cable testers that issues a signal and measures how it bounces back, indicating the distance between nodes and whether terminators are properly installed and functional.",
+                category: "troubleshooting"
+            },
+            {
+                term: "OTDR (Optical Time Domain Reflectometer)",
+                definition: "📡 A specialized device that measures fiber length, determines the location of faulty splices, breaks, connectors, and bends, and measures attenuation over fiber-optic cable.",
+                category: "troubleshooting"
+            },
+            {
+                term: "OPM (Optical Power Meter)",
+                definition: "💡 Also called a light meter, a device that measures the amount of light power transmitted on a fiber-optic line, requiring precise calibration for accurate results.",
+                category: "troubleshooting"
+            }
+        ];
+        
+        // Function to render the definitions grid
+        function renderDefinitions(filteredDefinitions) {
+            const grid = document.getElementById('definitions-grid');
+            grid.innerHTML = '';
+            
+            if (filteredDefinitions.length === 0) {
+                grid.innerHTML = '<p>No definitions found matching your search.</p>';
+                return;
+            }
+            
+            filteredDefinitions.forEach(def => {
+                const card = document.createElement('div');
+                card.className = 'definition-card';
+                card.setAttribute('data-category', def.category);
+                
+                card.innerHTML = `
+                    <h3>${def.term}</h3>
+                    <p>${def.definition}</p>
+                    <span class="category-label">${getCategoryName(def.category)}</span>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+        
+        // Function to get readable category name
+        function getCategoryName(categoryCode) {
+            const categoryNames = {
+                'basics': 'Transmission Basics',
+                'copper': 'Copper Cable',
+                'fiber': 'Fiber-Optic Cable',
+                'connectors': 'Connectors',
+                'troubleshooting': 'Troubleshooting'
+            };
+            
+            return categoryNames[categoryCode] || categoryCode;
+        }
+        
+        // Filter definitions by category and search term
+        function filterDefinitions() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            return definitions.filter(def => {
+                const matchesCategory = activeCategory === 'all' || def.category === activeCategory;
+                const matchesSearch = def.term.toLowerCase().includes(searchTerm) || 
+                                    def.definition.toLowerCase().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+        }
+        
+        // Initialize the grid
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render all definitions initially
+            renderDefinitions(definitions);
+            
+            // Add event listeners for category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderDefinitions(filterDefinitions());
+                });
+            });
+            
+            // Add event listener for search input
+            document.getElementById('search').addEventListener('input', () => {
+                renderDefinitions(filterDefinitions());
+            });
         });
     </script>
 </body>
