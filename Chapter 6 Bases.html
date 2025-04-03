@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions, Acids, and Bases</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f7fa;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .interactive {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .flex-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        /* Specific Styling */
+        .molecule {
+            display: inline-block;
+            margin: 5px;
+            text-align: center;
+            transition: transform 0.5s ease;
+        }
+        
+        .molecule.dissolve {
+            transform: scale(0.3) rotate(360deg);
+            opacity: 0.3;
+        }
+        
+        .pH-scale {
+            display: flex;
+            height: 40px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .pH-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .pH-indicator {
+            position: absolute;
+            width: 10px;
+            height: 50px;
+            background-color: black;
+            top: -5px;
+            transition: left 0.3s ease;
+        }
+        
+        .beaker {
+            width: 100px;
+            height: 120px;
+            border: 3px solid #999;
+            border-top: none;
+            border-radius: 0 0 20px 20px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            transition: height 0.5s ease, background-color 0.5s ease;
+        }
+        
+        .arrow-right {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid #333;
+            display: inline-block;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Solutions, Acids, and Bases</h1>
+        <p>An interactive guide to fundamental chemistry concepts</p>
+    </header>
+    
+    <section id="solutions">
+        <h2>1. Solutions & Solubility</h2>
+        
+        <div class="card">
+            <h3>What is a Solution?</h3>
+            <p>A solution is a homogeneous mixture where one substance (the solute) is dissolved in another substance (the solvent).</p>
+            <ul>
+                <li><strong>Solute:</strong> The substance being dissolved (usually in smaller amount)</li>
+                <li><strong>Solvent:</strong> The substance doing the dissolving (usually in larger amount)</li>
+            </ul>
+        </div>
+        
+        <div class="interactive">
+            <h3>Interactive Dissolution Process</h3>
+            <p>Click the button to see how sodium chloride (NaCl) dissolves in water:</p>
+            
+            <div id="dissolution-container" style="text-align: center;">
+                <div class="molecule" id="nacl">NaCl</div>
+                <div class="molecule" id="nacl2">NaCl</div>
+                <div class="molecule" id="nacl3">NaCl</div>
+                <div class="molecule" id="water">H₂O</div>
+            </div>
+            
+            <button id="dissolve-btn">Dissolve Salt</button>
+            <button id="reset-dissolution-btn">Reset</button>
+        </div>
+        
+        <div class="card">
+            <h3>Concentration & Molarity</h3>
+            <p>Molarity (M) is a common way to express solution concentration:</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <strong>Molarity (M) = Moles of solute / Liters of solution</strong>
+            </div>
+            <p>For example, a 1M solution of NaCl contains 1 mole of NaCl in 1 liter of solution.</p>
+        </div>
+        
+        <div class="interactive">
+            <h3>Calculate Molarity</h3>
+            <div>
+                <label>Moles of solute: </label>
+                <input type="number" id="moles-input" value="1" min="0" step="0.1">
+            </div>
+            <div>
+                <label>Volume (liters): </label>
+                <input type="number" id="volume-input" value="1" min="0.1" step="0.1">
+            </div>
+            <button id="calculate-molarity">Calculate</button>
+            <div id="molarity-result" style="margin-top: 10px; font-weight: bold;"></div>
+        </div>
+    </section>
+    
+    <section id="acids-bases">
+        <h2>2. Acids and Bases</h2>
+        
+        <div class="flex-container">
+            <div class="flex-item card">
+                <h3>Acids</h3>
+                <ul>
+                    <li>Donate H⁺ ions in solution</li>
+                    <li>Sour taste</li>
+                    <li>pH less than 7</li>
+                    <li>Examples: HCl, H₂SO₄, vinegar (CH₃COOH)</li>
+                </ul>
+            </div>
+            
+            <div class="flex-item card">
+                <h3>Bases</h3>
+                <ul>
+                    <li>Accept H⁺ ions/donate OH⁻ ions</li>
+                    <li>Bitter taste, slippery feel</li>
+                    <li>pH greater than 7</li>
+                    <li>Examples: NaOH, NH₃, soap</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>The pH Scale</h3>
+            <p>pH measures how acidic or basic a solution is on a scale from 0 to 14.</p>
+            <ul>
+                <li><strong>pH = -log[H⁺]</strong> where [H⁺] is the concentration of hydrogen ions</li>
+                <li>Each pH unit represents a 10-fold change in H⁺ concentration</li>
+            </ul>
+            
+            <div class="pH-scale" id="pH-scale">
+                <div class="pH-indicator" id="pH-indicator"></div>
+                <!-- pH segments will be added by JavaScript -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <label for="pH-selector">Select pH value: </label>
+                <input type="range" id="pH-selector" min="0" max="14" step="1" value="7">
+                <span id="pH-value">7</span>
+            </div>
+            
+            <div id="pH-description" style="margin-top: 10px; text-align: center;">
+                Neutral (pure water)
+            </div>
+        </div>
+        
+        <div class="interactive">
+            <h3>Calculate pH</h3>
+            <div>
+                <label>[H⁺] concentration (mol/L): </label>
+                <input type="number" id="h-conc-input" value="0.0000001" min="0" step="0.0000001">
+            </div>
+            <button id="calculate-pH">Calculate pH</button>
+            <div id="pH-calculation-result" style="margin-top: 10px; font-weight: bold;"></div>
+        </div>
+    </section>
+    
+    <section id="neutralization">
+        <h2>3. Neutralization & Titrations</h2>
+        
+        <div class="card">
+            <h3>Neutralization Reactions</h3>
+            <p>When an acid and base react, they form water and a salt:</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <strong>Acid + Base → Salt + Water</strong><br>
+                HCl + NaOH → NaCl + H₂O
+            </div>
+        </div>
+        
+        <div class="interactive">
+            <h3>Titration Simulation</h3>
+            <p>Add base to neutralize an acid solution:</p>
+            
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <div>
+                    <div class="beaker" id="acid-beaker">
+                        <div class="liquid" id="acid-liquid" style="height: 80px; background-color: #ff9999;"></div>
+                    </div>
+                    <div style="text-align: center;">Acid solution</div>
+                </div>
+                
+                <div class="arrow-right"></div>
+                
+                <div>
+                    <div class="beaker" id="base-beaker">
+                        <div class="liquid" id="base-liquid" style="height: 20px; background-color: #9999ff;"></div>
+                    </div>
+                    <div style="text-align: center;">Base added</div>
+                </div>
+                
+                <div class="arrow-right"></div>
+                
+                <div>
+                    <div class="beaker" id="result-beaker">
+                        <div class="liquid" id="result-liquid" style="height: 80px; background-color: #ff9999;"></div>
+                    </div>
+                    <div style="text-align: center;">Resulting solution</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <label>Add base (mL): </label>
+                <input type="range" id="base-amount" min="0" max="20" value="0" step="1">
+                <span id="base-volume">0 mL</span>
+            </div>
+            
+            <div style="text-align: center; margin-top: 10px;">
+                <p><strong>Current pH: <span id="titration-pH">3.0</span></strong></p>
+                <p id="titration-status">Solution is acidic</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Titration Curves</h3>
+            <p>A titration curve shows how pH changes as base is added to an acid (or vice versa):</p>
+            <ul>
+                <li><strong>Equivalence point:</strong> The point where the acid is completely neutralized by the base</li>
+                <li><strong>Endpoint:</strong> When an indicator changes color, signaling the end of the titration</li>
+            </ul>
+            <div id="titration-curve" style="height: 200px; border: 1px solid #ccc; position: relative; margin-top: 10px;">
+                <!-- Curve will be drawn by JavaScript -->
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background-color: #ccc;"></div>
+                <div style="position: absolute; left: 0; bottom: 0; height: 100%; width: 1px; background-color: #ccc;"></div>
+                <div id="curve-container"></div>
+                <div id="endpoint-marker" style="position: absolute; display: none; width: 10px; height: 10px; background-color: red; border-radius: 50%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <span>0 mL</span>
+                <span>Volume of base added</span>
+                <span>20 mL</span>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // Solutions and Dissolution
+        document.getElementById('dissolve-btn').addEventListener('click', function() {
+            const molecules = document.querySelectorAll('.molecule');
+            molecules.forEach(molecule => {
+                molecule.classList.add('dissolve');
+                
+                // Random positioning after dissolution
+                setTimeout(() => {
+                    molecule.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) scale(0.7)`;
+                    molecule.style.opacity = '0.7';
+                }, 500);
+            });
+        });
+        
+        document.getElementById('reset-dissolution-btn').addEventListener('click', function() {
+            const molecules = document.querySelectorAll('.molecule');
+            molecules.forEach(molecule => {
+                molecule.classList.remove('dissolve');
+                molecule.style.transform = '';
+                molecule.style.opacity = '1';
+            });
+        });
+        
+        // Molarity Calculator
+        document.getElementById('calculate-molarity').addEventListener('click', function() {
+            const moles = parseFloat(document.getElementById('moles-input').value);
+            const volume = parseFloat(document.getElementById('volume-input').value);
+            
+            if (moles >= 0 && volume > 0) {
+                const molarity = moles / volume;
+                document.getElementById('molarity-result').textContent = 
+                    `Molarity = ${molarity.toFixed(2)} M (mol/L)`;
+            } else {
+                document.getElementById('molarity-result').textContent = 
+                    'Please enter valid values (volume must be greater than 0)';
+            }
+        });
+        
+        // pH Scale
+        const pHScale = document.getElementById('pH-scale');
+        const pHColors = [
+            '#ff0000', '#ff3300', '#ff6600', '#ff9900', '#ffcc00', // 0-4
+            '#ffff00', '#ccff00', '#99ff00', '#33ff00', '#00ff00', // 5-9
+            '#00ffcc', '#00ccff', '#0099ff', '#0066ff', '#0033ff'  // 10-14
+        ];
+        
+        // Create pH scale segments
+        for (let i = 0; i < 15; i++) {
+            const segment = document.createElement('div');
+            segment.className = 'pH-segment';
+            segment.style.backgroundColor = pHColors[i];
+            segment.textContent = i;
+            pHScale.appendChild(segment);
+        }
+        
+        // pH slider functionality
+        const pHSelector = document.getElementById('pH-selector');
+        const pHIndicator = document.getElementById('pH-indicator');
+        const pHValue = document.getElementById('pH-value');
+        const pHDescription = document.getElementById('pH-description');
+        
+        // Set initial indicator position
+        pHIndicator.style.left = `${(7 / 14) * 100}%`;
+        
+        pHSelector.addEventListener('input', function() {
+            const pH = parseInt(this.value);
+            pHValue.textContent = pH;
+            
+            // Update indicator position
+            pHIndicator.style.left = `${(pH / 14) * 100}%`;
+            
+            // Update description based on pH
+            if (pH < 3) {
+                pHDescription.textContent = 'Strongly Acidic (e.g., stomach acid)';
+            } else if (pH < 7) {
+                pHDescription.textContent = 'Acidic (e.g., coffee, orange juice)';
+            } else if (pH === 7) {
+                pHDescription.textContent = 'Neutral (pure water)';
+            } else if (pH < 11) {
+                pHDescription.textContent = 'Basic (e.g., baking soda, soap)';
+            } else {
+                pHDescription.textContent = 'Strongly Basic (e.g., drain cleaner)';
+            }
+        });
+        
+        // pH Calculator
+        document.getElementById('calculate-pH').addEventListener('click', function() {
+            const hConc = parseFloat(document.getElementById('h-conc-input').value);
+            
+            if (hConc > 0) {
+                const pH = -Math.log10(hConc);
+                document.getElementById('pH-calculation-result').textContent = 
+                    `pH = ${pH.toFixed(2)}`;
+                
+                // Update the pH slider if result is within range
+                if (pH >= 0 && pH <= 14) {
+                    pHSelector.value = Math.round(pH);
+                    pHSelector.dispatchEvent(new Event('input'));
+                }
+            } else {
+                document.getElementById('pH-calculation-result').textContent = 
+                    'Please enter a valid concentration (must be greater than 0)';
+            }
+        });
+        
+        // Titration Simulation
+        const baseAmount = document.getElementById('base-amount');
+        const baseVolume = document.getElementById('base-volume');
+        const acidLiquid = document.getElementById('acid-liquid');
+        const baseLiquid = document.getElementById('base-liquid');
+        const resultLiquid = document.getElementById('result-liquid');
+        const titrationPH = document.getElementById('titration-pH');
+        const titrationStatus = document.getElementById('titration-status');
+        const curveContainer = document.getElementById('curve-container');
+        const endpointMarker = document.getElementById('endpoint-marker');
+        
+        // Generate points for titration curve
+        function generateCurvePoints() {
+            const points = [];
+            for (let vol = 0; vol <= 20; vol += 0.1) {
+                // Simplified S-curve for demonstration
+                let pH;
+                if (vol < 8) {
+                    pH = 3 + vol * 0.25; // Initial slow rise
+                } else if (vol < 12) {
+                    pH = 5 + (vol - 8) * 1.5; // Steep rise around equivalence
+                } else {
+                    pH = 11 + (vol - 12) * 0.2; // Final slow rise
+                }
+                pH = Math.min(13, Math.max(2, pH)); // Clamp between 2-13
+                points.push({vol, pH});
+            }
+            return points;
+        }
+        
+        const curvePoints = generateCurvePoints();
+        
+        // Draw initial curve
+        curvePoints.forEach((point, i) => {
+            if (i > 0) {
+                const prevPoint = curvePoints[i-1];
+                const line = document.createElement('div');
+                line.style.position = 'absolute';
+                line.style.height = '2px';
+                line.style.backgroundColor = '#3498db';
+                
+                // Calculate positions (normalize to plot area)
+                const x1 = (prevPoint.vol / 20) * 100;
+                const y1 = 100 - ((prevPoint.pH - 2) / 11) * 100;
+                const x2 = (point.vol / 20) * 100;
+                const y2 = 100 - ((point.pH - 2) / 11) * 100;
+                
+                // Calculate length and angle for the line
+                const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                
+                line.style.width = `${length}%`;
+                line.style.left = `${x1}%`;
+                line.style.bottom = `${y1}%`;
+                line.style.transformOrigin = '0 0';
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                curveContainer.appendChild(line);
+            }
+        });
+        
+        // Update titration simulation based on base amount
+        baseAmount.addEventListener('input', function() {
+            const vol = parseInt(this.value);
+            baseVolume.textContent = `${vol} mL`;
+            
+            // Update beaker visuals
+            baseLiquid.style.height = `${20 + vol * 3}px`;
+            
+            // Find corresponding pH from curve
+            const point = curvePoints.find(p => Math.round(p.vol) === vol);
+            if (point) {
+                const pH = point.pH.toFixed(1);
+                titrationPH.textContent = pH;
+                
+                // Update result beaker color based on pH
+                if (pH < 5) {
+                    resultLiquid.style.backgroundColor = '#ff9999'; // Red (acidic)
+                    titrationStatus.textContent = 'Solution is acidic';
+                } else if (pH < 8) {
+                    resultLiquid.style.backgroundColor = '#ffcc99'; // Orange (near neutral)
+                    titrationStatus.textContent = pH == 7 ? 'Solution is neutral' : 'Solution is near neutral';
+                } else {
+                    resultLiquid.style.backgroundColor = '#9999ff'; // Blue (basic)
+                    titrationStatus.textContent = 'Solution is basic';
+                }
+                
+                // Show endpoint marker around pH 7
+                if (pH >= 6.8 && pH <= 7.2) {
+                    endpointMarker.style.display = 'block';
+                    endpointMarker.style.left = `${(vol / 20) * 100}%`;
+                    endpointMarker.style.bottom = `${100 - ((point.pH - 2) / 11) * 100}%`;
+                    titrationStatus.textContent = 'Equivalence point reached!';
+                } else {
+                    endpointMarker.style.display = 'none';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

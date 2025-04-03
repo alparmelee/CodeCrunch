@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Course Navigation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .chapter-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chapter-header {
+            padding: 15px;
+            background-color: #2980b9;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .chapter-content {
+            padding: 15px;
+        }
+        
+        .chapter-title {
+            margin: 0;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        
+        .file-info {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            padding: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chemistry Course Navigation</h1>
+            <div class="subtitle">Access all chapters of your chemistry course</div>
+        </header>
+        
+        <div class="chapter-grid" id="chapterGrid"></div>
+        
+        <footer>
+            <p>Chemistry Course Navigation</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chapter data
+            const chapters = [
+                {
+                    number: 1,
+                    title: "Chemistry Foundations",
+                    file: "Chapter 1 chemistry-foundations.html"
+                },
+                {
+                    number: 2,
+                    title: "Periodic Table",
+                    file: "chapter 2 periodic-table.html"
+                },
+                {
+                    number: 3,
+                    title: "Chemistry Concepts (Simple)",
+                    file: "Chapter 3 chemistry-concepts-simple.html"
+                },
+                {
+                    number: 4,
+                    title: "Reactions",
+                    file: "Chapter 4 Reactions .html"
+                },
+                {
+                    number: 5,
+                    title: "States & Gas Laws",
+                    file: "Chapter 5 states-gas-laws.html"
+                },
+                {
+                    number: 6,
+                    title: "Bases",
+                    file: "Chapter 6 Bases.html"
+                },
+                {
+                    number: 7,
+                    title: "Thermochemistry Demo",
+                    file: "Chapter 7 thermochemistry-demo.html"
+                },
+                {
+                    number: 8,
+                    title: "Redox & Electrochemistry Explainer",
+                    file: "Chapter 8 redox-electrochemistry-explainer.html"
+                }
+            ];
+            
+            // Populate chapter grid
+            const chapterGrid = document.getElementById('chapterGrid');
+            
+            chapters.forEach(chapter => {
+                const card = document.createElement('div');
+                card.className = 'chapter-card';
+                card.innerHTML = `
+                    <div class="chapter-header">Chapter ${chapter.number}</div>
+                    <div class="chapter-content">
+                        <h3 class="chapter-title">${chapter.title}</h3>
+                        <div class="file-info">${chapter.file}</div>
+                    </div>
+                `;
+                
+                // Add click event to navigate to the chapter file
+                card.addEventListener('click', function() {
+                    window.location.href = encodeURI(chapter.file);
+                });
+                
+                chapterGrid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>

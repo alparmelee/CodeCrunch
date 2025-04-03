@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundations of Chemistry</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #1a237e;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        h1 {
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .tab-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #3949ab;
+        }
+        
+        .tab {
+            padding: 1rem;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            color: white;
+            transition: background 0.3s;
+        }
+        
+        .tab.active {
+            background: #283593;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Scientific Method */
+        .method-step {
+            border-left: 4px solid #3949ab;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+        }
+        
+        .method-step h3 {
+            margin-top: 0;
+            color: #3949ab;
+        }
+        
+        /* Lab Safety */
+        .safety-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            background: white;
+        }
+        
+        .safety-icon {
+            width: 60px;
+            height: 60px;
+            background: #ffcc80;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 24px;
+        }
+        
+        /* Measurements */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #e8eaf6;
+        }
+        
+        /* Atomic Structure */
+        .atom-container {
+            width: 300px;
+            height: 300px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        
+        .nucleus {
+            width: 100px;
+            height: 100px;
+            background: #ff5722;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.5);
+        }
+        
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px dashed #bbb;
+            border-radius: 50%;
+        }
+        
+        .orbit-1 {
+            width: 180px;
+            height: 180px;
+        }
+        
+        .orbit-2 {
+            width: 240px;
+            height: 240px;
+        }
+        
+        .orbit-3 {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .electron {
+            width: 20px;
+            height: 20px;
+            background: #2196f3;
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.7);
+        }
+        
+        .isotope-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .isotope-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .isotope-btn.active {
+            background: #3949ab;
+            color: white;
+        }
+        
+        .unit-converter {
+            background: #f1f8e9;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        
+        input, select, button {
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        button {
+            background: #3949ab;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .result {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Chapter 1: Foundations of Chemistry</h1>
+            <p>Interactive Learning Module</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="scientific-method">Scientific Method</div>
+                <div class="tab" data-tab="measurements">Measurements</div>
+                <div class="tab" data-tab="lab-safety">Lab Safety</div>
+                <div class="tab" data-tab="atomic-structure">Atomic Structure</div>
+            </div>
+            
+            <div id="scientific-method" class="tab-content active">
+                <h2>The Scientific Method</h2>
+                <p>The scientific method is a systematic approach to gaining knowledge through observation and experimentation.</p>
+                
+                <div class="method-step">
+                    <h3>1. Ask a Question</h3>
+                    <p>Begin with curiosity about a natural phenomenon or process.</p>
+                    <p><strong>Example:</strong> "Does temperature affect the rate of a chemical reaction?"</p>
+                </div>
+                
+                <div class="method-step">
+                    <h3>2. Research</h3>
+                    <p>Gather information about what is already known on the topic.</p>
+                </div>
+                
+                <div class="method-step">
+                    <h3>3. Form a Hypothesis</h3>
+                    <p>Make an educated guess that answers your question and can be tested.</p>
+                    <p><strong>Example:</strong> "If the temperature is increased, then the rate of reaction will increase."</p>
+                </div>
+                
+                <div class="method-step">
+                    <h3>4. Experiment</h3>
+                    <p>Design and conduct experiments to test your hypothesis.</p>
+                    <p>Control variables: Keep all factors constant except for the one being tested.</p>
+                </div>
+                
+                <div class="method-step">
+                    <h3>5. Analyze Data</h3>
+                    <p>Organize and analyze the results of your experiment.</p>
+                </div>
+                
+                <div class="method-step">
+                    <h3>6. Draw Conclusions</h3>
+                    <p>Determine if your data supports or refutes your hypothesis.</p>
+                </div>
+                
+                <div class="method-step">
+                    <h3>7. Communicate Results</h3>
+                    <p>Share your findings with the scientific community for peer review.</p>
+                </div>
+            </div>
+            
+            <div id="measurements" class="tab-content">
+                <h2>Scientific Measurements</h2>
+                <p>Chemistry relies on precise measurements using the International System of Units (SI).</p>
+                
+                <h3>Basic SI Units</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Symbol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Length</td>
+                            <td>meter</td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>Mass</td>
+                            <td>kilogram</td>
+                            <td>kg</td>
+                        </tr>
+                        <tr>
+                            <td>Time</td>
+                            <td>second</td>
+                            <td>s</td>
+                        </tr>
+                        <tr>
+                            <td>Temperature</td>
+                            <td>kelvin</td>
+                            <td>K</td>
+                        </tr>
+                        <tr>
+                            <td>Amount of substance</td>
+                            <td>mole</td>
+                            <td>mol</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Unit Converter</h3>
+                <div class="unit-converter">
+                    <div>
+                        <input type="number" id="value-input" placeholder="Enter value">
+                        <select id="from-unit">
+                            <option value="g">grams (g)</option>
+                            <option value="kg">kilograms (kg)</option>
+                            <option value="mg">milligrams (mg)</option>
+                            <option value="mL">milliliters (mL)</option>
+                            <option value="L">liters (L)</option>
+                            <option value="cm">centimeters (cm)</option>
+                            <option value="m">meters (m)</option>
+                            <option value="°C">Celsius (°C)</option>
+                            <option value="K">Kelvin (K)</option>
+                        </select>
+                        to
+                        <select id="to-unit">
+                            <option value="g">grams (g)</option>
+                            <option value="kg">kilograms (kg)</option>
+                            <option value="mg">milligrams (mg)</option>
+                            <option value="mL">milliliters (mL)</option>
+                            <option value="L">liters (L)</option>
+                            <option value="cm">centimeters (cm)</option>
+                            <option value="m">meters (m)</option>
+                            <option value="°C">Celsius (°C)</option>
+                            <option value="K">Kelvin (K)</option>
+                        </select>
+                        <button id="convert-btn">Convert</button>
+                    </div>
+                    <div class="result" id="conversion-result"></div>
+                </div>
+                
+                <h3>Scientific Notation</h3>
+                <p>Scientists use scientific notation to express very large or very small numbers:</p>
+                <p>Format: a × 10<sup>b</sup> where 1 ≤ a < 10 and b is an integer</p>
+                <p><strong>Example:</strong> 0.00000456 = 4.56 × 10<sup>-6</sup></p>
+                
+                <h3>Significant Figures</h3>
+                <p>The number of digits that carry meaningful information about a measurement.</p>
+                <p><strong>Rules:</strong></p>
+                <ul>
+                    <li>Non-zero digits are always significant</li>
+                    <li>Zeros between significant digits are significant</li>
+                    <li>Leading zeros are never significant</li>
+                    <li>Trailing zeros after a decimal point are significant</li>
+                </ul>
+            </div>
+            
+            <div id="lab-safety" class="tab-content">
+                <h2>Laboratory Safety & Techniques</h2>
+                
+                <h3>Essential Safety Rules</h3>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">👁️</div>
+                    <div>
+                        <h4>Always Wear Safety Goggles</h4>
+                        <p>Protect your eyes from chemicals and flying debris at all times in the lab.</p>
+                    </div>
+                </div>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">🥼</div>
+                    <div>
+                        <h4>Wear Appropriate Clothing</h4>
+                        <p>Lab coats, closed-toe shoes, and tie back long hair.</p>
+                    </div>
+                </div>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">🔬</div>
+                    <div>
+                        <h4>No Unauthorized Experiments</h4>
+                        <p>Never perform unauthorized experiments or modify procedures without permission.</p>
+                    </div>
+                </div>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">🚿</div>
+                    <div>
+                        <h4>Know Safety Equipment Location</h4>
+                        <p>Locate eyewash stations, safety showers, fire extinguishers, and exits before beginning work.</p>
+                    </div>
+                </div>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">⚗️</div>
+                    <div>
+                        <h4>Handle Chemicals Properly</h4>
+                        <p>Never taste or directly smell chemicals. Use wafting technique for odors.</p>
+                    </div>
+                </div>
+                
+                <h3>Common Lab Techniques</h3>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">⚖️</div>
+                    <div>
+                        <h4>Measuring Mass</h4>
+                        <p>Use analytical balances for precise measurements. Always tare the balance with a container before adding substances.</p>
+                    </div>
+                </div>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">🧪</div>
+                    <div>
+                        <h4>Measuring Volume</h4>
+                        <p>Use graduated cylinders, pipettes, or burettes depending on the precision required.</p>
+                    </div>
+                </div>
+                
+                <div class="safety-card">
+                    <div class="safety-icon">🔥</div>
+                    <div>
+                        <h4>Heating Substances</h4>
+                        <p>Use water baths for gentle heating. For direct heating, use Bunsen burners with caution.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="atomic-structure" class="tab-content">
+                <h2>Atomic Structure</h2>
+                <p>Atoms are the basic units of matter and consist of three main subatomic particles.</p>
+                
+                <div class="isotope-selector">
+                    <button class="isotope-btn active" data-isotope="h1">Hydrogen-1</button>
+                    <button class="isotope-btn" data-isotope="h2">Hydrogen-2 (Deuterium)</button>
+                    <button class="isotope-btn" data-isotope="h3">Hydrogen-3 (Tritium)</button>
+                </div>
+                
+                <div class="atom-container">
+                    <div class="orbit orbit-1"></div>
+                    <div class="orbit orbit-2"></div>
+                    <div class="orbit orbit-3"></div>
+                    <div class="nucleus" id="nucleus">1p</div>
+                    <!-- Electrons will be added by JavaScript -->
+                </div>
+                
+                <h3>Subatomic Particles</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Particle</th>
+                            <th>Symbol</th>
+                            <th>Charge</th>
+                            <th>Location</th>
+                            <th>Mass (AMU)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Proton</td>
+                            <td>p</td>
+                            <td>+1</td>
+                            <td>Nucleus</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>Neutron</td>
+                            <td>n</td>
+                            <td>0</td>
+                            <td>Nucleus</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>Electron</td>
+                            <td>e<sup>-</sup></td>
+                            <td>-1</td>
+                            <td>Energy levels</td>
+                            <td>0.0005</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Isotopes</h3>
+                <p>Isotopes are atoms of the same element with different numbers of neutrons.</p>
+                <p>They have the same atomic number (number of protons) but different mass numbers (protons + neutrons).</p>
+                <div id="isotope-info">
+                    <p><strong>Hydrogen-1 (Protium):</strong> 1 proton, 0 neutrons, 1 electron</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Unit converter
+        document.getElementById('convert-btn').addEventListener('click', () => {
+            const value = parseFloat(document.getElementById('value-input').value);
+            const fromUnit = document.getElementById('from-unit').value;
+            const toUnit = document.getElementById('to-unit').value;
+            
+            if (isNaN(value)) {
+                document.getElementById('conversion-result').textContent = 'Please enter a valid number';
+                return;
+            }
+            
+            let result;
+            
+            // Mass conversions
+            if ((fromUnit === 'g' || fromUnit === 'kg' || fromUnit === 'mg') && 
+                (toUnit === 'g' || toUnit === 'kg' || toUnit === 'mg')) {
+                
+                // Convert to grams first
+                let valueInGrams;
+                if (fromUnit === 'g') valueInGrams = value;
+                else if (fromUnit === 'kg') valueInGrams = value * 1000;
+                else if (fromUnit === 'mg') valueInGrams = value / 1000;
+                
+                // Convert to target unit
+                if (toUnit === 'g') result = valueInGrams;
+                else if (toUnit === 'kg') result = valueInGrams / 1000;
+                else if (toUnit === 'mg') result = valueInGrams * 1000;
+            }
+            
+            // Volume conversions
+            else if ((fromUnit === 'mL' || fromUnit === 'L') && 
+                     (toUnit === 'mL' || toUnit === 'L')) {
+                
+                // Convert to mL first
+                let valueInMl;
+                if (fromUnit === 'mL') valueInMl = value;
+                else if (fromUnit === 'L') valueInMl = value * 1000;
+                
+                // Convert to target unit
+                if (toUnit === 'mL') result = valueInMl;
+                else if (toUnit === 'L') result = valueInMl / 1000;
+            }
+            
+            // Length conversions
+            else if ((fromUnit === 'cm' || fromUnit === 'm') && 
+                     (toUnit === 'cm' || toUnit === 'm')) {
+                
+                // Convert to cm first
+                let valueInCm;
+                if (fromUnit === 'cm') valueInCm = value;
+                else if (fromUnit === 'm') valueInCm = value * 100;
+                
+                // Convert to target unit
+                if (toUnit === 'cm') result = valueInCm;
+                else if (toUnit === 'm') result = valueInCm / 100;
+            }
+            
+            // Temperature conversions
+            else if ((fromUnit === '°C' || fromUnit === 'K') && 
+                     (toUnit === '°C' || toUnit === 'K')) {
+                
+                if (fromUnit === '°C' && toUnit === 'K') {
+                    result = value + 273.15;
+                } else if (fromUnit === 'K' && toUnit === '°C') {
+                    result = value - 273.15;
+                } else {
+                    result = value; // Same unit
+                }
+            }
+            
+            else {
+                document.getElementById('conversion-result').textContent = 'Incompatible unit conversion';
+                return;
+            }
+            
+            document.getElementById('conversion-result').textContent = 
+                `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+        });
+        
+        // Atom visualization
+        function updateAtom(isotope) {
+            // Clear previous electrons
+            document.querySelectorAll('.electron').forEach(e => e.remove());
+            
+            const nucleus = document.getElementById('nucleus');
+            const isotopeInfo = document.getElementById('isotope-info');
+            
+            // Update nucleus and info based on isotope
+            if (isotope === 'h1') {
+                nucleus.textContent = '1p';
+                isotopeInfo.innerHTML = '<p><strong>Hydrogen-1 (Protium):</strong> 1 proton, 0 neutrons, 1 electron</p>';
+            } else if (isotope === 'h2') {
+                nucleus.textContent = '1p 1n';
+                isotopeInfo.innerHTML = '<p><strong>Hydrogen-2 (Deuterium):</strong> 1 proton, 1 neutron, 1 electron</p>';
+            } else if (isotope === 'h3') {
+                nucleus.textContent = '1p 2n';
+                isotopeInfo.innerHTML = '<p><strong>Hydrogen-3 (Tritium):</strong> 1 proton, 2 neutrons, 1 electron</p>';
+            }
+            
+            // Add electron to first orbit
+            const electron = document.createElement('div');
+            electron.className = 'electron';
+            document.querySelector('.atom-container').appendChild(electron);
+            
+            // Position electron
+            const angle = Math.random() * Math.PI * 2;
+            const orbit = document.querySelector('.orbit-1');
+            const radius = parseInt(getComputedStyle(orbit).width) / 2;
+            const orbitCenter = {
+                x: orbit.offsetLeft + orbit.offsetWidth / 2,
+                y: orbit.offsetTop + orbit.offsetHeight / 2
+            };
+            
+            electron.style.left = (orbitCenter.x + radius * Math.cos(angle)) + 'px';
+            electron.style.top = (orbitCenter.y + radius * Math.sin(angle)) + 'px';
+            
+            // Animate electron
+            let currentAngle = angle;
+            setInterval(() => {
+                currentAngle += 0.02;
+                electron.style.left = (orbitCenter.x + radius * Math.cos(currentAngle)) + 'px';
+                electron.style.top = (orbitCenter.y + radius * Math.sin(currentAngle)) + 'px';
+            }, 20);
+        }
+        
+        // Set up isotope buttons
+        document.querySelectorAll('.isotope-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.isotope-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                updateAtom(btn.getAttribute('data-isotope'));
+            });
+        });
+        
+        // Initialize the atom visualization
+        updateAtom('h1');
+    </script>
+</body>
+</html>

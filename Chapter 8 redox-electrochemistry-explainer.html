@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redox & Electrochemistry Interactive Tutorial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .interactive {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .animation-container {
+            position: relative;
+            height: 250px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .definition {
+            background-color: #eaf2f8;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin: 10px 0;
+        }
+        .example {
+            background-color: #e8f8f5;
+            padding: 10px;
+            border-left: 4px solid #2ecc71;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .electron {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #3498db;
+            border-radius: 50%;
+            transition: all 1s ease;
+        }
+        .atom {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 1s ease;
+        }
+        .half-cell {
+            position: absolute;
+            width: 120px;
+            height: 200px;
+            bottom: 0;
+            border: 2px solid #aaa;
+        }
+        .electrode {
+            position: absolute;
+            width: 20px;
+            height: 180px;
+            background-color: #555;
+            bottom: 10px;
+            border-radius: 2px;
+        }
+        .solution {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            bottom: 0;
+            opacity: 0.5;
+        }
+        .battery-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+            gap: 20px;
+        }
+        .battery {
+            width: 100px;
+            height: 150px;
+            background-color: #eee;
+            border: 2px solid #555;
+            position: relative;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        .battery-terminal {
+            height: 10px;
+            width: 30px;
+            background-color: #333;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .battery-content {
+            flex: 1;
+            display: flex;
+        }
+        .battery-anode {
+            flex: 1;
+            background-color: #ff9999;
+        }
+        .battery-cathode {
+            flex: 1;
+            background-color: #9999ff;
+        }
+        .quiz {
+            background-color: #f3e5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Redox & Electrochemistry Interactive Tutorial</h1>
+        
+        <div class="section">
+            <h2>1. Oxidation-Reduction (Redox) Reactions</h2>
+            
+            <p>Redox reactions involve the transfer of electrons between chemical species. They consist of two half-reactions:</p>
+            <ul>
+                <li><strong>Oxidation:</strong> Loss of electrons (LEO - Loss of Electrons is Oxidation)</li>
+                <li><strong>Reduction:</strong> Gain of electrons (GER - Gain of Electrons is Reduction)</li>
+            </ul>
+            
+            <div class="definition">
+                <p><strong>Oxidation Number:</strong> A concept used to track electron transfers. In redox reactions:</p>
+                <ul>
+                    <li>Increase in oxidation number = Oxidation</li>
+                    <li>Decrease in oxidation number = Reduction</li>
+                </ul>
+            </div>
+            
+            <h3>Interactive Redox Demonstration</h3>
+            <div class="interactive">
+                <p>Click to see the electron transfer in a redox reaction between zinc (Zn) and copper (Cu²⁺):</p>
+                <p>Zn(s) + Cu²⁺(aq) → Zn²⁺(aq) + Cu(s)</p>
+                <button id="startRedoxBtn">Start Redox Reaction</button>
+                <button id="resetRedoxBtn">Reset</button>
+                
+                <div class="animation-container" id="redoxAnimation">
+                    <div class="atom" id="zinc" style="left: 100px; top: 100px; background-color: #A9A9A9;">Zn</div>
+                    <div class="atom" id="copper" style="left: 300px; top: 100px; background-color: #b87333;">Cu²⁺</div>
+                </div>
+                
+                <div id="redoxExplanation">
+                    <p><strong>Explanation:</strong></p>
+                    <ul>
+                        <li>Zinc is oxidized (loses 2 electrons): Zn → Zn²⁺ + 2e⁻</li>
+                        <li>Copper is reduced (gains 2 electrons): Cu²⁺ + 2e⁻ → Cu</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Common Oxidizing and Reducing Agents</h3>
+            <table>
+                <tr>
+                    <th>Oxidizing Agents (accept electrons)</th>
+                    <th>Reducing Agents (donate electrons)</th>
+                </tr>
+                <tr>
+                    <td>O₂, F₂, Cl₂, Br₂</td>
+                    <td>H₂, Na, Mg, Al, Zn</td>
+                </tr>
+                <tr>
+                    <td>MnO₄⁻, Cr₂O₇²⁻, H₂O₂</td>
+                    <td>Fe²⁺, I⁻, S²⁻, C</td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <p><strong>Example:</strong> Consider the reaction between magnesium and oxygen:</p>
+                <p>2Mg(s) + O₂(g) → 2MgO(s)</p>
+                <ul>
+                    <li>Mg is oxidized from 0 to +2</li>
+                    <li>O is reduced from 0 to -2</li>
+                    <li>Mg is the reducing agent</li>
+                    <li>O₂ is the oxidizing agent</li>
+                </ul>
+            </div>
+            
+            <div class="quiz">
+                <h4>Quick Check:</h4>
+                <p>In the reaction: Fe²⁺ + Cl₂ → Fe³⁺ + 2Cl⁻</p>
+                <p>Which species is oxidized?</p>
+                <button id="quizBtn1">Fe²⁺</button>
+                <button id="quizBtn2">Cl₂</button>
+                <p id="quizAnswer" class="hidden"></p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>2. Electrochemical Cells</h2>
+            
+            <p>Electrochemical cells convert chemical energy into electrical energy (or vice versa) through redox reactions.</p>
+            
+            <h3>Galvanic/Voltaic Cells (Spontaneous)</h3>
+            <p>These cells produce electricity from spontaneous redox reactions.</p>
+            
+            <div class="interactive">
+                <h4>Zinc-Copper Galvanic Cell</h4>
+                <button id="startCellBtn">Start Cell</button>
+                <button id="resetCellBtn">Reset</button>
+                
+                <div class="animation-container" id="cellAnimation">
+                    <!-- Half-cells will be added by JavaScript -->
+                </div>
+                
+                <div id="cellExplanation">
+                    <p><strong>Cell Components:</strong></p>
+                    <ul>
+                        <li><strong>Anode:</strong> Zinc electrode (oxidation occurs) - negative terminal</li>
+                        <li><strong>Cathode:</strong> Copper electrode (reduction occurs) - positive terminal</li>
+                        <li><strong>Salt Bridge:</strong> Allows ion movement to maintain electrical neutrality</li>
+                        <li><strong>External Circuit:</strong> Path for electrons to flow from anode to cathode</li>
+                    </ul>
+                    <p><strong>Cell Notation:</strong> Zn(s) | Zn²⁺(aq) || Cu²⁺(aq) | Cu(s)</p>
+                </div>
+            </div>
+            
+            <h4>Cell Potential (Voltage)</h4>
+            <p>The cell potential (E°cell) is the measure of the driving force of the redox reaction:</p>
+            <p>E°cell = E°cathode - E°anode</p>
+            <p>For our Zn-Cu cell: E°cell = +0.34V - (-0.76V) = +1.10V</p>
+            
+            <h3>Electrolytic Cells (Non-spontaneous)</h3>
+            <p>These cells use electrical energy to drive non-spontaneous redox reactions.</p>
+            <p>Common applications include electroplating and the production of aluminum and chlorine.</p>
+        </div>
+        
+        <div class="section">
+            <h2>3. Batteries</h2>
+            
+            <p>Batteries are portable electrochemical cells designed to provide electrical energy.</p>
+            
+            <div class="battery-container" id="batteryTypes">
+                <!-- Batteries will be added by JavaScript -->
+            </div>
+            
+            <h3>Types of Batteries</h3>
+            <table>
+                <tr>
+                    <th>Battery Type</th>
+                    <th>Chemistry</th>
+                    <th>Applications</th>
+                </tr>
+                <tr>
+                    <td>Alkaline</td>
+                    <td>Zn/MnO₂</td>
+                    <td>Household devices</td>
+                </tr>
+                <tr>
+                    <td>Lithium-ion</td>
+                    <td>LiCoO₂/Graphite</td>
+                    <td>Electronics, EVs</td>
+                </tr>
+                <tr>
+                    <td>Lead-acid</td>
+                    <td>Pb/PbO₂</td>
+                    <td>Car batteries</td>
+                </tr>
+                <tr>
+                    <td>Nickel-Cadmium</td>
+                    <td>Ni(OH)₂/Cd</td>
+                    <td>Power tools</td>
+                </tr>
+            </table>
+            
+            <div class="example">
+                <h4>Lithium-ion Battery</h4>
+                <p>Half-reactions:</p>
+                <ul>
+                    <li>Anode: LiC₆ → C₆ + Li⁺ + e⁻</li>
+                    <li>Cathode: Li₁₋ₓCoO₂ + xLi⁺ + xe⁻ → LiCoO₂</li>
+                </ul>
+                <p>Advantages: High energy density, low self-discharge, no memory effect</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Summary</h2>
+            <ul>
+                <li><strong>Redox Reactions:</strong> Involve electron transfer with oxidation (loss of electrons) and reduction (gain of electrons)</li>
+                <li><strong>Galvanic Cells:</strong> Spontaneous redox reactions produce electricity</li>
+                <li><strong>Electrolytic Cells:</strong> Use electricity to drive non-spontaneous redox reactions</li>
+                <li><strong>Batteries:</strong> Portable electrochemical cells with various chemistries for different applications</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Redox Animation
+        document.getElementById('startRedoxBtn').addEventListener('click', function() {
+            const zincAtom = document.getElementById('zinc');
+            const copperAtom = document.getElementById('copper');
+            const container = document.getElementById('redoxAnimation');
+            
+            // Create electrons
+            for (let i = 0; i < 2; i++) {
+                const electron = document.createElement('div');
+                electron.className = 'electron';
+                electron.style.left = '120px';
+                electron.style.top = (110 + i * 10) + 'px';
+                container.appendChild(electron);
+                
+                // Animate electron movement
+                setTimeout(() => {
+                    electron.style.left = '290px';
+                    electron.style.top = (110 + i * 10) + 'px';
+                }, 500 + i * 300);
+            }
+            
+            // Change atom labels after electron transfer
+            setTimeout(() => {
+                zincAtom.textContent = 'Zn²⁺';
+                copperAtom.textContent = 'Cu';
+                copperAtom.style.backgroundColor = '#b87333';
+            }, 1500);
+        });
+
+        document.getElementById('resetRedoxBtn').addEventListener('click', function() {
+            const container = document.getElementById('redoxAnimation');
+            const zincAtom = document.getElementById('zinc');
+            const copperAtom = document.getElementById('copper');
+            
+            // Remove all electrons
+            const electrons = container.querySelectorAll('.electron');
+            electrons.forEach(e => e.remove());
+            
+            // Reset atoms
+            zincAtom.textContent = 'Zn';
+            copperAtom.textContent = 'Cu²⁺';
+        });
+
+        // Electrochemical Cell Animation
+        document.getElementById('startCellBtn').addEventListener('click', function() {
+            const container = document.getElementById('cellAnimation');
+            container.innerHTML = '';
+            
+            // Create half-cells
+            const anodeCell = document.createElement('div');
+            anodeCell.className = 'half-cell';
+            anodeCell.style.left = '50px';
+            
+            const cathodeCell = document.createElement('div');
+            cathodeCell.className = 'half-cell';
+            cathodeCell.style.right = '50px';
+            
+            // Create electrodes
+            const anodeElectrode = document.createElement('div');
+            anodeElectrode.className = 'electrode';
+            anodeElectrode.style.left = '50px';
+            anodeElectrode.style.backgroundColor = '#A9A9A9'; // Zinc color
+            
+            const cathodeElectrode = document.createElement('div');
+            cathodeElectrode.className = 'electrode';
+            cathodeElectrode.style.right = '50px';
+            cathodeElectrode.style.backgroundColor = '#b87333'; // Copper color
+            
+            // Create solutions
+            const anodeSolution = document.createElement('div');
+            anodeSolution.className = 'solution';
+            anodeSolution.style.backgroundColor = '#e6f7ff';
+            
+            const cathodeSolution = document.createElement('div');
+            cathodeSolution.className = 'solution';
+            cathodeSolution.style.backgroundColor = '#e6f7ff';
+            
+            // Create salt bridge
+            const saltBridge = document.createElement('div');
+            saltBridge.style.position = 'absolute';
+            saltBridge.style.width = '180px';
+            saltBridge.style.height = '30px';
+            saltBridge.style.backgroundColor = '#f5f5f5';
+            saltBridge.style.border = '1px solid #ddd';
+            saltBridge.style.top = '50px';
+            saltBridge.style.left = '120px';
+            
+            // Append elements
+            anodeCell.appendChild(anodeSolution);
+            cathodeCell.appendChild(cathodeSolution);
+            
+            container.appendChild(anodeCell);
+            container.appendChild(cathodeCell);
+            container.appendChild(anodeElectrode);
+            container.appendChild(cathodeElectrode);
+            container.appendChild(saltBridge);
+            
+            // Add labels
+            const anodeLabel = document.createElement('div');
+            anodeLabel.textContent = 'Anode (Zn)';
+            anodeLabel.style.position = 'absolute';
+            anodeLabel.style.left = '40px';
+            anodeLabel.style.top = '220px';
+            
+            const cathodeLabel = document.createElement('div');
+            cathodeLabel.textContent = 'Cathode (Cu)';
+            cathodeLabel.style.position = 'absolute';
+            cathodeLabel.style.right = '40px';
+            cathodeLabel.style.top = '220px';
+            
+            const saltBridgeLabel = document.createElement('div');
+            saltBridgeLabel.textContent = 'Salt Bridge';
+            saltBridgeLabel.style.position = 'absolute';
+            saltBridgeLabel.style.left = '190px';
+            saltBridgeLabel.style.top = '30px';
+            
+            container.appendChild(anodeLabel);
+            container.appendChild(cathodeLabel);
+            container.appendChild(saltBridgeLabel);
+            
+            // Create electrons flowing
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const electron = document.createElement('div');
+                    electron.className = 'electron';
+                    electron.style.left = '70px';
+                    electron.style.top = '100px';
+                    container.appendChild(electron);
+                    
+                    setTimeout(() => {
+                        electron.style.left = '350px';
+                    }, 300);
+                    
+                    setTimeout(() => {
+                        electron.remove();
+                    }, 1300);
+                }, i * 500);
+            }
+        });
+
+        document.getElementById('resetCellBtn').addEventListener('click', function() {
+            document.getElementById('cellAnimation').innerHTML = '';
+        });
+
+        // Battery Visualization
+        function createBatteries() {
+            const container = document.getElementById('batteryTypes');
+            
+            const batteries = [
+                { name: 'Alkaline', color1: '#d9d9d9', color2: '#8c8c8c' },
+                { name: 'Li-ion', color1: '#ffcccc', color2: '#ccd9ff' },
+                { name: 'Lead-acid', color1: '#e6e6e6', color2: '#999999' }
+            ];
+            
+            batteries.forEach(battery => {
+                const batteryElement = document.createElement('div');
+                batteryElement.className = 'battery';
+                
+                const terminal = document.createElement('div');
+                terminal.className = 'battery-terminal';
+                
+                const content = document.createElement('div');
+                content.className = 'battery-content';
+                
+                const anode = document.createElement('div');
+                anode.className = 'battery-anode';
+                anode.style.backgroundColor = battery.color1;
+                
+                const cathode = document.createElement('div');
+                cathode.className = 'battery-cathode';
+                cathode.style.backgroundColor = battery.color2;
+                
+                const label = document.createElement('div');
+                label.textContent = battery.name;
+                label.style.textAlign = 'center';
+                label.style.padding = '5px';
+                
+                content.appendChild(anode);
+                content.appendChild(cathode);
+                
+                batteryElement.appendChild(terminal);
+                batteryElement.appendChild(content);
+                batteryElement.appendChild(label);
+                
+                container.appendChild(batteryElement);
+            });
+        }
+        
+        // Quiz functionality
+        document.getElementById('quizBtn1').addEventListener('click', function() {
+            const answer = document.getElementById('quizAnswer');
+            answer.textContent = 'Correct! Fe²⁺ is oxidized to Fe³⁺ (loses an electron)';
+            answer.style.color = 'green';
+            answer.classList.remove('hidden');
+        });
+        
+        document.getElementById('quizBtn2').addEventListener('click', function() {
+            const answer = document.getElementById('quizAnswer');
+            answer.textContent = 'Incorrect. Cl₂ is reduced to Cl⁻ (gains electrons)';
+            answer.style.color = 'red';
+            answer.classList.remove('hidden');
+        });
+        
+        // Initialize visualizations
+        window.onload = function() {
+            createBatteries();
+        };
+    </script>
+</body>
+</html>

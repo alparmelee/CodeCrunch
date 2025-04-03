@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Concepts</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 15px; }
+        h1, h2 { color: #2c3e50; }
+        .tabs { display: flex; border-bottom: 1px solid #ddd; }
+        .tab { padding: 8px 15px; cursor: pointer; background: #f1f1f1; border: 1px solid #ddd; border-bottom: none; margin-right: 5px; border-radius: 5px 5px 0 0; }
+        .tab.active { background: #3498db; color: white; }
+        .content { display: none; padding: 15px; border: 1px solid #ddd; border-top: none; }
+        .content.active { display: block; }
+        select, button { padding: 6px 10px; margin: 5px; border-radius: 4px; border: 1px solid #ddd; }
+        button { background: #3498db; color: white; border: none; cursor: pointer; }
+        .molecule { text-align: center; margin: 10px; width: 45%; float: left; }
+        canvas { max-width: 100%; height: 180px; }
+        .explanation { background: #f9f9f9; padding: 10px; border-radius: 5px; margin-top: 10px; clear: both; }
+    </style>
+</head>
+<body>
+    <h1>Chapter 3 Bonding</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab(event, 'periodic-trends')">Periodic Trends</div>
+        <div class="tab" onclick="openTab(event, 'bonding')">Bonding</div>
+        <div class="tab" onclick="openTab(event, 'lewis')">Lewis & Geometry</div>
+    </div>
+    
+    <div id="periodic-trends" class="content active">
+        <h2>Periodic Trends</h2>
+        <select id="trend-selector" onchange="changeTrend()">
+            <option value="atomic-radius">Atomic Radius</option>
+            <option value="ionization-energy">Ionization Energy</option>
+            <option value="electronegativity">Electronegativity</option>
+        </select>
+        <canvas id="trend-canvas" width="700" height="250"></canvas>
+        <div id="trend-explanation" class="explanation"></div>
+    </div>
+    
+    <div id="bonding" class="content">
+        <h2>Ionic vs. Covalent Bonding</h2>
+        <select id="element1">
+            <option value="Na">Na (Sodium)</option>
+            <option value="Cl">Cl (Chlorine)</option>
+            <option value="H">H (Hydrogen)</option>
+            <option value="O">O (Oxygen)</option>
+        </select>
+        <select id="element2">
+            <option value="Cl">Cl (Chlorine)</option>
+            <option value="Na">Na (Sodium)</option>
+            <option value="O">O (Oxygen)</option>
+            <option value="H">H (Hydrogen)</option>
+        </select>
+        <button onclick="showBond()">Show Bond</button>
+        <canvas id="bond-canvas" width="400" height="180"></canvas>
+        <div id="bond-explanation" class="explanation"></div>
+    </div>
+    
+    <div id="lewis" class="content">
+        <h2>Lewis Structures & Molecular Geometry</h2>
+        <select id="molecule-selector" onchange="showMolecule()">
+            <option value="H2O">H₂O (Water)</option>
+            <option value="CO2">CO₂ (Carbon Dioxide)</option>
+            <option value="NH3">NH₃ (Ammonia)</option>
+            <option value="CH4">CH₄ (Methane)</option>
+        </select>
+        <div class="molecule">
+            <h3>Lewis Structure</h3>
+            <canvas id="lewis-canvas" width="180" height="180"></canvas>
+        </div>
+        <div class="molecule">
+            <h3>Molecular Geometry</h3>
+            <canvas id="geometry-canvas" width="180" height="180"></canvas>
+        </div>
+        <div id="molecule-explanation" class="explanation"></div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            document.querySelectorAll(".content").forEach(c => c.classList.remove("active"));
+            evt.currentTarget.classList.add("active");
+            document.getElementById(tabName).classList.add("active");
+            
+            if (tabName === "periodic-trends") changeTrend();
+            else if (tabName === "bonding") showBond();
+            else if (tabName === "lewis") showMolecule();
+        }
+        
+        // Periodic Trends
+        function changeTrend() {
+            const trend = document.getElementById("trend-selector").value;
+            const canvas = document.getElementById("trend-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const colors = {
+                "atomic-radius": ["#ff0000", "#ffcccc"],
+                "ionization-energy": ["#0000ff", "#ccccff"],
+                "electronegativity": ["#008800", "#ccffcc"]
+            };
+            const gradientColor = colors[trend][0];
+            
+            ctx.font = "14px Arial";
+            ctx.textAlign = "center";
+            
+            // Draw horizontal trend (period)
+            const gradient = ctx.createLinearGradient(70, 80, 630, 80);
+            if (trend === "atomic-radius") {
+                gradient.addColorStop(0, gradientColor);
+                gradient.addColorStop(1, colors[trend][1]);
+                ctx.fillText("Decreases →", 350, 60);
+            } else {
+                gradient.addColorStop(0, colors[trend][1]);
+                gradient.addColorStop(1, gradientColor);
+                ctx.fillText("Increases →", 350, 60);
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(70, 80, 560, 40);
+            
+            // Draw vertical trend (group)
+            const vGradient = ctx.createLinearGradient(70, 140, 70, 240);
+            if (trend === "atomic-radius") {
+                vGradient.addColorStop(0, colors[trend][1]);
+                vGradient.addColorStop(1, gradientColor);
+                ctx.fillText("↓ Increases", 70, 130);
+            } else {
+                vGradient.addColorStop(0, gradientColor);
+                vGradient.addColorStop(1, colors[trend][1]);
+                ctx.fillText("↓ Decreases", 70, 130);
+            }
+            ctx.fillStyle = vGradient;
+            ctx.fillRect(70, 140, 40, 100);
+            
+            // Add labels
+            ctx.fillStyle = "#000";
+            ctx.fillText("Period →", 350, 40);
+            ctx.fillText("Group", 40, 190);
+            
+            // Update explanation
+            const explanations = {
+                "atomic-radius": "<h3>Atomic Radius</h3><p>Decreases from left to right (more protons pull electrons closer). Increases down a group (more electron shells).</p>",
+                "ionization-energy": "<h3>Ionization Energy</h3><p>Increases from left to right (electrons harder to remove). Decreases down a group (valence electrons farther from nucleus).</p>",
+                "electronegativity": "<h3>Electronegativity</h3><p>Increases from left to right (stronger pull on shared electrons). Decreases down a group (valence electrons farther from nucleus).</p>"
+            };
+            document.getElementById("trend-explanation").innerHTML = explanations[trend];
+        }
+        
+        // Ionic vs Covalent Bonding
+        function showBond() {
+            const element1 = document.getElementById("element1").value;
+            const element2 = document.getElementById("element2").value;
+            const canvas = document.getElementById("bond-canvas");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const electronegativities = {"H": 2.2, "O": 3.44, "Na": 0.93, "Cl": 3.16};
+            const en1 = electronegativities[element1];
+            const en2 = electronegativities[element2];
+            const difference = Math.abs(en1 - en2);
+            
+            let bondType = difference > 1.7 ? "Ionic" : difference > 0.4 ? "Polar Covalent" : "Nonpolar Covalent";
+            let color = bondType === "Ionic" ? "#ff6666" : bondType === "Polar Covalent" ? "#66aaff" : "#66ff66";
+            
+            // Draw elements
+            ctx.font = "16px Arial";
+            ctx.textAlign = "center";
+            
+            // Element 1
+            ctx.beginPath();
+            ctx.arc(100, 90, 30, 0, Math.PI * 2);
+            ctx.fillStyle = "#ddd";
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "#333";
+            ctx.fillText(element1, 100, 95);
+            
+            // Element 2
+            ctx.beginPath();
+            ctx.arc(300, 90, 30, 0, Math.PI * 2);
+            ctx.fillStyle = "#ddd";
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "#333";
+            ctx.fillText(element2, 300, 95);
+            
+            // Bond
+            ctx.beginPath();
+            ctx.moveTo(130, 90);
+            ctx.lineTo(270, 90);
+            ctx.lineWidth = 8;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+            ctx.lineWidth = 1;
+            
+            // Bond info
+            ctx.fillStyle = "#333";
+            ctx.fillText(bondType + " Bond", 200, 140);
+            ctx.fillText("EN Difference: " + difference.toFixed(2), 200, 160);
+            
+            // Update explanation
+            let explanation = `<h3>${element1}-${element2} Bond: ${bondType}</h3>`;
+            if (bondType === "Ionic") {
+                explanation += `<p>Electrons are transferred from ${en1 < en2 ? element1 : element2} to ${en1 < en2 ? element2 : element1}.</p>`;
+            } else {
+                explanation += `<p>Electrons are shared ${bondType === "Polar Covalent" ? "unequally" : "equally"} between atoms.</p>`;
+            }
+            document.getElementById("bond-explanation").innerHTML = explanation;
+        }
+        
+        // Lewis Structures and Molecular Geometry
+        function showMolecule() {
+            const molecule = document.getElementById("molecule-selector").value;
+            drawMolecule(molecule);
+            
+            // Update explanation
+            const explanations = {
+                "H2O": "<h3>H₂O (Water)</h3><p>Bent molecular geometry (104.5°). Two bonding pairs, two lone pairs on oxygen.</p>",
+                "CO2": "<h3>CO₂ (Carbon Dioxide)</h3><p>Linear molecular geometry (180°). Two double bonds, no lone pairs.</p>",
+                "NH3": "<h3>NH₃ (Ammonia)</h3><p>Trigonal pyramidal geometry (107°). Three bonding pairs, one lone pair.</p>",
+                "CH4": "<h3>CH₄ (Methane)</h3><p>Tetrahedral geometry (109.5°). Four bonding pairs, no lone pairs.</p>"
+            };
+            document.getElementById("molecule-explanation").innerHTML = explanations[molecule];
+        }
+        
+        function drawMolecule(molecule) {
+            // Lewis structure
+            const lewisCtx = document.getElementById("lewis-canvas").getContext("2d");
+            lewisCtx.clearRect(0, 0, 180, 180);
+            
+            // Geometry
+            const geoCtx = document.getElementById("geometry-canvas").getContext("2d");
+            geoCtx.clearRect(0, 0, 180, 180);
+            
+            // Draw based on molecule type
+            if (molecule === "H2O") {
+                // Lewis: O with 2 lone pairs, bonded to 2 H
+                drawAtom(lewisCtx, 90, 90, "O", "#ff6666");
+                drawAtom(lewisCtx, 40, 70, "H", "#eee");
+                drawAtom(lewisCtx, 140, 70, "H", "#eee");
+                drawBond(lewisCtx, 75, 85, 55, 75);
+                drawBond(lewisCtx, 105, 85, 125, 75);
+                drawLonePair(lewisCtx, 80, 110);
+                drawLonePair(lewisCtx, 100, 110);
+                
+                // Geometry: Bent
+                drawAtom(geoCtx, 90, 90, "O", "#ff6666");
+                drawAtom(geoCtx, 50, 60, "H", "#eee");
+                drawAtom(geoCtx, 130, 60, "H", "#eee");
+                drawBond(geoCtx, 80, 80, 60, 65);
+                drawBond(geoCtx, 100, 80, 120, 65);
+                geoCtx.fillText("104.5°", 90, 120);
+                
+            } else if (molecule === "CO2") {
+                // Lewis: C double-bonded to 2 O
+                drawAtom(lewisCtx, 90, 90, "C", "#666666", "#fff");
+                drawAtom(lewisCtx, 30, 90, "O", "#ff6666");
+                drawAtom(lewisCtx, 150, 90, "O", "#ff6666");
+                drawDoubleBond(lewisCtx, 70, 90, 50, 90);
+                drawDoubleBond(lewisCtx, 110, 90, 130, 90);
+                
+                // Geometry: Linear
+                drawAtom(geoCtx, 90, 90, "C", "#666666", "#fff");
+                drawAtom(geoCtx, 40, 90, "O", "#ff6666");
+                drawAtom(geoCtx, 140, 90, "O", "#ff6666");
+                drawBond(geoCtx, 75, 90, 55, 90);
+                drawBond(geoCtx, 105, 90, 125, 90);
+                geoCtx.fillText("180°", 90, 120);
+                
+            } else if (molecule === "NH3") {
+                // Lewis: N with 1 lone pair, bonded to 3 H
+                drawAtom(lewisCtx, 90, 90, "N", "#6666ff", "#fff");
+                drawAtom(lewisCtx, 60, 130, "H", "#eee");
+                drawAtom(lewisCtx, 120, 130, "H", "#eee");
+                drawAtom(lewisCtx, 90, 50, "H", "#eee");
+                drawBond(lewisCtx, 80, 100, 70, 120);
+                drawBond(lewisCtx, 100, 100, 110, 120);
+                drawBond(lewisCtx, 90, 75, 90, 65);
+                drawLonePair(lewisCtx, 90, 110);
+                
+                // Geometry: Trigonal pyramidal
+                drawAtom(geoCtx, 90, 90, "N", "#6666ff", "#fff");
+                drawAtom(geoCtx, 60, 120, "H", "#eee");
+                drawAtom(geoCtx, 120, 120, "H", "#eee");
+                drawAtom(geoCtx, 90, 50, "H", "#eee");
+                drawBond(geoCtx, 80, 100, 70, 110);
+                drawBond(geoCtx, 100, 100, 110, 110);
+                drawBond(geoCtx, 90, 75, 90, 65);
+                geoCtx.fillText("107°", 90, 140);
+                
+            } else if (molecule === "CH4") {
+                // Lewis: C bonded to 4 H
+                drawAtom(lewisCtx, 90, 90, "C", "#666666", "#fff");
+                drawAtom(lewisCtx, 50, 50, "H", "#eee");
+                drawAtom(lewisCtx, 130, 50, "H", "#eee");
+                drawAtom(lewisCtx, 50, 130, "H", "#eee");
+                drawAtom(lewisCtx, 130, 130, "H", "#eee");
+                drawBond(lewisCtx, 80, 80, 60, 60);
+                drawBond(lewisCtx, 100, 80, 120, 60);
+                drawBond(lewisCtx, 80, 100, 60, 120);
+                drawBond(lewisCtx, 100, 100, 120, 120);
+                
+                // Geometry: Tetrahedral
+                drawAtom(geoCtx, 90, 90, "C", "#666666", "#fff");
+                drawAtom(geoCtx, 60, 60, "H", "#eee");
+                drawAtom(geoCtx, 120, 60, "H", "#eee");
+                drawAtom(geoCtx, 60, 120, "H", "#eee");
+                drawAtom(geoCtx, 120, 120, "H", "#eee");
+                drawBond(geoCtx, 80, 80, 70, 70);
+                drawBond(geoCtx, 100, 80, 110, 70);
+                drawBond(geoCtx, 80, 100, 70, 110);
+                drawBond(geoCtx, 100, 100, 110, 110);
+                geoCtx.fillText("109.5°", 90, 150);
+            }
+        }
+        
+        // Helper functions for drawing molecules
+        function drawAtom(ctx, x, y, label, color, textColor = "#000") {
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = textColor;
+            ctx.font = "12px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(label, x, y + 4);
+        }
+        
+        function drawBond(ctx, x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+        
+        function drawDoubleBond(ctx, x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1 - 3);
+            ctx.lineTo(x2, y2 - 3);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x1, y1 + 3);
+            ctx.lineTo(x2, y2 + 3);
+            ctx.stroke();
+        }
+        
+        function drawLonePair(ctx, x, y) {
+            ctx.fillStyle = "#ffff00";
+            ctx.beginPath();
+            ctx.arc(x - 5, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x + 5, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        }
+        
+        // Initialize
+        changeTrend();
+    </script>
+</body>
+</html>

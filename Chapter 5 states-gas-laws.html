@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>States of Matter & Gas Laws</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .highlight {
+            background-color: #e8f4fd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .interactive-demo {
+            background-color: #f1f8fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .simulation {
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #3498db;
+        }
+        
+        .controls {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        input[type="range"] {
+            width: 200px;
+        }
+        
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .formula {
+            font-family: "Times New Roman", Times, serif;
+            font-style: italic;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        
+        .gas-law-calculator {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .result-display {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .state-comparison {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .state-box {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        #gas-law-graph {
+            height: 200px;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        
+        .graph-axis {
+            position: absolute;
+            background-color: #333;
+        }
+        
+        .x-axis {
+            bottom: 30px;
+            left: 40px;
+            right: 20px;
+            height: 2px;
+        }
+        
+        .y-axis {
+            bottom: 30px;
+            left: 40px;
+            top: 20px;
+            width: 2px;
+        }
+        
+        .graph-point {
+            width: 6px;
+            height: 6px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>States of Matter & Gas Laws</h1>
+    
+    <div class="section">
+        <h2>1. States of Matter</h2>
+        <p>Matter exists in three common states: solids, liquids, and gases. Each state has distinct properties based on the arrangement and motion of particles.</p>
+        
+        <div class="state-comparison">
+            <div class="state-box">
+                <h3>Solids</h3>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>Definite shape and volume</li>
+                    <li>Particles tightly packed in fixed positions</li>
+                    <li>Only vibrate in place</li>
+                    <li>Strong attractive forces between particles</li>
+                    <li>High density</li>
+                </ul>
+            </div>
+            
+            <div class="state-box">
+                <h3>Liquids</h3>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>No definite shape, but definite volume</li>
+                    <li>Particles close together but can move past each other</li>
+                    <li>Flow and take shape of container</li>
+                    <li>Moderate attractive forces</li>
+                    <li>Medium density</li>
+                </ul>
+            </div>
+            
+            <div class="state-box">
+                <h3>Gases</h3>
+                <p><strong>Properties:</strong></p>
+                <ul>
+                    <li>No definite shape or volume</li>
+                    <li>Particles are far apart and move freely</li>
+                    <li>Fill entire container</li>
+                    <li>Weak attractive forces</li>
+                    <li>Low density</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h3>Phase Changes</h3>
+        <table>
+            <tr>
+                <th>Change</th>
+                <th>Process</th>
+                <th>Energy</th>
+            </tr>
+            <tr>
+                <td>Solid → Liquid</td>
+                <td>Melting/Fusion</td>
+                <td>Absorbs heat (endothermic)</td>
+            </tr>
+            <tr>
+                <td>Liquid → Gas</td>
+                <td>Vaporization/Evaporation</td>
+                <td>Absorbs heat (endothermic)</td>
+            </tr>
+            <tr>
+                <td>Gas → Liquid</td>
+                <td>Condensation</td>
+                <td>Releases heat (exothermic)</td>
+            </tr>
+            <tr>
+                <td>Liquid → Solid</td>
+                <td>Freezing/Solidification</td>
+                <td>Releases heat (exothermic)</td>
+            </tr>
+            <tr>
+                <td>Solid → Gas</td>
+                <td>Sublimation</td>
+                <td>Absorbs heat (endothermic)</td>
+            </tr>
+            <tr>
+                <td>Gas → Solid</td>
+                <td>Deposition</td>
+                <td>Releases heat (exothermic)</td>
+            </tr>
+        </table>
+        
+        <div class="interactive-demo">
+            <h3>Interactive Particle Motion Simulation</h3>
+            <div class="controls">
+                <button id="show-solid">Solid</button>
+                <button id="show-liquid">Liquid</button>
+                <button id="show-gas">Gas</button>
+                <button id="increase-temp">Increase Temperature</button>
+            </div>
+            <div id="particle-simulation" class="simulation">
+                <!-- Particles will be added here by JavaScript -->
+            </div>
+            <p id="state-description">Select a state to see particle behavior</p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>2. Kinetic Molecular Theory</h2>
+        <p>The Kinetic Molecular Theory explains the behavior of matter, particularly gases, based on the motion of particles.</p>
+        
+        <h3>Key Principles:</h3>
+        <ol>
+            <li>All matter consists of tiny particles (atoms, molecules) in constant motion</li>
+            <li>Particles have energy of motion (kinetic energy) proportional to temperature</li>
+            <li>Collisions between particles are perfectly elastic (no net energy loss)</li>
+            <li>There are attractive forces between particles, strongest in solids and weakest in gases</li>
+            <li>The average kinetic energy of particles increases with temperature</li>
+        </ol>
+        
+        <h3>For Ideal Gases:</h3>
+        <ul>
+            <li>Gas particles have negligible volume compared to the container</li>
+            <li>There are no attractive forces between gas particles</li>
+            <li>Particles move randomly in straight lines</li>
+            <li>Collisions with the container walls create pressure</li>
+        </ul>
+        
+        <div class="interactive-demo">
+            <h3>Temperature and Kinetic Energy</h3>
+            <div class="slider-container">
+                <label for="temp-slider">Temperature (K): </label>
+                <input type="range" id="temp-slider" min="100" max="1000" value="300">
+                <span id="temp-value">300 K</span>
+            </div>
+            <div id="energy-simulation" class="simulation">
+                <!-- Particles will be added here by JavaScript -->
+            </div>
+            <p id="energy-description">Average kinetic energy: <span id="avg-energy">1.24 × 10<sup>-20</sup> J</span></p>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>3. Gas Laws</h2>
+        
+        <h3>Boyle's Law (Pressure-Volume Relationship)</h3>
+        <p>At constant temperature and amount of gas, the pressure is inversely proportional to the volume.</p>
+        <div class="formula">P₁V₁ = P₂V₂</div>
+        <p>If volume decreases, pressure increases, and vice versa.</p>
+        
+        <div class="gas-law-calculator">
+            <h4>Boyle's Law Calculator</h4>
+            <div class="slider-container">
+                <label for="volume-slider">Volume (L): </label>
+                <input type="range" id="volume-slider" min="1" max="10" value="5" step="0.1">
+                <span id="volume-value">5.0 L</span>
+            </div>
+            <p>At constant temperature (300K) and 1.0 atm initial pressure (V = 5.0L)</p>
+            <div class="result-display" id="boyle-result">
+                Pressure = 1.00 atm
+            </div>
+            <div id="boyle-graph" class="simulation">
+                <!-- Graph will be drawn here by JavaScript -->
+                <div class="graph-axis x-axis"></div>
+                <div class="graph-axis y-axis"></div>
+                <div class="axis-label" style="bottom: 10px; left: 50%;">Volume (L)</div>
+                <div class="axis-label" style="left: 10px; top: 50%; transform: rotate(-90deg);">Pressure (atm)</div>
+            </div>
+        </div>
+        
+        <h3>Charles's Law (Volume-Temperature Relationship)</h3>
+        <p>At constant pressure and amount of gas, the volume is directly proportional to the absolute temperature.</p>
+        <div class="formula">V₁/T₁ = V₂/T₂</div>
+        <p>If temperature increases, volume increases, and vice versa.</p>
+        
+        <div class="gas-law-calculator">
+            <h4>Charles's Law Calculator</h4>
+            <div class="slider-container">
+                <label for="charles-temp-slider">Temperature (K): </label>
+                <input type="range" id="charles-temp-slider" min="100" max="500" value="300" step="10">
+                <span id="charles-temp-value">300 K</span>
+            </div>
+            <p>At constant pressure (1.0 atm) and initial volume 5.0L at 300K</p>
+            <div class="result-display" id="charles-result">
+                Volume = 5.00 L
+            </div>
+            <div id="charles-graph" class="simulation">
+                <!-- Graph will be drawn here by JavaScript -->
+                <div class="graph-axis x-axis"></div>
+                <div class="graph-axis y-axis"></div>
+                <div class="axis-label" style="bottom: 10px; left: 50%;">Temperature (K)</div>
+                <div class="axis-label" style="left: 10px; top: 50%; transform: rotate(-90deg);">Volume (L)</div>
+            </div>
+        </div>
+        
+        <h3>Ideal Gas Law</h3>
+        <p>The Ideal Gas Law combines Boyle's Law, Charles's Law, and Avogadro's Law into a single equation:</p>
+        <div class="formula">PV = nRT</div>
+        <p>Where:</p>
+        <ul>
+            <li>P = Pressure (in atm, Pa, or other pressure units)</li>
+            <li>V = Volume (in L or m³)</li>
+            <li>n = Number of moles of gas</li>
+            <li>R = Gas constant (8.314 J/mol·K or 0.0821 L·atm/mol·K)</li>
+            <li>T = Temperature (in Kelvin)</li>
+        </ul>
+        
+        <div class="gas-law-calculator">
+            <h4>Ideal Gas Law Calculator</h4>
+            <p>Solve for the unknown variable:</p>
+            
+            <div class="controls">
+                <input type="number" id="pressure-input" placeholder="P (atm)" value="1.0" step="0.1">
+                <input type="number" id="volume-input" placeholder="V (L)" value="22.4" step="0.1">
+                <input type="number" id="moles-input" placeholder="n (mol)" value="1.0" step="0.1">
+                <input type="number" id="temperature-input" placeholder="T (K)" value="273.15" step="1">
+            </div>
+            <p>Gas constant (R) = 0.0821 L·atm/mol·K</p>
+            <button id="calculate-ideal">Calculate</button>
+            <div class="result-display" id="ideal-result">
+                Choose values and calculate
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particle Simulation
+        let particles = [];
+        const simulation = document.getElementById('particle-simulation');
+        const stateDescription = document.getElementById('state-description');
+        
+        function createParticles(count) {
+            // Clear existing particles
+            simulation.innerHTML = '';
+            particles = [];
+            
+            // Create new particles
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                simulation.appendChild(particle);
+                
+                particles.push({
+                    element: particle,
+                    x: Math.random() * (simulation.clientWidth - 10),
+                    y: Math.random() * (simulation.clientHeight - 10),
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: (Math.random() - 0.5) * 2
+                });
+            }
+        }
+        
+        // States of Matter buttons
+        document.getElementById('show-solid').addEventListener('click', function() {
+            createParticles(30);
+            // Place particles in a grid pattern
+            const rowCount = 5;
+            const colCount = 6;
+            const xStep = simulation.clientWidth / (colCount + 1);
+            const yStep = simulation.clientHeight / (rowCount + 1);
+            
+            let index = 0;
+            for (let row = 1; row <= rowCount; row++) {
+                for (let col = 1; col <= colCount && index < particles.length; col++) {
+                    particles[index].x = col * xStep;
+                    particles[index].y = row * yStep;
+                    particles[index].speedX = 0;
+                    particles[index].speedY = 0;
+                    index++;
+                }
+            }
+            
+            stateDescription.textContent = "Solid: Particles are tightly packed in a regular pattern and only vibrate in place.";
+            updateParticles();
+            
+            // Add small vibration
+            setInterval(() => {
+                particles.forEach(p => {
+                    p.x += (Math.random() - 0.5) * 1;
+                    p.y += (Math.random() - 0.5) * 1;
+                });
+                updateParticles();
+            }, 100);
+        });
+        
+        document.getElementById('show-liquid').addEventListener('click', function() {
+            createParticles(25);
+            particles.forEach(p => {
+                p.speedX = (Math.random() - 0.5) * 1;
+                p.speedY = (Math.random() - 0.5) * 1;
+            });
+            
+            stateDescription.textContent = "Liquid: Particles are close together but can move past each other with moderate speed.";
+            animateParticles();
+        });
+        
+        document.getElementById('show-gas').addEventListener('click', function() {
+            createParticles(15);
+            particles.forEach(p => {
+                p.speedX = (Math.random() - 0.5) * 4;
+                p.speedY = (Math.random() - 0.5) * 4;
+            });
+            
+            stateDescription.textContent = "Gas: Particles move quickly and freely, occupying the entire container space.";
+            animateParticles();
+        });
+        
+        document.getElementById('increase-temp').addEventListener('click', function() {
+            particles.forEach(p => {
+                p.speedX *= 1.5;
+                p.speedY *= 1.5;
+            });
+            stateDescription.textContent += " (Temperature increased: faster particle motion)";
+        });
+        
+        function updateParticles() {
+            particles.forEach(p => {
+                p.element.style.left = p.x + 'px';
+                p.element.style.top = p.y + 'px';
+            });
+        }
+        
+        let animationId;
+        function animateParticles() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            function move() {
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    // Bounce off walls
+                    if (p.x < 0 || p.x > simulation.clientWidth - 10) {
+                        p.speedX *= -1;
+                        p.x = p.x < 0 ? 0 : simulation.clientWidth - 10;
+                    }
+                    if (p.y < 0 || p.y > simulation.clientHeight - 10) {
+                        p.speedY *= -1;
+                        p.y = p.y < 0 ? 0 : simulation.clientHeight - 10;
+                    }
+                });
+                
+                updateParticles();
+                animationId = requestAnimationFrame(move);
+            }
+            
+            move();
+        }
+        
+        // Temperature and Kinetic Energy Simulation
+        const energySimulation = document.getElementById('energy-simulation');
+        const tempSlider = document.getElementById('temp-slider');
+        const tempValue = document.getElementById('temp-value');
+        const avgEnergy = document.getElementById('avg-energy');
+        let energyParticles = [];
+        
+        function createEnergyParticles() {
+            energySimulation.innerHTML = '';
+            energyParticles = [];
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                energySimulation.appendChild(particle);
+                
+                energyParticles.push({
+                    element: particle,
+                    x: Math.random() * (energySimulation.clientWidth - 10),
+                    y: Math.random() * (energySimulation.clientHeight - 10),
+                    speedX: (Math.random() - 0.5) * 2,
+                    speedY: (Math.random() - 0.5) * 2
+                });
+            }
+        }
+        
+        function updateEnergyParticles(temperature) {
+            const speedFactor = Math.sqrt(temperature / 300);
+            
+            energyParticles.forEach(p => {
+                p.speedX = (Math.random() - 0.5) * 4 * speedFactor;
+                p.speedY = (Math.random() - 0.5) * 4 * speedFactor;
+            });
+            
+            // Update average kinetic energy display
+            // E = (3/2)kT where k is Boltzmann constant
+            const boltzmann = 1.38e-23; // J/K
+            const energy = 1.5 * boltzmann * temperature;
+            const energyFormatted = energy.toExponential(2);
+            avgEnergy.textContent = energyFormatted + " J";
+        }
+        
+        tempSlider.addEventListener('input', function() {
+            const temperature = parseInt(this.value);
+            tempValue.textContent = temperature + " K";
+            updateEnergyParticles(temperature);
+        });
+        
+        function animateEnergyParticles() {
+            function move() {
+                energyParticles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    // Bounce off walls
+                    if (p.x < 0 || p.x > energySimulation.clientWidth - 10) {
+                        p.speedX *= -1;
+                        p.x = p.x < 0 ? 0 : energySimulation.clientWidth - 10;
+                    }
+                    if (p.y < 0 || p.y > energySimulation.clientHeight - 10) {
+                        p.speedY *= -1;
+                        p.y = p.y < 0 ? 0 : energySimulation.clientHeight - 10;
+                    }
+                    
+                    p.element.style.left = p.x + 'px';
+                    p.element.style.top = p.y + 'px';
+                });
+                
+                requestAnimationFrame(move);
+            }
+            
+            move();
+        }
+        
+        // Initialize energy simulation
+        createEnergyParticles();
+        updateEnergyParticles(300);
+        animateEnergyParticles();
+        
+        // Boyle's Law Calculator
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeValue = document.getElementById('volume-value');
+        const boyleResult = document.getElementById('boyle-result');
+        const boyleGraph = document.getElementById('boyle-graph');
+        
+        function updateBoyleLaw() {
+            const initialVolume = 5.0;
+            const initialPressure = 1.0;
+            const newVolume = parseFloat(volumeSlider.value);
+            
+            // P₁V₁ = P₂V₂
+            const newPressure = (initialPressure * initialVolume) / newVolume;
+            boyleResult.textContent = `Pressure = ${newPressure.toFixed(2)} atm`;
+            
+            // Update graph point
+            updateBoyleGraph(newVolume, newPressure);
+        }
+        
+        function updateBoyleGraph(volume, pressure) {
+            // Clear previous points
+            const oldPoints = boyleGraph.querySelectorAll('.graph-point');
+            oldPoints.forEach(point => point.remove());
+            
+            // Add new point
+            const point = document.createElement('div');
+            point.className = 'graph-point';
+            
+            // Scale to fit graph (x: 1-10L, y: 0.5-5atm)
+            const x = 40 + ((volume - 1) / 9) * (boyleGraph.clientWidth - 60);
+            const y = boyleGraph.clientHeight - 30 - ((pressure - 0.5) / 4.5) * (boyleGraph.clientHeight - 50);
+            
+            point.style.left = x + 'px';
+            point.style.top = y + 'px';
+            boyleGraph.appendChild(point);
+        }
+        
+        volumeSlider.addEventListener('input', function() {
+            volumeValue.textContent = this.value + " L";
+            updateBoyleLaw();
+        });
+        
+        // Charles's Law Calculator
+        const charlesTempSlider = document.getElementById('charles-temp-slider');
+        const charlesTempValue = document.getElementById('charles-temp-value');
+        const charlesResult = document.getElementById('charles-result');
+        const charlesGraph = document.getElementById('charles-graph');
+        
+        function updateCharlesLaw() {
+            const initialTemp = 300;
+            const initialVolume = 5.0;
+            const newTemp = parseFloat(charlesTempSlider.value);
+            
+            // V₁/T₁ = V₂/T₂
+            const newVolume = (initialVolume * newTemp) / initialTemp;
+            charlesResult.textContent = `Volume = ${newVolume.toFixed(2)} L`;
+            
+            // Update graph point
+            updateCharlesGraph(newTemp, newVolume);
+        }
+        
+        function updateCharlesGraph(temp, volume) {
+            // Clear previous points
+            const oldPoints = charlesGraph.querySelectorAll('.graph-point');
+            oldPoints.forEach(point => point.remove());
+            
+            // Add new point
+            const point = document.createElement('div');
+            point.className = 'graph-point';
+            
+            // Scale to fit graph (x: 100-500K, y: 0-10L)
+            const x = 40 + ((temp - 100) / 400) * (charlesGraph.clientWidth - 60);
+            const y = charlesGraph.clientHeight - 30 - (volume / 10) * (charlesGraph.clientHeight - 50);
+            
+            point.style.left = x + 'px';
+            point.style.top = y + 'px';
+            charlesGraph.appendChild(point);
+        }
+        
+        charlesTempSlider.addEventListener('input', function() {
+            charlesTempValue.textContent = this.value + " K";
+            updateCharlesLaw();
+        });
+        
+        // Ideal Gas Law Calculator
+        const pressureInput = document.getElementById('pressure-input');
+        const volumeInput = document.getElementById('volume-input');
+        const molesInput = document.getElementById('moles-input');
+        const temperatureInput = document.getElementById('temperature-input');
+        const idealResult = document.getElementById('ideal-result');
+        const calculateIdeal = document.getElementById('calculate-ideal');
+        
+        calculateIdeal.addEventListener('click', function() {
+            const P = parseFloat(pressureInput.value);
+            const V = parseFloat(volumeInput.value);
+            const n = parseFloat(molesInput.value);
+            const T = parseFloat(temperatureInput.value);
+            const R = 0.0821; // L·atm/mol·K
+            
+            let result = '';
+            
+            // Check which value to calculate based on which input is empty or set to 0
+            if (!P || P === 0) {
+                const calculatedP = (n * R * T) / V;
+                result = `Pressure = ${calculatedP.toFixed(4)} atm`;
+                pressureInput.value = calculatedP.toFixed(4);
+            } else if (!V || V === 0) {
+                const calculatedV = (n * R * T) / P;
+                result = `Volume = ${calculatedV.toFixed(4)} L`;
+                volumeInput.value = calculatedV.toFixed(4);
+            } else if (!n || n === 0) {
+                const calculatedN = (P * V) / (R * T);
+                result = `Moles = ${calculatedN.toFixed(4)} mol`;
+                molesInput.value = calculatedN.toFixed(4);
+            } else if (!T || T === 0) {
+                const calculatedT = (P * V) / (n * R);
+                result = `Temperature = ${calculatedT.toFixed(4)} K`;
+                temperatureInput.value = calculatedT.toFixed(4);
+            } else {
+                // Check if the equation balances
+                const leftSide = P * V;
+                const rightSide = n * R * T;
+                const percentDiff = Math.abs((leftSide - rightSide) / rightSide) * 100;
+                
+                if (percentDiff < 0.1) {
+                    result = "The equation is balanced! PV = nRT";
+                } else {
+                    result = `PV (${leftSide.toFixed(4)}) ≠ nRT (${rightSide.toFixed(4)})`;
+                }
+            }
+            
+            idealResult.textContent = result;
+        });
+        
+        // Initialize Boyle's and Charles's Law graphs
+        updateBoyleLaw();
+        updateCharlesLaw();
+    </script>
+</body>
+</html>

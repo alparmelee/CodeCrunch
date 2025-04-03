@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Reactions & Stoichiometry</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        h1, h2, h3 {
+            color: #1a5276;
+        }
+        
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .reaction {
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .interactive-tool {
+            background-color: #e8f8f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .result-box {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .molecule {
+            display: inline-block;
+            margin: 5px;
+            font-size: 20px;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            margin: 0 10px;
+        }
+        
+        #balancing-workspace {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background-color: #e8f4f8;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .coefficient {
+            width: 40px;
+            text-align: center;
+        }
+        
+        .element-count {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chemical Reactions & Stoichiometry</h1>
+    
+    <div class="section">
+        <h2>1. Types of Chemical Reactions</h2>
+        <p>Chemical reactions involve the transformation of reactants into products. There are several main types:</p>
+        
+        <h3>Synthesis (Combination) Reaction</h3>
+        <p>Two or more substances combine to form a new compound.</p>
+        <div class="reaction">A + B → AB</div>
+        <p>Example: <span class="reaction">2 Na + Cl₂ → 2 NaCl</span></p>
+        
+        <h3>Decomposition Reaction</h3>
+        <p>A compound breaks down into two or more simpler substances.</p>
+        <div class="reaction">AB → A + B</div>
+        <p>Example: <span class="reaction">2 H₂O₂ → 2 H₂O + O₂</span></p>
+        
+        <h3>Single Displacement (Replacement)</h3>
+        <p>An element replaces another element in a compound.</p>
+        <div class="reaction">A + BC → AC + B</div>
+        <p>Example: <span class="reaction">Zn + 2 HCl → ZnCl₂ + H₂</span></p>
+        
+        <h3>Double Displacement</h3>
+        <p>The ions of two compounds exchange places to form two new compounds.</p>
+        <div class="reaction">AB + CD → AD + CB</div>
+        <p>Example: <span class="reaction">AgNO₃ + NaCl → AgCl + NaNO₃</span></p>
+        
+        <h3>Combustion</h3>
+        <p>A substance combines with oxygen, releasing energy in the form of heat and light.</p>
+        <div class="reaction">Hydrocarbon + O₂ → CO₂ + H₂O</div>
+        <p>Example: <span class="reaction">CH₄ + 2 O₂ → CO₂ + 2 H₂O</span></p>
+
+        <div class="interactive-tool">
+            <h3>Reaction Type Identifier</h3>
+            <p>Select a reaction to see its type:</p>
+            <select id="reaction-selector">
+                <option value="synthesis">2 Mg + O₂ → 2 MgO</option>
+                <option value="decomposition">2 KClO₃ → 2 KCl + 3 O₂</option>
+                <option value="singlereplacement">Fe + CuSO₄ → FeSO₄ + Cu</option>
+                <option value="doublereplacement">BaCl₂ + Na₂SO₄ → BaSO₄ + 2 NaCl</option>
+                <option value="combustion">C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O</option>
+            </select>
+            <button id="identify-btn">Identify Reaction Type</button>
+            <div id="reaction-result" class="result-box"></div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>2. Balancing Chemical Equations</h2>
+        <p>Chemical equations must be balanced to satisfy the <span class="highlight">Law of Conservation of Mass</span> - matter cannot be created or destroyed in a chemical reaction.</p>
+        
+        <h3>Steps to Balance an Equation:</h3>
+        <ol>
+            <li>Write the unbalanced equation with correct formulas</li>
+            <li>Count the number of atoms of each element on both sides</li>
+            <li>Add coefficients to balance the number of atoms</li>
+            <li>Check that all atoms are balanced</li>
+        </ol>
+        
+        <div class="interactive-tool">
+            <h3>Equation Balancer</h3>
+            <p>Try balancing this equation by adjusting the coefficients:</p>
+            <div id="balancing-workspace">
+                <input type="number" min="1" max="20" value="1" class="coefficient" id="coef1"> 
+                <div class="molecule">H₂</div> 
+                <span>+</span> 
+                <input type="number" min="1" max="20" value="1" class="coefficient" id="coef2"> 
+                <div class="molecule">O₂</div> 
+                <span class="arrow">→</span> 
+                <input type="number" min="1" max="20" value="1" class="coefficient" id="coef3"> 
+                <div class="molecule">H₂O</div>
+            </div>
+            
+            <div class="element-count">
+                <p><strong>Hydrogen atoms:</strong> <span id="h-count-left">2</span> (left) vs <span id="h-count-right">2</span> (right)</p>
+                <p><strong>Oxygen atoms:</strong> <span id="o-count-left">2</span> (left) vs <span id="o-count-right">1</span> (right)</p>
+            </div>
+            
+            <button id="check-balance-btn">Check Balance</button>
+            <div id="balance-result" class="result-box"></div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>3. Mole Concept & Stoichiometric Calculations</h2>
+        <p>The <span class="highlight">mole</span> is the SI unit for amount of substance, containing exactly 6.022 × 10²³ particles (Avogadro's number).</p>
+        
+        <h3>Key Relationships:</h3>
+        <ul>
+            <li>1 mole = 6.022 × 10²³ particles</li>
+            <li>Moles = Mass (g) ÷ Molar Mass (g/mol)</li>
+            <li>Moles = Volume (L) ÷ Molar Volume (22.4 L/mol at STP)</li>
+        </ul>
+        
+        <h3>Stoichiometric Calculations</h3>
+        <p>Stoichiometry uses the balanced chemical equation to calculate quantities of reactants and products.</p>
+        
+        <div class="reaction">2 H₂ + O₂ → 2 H₂O</div>
+        <p>From this balanced equation, we can determine that:</p>
+        <ul>
+            <li>2 moles of H₂ react with 1 mole of O₂</li>
+            <li>2 moles of H₂ produce 2 moles of H₂O</li>
+            <li>1 mole of O₂ produces 2 moles of H₂O</li>
+        </ul>
+        
+        <div class="interactive-tool">
+            <h3>Stoichiometry Calculator</h3>
+            <p>For the reaction: 2 H₂ + O₂ → 2 H₂O</p>
+            
+            <div>
+                <label>Enter amount of H₂:</label>
+                <input type="number" id="h2-amount" value="10" min="0" step="0.1">
+                <select id="h2-unit">
+                    <option value="g">grams</option>
+                    <option value="mol">moles</option>
+                </select>
+            </div>
+            
+            <button id="calculate-btn">Calculate O₂ needed and H₂O produced</button>
+            <div id="stoich-result" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // Reaction Type Identifier
+        document.getElementById('identify-btn').addEventListener('click', function() {
+            const reaction = document.getElementById('reaction-selector').value;
+            const resultDiv = document.getElementById('reaction-result');
+            
+            let explanation = '';
+            switch(reaction) {
+                case 'synthesis':
+                    explanation = 'This is a <strong>Synthesis/Combination Reaction</strong>. Elements magnesium and oxygen combine to form a single compound (magnesium oxide).';
+                    break;
+                case 'decomposition':
+                    explanation = 'This is a <strong>Decomposition Reaction</strong>. Potassium chlorate breaks down into potassium chloride and oxygen gas.';
+                    break;
+                case 'singlereplacement':
+                    explanation = 'This is a <strong>Single Displacement/Replacement Reaction</strong>. Iron replaces copper in copper sulfate to form iron sulfate, and copper metal is released.';
+                    break;
+                case 'doublereplacement':
+                    explanation = 'This is a <strong>Double Displacement Reaction</strong>. The ions exchange partners: Ba²⁺ combines with SO₄²⁻, and Na⁺ combines with Cl⁻.';
+                    break;
+                case 'combustion':
+                    explanation = 'This is a <strong>Combustion Reaction</strong>. A hydrocarbon (propane) reacts with oxygen to produce carbon dioxide and water, typically releasing heat and light.';
+                    break;
+            }
+            
+            resultDiv.innerHTML = explanation;
+        });
+        
+        // Equation Balancer
+        function updateAtomCounts() {
+            const coef1 = parseInt(document.getElementById('coef1').value) || 0;
+            const coef2 = parseInt(document.getElementById('coef2').value) || 0;
+            const coef3 = parseInt(document.getElementById('coef3').value) || 0;
+            
+            // Calculate atoms on each side
+            const hLeft = coef1 * 2; // H₂ has 2 H atoms
+            const oLeft = coef2 * 2; // O₂ has 2 O atoms
+            
+            const hRight = coef3 * 2; // H₂O has 2 H atoms
+            const oRight = coef3;    // H₂O has 1 O atom
+            
+            // Update the counts
+            document.getElementById('h-count-left').textContent = hLeft;
+            document.getElementById('h-count-right').textContent = hRight;
+            document.getElementById('o-count-left').textContent = oLeft;
+            document.getElementById('o-count-right').textContent = oRight;
+        }
+        
+        // Add event listeners to update counts when coefficients change
+        document.getElementById('coef1').addEventListener('input', updateAtomCounts);
+        document.getElementById('coef2').addEventListener('input', updateAtomCounts);
+        document.getElementById('coef3').addEventListener('input', updateAtomCounts);
+        
+        document.getElementById('check-balance-btn').addEventListener('click', function() {
+            const coef1 = parseInt(document.getElementById('coef1').value) || 0;
+            const coef2 = parseInt(document.getElementById('coef2').value) || 0;
+            const coef3 = parseInt(document.getElementById('coef3').value) || 0;
+            
+            const hLeft = coef1 * 2;
+            const oLeft = coef2 * 2;
+            const hRight = coef3 * 2;
+            const oRight = coef3;
+            
+            const resultDiv = document.getElementById('balance-result');
+            
+            if (hLeft === hRight && oLeft === oRight) {
+                resultDiv.innerHTML = '<span style="color: green;">✓ The equation is balanced!</span>';
+                
+                // Check if the coefficients are in their simplest form
+                const gcd = findGCD(findGCD(coef1, coef2), coef3);
+                if (gcd > 1) {
+                    resultDiv.innerHTML += '<br>However, the coefficients can be simplified by dividing all by ' + gcd + '.';
+                }
+            } else {
+                resultDiv.innerHTML = '<span style="color: red;">✗ The equation is not balanced.</span><br>';
+                
+                if (hLeft !== hRight) {
+                    resultDiv.innerHTML += 'Hydrogen atoms: ' + hLeft + ' ≠ ' + hRight + '<br>';
+                }
+                
+                if (oLeft !== oRight) {
+                    resultDiv.innerHTML += 'Oxygen atoms: ' + oLeft + ' ≠ ' + oRight;
+                }
+                
+                // Give a hint if close to the correct answer
+                if ((coef1 === 2 && coef2 === 1 && coef3 !== 2) || 
+                    (coef1 * coef3 === coef2 * 2 * 2 && coef1 !== 2)) {
+                    resultDiv.innerHTML += '<br><br>Hint: Try coefficients 2:1:2 for H₂:O₂:H₂O';
+                }
+            }
+        });
+        
+        // Stoichiometry Calculator
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            const h2Amount = parseFloat(document.getElementById('h2-amount').value) || 0;
+            const h2Unit = document.getElementById('h2-unit').value;
+            const resultDiv = document.getElementById('stoich-result');
+            
+            // Constants
+            const h2MolarMass = 2.016; // g/mol
+            const o2MolarMass = 32.00; // g/mol
+            const h2oMolarMass = 18.02; // g/mol
+            
+            let h2Moles;
+            if (h2Unit === 'g') {
+                h2Moles = h2Amount / h2MolarMass;
+            } else {
+                h2Moles = h2Amount; // Already in moles
+            }
+            
+            // According to balanced equation 2 H₂ + O₂ → 2 H₂O
+            const o2Moles = h2Moles / 2; // O₂ moles = H₂ moles ÷ 2
+            const h2oMoles = h2Moles; // H₂O moles = H₂ moles (1:1 ratio)
+            
+            // Convert to grams
+            const o2Grams = o2Moles * o2MolarMass;
+            const h2oGrams = h2oMoles * h2oMolarMass;
+            
+            resultDiv.innerHTML = `
+                <p>Starting with ${h2Amount} ${h2Unit} of H₂:</p>
+                <p>H₂: ${h2Moles.toFixed(4)} moles</p>
+                <p>O₂ needed: ${o2Moles.toFixed(4)} moles (${o2Grams.toFixed(4)} g)</p>
+                <p>H₂O produced: ${h2oMoles.toFixed(4)} moles (${h2oGrams.toFixed(4)} g)</p>
+            `;
+        });
+        
+        // Utility function to find GCD
+        function findGCD(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                const t = b;
+                b = a % b;
+                a = t;
+            }
+            return a;
+        }
+    </script>
+</body>
+</html>
