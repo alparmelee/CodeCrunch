@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biochemistry & Genetics Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f8ff;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      border-radius: 5px 5px 0 0;
+    }
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    .tab button.active {
+      background-color: #3498db;
+      color: white;
+    }
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+    .concept-card {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .concept-title {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    .interactive-area {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+    }
+    select, button, input {
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .visual-area {
+      height: 200px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+      padding: 10px;
+    }
+    .dna-strand {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .nucleotide {
+      width: 30px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2px;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+    }
+    .molecule-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .molecule-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Biochemistry & Genetics Calculator</h1>
+    
+    <div class="tab">
+      <button class="tablinks active" onclick="openTab(event, 'biochemistry')">Biochemistry</button>
+      <button class="tablinks" onclick="openTab(event, 'genetics')">Genetics</button>
+    </div>
+    
+    <div id="biochemistry" class="tabcontent" style="display:block;">
+      <h2>Biochemistry</h2>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Macromolecules</h3>
+        <p>Biological macromolecules are large molecules essential for life processes.</p>
+        <div class="interactive-area">
+          <h4>Macromolecule Structure & Function</h4>
+          <select id="macromolecule-type">
+            <option value="carbohydrates">Carbohydrates</option>
+            <option value="proteins">Proteins</option>
+            <option value="lipids">Lipids</option>
+            <option value="nucleic-acids">Nucleic Acids</option>
+          </select>
+          <button onclick="showMacromoleculeInfo()">Show Information</button>
+          <div id="macromolecule-result" class="visual-area" style="height: auto; min-height: 100px;"></div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Enzyme Activity</h3>
+        <p>Enzymes are biological catalysts that speed up chemical reactions in cells.</p>
+        <div class="interactive-area">
+          <h4>Enzyme Activity Calculator</h4>
+          <div>
+            <label for="substrate-conc">Substrate Concentration (mM):</label>
+            <input type="number" id="substrate-conc" value="5" min="1" max="20" step="1">
+          </div>
+          <div>
+            <label for="enzyme-temp">Temperature (°C):</label>
+            <input type="number" id="enzyme-temp" value="37" min="0" max="100" step="1">
+          </div>
+          <div>
+            <label for="enzyme-ph">pH Level:</label>
+            <input type="number" id="enzyme-ph" value="7" min="1" max="14" step="0.5">
+          </div>
+          <button onclick="calculateEnzymeActivity()">Calculate Activity</button>
+          <p id="enzyme-activity-result"></p>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Metabolism</h3>
+        <p>Metabolism encompasses all biochemical reactions in an organism.</p>
+        <div class="interactive-area">
+          <h4>Metabolic Pathway Calculator</h4>
+          <select id="metabolism-type">
+            <option value="glycolysis">Glycolysis (Glucose Breakdown)</option>
+            <option value="krebs">Krebs Cycle (Citric Acid Cycle)</option>
+            <option value="etc">Electron Transport Chain</option>
+            <option value="photosynthesis">Photosynthesis</option>
+          </select>
+          <button onclick="showMetabolismInfo()">Show ATP Production</button>
+          <p id="metabolism-result"></p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="genetics" class="tabcontent">
+      <h2>Genetics</h2>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">DNA Structure</h3>
+        <p>DNA (deoxyribonucleic acid) is a molecule carrying genetic instructions.</p>
+        <div class="interactive-area">
+          <h4>DNA Base Pair Calculator</h4>
+          <div>
+            <label for="dna-sequence">Enter DNA sequence (e.g., ATGC):</label>
+            <input type="text" id="dna-sequence" placeholder="ATGC" maxlength="20" value="ATGC">
+          </div>
+          <button onclick="showDNAComplementary()">Generate Complementary Strand</button>
+          <div id="dna-visual" class="visual-area" style="height: auto; min-height: 100px;"></div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Mendelian Genetics</h3>
+        <p>Principles of inheritance first described by Gregor Mendel.</p>
+        <div class="interactive-area">
+          <h4>Punnett Square Calculator</h4>
+          <div>
+            <label for="parent1">Parent 1 Genotype:</label>
+            <select id="parent1">
+              <option value="AA">AA (Homozygous Dominant)</option>
+              <option value="Aa">Aa (Heterozygous)</option>
+              <option value="aa">aa (Homozygous Recessive)</option>
+            </select>
+          </div>
+          <div>
+            <label for="parent2">Parent 2 Genotype:</label>
+            <select id="parent2">
+              <option value="AA">AA (Homozygous Dominant)</option>
+              <option value="Aa" selected>Aa (Heterozygous)</option>
+              <option value="aa">aa (Homozygous Recessive)</option>
+            </select>
+          </div>
+          <button onclick="calculatePunnettSquare()">Generate Punnett Square</button>
+          <div id="punnett-result" style="margin-top: 15px;"></div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Mutations</h3>
+        <p>Changes in DNA sequence that can alter the genetic information.</p>
+        <div class="interactive-area">
+          <h4>Mutation Effects Simulator</h4>
+          <div>
+            <label for="mutation-type">Select Mutation Type:</label>
+            <select id="mutation-type">
+              <option value="substitution">Substitution</option>
+              <option value="insertion">Insertion</option>
+              <option value="deletion">Deletion</option>
+              <option value="frameshift">Frameshift</option>
+            </select>
+          </div>
+          <div>
+            <label for="original-sequence">Original DNA Sequence:</label>
+            <input type="text" id="original-sequence" value="ATGCCG" placeholder="ATGCCG">
+          </div>
+          <button onclick="simulateMutation()">Simulate Mutation</button>
+          <div id="mutation-result" style="margin-top: 15px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab functionality
+    function openTab(evt, tabName) {
+      var tabcontent = document.getElementsByClassName("tabcontent");
+      for (var i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      
+      var tablinks = document.getElementsByClassName("tablinks");
+      for (var i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    // Biochemistry - Macromolecules
+    function showMacromoleculeInfo() {
+      const type = document.getElementById("macromolecule-type").value;
+      const resultDiv = document.getElementById("macromolecule-result");
+      
+      const info = {
+        'carbohydrates': {
+          color: '#FF9933',
+          name: 'Carbohydrates',
+          structure: 'Made of carbon, hydrogen, and oxygen (CH₂O)ₙ',
+          examples: 'Glucose, sucrose, starch, glycogen, cellulose',
+          function: 'Primary energy source, structural components in plants (cellulose), energy storage (glycogen, starch)'
+        },
+        'proteins': {
+          color: '#3366CC',
+          name: 'Proteins',
+          structure: 'Polymers of amino acids linked by peptide bonds',
+          examples: 'Enzymes, antibodies, hemoglobin, collagen',
+          function: 'Catalysis (enzymes), transport (hemoglobin), structure (collagen), defense (antibodies)'
+        },
+        'lipids': {
+          color: '#FFCC00',
+          name: 'Lipids',
+          structure: 'Diverse group including fats, phospholipids, steroids; hydrophobic',
+          examples: 'Triglycerides, phospholipids, cholesterol, waxes',
+          function: 'Energy storage, cell membrane structure, insulation, hormones'
+        },
+        'nucleic-acids': {
+          color: '#66CC66',
+          name: 'Nucleic Acids',
+          structure: 'Polymers of nucleotides (sugar, phosphate, nitrogenous base)',
+          examples: 'DNA, RNA, ATP',
+          function: 'Storage and transfer of genetic information, protein synthesis'
+        }
+      };
+      
+      const molecule = info[type];
+      resultDiv.innerHTML = `
+        <div class="molecule-info">
+          <div class="molecule-color" style="background-color:${molecule.color}"></div>
+          <h3>${molecule.name}</h3>
+        </div>
+        <p><strong>Structure:</strong> ${molecule.structure}</p>
+        <p><strong>Examples:</strong> ${molecule.examples}</p>
+        <p><strong>Function:</strong> ${molecule.function}</p>
+      `;
+    }
+    
+    // Biochemistry - Enzyme Activity
+    function calculateEnzymeActivity() {
+      const substrate = parseFloat(document.getElementById("substrate-conc").value);
+      const temperature = parseFloat(document.getElementById("enzyme-temp").value);
+      const pH = parseFloat(document.getElementById("enzyme-ph").value);
+      const resultDiv = document.getElementById("enzyme-activity-result");
+      
+      let activity = 100; // baseline activity
+      
+      // Substrate effect (using simplified Michaelis-Menten kinetics)
+      activity = activity * (substrate / (substrate + 2)); // 2 is our Km value
+      
+      // Temperature effect (simplified bell curve around 37°C)
+      const tempFactor = 1 - Math.abs(temperature - 37) / 50;
+      activity = activity * (tempFactor > 0 ? tempFactor : 0);
+      
+      // pH effect (simplified bell curve around pH 7)
+      const pHFactor = 1 - Math.abs(pH - 7) / 7;
+      activity = activity * (pHFactor > 0 ? pHFactor : 0);
+      
+      activity = Math.round(activity * 100) / 100; // round to 2 decimal places
+      
+      let effectivenessMsg = "";
+      if (activity > 80) effectivenessMsg = "Optimal activity";
+      else if (activity > 50) effectivenessMsg = "Good activity";
+      else if (activity > 20) effectivenessMsg = "Reduced activity";
+      else effectivenessMsg = "Poor activity";
+      
+      resultDiv.innerHTML = `
+        <strong>Enzyme Activity: ${activity}%</strong> (${effectivenessMsg})<br>
+        <span style="font-size:14px;">
+          • Substrate concentration: ${substrate > 10 ? "Approaching saturation" : substrate < 3 ? "Limiting factor" : "Optimal range"}<br>
+          • Temperature: ${Math.abs(temperature - 37) < 5 ? "Optimal" : temperature > 50 ? "Risk of denaturation" : "Suboptimal"}<br>
+          • pH: ${Math.abs(pH - 7) < 1 ? "Optimal" : "Suboptimal"}
+        </span>
+      `;
+    }
+    
+    // Biochemistry - Metabolism
+    function showMetabolismInfo() {
+      const pathway = document.getElementById("metabolism-type").value;
+      const resultDiv = document.getElementById("metabolism-result");
+      
+      const pathways = {
+        'glycolysis': {
+          name: 'Glycolysis',
+          description: 'Glucose → 2 Pyruvate',
+          location: 'Cytoplasm',
+          atp: 'Net ATP production: 2 ATP',
+          other: 'Also produces 2 NADH'
+        },
+        'krebs': {
+          name: 'Krebs Cycle (Citric Acid Cycle)',
+          description: 'Acetyl-CoA → CO₂',
+          location: 'Mitochondrial matrix',
+          atp: 'Net ATP production: 2 ATP per glucose',
+          other: 'Also produces 6 NADH and 2 FADH₂ per glucose'
+        },
+        'etc': {
+          name: 'Electron Transport Chain',
+          description: 'NADH/FADH₂ → H₂O',
+          location: 'Inner mitochondrial membrane',
+          atp: 'Net ATP production: ~32-34 ATP per glucose',
+          other: 'Consumes oxygen as final electron acceptor'
+        },
+        'photosynthesis': {
+          name: 'Photosynthesis',
+          description: 'CO₂ + H₂O → Glucose + O₂',
+          location: 'Chloroplasts',
+          atp: 'Uses ATP (does not produce net ATP)',
+          other: 'Light reactions produce ATP and NADPH; Calvin cycle uses these to fix carbon'
+        }
+      };
+      
+      const selected = pathways[pathway];
+      resultDiv.innerHTML = `
+        <strong>${selected.name}</strong><br>
+        <strong>Process:</strong> ${selected.description}<br>
+        <strong>Location:</strong> ${selected.location}<br>
+        <strong>Energy:</strong> ${selected.atp}<br>
+        <strong>Notes:</strong> ${selected.other}
+      `;
+    }
+    
+    // Genetics - DNA Structure
+    function showDNAComplementary() {
+      const sequence = document.getElementById("dna-sequence").value.toUpperCase();
+      const resultDiv = document.getElementById("dna-visual");
+      
+      const complementMap = {
+        'A': 'T',
+        'T': 'A',
+        'G': 'C',
+        'C': 'G'
+      };
+      
+      const baseColors = {
+        'A': '#3CB371', // Green
+        'T': '#CD5C5C', // Red
+        'G': '#4169E1', // Blue
+        'C': '#FFD700'  // Yellow
+      };
+      
+      let topStrand = '<div class="dna-strand">';
+      let bottomStrand = '<div class="dna-strand">';
+      let connectors = '<div class="dna-strand">';
+      
+      for (let i = 0; i < sequence.length; i++) {
+        const base = sequence[i];
+        if (!complementMap[base]) continue; // Skip invalid characters
+        
+        const complement = complementMap[base];
+        
+        topStrand += `<div class="nucleotide" style="background-color:${baseColors[base]}">${base}</div>`;
+        connectors += `<div style="width:30px; text-align:center;">|</div>`;
+        bottomStrand += `<div class="nucleotide" style="background-color:${baseColors[complement]}">${complement}</div>`;
+      }
+      
+      topStrand += '</div>';
+      connectors += '</div>';
+      bottomStrand += '</div>';
+      
+      resultDiv.innerHTML = topStrand + connectors + bottomStrand;
+      
+      // Add legend
+      let legend = '<div style="margin-top:20px;"><strong>Base Pair Legend:</strong><br>';
+      for (const base in baseColors) {
+        legend += `<span style="margin-right:15px;"><span style="display:inline-block;width:15px;height:15px;background-color:${baseColors[base]};border-radius:50%;margin-right:5px;"></span>${base}</span>`;
+      }
+      legend += '</div>';
+      
+      resultDiv.innerHTML += legend;
+    }
+    
+    // Genetics - Punnett Square
+    function calculatePunnettSquare() {
+      const parent1 = document.getElementById("parent1").value;
+      const parent2 = document.getElementById("parent2").value;
+      const resultDiv = document.getElementById("punnett-result");
+      
+      // Generate gametes
+      function getGametes(genotype) {
+        if (genotype === "AA") return ["A"];
+        if (genotype === "aa") return ["a"];
+        return ["A", "a"]; // Heterozygous
+      }
+      
+      const gametes1 = getGametes(parent1);
+      const gametes2 = getGametes(parent2);
+      
+      // Generate Punnett square
+      let table = '<table border="1" style="border-collapse:collapse; width:200px; text-align:center;">';
+      
+      // Header row
+      table += '<tr><td></td>';
+      for (let g of gametes2) {
+        table += `<td style="padding:5px;"><strong>${g}</strong></td>`;
+      }
+      table += '</tr>';
+      
+      // Data rows
+      let phenotypeCount = {dominant: 0, recessive: 0};
+      let genotypeCount = {AA: 0, Aa: 0, aa: 0};
+      
+      for (let g1 of gametes1) {
+        table += `<tr><td style="padding:5px;"><strong>${g1}</strong></td>`;
+        
+        for (let g2 of gametes2) {
+          // Sort the alleles to ensure consistent genotype representation
+          let offspring = (g1 + g2).split('').sort().join('');
+          
+          table += `<td style="padding:5px;">${offspring}</td>`;
+          
+          // Count genotypes and phenotypes
+          genotypeCount[offspring]++;
+          if (offspring.includes('A')) {
+            phenotypeCount.dominant++;
+          } else {
+            phenotypeCount.recessive++;
+          }
+        }
+        
+        table += '</tr>';
+      }
+      
+      table += '</table>';
+      
+      // Calculate ratios
+      const totalOffspring = phenotypeCount.dominant + phenotypeCount.recessive;
+      const dominantRatio = phenotypeCount.dominant / totalOffspring;
+      const recessiveRatio = phenotypeCount.recessive / totalOffspring;
+      
+      resultDiv.innerHTML = `
+        ${table}
+        <div style="margin-top:15px;">
+          <strong>Genotype Ratio:</strong> ${genotypeCount.AA}:${genotypeCount.Aa}:${genotypeCount.aa}<br>
+          <strong>Phenotype Ratio:</strong> ${phenotypeCount.dominant} dominant : ${phenotypeCount.recessive} recessive<br>
+          <strong>Phenotype Percentage:</strong> ${Math.round(dominantRatio * 100)}% dominant, ${Math.round(recessiveRatio * 100)}% recessive<br>
+        </div>
+      `;
+    }
+    
+    // Genetics - Mutations
+    function simulateMutation() {
+      const mutationType = document.getElementById("mutation-type").value;
+      const sequence = document.getElementById("original-sequence").value.toUpperCase();
+      const resultDiv = document.getElementById("mutation-result");
+      
+      let mutatedSequence = "";
+      let explanation = "";
+      
+      switch(mutationType) {
+        case "substitution":
+          // Replace a random base
+          const position = Math.floor(Math.random() * sequence.length);
+          const bases = ["A", "T", "G", "C"];
+          let newBase = sequence[position];
+          while (newBase === sequence[position]) {
+            newBase = bases[Math.floor(Math.random() * 4)];
+          }
+          
+          mutatedSequence = sequence.substring(0, position) + newBase + sequence.substring(position + 1);
+          explanation = `A substitution mutation replaced ${sequence[position]} with ${newBase} at position ${position + 1}.`;
+          break;
+          
+        case "insertion":
+          // Insert a random base
+          const insertPosition = Math.floor(Math.random() * (sequence.length + 1));
+          const insertBase = ["A", "T", "G", "C"][Math.floor(Math.random() * 4)];
+          
+          mutatedSequence = sequence.substring(0, insertPosition) + insertBase + sequence.substring(insertPosition);
+          explanation = `An insertion mutation added ${insertBase} at position ${insertPosition + 1}.`;
+          break;
+          
+        case "deletion":
+          // Delete a random base
+          const deletePosition = Math.floor(Math.random() * sequence.length);
+          
+          mutatedSequence = sequence.substring(0, deletePosition) + sequence.substring(deletePosition + 1);
+          explanation = `A deletion mutation removed ${sequence[deletePosition]} at position ${deletePosition + 1}.`;
+          break;
+          
+        case "frameshift":
+          // Insert or delete 1-2 bases to cause frameshift
+          if (Math.random() > 0.5) {
+            // Insert 1-2 bases
+            const framePosition = Math.floor(Math.random() * sequence.length);
+            const numBases = Math.random() > 0.5 ? 1 : 2;
+            let insertBases = "";
+            for (let i = 0; i < numBases; i++) {
+              insertBases += ["A", "T", "G", "C"][Math.floor(Math.random() * 4)];
+            }
+            
+            mutatedSequence = sequence.substring(0, framePosition) + insertBases + sequence.substring(framePosition);
+            explanation = `A frameshift mutation inserted ${numBases} base(s) (${insertBases}) at position ${framePosition + 1}.`;
+          } else {
+            // Delete 1-2 bases
+            const framePosition = Math.floor(Math.random() * (sequence.length - 1));
+            const numBases = Math.min(Math.random() > 0.5 ? 1 : 2, sequence.length - framePosition);
+            const deletedBases = sequence.substring(framePosition, framePosition + numBases);
+            
+            mutatedSequence = sequence.substring(0, framePosition) + sequence.substring(framePosition + numBases);
+            explanation = `A frameshift mutation deleted ${numBases} base(s) (${deletedBases}) at position ${framePosition + 1}.`;
+          }
+          break;
+      }
+      
+      // Show the alignment and explanation
+      resultDiv.innerHTML = `
+        <div style="font-family: monospace; white-space: pre;">
+          Original:  ${sequence}<br>
+          Mutated:   ${mutatedSequence}
+        </div>
+        <p>${explanation}</p>
+        <p><strong>Effect:</strong> ${mutationType === "substitution" ? "May change a single amino acid or be silent" : "Likely to alter the reading frame, affecting all downstream amino acids"}</p>
+      `;
+    }
+    
+    // Initialize default displays
+    showMacromoleculeInfo();
+    calculateEnzymeActivity();
+    showMetabolismInfo();
+  </script>
+</body>
+</html>

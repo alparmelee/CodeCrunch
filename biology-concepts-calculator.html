@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biology Concepts Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f7ff;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      border-radius: 5px 5px 0 0;
+    }
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    .tab button.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      animation: fadeEffect 1s;
+    }
+    @keyframes fadeEffect {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    .concept-card {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .concept-title {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+    .interactive-area {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+    }
+    select, button {
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .visual-area {
+      height: 200px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .organelle {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    #calculation-result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Biology Concepts Calculator</h1>
+    
+    <div class="tab">
+      <button class="tablinks active" onclick="openTab(event, 'foundations')">Foundations of Biology</button>
+      <button class="tablinks" onclick="openTab(event, 'cell-biology')">Cell Biology</button>
+    </div>
+    
+    <div id="foundations" class="tabcontent" style="display:block;">
+      <h2>Foundations of Biology</h2>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Scientific Method</h3>
+        <p>The scientific method is a systematic approach to understanding the natural world through observation, hypothesis formation, experimentation, and theory development.</p>
+        <div class="interactive-area">
+          <h4>Scientific Method Calculator</h4>
+          <select id="scientific-method-step">
+            <option value="observation">1. Observation</option>
+            <option value="question">2. Question</option>
+            <option value="hypothesis">3. Hypothesis</option>
+            <option value="experiment">4. Experiment</option>
+            <option value="analysis">5. Analysis</option>
+            <option value="conclusion">6. Conclusion</option>
+          </select>
+          <button onclick="showScientificMethodStep()">Show Step Description</button>
+          <p id="scientific-method-result"></p>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Biological Organization</h3>
+        <p>Life is organized in a hierarchical structure from atoms to the biosphere.</p>
+        <div class="interactive-area">
+          <h4>Biological Organization Level Calculator</h4>
+          <select id="bio-org-level">
+            <option value="atom">Atom</option>
+            <option value="molecule">Molecule</option>
+            <option value="organelle">Organelle</option>
+            <option value="cell">Cell</option>
+            <option value="tissue">Tissue</option>
+            <option value="organ">Organ</option>
+            <option value="organ-system">Organ System</option>
+            <option value="organism">Organism</option>
+            <option value="population">Population</option>
+            <option value="community">Community</option>
+            <option value="ecosystem">Ecosystem</option>
+            <option value="biosphere">Biosphere</option>
+          </select>
+          <button onclick="showBioOrgLevel()">Show Level Info</button>
+          <p id="bio-org-result"></p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="cell-biology" class="tabcontent">
+      <h2>Cell Biology</h2>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Cell Types</h3>
+        <p>There are two main types of cells: prokaryotic and eukaryotic.</p>
+        <div class="interactive-area">
+          <h4>Cell Type Comparison</h4>
+          <select id="cell-type">
+            <option value="prokaryotic">Prokaryotic Cell</option>
+            <option value="eukaryotic">Eukaryotic Cell</option>
+          </select>
+          <button onclick="showCellType()">Show Cell Features</button>
+          <p id="cell-type-result"></p>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Cell Organelles</h3>
+        <p>Explore the different organelles found in eukaryotic cells and their functions.</p>
+        <div class="interactive-area">
+          <div class="visual-area" id="organelle-visual">
+            <!-- Organelles will be placed here by JavaScript -->
+          </div>
+          <p id="organelle-info">Click on an organelle to learn about its function.</p>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Cell Division</h3>
+        <p>Cells divide through mitosis (somatic cells) or meiosis (gamete production).</p>
+        <div class="interactive-area">
+          <h4>Cell Division Calculator</h4>
+          <select id="division-type">
+            <option value="mitosis">Mitosis</option>
+            <option value="meiosis">Meiosis</option>
+          </select>
+          <label for="chromosomes">Starting Chromosome Count:</label>
+          <input type="number" id="chromosomes" value="46" min="1" max="100">
+          <button onclick="calculateDivision()">Calculate Results</button>
+          <p id="division-result"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab functionality
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+      
+      // Initialize organelles if cell biology tab is opened
+      if (tabName === 'cell-biology') {
+        createOrganelles();
+      }
+    }
+    
+    // Scientific Method functionality
+    function showScientificMethodStep() {
+      const step = document.getElementById("scientific-method-step").value;
+      const resultDiv = document.getElementById("scientific-method-result");
+      
+      const descriptions = {
+        'observation': 'Scientists carefully observe natural phenomena to gather information.',
+        'question': 'Based on observations, scientists formulate questions about why or how something happens.',
+        'hypothesis': 'A testable explanation or prediction is proposed based on available evidence.',
+        'experiment': 'Tests are designed and conducted to verify or falsify the hypothesis.',
+        'analysis': 'Data from experiments are analyzed using statistics and other methods.',
+        'conclusion': 'Results are interpreted and conclusions are drawn about the original hypothesis.'
+      };
+      
+      resultDiv.textContent = descriptions[step];
+    }
+    
+    // Biological Organization functionality
+    function showBioOrgLevel() {
+      const level = document.getElementById("bio-org-level").value;
+      const resultDiv = document.getElementById("bio-org-result");
+      
+      const descriptions = {
+        'atom': 'Basic unit of matter consisting of a nucleus and electrons.',
+        'molecule': 'Group of atoms bonded together (e.g., water, proteins).',
+        'organelle': 'Specialized structures within cells (e.g., mitochondria).',
+        'cell': 'The basic structural and functional unit of all living organisms.',
+        'tissue': 'Group of similar cells performing a specific function.',
+        'organ': 'Structure made up of different tissues working together.',
+        'organ-system': 'Group of organs working together (e.g., digestive system).',
+        'organism': 'Individual living entity.',
+        'population': 'Group of same-species organisms in a specific area.',
+        'community': 'All populations of different species in an area.',
+        'ecosystem': 'Community of living organisms with their physical environment.',
+        'biosphere': 'All ecosystems on Earth.'
+      };
+      
+      resultDiv.textContent = descriptions[level];
+    }
+    
+    // Cell Type functionality
+    function showCellType() {
+      const cellType = document.getElementById("cell-type").value;
+      const resultDiv = document.getElementById("cell-type-result");
+      
+      if (cellType === 'prokaryotic') {
+        resultDiv.innerHTML = `
+          <strong>Prokaryotic Cell Features:</strong><br>
+          • No nucleus or membrane-bound organelles<br>
+          • Typically smaller (0.1-5 μm)<br>
+          • Circular DNA in nucleoid region<br>
+          • Example organisms: bacteria and archaea<br>
+          • Simple internal structure
+        `;
+      } else {
+        resultDiv.innerHTML = `
+          <strong>Eukaryotic Cell Features:</strong><br>
+          • Has a nucleus and membrane-bound organelles<br>
+          • Larger size (10-100 μm)<br>
+          • Linear DNA organized into chromosomes<br>
+          • Example organisms: plants, animals, fungi, protists<br>
+          • Complex internal compartmentalization
+        `;
+      }
+    }
+    
+    // Cell Division Calculator
+    function calculateDivision() {
+      const divisionType = document.getElementById("division-type").value;
+      const chromosomeCount = parseInt(document.getElementById("chromosomes").value);
+      const resultDiv = document.getElementById("division-result");
+      
+      if (divisionType === 'mitosis') {
+        resultDiv.innerHTML = `
+          <strong>Mitosis Results:</strong><br>
+          • Starting cell: ${chromosomeCount} chromosomes (diploid)<br>
+          • Number of divisions: 1<br>
+          • Number of daughter cells: 2<br>
+          • Chromosomes per daughter cell: ${chromosomeCount}<br>
+          • Purpose: Growth, repair, asexual reproduction<br>
+          • Daughter cells are genetically identical to parent
+        `;
+      } else {
+        resultDiv.innerHTML = `
+          <strong>Meiosis Results:</strong><br>
+          • Starting cell: ${chromosomeCount} chromosomes (diploid)<br>
+          • Number of divisions: 2 (Meiosis I and II)<br>
+          • Number of daughter cells: 4<br>
+          • Chromosomes per daughter cell: ${chromosomeCount/2} (haploid)<br>
+          • Purpose: Gamete production for sexual reproduction<br>
+          • Genetic recombination creates diversity
+        `;
+      }
+    }
+    
+    // Organelles Visual
+    function createOrganelles() {
+      const visual = document.getElementById("organelle-visual");
+      visual.innerHTML = ''; // Clear existing content
+      
+      const organelles = [
+        {name: 'Nucleus', color: '#8A2BE2', top: 40, left: 190, size: 60},
+        {name: 'Mitochondrion', color: '#FF6347', top: 120, left: 100, size: 40},
+        {name: 'Endoplasmic Reticulum', color: '#4682B4', top: 80, left: 300, size: 55},
+        {name: 'Golgi Apparatus', color: '#DAA520', top: 160, left: 230, size: 50},
+        {name: 'Lysosome', color: '#CD5C5C', top: 30, left: 110, size: 25},
+        {name: 'Chloroplast', color: '#32CD32', top: 140, left: 350, size: 45}
+      ];
+      
+      organelles.forEach(org => {
+        const element = document.createElement('div');
+        element.className = 'organelle';
+        element.style.backgroundColor = org.color;
+        element.style.width = org.size + 'px';
+        element.style.height = org.size + 'px';
+        element.style.top = org.top + 'px';
+        element.style.left = org.left + 'px';
+        element.title = org.name;
+        
+        element.addEventListener('click', () => {
+          showOrganelleInfo(org.name);
+        });
+        
+        visual.appendChild(element);
+      });
+    }
+    
+    function showOrganelleInfo(name) {
+      const infoDiv = document.getElementById("organelle-info");
+      
+      const descriptions = {
+        'Nucleus': 'Control center of the cell containing DNA. Regulates gene expression and cell activities.',
+        'Mitochondrion': 'Powerhouse of the cell where cellular respiration occurs to produce ATP energy.',
+        'Endoplasmic Reticulum': 'Network of membranes involved in protein synthesis (rough ER) and lipid synthesis (smooth ER).',
+        'Golgi Apparatus': 'Modifies, sorts, and packages proteins for transport to various destinations.',
+        'Lysosome': 'Contains digestive enzymes that break down waste materials and cellular debris.',
+        'Chloroplast': 'Found in plant cells, site of photosynthesis where light energy is converted to chemical energy.'
+      };
+      
+      infoDiv.innerHTML = `<strong>${name}:</strong> ${descriptions[name]}`;
+    }
+    
+    // Initialize with defaults
+    showScientificMethodStep();
+    showBioOrgLevel();
+  </script>
+</body>
+</html>

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evolution & Ecology Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f7fa;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #336633;
+    }
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      border-radius: 5px 5px 0 0;
+    }
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    .tab button:hover {
+      background-color: #ddd;
+    }
+    .tab button.active {
+      background-color: #336633;
+      color: white;
+    }
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+    .concept-card {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .concept-title {
+      color: #336633;
+      margin-top: 0;
+    }
+    .interactive-area {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #e9ecef;
+      border-radius: 5px;
+    }
+    select, button, input {
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #336633;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #254d25;
+    }
+    .visual-area {
+      height: 200px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+      padding: 10px;
+    }
+    .organism {
+      position: absolute;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      transition: all 0.5s ease;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .slider {
+      width: 100%;
+      margin: 10px 0;
+    }
+    .food-chain {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    .chain-organism {
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      background: #f8f9fa;
+      width: 100px;
+    }
+    .arrow {
+      font-size: 24px;
+      color: #336633;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Evolution & Ecology Calculator</h1>
+    
+    <div class="tab">
+      <button class="tablinks active" onclick="openTab(event, 'evolution')">Evolution</button>
+      <button class="tablinks" onclick="openTab(event, 'ecology')">Ecology</button>
+    </div>
+    
+    <div id="evolution" class="tabcontent" style="display:block;">
+      <h2>Evolution</h2>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Natural Selection Simulator</h3>
+        <p>Natural selection is the process by which traits become more or less common based on their effect on survival and reproduction.</p>
+        <div class="interactive-area">
+          <h4>Population Adaptation Simulator</h4>
+          <div>
+            <label for="environment">Environment:</label>
+            <select id="environment" onchange="updateEnvironment()">
+              <option value="forest">Forest</option>
+              <option value="desert">Desert</option>
+              <option value="arctic">Arctic</option>
+            </select>
+          </div>
+          <div>
+            <label for="selection-pressure">Selection Pressure:</label>
+            <input type="range" id="selection-pressure" min="1" max="10" value="5" class="slider" onchange="updateSelectionPressure()">
+            <span id="pressure-value">Medium</span>
+          </div>
+          <button onclick="runNaturalSelection()">Run Natural Selection</button>
+          <div id="selection-visual" class="visual-area">
+            <!-- Organisms will be placed here by JavaScript -->
+          </div>
+          <p id="selection-results"></p>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Evidence for Evolution</h3>
+        <p>Multiple lines of evidence support the theory of evolution.</p>
+        <div class="interactive-area">
+          <h4>Evolution Evidence Explorer</h4>
+          <select id="evidence-type" onchange="showEvolutionEvidence()">
+            <option value="fossils">Fossil Record</option>
+            <option value="comparative-anatomy">Comparative Anatomy</option>
+            <option value="embryology">Embryology</option>
+            <option value="molecular-biology">Molecular Biology</option>
+            <option value="biogeography">Biogeography</option>
+          </select>
+          <div id="evidence-display" style="margin-top: 15px;"></div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Speciation</h3>
+        <p>Speciation is the process by which populations evolve to become distinct species.</p>
+        <div class="interactive-area">
+          <h4>Speciation Process Calculator</h4>
+          <div>
+            <label for="isolation-type">Isolation Type:</label>
+            <select id="isolation-type">
+              <option value="geographic">Geographic Isolation</option>
+              <option value="reproductive">Reproductive Isolation</option>
+              <option value="behavioral">Behavioral Isolation</option>
+              <option value="temporal">Temporal Isolation</option>
+            </select>
+          </div>
+          <div>
+            <label for="isolation-time">Isolation Time (1000s of years):</label>
+            <input type="range" id="isolation-time" min="1" max="100" value="20" class="slider">
+            <span id="time-value">20,000 years</span>
+          </div>
+          <button onclick="calculateSpeciation()">Calculate Speciation Probability</button>
+          <p id="speciation-result"></p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="ecology" class="tabcontent">
+      <h2>Ecology</h2>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Ecosystem Structure</h3>
+        <p>Ecosystems consist of living organisms interacting with each other and their physical environment.</p>
+        <div class="interactive-area">
+          <h4>Ecosystem Component Calculator</h4>
+          <select id="ecosystem-type" onchange="showEcosystemStructure()">
+            <option value="forest">Forest Ecosystem</option>
+            <option value="marine">Marine Ecosystem</option>
+            <option value="grassland">Grassland Ecosystem</option>
+            <option value="desert">Desert Ecosystem</option>
+          </select>
+          <div id="ecosystem-structure" style="margin-top: 15px;"></div>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Population Dynamics</h3>
+        <p>Study of how and why populations change in size and structure over time.</p>
+        <div class="interactive-area">
+          <h4>Population Growth Calculator</h4>
+          <div>
+            <label for="initial-population">Initial Population Size:</label>
+            <input type="number" id="initial-population" value="100" min="1" max="1000">
+          </div>
+          <div>
+            <label for="growth-rate">Growth Rate (% per year):</label>
+            <input type="number" id="growth-rate" value="5" min="-20" max="20" step="0.5">
+          </div>
+          <div>
+            <label for="carrying-capacity">Carrying Capacity:</label>
+            <input type="number" id="carrying-capacity" value="1000" min="10" max="10000">
+          </div>
+          <div>
+            <label for="time-period">Time Period (years):</label>
+            <input type="number" id="time-period" value="10" min="1" max="100">
+          </div>
+          <button onclick="calculatePopulationGrowth()">Calculate Growth</button>
+          <p id="population-result"></p>
+        </div>
+      </div>
+      
+      <div class="concept-card">
+        <h3 class="concept-title">Food Chains & Energy Flow</h3>
+        <p>Food chains show how energy flows through ecosystems from producers to consumers.</p>
+        <div class="interactive-area">
+          <h4>Food Chain Energy Calculator</h4>
+          <select id="food-chain-type" onchange="showFoodChain()">
+            <option value="terrestrial">Terrestrial Food Chain</option>
+            <option value="aquatic">Aquatic Food Chain</option>
+          </select>
+          <div id="food-chain-visual" style="margin-top: 15px;"></div>
+          <div>
+            <label for="initial-energy">Initial Energy from Sun (kcal):</label>
+            <input type="number" id="initial-energy" value="10000" min="1000" max="100000" step="1000">
+          </div>
+          <button onclick="calculateEnergyFlow()">Calculate Energy Flow</button>
+          <div id="energy-flow-result" style="margin-top: 15px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab functionality
+    function openTab(evt, tabName) {
+      const tabcontent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      
+      const tablinks = document.getElementsByClassName("tablinks");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    
+    // EVOLUTION - Natural Selection
+    let environment = "forest";
+    let selectionPressure = 5;
+    
+    function updateEnvironment() {
+      environment = document.getElementById("environment").value;
+    }
+    
+    function updateSelectionPressure() {
+      selectionPressure = document.getElementById("selection-pressure").value;
+      const pressureDisplay = document.getElementById("pressure-value");
+      
+      if (selectionPressure <= 3) pressureDisplay.textContent = "Low";
+      else if (selectionPressure <= 7) pressureDisplay.textContent = "Medium";
+      else pressureDisplay.textContent = "High";
+    }
+    
+    function runNaturalSelection() {
+      const visualArea = document.getElementById("selection-visual");
+      visualArea.innerHTML = "";
+      
+      // Generate population with varied traits
+      const populationSize = 20;
+      const organisms = [];
+      
+      // Environment-appropriate colors
+      const envColors = {
+        forest: ["#228B22", "#006400", "#8B4513", "#A0522D"],
+        desert: ["#F4A460", "#DEB887", "#D2B48C", "#FFEBCD"],
+        arctic: ["#F0F8FF", "#E6E6FA", "#DCDCDC", "#D3D3D3"]
+      };
+      
+      // Create initial population
+      for (let i = 0; i < populationSize; i++) {
+        const colorIndex = Math.floor(Math.random() * 4);
+        const org = document.createElement("div");
+        org.className = "organism";
+        org.style.backgroundColor = envColors[environment][colorIndex];
+        org.style.left = Math.random() * 80 + "%";
+        org.style.top = Math.random() * 80 + "%";
+        org.dataset.fitness = calculateFitness(envColors[environment][colorIndex]);
+        visualArea.appendChild(org);
+        organisms.push(org);
+      }
+      
+      // Simulate selection
+      setTimeout(() => {
+        let survived = 0;
+        organisms.forEach(org => {
+          const survivalThreshold = 0.5 + (selectionPressure / 20);
+          if (parseFloat(org.dataset.fitness) >= survivalThreshold) {
+            org.style.border = "2px solid black";
+            survived++;
+          } else {
+            org.style.opacity = "0.3";
+          }
+        });
+        
+        document.getElementById("selection-results").innerHTML = `
+          <strong>Results:</strong> ${survived} out of ${populationSize} organisms survived.<br>
+          In the ${environment} environment, organisms with ${getBestTrait()} coloration had higher fitness.
+        `;
+      }, 1000);
+    }
+    
+    function calculateFitness(color) {
+      // Different colors have different fitness in different environments
+      const fitnessMap = {
+        forest: {
+          "#228B22": 0.9, // Dark green - high fitness in forest
+          "#006400": 0.85,
+          "#8B4513": 0.6,
+          "#A0522D": 0.5
+        },
+        desert: {
+          "#F4A460": 0.9, // Sandy - high fitness in desert
+          "#DEB887": 0.85,
+          "#D2B48C": 0.7,
+          "#FFEBCD": 0.5
+        },
+        arctic: {
+          "#F0F8FF": 0.9, // White - high fitness in arctic
+          "#E6E6FA": 0.8,
+          "#DCDCDC": 0.6,
+          "#D3D3D3": 0.5
+        }
+      };
+      
+      // Apply selection pressure
+      const baseFitness = fitnessMap[environment][color] || 0.5;
+      const pressureFactor = selectionPressure / 10;
+      
+      // Higher selection pressure makes fitness differences more pronounced
+      return baseFitness * pressureFactor + (1 - pressureFactor) * 0.5;
+    }
+    
+    function getBestTrait() {
+      switch(environment) {
+        case "forest": return "green";
+        case "desert": return "sandy/tan";
+        case "arctic": return "white";
+        default: return "adaptive";
+      }
+    }
+    
+    // EVOLUTION - Evidence
+    function showEvolutionEvidence() {
+      const evidenceType = document.getElementById("evidence-type").value;
+      const displayDiv = document.getElementById("evidence-display");
+      
+      const evidence = {
+        'fossils': {
+          title: "Fossil Record",
+          description: "Fossils provide direct evidence of extinct species and evolutionary transitions.",
+          examples: "Archaeopteryx (reptile-bird transition), horse evolution series, hominin fossils showing human evolution",
+          significance: "Shows change over time and transitions between major groups"
+        },
+        'comparative-anatomy': {
+          title: "Comparative Anatomy",
+          description: "Similar structures across species indicate common ancestry.",
+          examples: "Homologous structures: vertebrate limbs (human arm, bat wing, whale flipper, horse leg)",
+          significance: "Reveals evolutionary relationships despite different functions"
+        },
+        'embryology': {
+          title: "Embryology",
+          description: "Similarities in embryonic development reveal evolutionary relationships.",
+          examples: "Vertebrate embryos share features like pharyngeal slits and tail",
+          significance: "Demonstrates shared developmental pathways and genetic heritage"
+        },
+        'molecular-biology': {
+          title: "Molecular Biology",
+          description: "DNA and protein similarities across species indicate genetic relationships.",
+          examples: "Human and chimpanzee DNA is 98-99% identical; universal genetic code",
+          significance: "Provides quantitative measure of evolutionary distance between species"
+        },
+        'biogeography': {
+          title: "Biogeography",
+          description: "Species distribution patterns align with geological events.",
+          examples: "Unique marsupials in Australia, differences between mainland and island species",
+          significance: "Geographic isolation leads to divergent evolution"
+        }
+      };
+      
+      const selected = evidence[evidenceType];
+      displayDiv.innerHTML = `
+        <h4>${selected.title}</h4>
+        <p><strong>Description:</strong> ${selected.description}</p>
+        <p><strong>Examples:</strong> ${selected.examples}</p>
+        <p><strong>Significance:</strong> ${selected.significance}</p>
+      `;
+    }
+    
+    // EVOLUTION - Speciation
+    document.getElementById("isolation-time").addEventListener("input", function() {
+      document.getElementById("time-value").textContent = this.value + ",000 years";
+    });
+    
+    function calculateSpeciation() {
+      const isolationType = document.getElementById("isolation-type").value;
+      const isolationTime = parseInt(document.getElementById("isolation-time").value);
+      const resultDiv = document.getElementById("speciation-result");
+      
+      // Different isolation types have different rates of speciation
+      const isolationFactors = {
+        'geographic': 1.0,   // Geographic isolation is very effective
+        'reproductive': 0.9, // Reproductive isolation is quite effective
+        'behavioral': 0.7,   // Behavioral isolation is moderately effective
+        'temporal': 0.6      // Temporal isolation is less effective
+      };
+      
+      // Calculate probability based on time and isolation type
+      let probability = (isolationTime / 100) * isolationFactors[isolationType];
+      probability = Math.min(probability, 0.99); // Cap at 99%
+      
+      // Determine speciation type
+      let speciationType = "Allopatric speciation";
+      if (isolationType === "geographic") {
+        speciationType = "Allopatric speciation";
+      } else if (isolationType === "reproductive") {
+        speciationType = "Biological speciation";
+      } else if (isolationType === "behavioral") {
+        speciationType = "Behavioral isolation leading to sympatric speciation";
+      } else if (isolationType === "temporal") {
+        speciationType = "Allochronic speciation";
+      }
+      
+      resultDiv.innerHTML = `
+        <strong>Speciation Probability: ${Math.round(probability * 100)}%</strong><br>
+        <strong>Type:</strong> ${speciationType}<br>
+        <strong>Time Required:</strong> ${isolationTime},000 years<br>
+        <strong>Analysis:</strong> ${getSpeciationAnalysis(probability)}
+      `;
+    }
+    
+    function getSpeciationAnalysis(probability) {
+      if (probability < 0.3) {
+        return "Unlikely to form new species; populations may remain subspecies";
+      } else if (probability < 0.7) {
+        return "Moderate chance of speciation; genetic drift and selection would produce noticeable differences";
+      } else {
+        return "High probability of forming new species; populations would become reproductively isolated";
+      }
+    }
+    
+    // ECOLOGY - Ecosystem Structure
+    function showEcosystemStructure() {
+      const ecosystemType = document.getElementById("ecosystem-type").value;
+      const displayDiv = document.getElementById("ecosystem-structure");
+      
+      const ecosystems = {
+        'forest': {
+          producers: "Trees, shrubs, mosses, ferns",
+          primary_consumers: "Insects, small mammals, deer",
+          secondary_consumers: "Birds, foxes, small predators",
+          tertiary_consumers: "Hawks, wolves, bears",
+          decomposers: "Fungi, bacteria, invertebrates",
+          abiotic: "Soil, water, sunlight, temperature"
+        },
+        'marine': {
+          producers: "Phytoplankton, algae, seaweed",
+          primary_consumers: "Zooplankton, small fish, crustaceans",
+          secondary_consumers: "Medium fish, jellyfish",
+          tertiary_consumers: "Large fish, sharks, marine mammals",
+          decomposers: "Marine bacteria, crabs, sea cucumbers",
+          abiotic: "Water, currents, sunlight, dissolved oxygen"
+        },
+        'grassland': {
+          producers: "Grasses, flowering plants",
+          primary_consumers: "Grasshoppers, mice, rabbits, grazing mammals",
+          secondary_consumers: "Snakes, birds, small carnivores",
+          tertiary_consumers: "Hawks, foxes, large carnivores",
+          decomposers: "Fungi, bacteria, insects",
+          abiotic: "Soil, precipitation, temperature, fire"
+        },
+        'desert': {
+          producers: "Cacti, desert shrubs, drought-resistant plants",
+          primary_consumers: "Insects, rodents, small reptiles",
+          secondary_consumers: "Lizards, small birds, snakes",
+          tertiary_consumers: "Hawks, coyotes, large reptiles",
+          decomposers: "Desert fungi, bacteria",
+          abiotic: "Extreme temperature, limited water, sandy soil"
+        }
+      };
+      
+      const ecosystem = ecosystems[ecosystemType];
+      
+      let tableHTML = `
+        <table>
+          <tr>
+            <th>Trophic Level</th>
+            <th>Organisms</th>
+          </tr>
+          <tr>
+            <td>Producers</td>
+            <td>${ecosystem.producers}</td>
+          </tr>
+          <tr>
+            <td>Primary Consumers</td>
+            <td>${ecosystem.primary_consumers}</td>
+          </tr>
+          <tr>
+            <td>Secondary Consumers</td>
+            <td>${ecosystem.secondary_consumers}</td>
+          </tr>
+          <tr>
+            <td>Tertiary Consumers</td>
+            <td>${ecosystem.tertiary_consumers}</td>
+          </tr>
+          <tr>
+            <td>Decomposers</td>
+            <td>${ecosystem.decomposers}</td>
+          </tr>
+          <tr>
+            <td>Abiotic Factors</td>
+            <td>${ecosystem.abiotic}</td>
+          </tr>
+        </table>
+      `;
+      
+      displayDiv.innerHTML = tableHTML;
+    }
+    
+    // ECOLOGY - Population Dynamics
+    function calculatePopulationGrowth() {
+      const initialPopulation = parseFloat(document.getElementById("initial-population").value);
+      const growthRate = parseFloat(document.getElementById("growth-rate").value) / 100;
+      const carryingCapacity = parseFloat(document.getElementById("carrying-capacity").value);
+      const timePeriod = parseInt(document.getElementById("time-period").value);
+      
+      const resultDiv = document.getElementById("population-result");
+      let populationData = [];
+      
+      // Calculate population growth using logistic growth model
+      let currentPopulation = initialPopulation;
+      populationData.push(currentPopulation);
+      
+      for (let year = 1; year <= timePeriod; year++) {
+        // Logistic growth equation: dN/dt = rN(1-N/K)
+        const growthFactor = 1 + growthRate * (1 - currentPopulation / carryingCapacity);
+        currentPopulation = currentPopulation * growthFactor;
+        
+        // Ensure population doesn't go negative or exceed carrying capacity by too much
+        currentPopulation = Math.max(0, Math.min(currentPopulation, carryingCapacity * 1.1));
+        populationData.push(Math.round(currentPopulation));
+      }
+      
+      let growthType = "";
+      if (growthRate > 0) {
+        if (initialPopulation < carryingCapacity * 0.9) {
+          growthType = "Logistic growth (S-curve)";
+        } else {
+          growthType = "Approaching equilibrium";
+        }
+      } else {
+        growthType = "Population decline";
+      }
+      
+      resultDiv.innerHTML = `
+        <strong>Final Population after ${timePeriod} years: ${Math.round(populationData[timePeriod])}</strong><br>
+        <strong>Growth Pattern:</strong> ${growthType}<br>
+        <strong>Population by Year:</strong> ${populationData.join(", ")}
+      `;
+    }
+    
+    // ECOLOGY - Food Chains
+    function showFoodChain() {
+      const chainType = document.getElementById("food-chain-type").value;
+      const visualDiv = document.getElementById("food-chain-visual");
+      
+      const chains = {
+        'terrestrial': [
+          {name: "Grass", level: "Producer"},
+          {name: "Grasshopper", level: "Primary Consumer"},
+          {name: "Mouse", level: "Primary Consumer"},
+          {name: "Snake", level: "Secondary Consumer"},
+          {name: "Hawk", level: "Tertiary Consumer"}
+        ],
+        'aquatic': [
+          {name: "Algae", level: "Producer"},
+          {name: "Zooplankton", level: "Primary Consumer"},
+          {name: "Small Fish", level: "Secondary Consumer"},
+          {name: "Large Fish", level: "Tertiary Consumer"},
+          {name: "Shark", level: "Apex Predator"}
+        ]
+      };
+      
+      let chainHTML = '<div class="food-chain">';
+      
+      chains[chainType].forEach((organism, index) => {
+        chainHTML += `
+          <div class="chain-organism">
+            <strong>${organism.name}</strong><br>
+            <span>${organism.level}</span>
+          </div>
+        `;
+        
+        if (index < chains[chainType].length - 1) {
+          chainHTML += '<div class="arrow">→</div>';
+        }
+      });
+      
+      chainHTML += '</div>';
+      visualDiv.innerHTML = chainHTML;
+    }
+    
+    function calculateEnergyFlow() {
+      const initialEnergy = parseFloat(document.getElementById("initial-energy").value);
+      const resultDiv = document.getElementById("energy-flow-result");
+      
+      // Ecological efficiency is typically around 10%
+      const efficiency = 0.1;
+      
+      // Calculate energy at each trophic level
+      const producerEnergy = initialEnergy;
+      const primaryConsumerEnergy = producerEnergy * efficiency;
+      const secondaryConsumerEnergy = primaryConsumerEnergy * efficiency;
+      const tertiaryConsumerEnergy = secondaryConsumerEnergy * efficiency;
+      const apexPredatorEnergy = tertiaryConsumerEnergy * efficiency;
+      
+      let tableHTML = `
+        <table>
+          <tr>
+            <th>Trophic Level</th>
+            <th>Energy (kcal)</th>
+            <th>% of Initial</th>
+          </tr>
+          <tr>
+            <td>Producers</td>
+            <td>${producerEnergy.toFixed(1)}</td>
+            <td>100%</td>
+          </tr>
+          <tr>
+            <td>Primary Consumers</td>
+            <td>${primaryConsumerEnergy.toFixed(1)}</td>
+            <td>${(primaryConsumerEnergy/initialEnergy*100).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Secondary Consumers</td>
+            <td>${secondaryConsumerEnergy.toFixed(1)}</td>
+            <td>${(secondaryConsumerEnergy/initialEnergy*100).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Tertiary Consumers</td>
+            <td>${tertiaryConsumerEnergy.toFixed(1)}</td>
+            <td>${(tertiaryConsumerEnergy/initialEnergy*100).toFixed(1)}%</td>
+          </tr>
+          <tr>
+            <td>Apex Predators</td>
+            <td>${apexPredatorEnergy.toFixed(1)}</td>
+            <td>${(apexPredatorEnergy/initialEnergy*100).toFixed(1)}%</td>
+          </tr>
+        </table>
+        <p><strong>Note:</strong> Approximately 90% of energy is lost at each trophic level due to heat loss, waste, and inefficient energy transfer.</p>
+      `;
+      
+      resultDiv.innerHTML = tableHTML;
+    }
+    
+    // Initialize default displays
+    showEvolutionEvidence();
+    showEcosystemStructure();
+    showFoodChain();
+  </script>
+</body>
+</html>

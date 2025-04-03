@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biology & Biotechnology Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        select, button {
+            padding: 8px 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        select {
+            width: 100%;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .info-box {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Biology & Biotechnology Explorer</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('human-biology')">Human Biology</div>
+            <div class="tab" onclick="switchTab('biotechnology')">Biotechnology</div>
+        </div>
+        
+        <div id="human-biology" class="tab-content">
+            <select id="biology-topic">
+                <option value="">Select a Human Biology Topic</option>
+                <option value="organ-systems">Human Organ Systems</option>
+                <option value="homeostasis">Homeostasis</option>
+                <option value="immune-system">Immune System</option>
+                <option value="diseases">Diseases & Pathogens</option>
+            </select>
+            <button onclick="displayBiologyInfo()">Learn About This Topic</button>
+        </div>
+        
+        <div id="biotechnology" class="tab-content hidden">
+            <select id="biotech-topic">
+                <option value="">Select a Biotechnology Topic</option>
+                <option value="genetic-engineering">Genetic Engineering</option>
+                <option value="stem-cells">Stem Cells</option>
+                <option value="biotech-tools">Biotechnology Tools (PCR, CRISPR)</option>
+                <option value="ethics">Ethical Issues in Biology</option>
+            </select>
+            <button onclick="displayBiotechInfo()">Learn About This Topic</button>
+        </div>
+        
+        <div id="info-display" class="info-box">
+            <p>Select a topic above to learn more about Human Biology and Biotechnology!</p>
+        </div>
+    </div>
+
+    <script>
+        // Topic data
+        const biologyData = {
+            "organ-systems": {
+                title: "Human Organ Systems",
+                content: `<h3>Major Organ Systems</h3>
+                <p>The human body contains 11 major organ systems working together to maintain life:</p>
+                <ul>
+                    <li><strong>Cardiovascular:</strong> Heart, blood vessels, and blood for oxygen/nutrient transport</li>
+                    <li><strong>Respiratory:</strong> Lungs and airways for gas exchange</li>
+                    <li><strong>Digestive:</strong> Organs that break down food into nutrients</li>
+                    <li><strong>Nervous:</strong> Brain, spinal cord, and nerves for information processing</li>
+                    <li><strong>Endocrine:</strong> Hormone-producing glands that regulate body processes</li>
+                </ul>
+                <p>Each system works in coordination with others to maintain overall health.</p>`
+            },
+            "homeostasis": {
+                title: "Homeostasis",
+                content: `<h3>Maintaining Internal Balance</h3>
+                <p>Homeostasis is the process by which organisms maintain stable internal conditions despite external changes.</p>
+                <p>Key homeostatic processes include:</p>
+                <ul>
+                    <li><strong>Temperature regulation:</strong> Sweating, shivering, and vasodilation/constriction</li>
+                    <li><strong>Blood glucose control:</strong> Insulin and glucagon hormones</li>
+                    <li><strong>pH balance:</strong> Buffer systems in blood</li>
+                    <li><strong>Water balance:</strong> Kidneys and the hormone ADH</li>
+                </ul>
+                <p>Feedback loops are essential mechanisms that detect changes and trigger corrective responses.</p>`
+            },
+            "immune-system": {
+                title: "Immune System",
+                content: `<h3>Body's Defense Mechanisms</h3>
+                <p>The immune system protects against pathogens and other foreign substances.</p>
+                <p>Main components include:</p>
+                <ul>
+                    <li><strong>White blood cells:</strong> Including lymphocytes (B and T cells) and phagocytes</li>
+                    <li><strong>Antibodies:</strong> Proteins that recognize and bind to specific antigens</li>
+                    <li><strong>Lymphatic system:</strong> Network of vessels, tissues, and organs that help fight infections</li>
+                </ul>
+                <p>Immune responses are divided into innate (general, immediate) and adaptive (specific, learned) immunity.</p>`
+            },
+            "diseases": {
+                title: "Diseases & Pathogens",
+                content: `<h3>Understanding Disease</h3>
+                <p>Diseases are abnormal conditions affecting organism function.</p>
+                <p>Major categories of pathogens include:</p>
+                <ul>
+                    <li><strong>Viruses:</strong> Non-living infectious particles that replicate inside host cells</li>
+                    <li><strong>Bacteria:</strong> Single-celled microorganisms, some of which cause disease</li>
+                    <li><strong>Fungi:</strong> Can cause infections like athlete's foot and candidiasis</li>
+                    <li><strong>Parasites:</strong> Organisms that live on or in a host and obtain nutrients at the host's expense</li>
+                </ul>
+                <p>Disease transmission occurs through direct contact, airborne particles, contaminated food/water, or vectors like mosquitoes.</p>`
+            }
+        };
+
+        const biotechData = {
+            "genetic-engineering": {
+                title: "Genetic Engineering",
+                content: `<h3>Modifying Genetic Material</h3>
+                <p>Genetic engineering involves manipulating an organism's DNA to introduce new traits or modify existing ones.</p>
+                <p>Key applications include:</p>
+                <ul>
+                    <li><strong>Genetically modified organisms (GMOs):</strong> Plants resistant to pests or environmental stress</li>
+                    <li><strong>Medical applications:</strong> Production of insulin, growth hormone, and vaccines</li>
+                    <li><strong>Gene therapy:</strong> Treating genetic disorders by correcting defective genes</li>
+                </ul>
+                <p>The process typically involves isolating, cutting, and joining DNA from different sources using enzymes like restriction endonucleases and ligases.</p>`
+            },
+            "stem-cells": {
+                title: "Stem Cells",
+                content: `<h3>Cellular Building Blocks</h3>
+                <p>Stem cells are undifferentiated cells that can develop into specialized cell types and self-renew indefinitely.</p>
+                <p>Major types include:</p>
+                <ul>
+                    <li><strong>Embryonic stem cells:</strong> From early embryos, can become any cell type</li>
+                    <li><strong>Adult/somatic stem cells:</strong> Found in adult tissues, more limited differentiation potential</li>
+                    <li><strong>Induced pluripotent stem cells (iPSCs):</strong> Adult cells reprogrammed to embryonic-like state</li>
+                </ul>
+                <p>Applications include regenerative medicine, disease modeling, and drug development/testing.</p>`
+            },
+            "biotech-tools": {
+                title: "Biotechnology Tools",
+                content: `<h3>PCR and CRISPR</h3>
+                <p><strong>Polymerase Chain Reaction (PCR):</strong></p>
+                <p>A technique that amplifies specific DNA sequences for analysis, diagnosis, and research. It works by:</p>
+                <ol>
+                    <li>Denaturing DNA strands with heat</li>
+                    <li>Annealing primers to target sequences</li>
+                    <li>Extending new DNA using DNA polymerase</li>
+                </ol>
+                <p><strong>CRISPR-Cas9:</strong></p>
+                <p>A revolutionary gene-editing tool derived from bacterial defense systems that can:</p>
+                <ul>
+                    <li>Cut DNA at specific locations using guide RNA</li>
+                    <li>Delete, insert, or modify genes with precision</li>
+                    <li>Potentially treat genetic diseases and enhance crops</li>
+                </ul>
+                <p>These tools have transformed biological research, medicine, agriculture, and forensics.</p>`
+            },
+            "ethics": {
+                title: "Ethical Issues in Biology",
+                content: `<h3>Navigating Biological Advances</h3>
+                <p>Biotechnology raises significant ethical considerations:</p>
+                <ul>
+                    <li><strong>Genetic privacy:</strong> Who owns genetic information and how should it be used?</li>
+                    <li><strong>Germline editing:</strong> Should we modify genes that will be inherited by future generations?</li>
+                    <li><strong>Bioweapons:</strong> How do we prevent misuse of biotechnology?</li>
+                    <li><strong>Access equity:</strong> Ensuring all people benefit from biotechnological advances</li>
+                    <li><strong>Environmental concerns:</strong> Long-term impacts of GMOs on ecosystems</li>
+                </ul>
+                <p>Balancing scientific progress with ethical considerations requires ongoing dialogue between scientists, ethicists, policymakers, and the public.</p>`
+            }
+        };
+
+        // Function to display biology information
+        function displayBiologyInfo() {
+            const selectedTopic = document.getElementById('biology-topic').value;
+            const infoDisplay = document.getElementById('info-display');
+            
+            if (selectedTopic === "") {
+                infoDisplay.innerHTML = "<p>Please select a specific topic to learn about.</p>";
+                return;
+            }
+            
+            const topicData = biologyData[selectedTopic];
+            infoDisplay.innerHTML = `<h2>${topicData.title}</h2>${topicData.content}`;
+        }
+        
+        // Function to display biotechnology information
+        function displayBiotechInfo() {
+            const selectedTopic = document.getElementById('biotech-topic').value;
+            const infoDisplay = document.getElementById('info-display');
+            
+            if (selectedTopic === "") {
+                infoDisplay.innerHTML = "<p>Please select a specific topic to learn about.</p>";
+                return;
+            }
+            
+            const topicData = biotechData[selectedTopic];
+            infoDisplay.innerHTML = `<h2>${topicData.title}</h2>${topicData.content}`;
+        }
+        
+        // Function to switch between tabs
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // Deactivate all tabs
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.add('hidden'));
+            
+            // Activate the selected tab
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
