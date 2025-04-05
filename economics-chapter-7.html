@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economics Definitions Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 7 Perfect Competition</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="market-structure">Market Structure</button>
+        <button class="filter-button" data-category="market-entry">Market Entry</button>
+        <button class="filter-button" data-category="competition-types">Competition Types</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="market-structure">
+            <h2>Market Structure</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏭</span> Perfect Competition</h3>
+                <p>A market structure in which a large number of firms all produce the same product and no single seller controls supply or price.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌾</span> Commodity</h3>
+                <p>A product that is the same no matter who produces or sells it, such as petroleum, notebook paper, or milk.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> Monopoly</h3>
+                <p>A market structure characterized by a single seller that dominates an entire market for a good or service with no close substitutes.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="market-entry">
+            <h2>Market Entry</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🚧</span> Barrier to Entry</h3>
+                <p>Any factor that makes it difficult for a new firm to enter a market.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Start Up Costs</h3>
+                <p>The expenses a new business must pay before it can begin to produce and sell goods.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="competition-types">
+            <h2>Competition Types</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚠️</span> Imperfect Competition</h3>
+                <p>A market structure that fails to meet the conditions of perfect competition.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

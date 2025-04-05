@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economics Definitions Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 3 Economics</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="economic-concepts">Economic Concepts</button>
+        <button class="filter-button" data-category="market-principles">Market Principles</button>
+        <button class="filter-button" data-category="government-economy">Government & Economy</button>
+        <button class="filter-button" data-category="intellectual-property">Intellectual Property</button>
+        <button class="filter-button" data-category="public-welfare">Public Welfare</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="economic-concepts">
+            <h2>Economic Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌐</span> Macroeconomics</h3>
+                <p>The study of economic behavior and decision making in a nation's whole economy.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔬</span> Microeconomics</h3>
+                <p>The study of the economic behavior and decision making in small units, such as households and firms.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> GDP</h3>
+                <p>The total value of all final goods and services produced in a country in a given year. (abbreviation)</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Business Cycle</h3>
+                <p>A period of macroeconomical expansion, or growth, followed by one of contraction, or decline.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Profit Motive</h3>
+                <p>The incentive that drives individuals and business owners to improve their material well-being.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❌</span> Obsolescense</h3>
+                <p>Situation in which older products and processes become out of date.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚒️</span> Work Ethic</h3>
+                <p>A commitment to the value of work.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="market-principles">
+            <h2>Market Principles</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🚪</span> Open Opportunity</h3>
+                <p>The principle that everyone can compete in the marketplace.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Legal Equality</h3>
+                <p>The principle that everyone has the same legal rights.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Private Property Rights</h3>
+                <p>The principle that people have the right to control their possessions and use them as they wish.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Free Contract</h3>
+                <p>The principle that people may decide what agreements they want to enter into.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Voluntary Exchange</h3>
+                <p>The principle that people may decide what, when, and how they want to buy and sell.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❌</span> Market Failure</h3>
+                <p>A situation in which the free market, operating on its own, does not distribute resources efficiently.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">↔️</span> Externality</h3>
+                <p>An economic side effect of a good or service that generates benefits or costs to someone other than the person deciding how much to produce or consume.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="government-economy">
+            <h2>Government & Economy</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Referendum</h3>
+                <p>A proposed law submitted directly to the public.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Interest Group</h3>
+                <p>A private organization that tries to persuade public officials to act in ways that benefit the members.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🇺🇸</span> Patriotism</h3>
+                <p>The love of one's country.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏢</span> Eminent Domain</h3>
+                <p>The right of a government to take private property for public use.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌍</span> Public Interest</h3>
+                <p>The concerns of society as a whole.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Public Disclosure Laws</h3>
+                <p>Laws requiring companies to provide information about their products or services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Public Sector</h3>
+                <p>The part of the economy that involves the transactions of the government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏭</span> Private Sector</h3>
+                <p>The part of the economy that involves the transactions of individuals and businesses.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛣️</span> Infrastructure</h3>
+                <p>The basic facilities that are needed for a society to function and grow.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="intellectual-property">
+            <h2>Intellectual Property</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💡</span> Patent</h3>
+                <p>A government license that gives the inventor of a new product the exclusive right to produce and sell it.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📚</span> Copyright</h3>
+                <p>A government license that grants an author exclusive rights to publish and sell creative works.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="public-welfare">
+            <h2>Public Welfare</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🚦</span> Public Good</h3>
+                <p>A shared good or service for which it would be inefficient or impractical to make consumers pay individually and to exclude those who did not pay.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚶</span> Free Rider</h3>
+                <p>Someone who would not be willing to pay for a certain good or service but who would get the benefits of it anyway if it were a public good.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📉</span> Poverty Threshold</h3>
+                <p>The income level below which income is sufficient to support a family or household.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤲</span> Welfare</h3>
+                <p>Government aid to the poor.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💵</span> Cash Transfers</h3>
+                <p>Direct payments of money to eligible poor people.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛒</span> In-kind Benefits</h3>
+                <p>Goods and services that are provided free or at greatly reduced prices.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏆</span> Grant</h3>
+                <p>A financial award given by a government agency to a private individual or group to carry out a specific task.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

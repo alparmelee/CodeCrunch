@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Systems Definitions Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 2 Economic Systems</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="economic-systems">Economic Systems</button>
+        <button class="filter-button" data-category="political-systems">Political Systems</button>
+        <button class="filter-button" data-category="market-mechanisms">Market Mechanisms</button>
+        <button class="filter-button" data-category="markets">Market Types</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="economic-systems">
+            <h2>Economic Systems</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌐</span> Economic System</h3>
+                <p>The way a society decides how to produce, distribute, and consume goods and services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏺</span> Traditional Economy</h3>
+                <p>An economy based on customs, traditions, and beliefs, where people do things the way they've always been done.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💹</span> Market Economy</h3>
+                <p>An economy where individual choices and voluntary exchanges guide economic decisions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👮</span> Command Economy</h3>
+                <p>An economy where the government makes all decisions about production and consumption.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Mixed Economy</h3>
+                <p>A combination of market and command systems; both individuals and the government make economic decisions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Centrally Planned Economy</h3>
+                <p>A type of command economy where the central government makes all the decisions about the economy.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="political-systems">
+            <h2>Political Systems</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Socialism</h3>
+                <p>A system where the government owns some of the factors of production and tries to reduce income inequality.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">☭</span> Communism</h3>
+                <p>A political and economic system where all property is publicly owned, and the government controls everything.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Capitalism</h3>
+                <p>An economic system based on private ownership, free markets, and individual profit.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤲</span> Laissez-faire</h3>
+                <p>The idea that government should not interfere in the economy—"hands-off" approach.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> Authoritarian</h3>
+                <p>A government system that limits individual freedoms and requires strict obedience from citizens.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="market-mechanisms">
+            <h2>Market Mechanisms</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Voluntary Exchange</h3>
+                <p>The act of buyers and sellers freely and willingly trading goods and services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏆</span> Incentive</h3>
+                <p>Something that motivates a person to act, such as money or rewards.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👤</span> Self-interest</h3>
+                <p>The motivation of individuals to fulfill their own needs and desires.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏁</span> Competition</h3>
+                <p>The rivalry between sellers to attract customers by offering better deals.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> Consumer Sovereignty</h3>
+                <p>The power of consumers to decide what gets produced by what they choose to buy.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="markets">
+            <h2>Market Types</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Private Property</h3>
+                <p>The right of individuals to own land, businesses, and goods.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💸</span> Profit</h3>
+                <p>The financial gain made in a transaction after subtracting costs.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏭</span> Factor Market</h3>
+                <p>A market where resources (land, labor, capital) are bought and sold.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛒</span> Product Market</h3>
+                <p>A market where finished goods and services are bought and sold to consumers.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

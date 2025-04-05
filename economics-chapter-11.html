@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economics Chapter 11: Investment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            cursor: pointer;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        .blur-content {
+            filter: blur(5px);
+            user-select: none;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .control-button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-button:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 11: Investment</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="investment-basics">Investment Basics</button>
+        <button class="filter-button" data-category="bonds">Bonds</button>
+        <button class="filter-button" data-category="markets">Markets</button>
+        <button class="filter-button" data-category="financial-institutions">Financial Institutions</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="investment-basics">
+            <h2>Investment Basics</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💹</span> Investment</h3>
+                <p>The act of redirecting sources from being consumed today so that they may create benefits in the future; the use of assets to earn income or profit.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Financial System</h3>
+                <p>The network of structures and mechanisms that allows the transfer of money between savers and borrowers.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📃</span> Financial Asset</h3>
+                <p>A claim on the property or income of a borrower.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Diversification</h3>
+                <p>The strategy of spreading out investments to reduce risk.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📁</span> Portfolio</h3>
+                <p>A collection of financial assets.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Prospectus</h3>
+                <p>An investment report that provides information to potential customers.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Return</h3>
+                <p>The money an investor receives above and beyond the sum of money initially invested.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="bonds">
+            <h2>Bonds</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Coupon Rate</h3>
+                <p>The interest rate that a bond issuer will pay to the bondholder.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⏰</span> Maturity</h3>
+                <p>The time at which payment to a bondholder is due.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏷️</span> Par Value</h3>
+                <p>A bond's stated value, to be paid to the bondholder at maturity.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📈</span> Yield</h3>
+                <p>The annual rate of return on a bond if the bond is held to maturity.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🇺🇸</span> Savings Bond</h3>
+                <p>A low-denomination bond issued by the United States government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📉</span> Inflation Indexed Bond</h3>
+                <p>A bond that protects the investor against inflation by its linkage to an index of inflation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏙️</span> Municipal Bond</h3>
+                <p>A bond issued by a state or local government or a municipality to finance a public project.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏢</span> Corporate Bond</h3>
+                <p>A bond issued by a corporation to help raise money for expansion.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚠️</span> Junk Bond</h3>
+                <p>A bond with high risk and potentially high yield.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="markets">
+            <h2>Markets</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📆</span> Capital Market</h3>
+                <p>A market in which money is lent for periods longer than a year.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⏱️</span> Money Market</h3>
+                <p>A market in which money is lent for periods of one year or less.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🆕</span> Primary Market</h3>
+                <p>A market for selling financial assets that can be redeemed by only the original holder.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Secondary Market</h3>
+                <p>A market for reselling financial assets.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="financial-institutions">
+            <h2>Financial Institutions</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏦</span> Financial Intermediary</h3>
+                <p>An institution that helps channel funds from savers to borrowers.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Mutual Fund</h3>
+                <p>Organization that pools the savings of many individuals and invests this money in a variety of stocks, bonds, and other financial assets.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦔</span> Hedge Fund</h3>
+                <p>A private investment organization that employs risky strategies that often made huge profits for investors.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button id="hideDefinitions" class="control-button">Hide Definitions</button>
+        <button id="hideTerms" class="control-button">Hide Terms</button>
+        <button id="showAll" class="control-button">Show All</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            const hideDefinitionsBtn = document.getElementById('hideDefinitions');
+            const hideTermsBtn = document.getElementById('hideTerms');
+            const showAllBtn = document.getElementById('showAll');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            // Toggle visibility of definitions
+            hideDefinitionsBtn.addEventListener('click', function() {
+                terms.forEach(term => {
+                    const definition = term.querySelector('p');
+                    definition.classList.add('blur-content');
+                });
+            });
+            
+            // Toggle visibility of terms
+            hideTermsBtn.addEventListener('click', function() {
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3');
+                    termTitle.classList.add('blur-content');
+                });
+            });
+            
+            // Show all content
+            showAllBtn.addEventListener('click', function() {
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3');
+                    const definition = term.querySelector('p');
+                    termTitle.classList.remove('blur-content');
+                    definition.classList.remove('blur-content');
+                });
+            });
+            
+            // Allow clicking on terms to toggle blur
+            terms.forEach(term => {
+                const termTitle = term.querySelector('h3');
+                const definition = term.querySelector('p');
+                
+                termTitle.addEventListener('click', function() {
+                    termTitle.classList.toggle('blur-content');
+                });
+                
+                definition.addEventListener('click', function() {
+                    definition.classList.toggle('blur-content');
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

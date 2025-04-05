@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economics Definitions Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 9 Labor and Wages</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="labor-market">Labor Market</button>
+        <button class="filter-button" data-category="labor-types">Labor Types</button>
+        <button class="filter-button" data-category="labor-unions">Labor Unions</button>
+        <button class="filter-button" data-category="dispute-resolution">Dispute Resolution</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="labor-market">
+            <h2>Labor Market</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Labor Force</h3>
+                <p>All nonmilitary people who are employed or unemployed.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Outsourcing</h3>
+                <p>The practice of contracting with another company to do a specific job that would otherwise be done by a company's own workers.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Offshoring</h3>
+                <p>The movement of some of a company's operations to another country.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧠</span> Learning Effect</h3>
+                <p>The theory that education increases efficiency of production and thus result in higher wages.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🎓</span> Screening Effect</h3>
+                <p>The theory that the completion of college indicates to employees that a job applicant is intelligent and hard-working.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⏱️</span> Contingent Employment</h3>
+                <p>A temporary and part-time job.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛂</span> Guest Workers</h3>
+                <p>Members of the labor force from another country who are allowed to live and work in the United States only temporarily.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⛓️</span> Derived Demand</h3>
+                <p>A type of demand that is set by the demand for another good service.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📈</span> Productivity Of Labor</h3>
+                <p>The quantity of output produced by a unit of labor.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Equilibrium Wage</h3>
+                <p>The wage rate, or price of labor services, that is set when the supply of workers meet the demand for workers in the labor market.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="labor-types">
+            <h2>Labor Types</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🔨</span> Unskilled Labor</h3>
+                <p>Work that requires no specialized skills, education, or training.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔧</span> Semi-Skilled Labor</h3>
+                <p>Work that requires minimal specialized skill and education.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚙️</span> Skilled Labor</h3>
+                <p>Work that requires specialized skills and traning.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👩‍⚕️</span> Professional Labor</h3>
+                <p>Work that requires advanced skills and education.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚧</span> Glass Ceiling</h3>
+                <p>An unofficial barrier that sometimes prevents women and minorities from advancing to the top ranks of organizations dominated by white men.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👷</span> Blue Collar Worker</h3>
+                <p>Someone who performs manual labor, often in a manufacturing job, and who earns an hourly wage.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👔</span> White Collar Worker</h3>
+                <p>Someone who works in a professional or clerical job and who usually earns a weekly salary.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="labor-unions">
+            <h2>Labor Unions</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Labor Union</h3>
+                <p>An organization of workers that tries to improve working conditions, wages, and benefits for its members.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💼</span> Collective Bargaining</h3>
+                <p>The process in which union and company management meet to negotitate a new labor contract.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛌</span> Featherbedding</h3>
+                <p>The practice of negotiating labor contracts that keep unnecessary workers on a company's payroll.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✊</span> Strikes</h3>
+                <p>An organized work stoppage intended to force an employer to address union demand.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚪</span> Right To Work Labor</h3>
+                <p>A measure that bans mandatory union membership.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="dispute-resolution">
+            <h2>Dispute Resolution</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🤔</span> Mediation</h3>
+                <p>A settlement technique in which a neutral person, the mediator, meet with each side to try to find a solution that both sides will accept.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👨‍⚖️</span> Arbitration</h3>
+                <p>A settlement technique in which a neutral third party listens to both sides and then imposes a decision that is legally binding for both the company and the union.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

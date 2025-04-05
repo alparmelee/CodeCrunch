@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economics Chapter 10: Money</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            cursor: pointer;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        .blur-content {
+            filter: blur(5px);
+            user-select: none;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .control-button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-button:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 10: Money</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="money-basics">Money Basics</button>
+        <button class="filter-button" data-category="money-types">Money Types</button>
+        <button class="filter-button" data-category="banking">Banking</button>
+        <button class="filter-button" data-category="credit">Credit & Loans</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="money-basics">
+            <h2>Money Basics</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Money</h3>
+                <p>Anything that serves as a medium of exchange, a unit of account, and a store of value.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Medium of Exchange</h3>
+                <p>Anything that is used to determine value during the exchange of goods and services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Barter</h3>
+                <p>The direct exchange of one set of goods or services for another.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Unit of Account</h3>
+                <p>A means for comparing the values of goods and services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏦</span> Store of Value</h3>
+                <p>Something that keeps its value if it is stored rather than spent.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💵</span> Currency</h3>
+                <p>Coins and paper bills used as money.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Liquidity</h3>
+                <p>The ability to be used as, or directly converted into, cash.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💲</span> Money Supply</h3>
+                <p>All the money available in the United States economy.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="money-types">
+            <h2>Money Types</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🥇</span> Commodity Money</h3>
+                <p>Objects that have value in and of themselves and that are also used as money.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧾</span> Representative Money</h3>
+                <p>Objects that have value because the holder can exchange them for something else of value.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🪙</span> Specie</h3>
+                <p>Coined money, usually gold or silver, used to back paper money.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Fiat Money</h3>
+                <p>Objects that have value because a government has decreed that they are an acceptable means to pay debts.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🟢</span> Greenback</h3>
+                <p>A paper currency issued during the Civil War.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Gold Standard</h3>
+                <p>A monetary system in which paper money and coins had the value of certain amounts of gold.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💼</span> Money Market Mutual Fund</h3>
+                <p>A fund that pools money from small savers to purchase short-term government and corporate securities.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="banking">
+            <h2>Banking</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Bank</h3>
+                <p>An institution for receiving, keeping, and lending money.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🇺🇸</span> National Bank</h3>
+                <p>A bank chartered by the federal government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏃</span> Bank Run</h3>
+                <p>A widespread panic in which many people try to redeem their paper money at the same time.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Central Bank</h3>
+                <p>A bank that can lend to other banks in time of need.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Member Bank</h3>
+                <p>A bank that belongs to the Federal Reserve System.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✅</span> Demand Deposit</h3>
+                <p>Money in a checking account that can be paid out "on demand," or at any time.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Fractional Reserve Banking</h3>
+                <p>A banking system that keeps only a fraction of its funds on hand and lends out the remainder.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="credit">
+            <h2>Credit & Loans</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💸</span> Interest</h3>
+                <p>The price paid for the use of borrowed money.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💵</span> Principal</h3>
+                <p>The amount of money borrowed.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Mortgage</h3>
+                <p>A specific type of loan that is used to buy real estate.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❌</span> Default</h3>
+                <p>Failing to pay back a loan.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏘️</span> Foreclosure</h3>
+                <p>The seizure of property from the borrowers who repay their loans.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💳</span> Credit Card</h3>
+                <p>A card entitling its owner to buy goods and services based on the owner's promise to pay for those goods and services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💹</span> Debit Card</h3>
+                <p>A card used to withdraw money from a bank account.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👨‍💼</span> Creditor</h3>
+                <p>A person or institution to whom money is owed.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button id="hideDefinitions" class="control-button">Hide Definitions</button>
+        <button id="hideTerms" class="control-button">Hide Terms</button>
+        <button id="showAll" class="control-button">Show All</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            const hideDefinitionsBtn = document.getElementById('hideDefinitions');
+            const hideTermsBtn = document.getElementById('hideTerms');
+            const showAllBtn = document.getElementById('showAll');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            // Toggle visibility of definitions
+            hideDefinitionsBtn.addEventListener('click', function() {
+                terms.forEach(term => {
+                    const definition = term.querySelector('p');
+                    definition.classList.add('blur-content');
+                });
+            });
+            
+            // Toggle visibility of terms
+            hideTermsBtn.addEventListener('click', function() {
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3');
+                    termTitle.classList.add('blur-content');
+                });
+            });
+            
+            // Show all content
+            showAllBtn.addEventListener('click', function() {
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3');
+                    const definition = term.querySelector('p');
+                    termTitle.classList.remove('blur-content');
+                    definition.classList.remove('blur-content');
+                });
+            });
+            
+            // Allow clicking on terms to toggle blur
+            terms.forEach(term => {
+                const termTitle = term.querySelector('h3');
+                const definition = term.querySelector('p');
+                
+                termTitle.addEventListener('click', function() {
+                    termTitle.classList.toggle('blur-content');
+                });
+                
+                definition.addEventListener('click', function() {
+                    definition.classList.toggle('blur-content');
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
