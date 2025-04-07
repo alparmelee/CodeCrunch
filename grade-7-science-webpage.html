@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 7 Life Science</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Grade 7: Life Science</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="scientific-skills">Scientific Skills</button>
+        <button class="filter-button" data-category="cell-biology">Cell Biology</button>
+        <button class="filter-button" data-category="classification">Classification</button>
+        <button class="filter-button" data-category="microscopy">Microscopy</button>
+        <button class="filter-button" data-category="plant-biology">Plant Biology</button>
+        <button class="filter-button" data-category="genetics">Genetics</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="scientific-skills">
+            <h2>Scientific Skills</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👁️</span> Observation</h3>
+                <p>A statement based on what is perceived by the senses.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💡</span> Hypothesis</h3>
+                <p>A testable explanation for an observation based on prior knowledge.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Data</h3>
+                <p>Information gathered during a scientific investigation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Evidence</h3>
+                <p>Observations that support or refute a claim or idea.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Conclusion</h3>
+                <p>A summary of the results of an experiment or investigation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Compare</h3>
+                <p>To give a similarity and a difference between two or more things.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">↔️</span> Contrast</h3>
+                <p>To point out differences between things.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Describe</h3>
+                <p>To list observable features.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❓</span> Explain</h3>
+                <p>To give reasons for an observation or event.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⏱️</span> Process</h3>
+                <p>A series of actions or steps leading to a result.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="cell-biology">
+            <h2>Cell Biology</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🧫</span> Cell</h3>
+                <p>The basic unit of life in all organisms.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔬</span> Organelle</h3>
+                <p>Specialized structures within eukaryotic cells.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚛️</span> Nucleus</h3>
+                <p>Organelle that contains DNA and controls the cell's activities.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚡</span> Mitochondrion</h3>
+                <p>Organelle that produces energy for the cell.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛡️</span> Cell membrane</h3>
+                <p>Semipermeable barrier around the cell.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Cytoplasm</h3>
+                <p>Fluid inside the cell that holds organelles.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧱</span> Cell wall</h3>
+                <p>Rigid structure surrounding plant, fungi, and bacterial cells.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌿</span> Chloroplast</h3>
+                <p>Organelle in plants that carries out photosynthesis.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🟢</span> Chlorophyll</h3>
+                <p>Green pigment in chloroplasts that captures light energy.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💼</span> Vacuole</h3>
+                <p>Organelle used for storage within the cell.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="classification">
+            <h2>Classification and Types of Organisms</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🦋</span> Organism</h3>
+                <p>Any living thing.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> Kingdom</h3>
+                <p>A major classification of life (e.g., Animalia, Plantae).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧬</span> Species</h3>
+                <p>A group of organisms that can reproduce together.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦠</span> Bacterium</h3>
+                <p>A unicellular, prokaryotic organism.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦠</span> Protista</h3>
+                <p>A kingdom of mostly single-celled eukaryotic organisms.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍄</span> Fungus</h3>
+                <p>A kingdom of decomposing, eukaryotic organisms.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Eukaryotic</h3>
+                <p>Cells that contain a nucleus and organelles.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧫</span> Prokaryotic</h3>
+                <p>Cells without a nucleus or organelles (e.g., bacteria).</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="microscopy">
+            <h2>Microscopy</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🔬</span> Microscope</h3>
+                <p>A tool used to view small organisms or structures.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👁️</span> Eyepiece</h3>
+                <p>The lens you look through on a microscope.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔎</span> Objective lens</h3>
+                <p>The lens closest to the specimen.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⭕</span> Field of view</h3>
+                <p>The visible area seen under a microscope.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📏</span> Slide</h3>
+                <p>A glass plate used to hold specimens for viewing.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Wet mount</h3>
+                <p>A way of preparing slides using liquid and a cover slip.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="plant-biology">
+            <h2>Plant and Reproductive Biology</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">☀️</span> Photosynthesis</h3>
+                <p>The process plants use to convert sunlight into energy.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌱</span> Root</h3>
+                <p>Plant organ that absorbs water and anchors the plant.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌸</span> Flower</h3>
+                <p>The reproductive structure of many plants.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌼</span> Pollen</h3>
+                <p>Male reproductive cells in plants.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🥚</span> Egg</h3>
+                <p>Female reproductive cell.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💞</span> Fertilization</h3>
+                <p>The fusion of sperm and egg to form a zygote.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌰</span> Seed</h3>
+                <p>A plant embryo with a food source and protective covering.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍎</span> Fruit</h3>
+                <p>A ripened ovary that contains seeds.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌱</span> Germination</h3>
+                <p>The process by which a seed begins to grow.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="genetics">
+            <h2>Genetics and Inheritance</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🧬</span> Gene</h3>
+                <p>A unit of inherited information in DNA.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Allele</h3>
+                <p>Different forms of a gene.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👁️</span> Trait</h3>
+                <p>A physical characteristic of an organism.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Genotype</h3>
+                <p>The genetic makeup of an organism.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👤</span> Phenotype</h3>
+                <p>The physical appearance resulting from the genotype.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔠</span> Homozygous</h3>
+                <p>Having two identical alleles for a gene.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔀</span> Heterozygous</h3>
+                <p>Having one dominant and one recessive allele.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

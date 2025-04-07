@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 7 Science Chapters</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            flex-grow: 1;
+        }
+        
+        .chapters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .chapter-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            background-color: #2c3e50;
+            color: white;
+            position: relative;
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .file-size {
+            margin-left: auto;
+            font-family: monospace;
+            background-color: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .chapter-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .view-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        
+        .view-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .chapter-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+        }
+        
+        .last-update {
+            font-style: italic;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Grade 7 Science Resources</h1>
+        <div class="subtitle">Interactive Learning Materials</div>
+    </header>
+    
+    <main>
+        <p>Welcome to the Grade 7 Science resources portal. Click on any chapter below to access interactive learning materials and definitions.</p>
+        
+        <div class="chapters-container">
+            <div class="chapter-card">
+                <div class="card-header">
+                    <h2>6th Grade</h2>
+                    <div class="chapter-icon">🌱</div>
+                </div>
+                <div class="card-body">
+                    <div class="file-info">
+                        <span>Updated: April 7, 2025</span>
+                        <span class="file-size">19,119 bytes</span>
+                    </div>
+                    <div class="chapter-description">
+                        <p>Explore fundamental concepts in Life Science including cell biology, classification, microscopy, plant biology, and genetics.</p>
+                    </div>
+                    <a href="grade-7-science-webpage.html" class="view-button">View Chapter</a>
+                </div>
+            </div>
+            
+            <div class="chapter-card">
+                <div class="card-header">
+                    <h2>7th Grade</h2>
+                    <div class="chapter-icon">🌎</div>
+                </div>
+                <div class="card-body">
+                    <div class="file-info">
+                        <span>Updated: April 7, 2025</span>
+                        <span class="file-size">17,646 bytes</span>
+                    </div>
+                    <div class="chapter-description">
+                        <p>Learn about Earth's structure, plate tectonics, weathering and erosion, rock cycles, and soil science in Chapter 6.</p>
+                    </div>
+                    <a href="earth-science-chapter-6.html" class="view-button">View Chapter</a>
+                </div>
+            </div>
+            
+            <div class="chapter-card">
+                <div class="card-header">
+                    <h2>8th Grade</h2>
+                    <div class="chapter-icon">📚</div>
+                </div>
+                <div class="card-body">
+                    <div class="file-info">
+                        <span>Updated: April 7, 2025</span>
+                        <span class="file-size">23,356 bytes</span>
+                    </div>
+                    <div class="chapter-description">
+                        <p>Review the top 50 science definitions from Chapter 8, covering essential terminology and concepts for your exam preparation.</p>
+                    </div>
+                    <a href="chapter-8-top-50-science-definitions.html" class="view-button">View Chapter</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Grade 7 Science - Interactive Learning Portal</p>
+        <div class="last-update">Last updated: April 7, 2025</div>
+    </footer>
+</body>
+</html>

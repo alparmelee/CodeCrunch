@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: Top 50 Science Definitions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .intro {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        .intro p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .intro ul {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .activities {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .activities h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        .activity {
+            margin-bottom: 20px;
+        }
+
+        .activity h3 {
+            color: #2c3e50;
+        }
+
+        .activity p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Grade 8: Biology, Chemistry, Physics, Earth Science</h1>
+    
+    <div class="intro">
+        <h2>Introduction</h2>
+        <p>Welcome to Chapter 8 of our Grade 7 Science curriculum! This chapter provides a comprehensive collection of the 50 most important scientific terms and concepts that every 7th-grade student should understand. These definitions span various scientific disciplines including biology, chemistry, physics, and earth science.</p>
+        
+        <h3>How to Use This Chapter</h3>
+        <ul>
+            <li>Review these definitions regularly to build your scientific vocabulary</li>
+            <li>Connect these terms to laboratory experiments and classroom discussions</li>
+            <li>Use them as study aids when preparing for quizzes and tests</li>
+            <li>Look for relationships between different terms to deepen your understanding</li>
+        </ul>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="biology">Biology</button>
+        <button class="filter-button" data-category="chemistry">Chemistry</button>
+        <button class="filter-button" data-category="physics">Physics</button>
+        <button class="filter-button" data-category="earth-science">Earth Science</button>
+        <button class="filter-button" data-category="scientific-method">Scientific Method</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="biology">
+            <h2>Biology Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🧫</span> Cell</h3>
+                <p>The basic structural and functional unit of all living organisms.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Cytoplasm</h3>
+                <p>The jellylike substance within a cell, excluding the nucleus.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛡️</span> Cell Membrane</h3>
+                <p>The outer layer of a cell that controls what enters and exits.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧱</span> Cell Wall</h3>
+                <p>A rigid layer in plant cells providing structure and protection.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌿</span> Chloroplast</h3>
+                <p>A plant cell organelle where photosynthesis occurs.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧬</span> DNA</h3>
+                <p>Molecule carrying genetic information essential for life.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧬</span> Chromosome</h3>
+                <p>A DNA molecule that carries genetic instructions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦋</span> Adaptation</h3>
+                <p>A trait that helps a species survive in its environment, shaped by natural selection.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Asexual Reproduction</h3>
+                <p>Reproduction involving one parent, producing genetically identical offspring.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Biodiversity</h3>
+                <p>The variety of life forms within a given ecosystem or on the entire Earth.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌳</span> Ecosystem</h3>
+                <p>A community of living organisms interacting with their environment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦕</span> Evolution</h3>
+                <p>The gradual change of species over generations through natural processes.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">☠️</span> Extinction</h3>
+                <p>The permanent loss of a species.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🕸️</span> Food Web</h3>
+                <p>A network of interconnected food chains showing energy flow.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🐺</span> Consumer</h3>
+                <p>An organism that gets energy by eating other organisms.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍄</span> Decomposer</h3>
+                <p>An organism that breaks down dead material, recycling nutrients.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍽️</span> Digestive System</h3>
+                <p>The body system that processes food for energy and removes waste.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❤️</span> Circulatory System</h3>
+                <p>The system that transports blood, oxygen, and nutrients through the body.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="chemistry">
+            <h2>Chemistry Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚛️</span> Atom</h3>
+                <p>The basic unit of matter, made of a nucleus surrounded by electrons.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Element</h3>
+                <p>A pure substance consisting of one type of atom.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔗</span> Compound</h3>
+                <p>A substance made from two or more elements chemically bonded.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Chemical Change</h3>
+                <p>A change that alters a substance's chemical composition.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚗️</span> Chemical Reaction</h3>
+                <p>A process where substances are transformed into new ones.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Conservation of Mass</h3>
+                <p>The principle that mass is neither created nor destroyed in a chemical reaction.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💨</span> Gas</h3>
+                <p>A state of matter without a fixed shape or volume; particles move freely.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧊</span> Solid</h3>
+                <p>A state of matter with definite shape and volume.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Liquid</h3>
+                <p>A state of matter with definite volume but no definite shape.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌧️</span> Condensation</h3>
+                <p>The change from gas to liquid.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">☁️</span> Evaporation</h3>
+                <p>The change from liquid to gas.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔥</span> Boiling Point</h3>
+                <p>The temperature at which a liquid becomes a gas.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Density</h3>
+                <p>Mass per unit volume.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="physics">
+            <h2>Physics Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚡</span> Energy</h3>
+                <p>The capacity to do work or cause change.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">➡️</span> Energy Transfer</h3>
+                <p>Movement of energy from one object or place to another.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Energy Transformation</h3>
+                <p>The change of energy from one form to another.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💪</span> Force</h3>
+                <p>A push or pull on an object, having both direction and magnitude.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛑</span> Friction</h3>
+                <p>A force that resists motion between two surfaces.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Gravity</h3>
+                <p>The force that attracts objects toward each other, especially the Earth.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚡</span> Electrical Energy</h3>
+                <p>Energy resulting from the flow of electric charge.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="earth-science">
+            <h2>Earth Science Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">☁️</span> Atmosphere</h3>
+                <p>The layer of gases surrounding a planet.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🪨</span> Crust</h3>
+                <p>The Earth's outer layer made of rock.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔥</span> Core (of Earth)</h3>
+                <p>The innermost layer, believed to be solid and composed of iron and nickel.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧩</span> Plate Tectonics</h3>
+                <p>The theory that Earth's crust is divided into plates that move.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌋</span> Earthquake</h3>
+                <p>A sudden ground movement caused by the shifting of Earth's plates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">↔️</span> Fault</h3>
+                <p>A fracture in Earth's crust where movement has occurred.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💨</span> Erosion</h3>
+                <p>The wearing away of Earth's surface by wind, water, or ice.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏝️</span> Deposition</h3>
+                <p>The laying down of sediment carried by wind, water, or ice.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦴</span> Fossils</h3>
+                <p>Preserved remains or traces of ancient organisms.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="scientific-method">
+            <h2>Scientific Method and Skills</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Analyze</h3>
+                <p>To examine details to understand causes or results.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Experiment</h3>
+                <p>A test carried out under controlled conditions to examine a hypothesis.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Conclusion</h3>
+                <p>A final judgment or decision based on experimental evidence.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="activities">
+        <h2>Practice Activities</h2>
+        
+        <div class="activity">
+            <h3>Vocabulary Connections</h3>
+            <p>Choose five terms from different sections and explain how they are related to each other.</p>
+        </div>
+        
+        <div class="activity">
+            <h3>Real-World Applications</h3>
+            <p>For each scientific discipline (Biology, Chemistry, Physics, Earth Science), identify two concepts from the list and describe how they apply to everyday life.</p>
+        </div>
+        
+        <div class="activity">
+            <h3>Concept Mapping</h3>
+            <p>Create a concept map showing the relationships between at least 10 terms from the chapter.</p>
+        </div>
+        
+        <div class="activity">
+            <h3>Definition Challenge</h3>
+            <p>Without looking at the definitions, try to explain each term in your own words, then check your answers against the chapter.</p>
+        </div>
+        
+        <h2>Review Questions</h2>
+        <ol>
+            <li>Explain the difference between a cell membrane and a cell wall.</li>
+            <li>How are adaptation and evolution connected?</li>
+            <li>What is the relationship between atoms, elements, and compounds?</li>
+            <li>Describe how energy transformation occurs during a simple activity like riding a bicycle.</li>
+            <li>Compare and contrast erosion and deposition.</li>
+            <li>How do decomposers contribute to an ecosystem?</li>
+            <li>Explain why understanding density is important when studying states of matter.</li>
+            <li>How does the scientific method incorporate analysis, experimentation, and conclusion?</li>
+        </ol>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

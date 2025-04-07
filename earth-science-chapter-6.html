@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 7 Earth Science - Chapter 6</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Grade 6: Science</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="earth-structure">Earth Structure</button>
+        <button class="filter-button" data-category="plate-tectonics">Plate Tectonics</button>
+        <button class="filter-button" data-category="weathering">Weathering & Erosion</button>
+        <button class="filter-button" data-category="rock-cycle">Rock Cycle</button>
+        <button class="filter-button" data-category="soil">Soil Science</button>
+        <button class="filter-button" data-category="scientific-skills">Scientific Skills</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="earth-structure">
+            <h2>Earth Structure</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Geology</h3>
+                <p>The study of planet Earth.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧊</span> Crust</h3>
+                <p>Layer of rock that forms Earth's outer surface.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🪨</span> Lithosphere</h3>
+                <p>The uppermost part of the mantle.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌡️</span> Asthenosphere</h3>
+                <p>Soft layer of rock in the mantle.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔥</span> Outer Core</h3>
+                <p>The layer made up of liquid iron and nickel.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="plate-tectonics">
+            <h2>Plate Tectonics</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌋</span> Plate Tectonics</h3>
+                <p>Theory that the outer layer of the earth is divided into plates that are in slow constant motion.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">↔️</span> Divergent Plates</h3>
+                <p>Tectonic plates that move away from each other.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">↕️</span> Transform Plates</h3>
+                <p>Tectonic plates that move in opposite directions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⬅️➡️</span> Convergent Plates</h3>
+                <p>Tectonic plates that come together at the same place.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📳</span> Earthquakes</h3>
+                <p>Caused by movement of tectonic plates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">〰️</span> Seismic Waves</h3>
+                <p>Waves of energy that travel through the earth after an earthquake.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌋</span> Volcanoes</h3>
+                <p>Can be formed by the movement of tectonic plates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💥</span> Explosive Eruptions</h3>
+                <p>Caused by magma that contains a lot of water and silica.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="weathering">
+            <h2>Weathering & Erosion</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⛏️</span> Mechanical Weathering</h3>
+                <p>Physical processes that break down rocks into smaller pieces without changing their composition.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Freeze-Thaw Weathering</h3>
+                <p>When water freezes and expands in cracks, breaking apart rocks.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Chemical Weathering</h3>
+                <p>Chemical processes that break down rocks by changing their composition.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌱</span> Biological Weathering</h3>
+                <p>When plants, animals, and microorganisms contribute to the breakdown of rocks.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍃</span> Lichen</h3>
+                <p>Organisms that can cause chemical weathering by releasing acids.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💨</span> Abrasion</h3>
+                <p>When rocks collide and wear against each other, causing mechanical weathering.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📏</span> Erosion</h3>
+                <p>The process of worn-away rock material being moved to new locations.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="rock-cycle">
+            <h2>Rock Cycle</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🔥</span> Igneous Rock</h3>
+                <p>Rock formed from the cooling and solidification of magma or lava.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧱</span> Sedimentary Rock</h3>
+                <p>Rock formed when sediment is compacted and cemented together.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Metamorphic Rock</h3>
+                <p>Rock that forms when heat and pressure change igneous or sedimentary rock.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌡️</span> Magma</h3>
+                <p>Molten rock beneath Earth's surface.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🪨</span> Sediment</h3>
+                <p>Fragments of rock, minerals, and organic material.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⬇️</span> Deposition</h3>
+                <p>When sediment settles out of water or air and collects in layers.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="soil">
+            <h2>Soil Science</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌱</span> Topsoil</h3>
+                <p>Crumbly, dark soil that is a mixture of humus, clay, and other minerals.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍂</span> Humus</h3>
+                <p>Decayed plant and animal remains.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦠</span> Decomposer</h3>
+                <p>Organisms that break down animal and plant remains.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏔️</span> Bedrock</h3>
+                <p>The solid layer of rock beneath the soil.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> pH Scale</h3>
+                <p>A scale used to measure soil acidity.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🥄</span> Subsoil</h3>
+                <p>Layer of soil with clay and other particles, but little humus.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌿</span> Loam</h3>
+                <p>Soil made of about equal parts clay, sand and silt.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌾</span> Fertility</h3>
+                <p>A measure of how well soil supports plant growth.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="scientific-skills">
+            <h2>Scientific Skills</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👁️</span> Observation</h3>
+                <p>A statement based on what is perceived by the senses.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❓</span> Question</h3>
+                <p>An inquiry that guides scientific investigation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💡</span> Hypothesis</h3>
+                <p>A testable explanation for an observation based on prior knowledge.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Experiment</h3>
+                <p>A controlled procedure to test a hypothesis.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Variable</h3>
+                <p>A factor in an experiment that can be changed, measured, or controlled.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Control Group</h3>
+                <p>A group in an experiment that does not receive the treatment being tested.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
