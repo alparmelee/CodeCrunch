@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 8: Industrial Revolution and Imperialism</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        
+        /* Category-specific colors */
+        .tech { border-left-color: #2980b9; }
+        .tech::after, .tech-color { background-color: #2980b9; }
+        .tech-btn.active { background-color: #2980b9; }
+        
+        .social { border-left-color: #c0392b; }
+        .social::after, .social-color { background-color: #c0392b; }
+        .social-btn.active { background-color: #c0392b; }
+        
+        .africa { border-left-color: #27ae60; }
+        .africa::after, .africa-color { background-color: #27ae60; }
+        .africa-btn.active { background-color: #27ae60; }
+        
+        .asia { border-left-color: #8e44ad; }
+        .asia::after, .asia-color { background-color: #8e44ad; }
+        .asia-btn.active { background-color: #8e44ad; }
+        
+        .resistance { border-left-color: #f39c12; }
+        .resistance::after, .resistance-color { background-color: #f39c12; }
+        .resistance-btn.active { background-color: #f39c12; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 8: Industrial Revolution and Imperialism</h1>
+            <p class="subtitle">Global Transformations and Power Relations (1750-1914 CE)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter examines the interconnected phenomena of industrialization and imperialism that transformed the world in the 19th and early 20th centuries. Beginning with technological innovations in Britain that sparked the Industrial Revolution, we trace how factory production, mechanization, and steam power revolutionized manufacturing and transportation. These changes profoundly altered society, creating new urban working classes, changing labor patterns, and prompting reform movements. Simultaneously, European powers embarked on a new phase of imperial expansion, colonizing large portions of Africa and Asia in pursuit of raw materials, markets, and geopolitical advantage. We explore both the economic drivers of imperialism and indigenous resistance to colonial rule.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Categories</button>
+            <button class="region-btn tech-btn" data-filter="tech">Technological Changes</button>
+            <button class="region-btn social-btn" data-filter="social">Social Impacts</button>
+            <button class="region-btn africa-btn" data-filter="africa">Imperialism in Africa</button>
+            <button class="region-btn asia-btn" data-filter="asia">Imperialism in Asia</button>
+            <button class="region-btn resistance-btn" data-filter="resistance">Colonial Resistance</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color tech-color"></div>
+                <span>Technological Changes</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color social-color"></div>
+                <span>Social Impacts</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color africa-color"></div>
+                <span>Imperialism in Africa</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color asia-color"></div>
+                <span>Imperialism in Asia</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color resistance-color"></div>
+                <span>Colonial Resistance</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each category
+            const events = [
+                {
+                    year: 1764,
+                    title: "Spinning Jenny Invented",
+                    description: "James Hargreaves created the Spinning Jenny, enabling one worker to spin multiple threads simultaneously.",
+                    significance: "Dramatically increased textile production efficiency and marked early mechanization of manufacturing.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1769,
+                    title: "Watt's Steam Engine Patent",
+                    description: "James Watt patented improved steam engine with separate condenser.",
+                    significance: "Provided efficient power source for factories, transforming manufacturing and later transportation.",
+                    region: "tech",
+                    position: "right"
+                },
+                {
+                    year: 1771,
+                    title: "First Water-Powered Cotton Mill",
+                    description: "Richard Arkwright established first water-powered cotton spinning mill at Cromford.",
+                    significance: "Created factory model that would spread throughout Britain and beyond.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1793,
+                    title: "Cotton Gin Invented",
+                    description: "Eli Whitney invented machine to quickly separate cotton fibers from seeds.",
+                    significance: "Increased cotton processing efficiency and expanded plantation slavery in American South.",
+                    region: "tech",
+                    position: "right"
+                },
+                {
+                    year: 1807,
+                    title: "First Commercial Steamboat",
+                    description: "Robert Fulton's Clermont began commercial service on Hudson River.",
+                    significance: "Revolutionized river transportation and later enabled steamship ocean travel.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1811,
+                    title: "Luddite Movement Begins",
+                    description: "English textile workers destroyed machinery they believed threatened their jobs.",
+                    significance: "First organized resistance to industrial mechanization and symbol of worker anxiety.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1825,
+                    title: "First Public Railway Opens",
+                    description: "Stockton and Darlington Railway began passenger and freight service using steam locomotives.",
+                    significance: "Demonstrated viability of rail transport, leading to railway boom that transformed economies.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1830,
+                    title: "Liverpool-Manchester Railway",
+                    description: "First intercity passenger railway using exclusively steam locomotives opened.",
+                    significance: "Established model for railway development worldwide and accelerated industrial growth.",
+                    region: "tech",
+                    position: "right"
+                },
+                {
+                    year: 1832,
+                    title: "Great Reform Act in Britain",
+                    description: "Parliament passed act extending voting rights to middle-class men and eliminating rotten boroughs.",
+                    significance: "First major expansion of British electorate in response to industrialization and urbanization.",
+                    region: "social",
+                    position: "left"
+                },
+                {
+                    year: 1833,
+                    title: "Factory Act in Britain",
+                    description: "Parliament prohibited employment of children under 9 in textile factories and limited working hours for older children.",
+                    significance: "First significant government regulation of industrial working conditions.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1839,
+                    title: "First Opium War Begins",
+                    description: "British military action against China in response to destruction of opium stocks.",
+                    significance: "Forced China to open ports to Western trade and began era of unequal treaties.",
+                    region: "asia",
+                    position: "left"
+                },
+                {
+                    year: 1842,
+                    title: "Mines Act in Britain",
+                    description: "Parliament prohibited employment of women and children under 10 in mines.",
+                    significance: "Extended industrial regulation beyond factories and highlighted deplorable mining conditions.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1844,
+                    title: "Telegraph Line Demonstrated",
+                    description: "Samuel Morse sent first telegraph message between Washington and Baltimore.",
+                    significance: "Revolutionized long-distance communication and later enabled coordination of global empire.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1848,
+                    title: "Communist Manifesto Published",
+                    description: "Karl Marx and Friedrich Engels published pamphlet calling for worker revolution.",
+                    significance: "Provided theoretical foundation for socialist movements and critiques of industrial capitalism.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1851,
+                    title: "Great Exhibition in London",
+                    description: "First World's Fair showcased British industrial and imperial might.",
+                    significance: "Celebrated industrial progress and competition between nations for technological superiority.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1857,
+                    title: "Indian Rebellion",
+                    description: "Widespread rebellion against British East India Company rule.",
+                    significance: "Led to direct British Crown rule of India and changed colonial administration practices.",
+                    region: "resistance",
+                    position: "right"
+                },
+                {
+                    year: 1859,
+                    title: "First Oil Well Drilled",
+                    description: "Edwin Drake drilled first commercially successful oil well in Pennsylvania.",
+                    significance: "Began petroleum industry that would provide crucial fuel for industrial expansion.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1869,
+                    title: "Suez Canal Opens",
+                    description: "Canal connecting Mediterranean and Red Seas completed.",
+                    significance: "Shortened route between Europe and Asia, facilitating trade and imperial control.",
+                    region: "tech",
+                    position: "right"
+                },
+                {
+                    year: 1870,
+                    title: "Forster Education Act",
+                    description: "Britain established first national system of elementary education.",
+                    significance: "Recognized need for literate workforce in industrial economy and expanded opportunity.",
+                    region: "social",
+                    position: "left"
+                },
+                {
+                    year: 1876,
+                    title: "Bell Patents Telephone",
+                    description: "Alexander Graham Bell received patent for first practical telephone.",
+                    significance: "Further revolutionized communication, enabling voice transmission across distances.",
+                    region: "tech",
+                    position: "right"
+                },
+                {
+                    year: 1879,
+                    title: "Edison's Electric Light",
+                    description: "Thomas Edison demonstrated first practical incandescent light bulb.",
+                    significance: "Enabled widespread electrical lighting of factories, homes, and cities.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1882,
+                    title: "Triple Alliance Formed",
+                    description: "Germany, Austria-Hungary, and Italy formed defensive alliance.",
+                    significance: "Reflected imperial competition and tensions between European powers.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1884,
+                    title: "Berlin Conference Begins",
+                    description: "European powers met to establish rules for African colonization.",
+                    significance: "Formalized 'Scramble for Africa' and established principles for dividing continent.",
+                    region: "africa",
+                    position: "left"
+                },
+                {
+                    year: 1885,
+                    title: "Congo Free State Established",
+                    description: "King Leopold II of Belgium claimed Congo Basin as personal colony.",
+                    significance: "Created exploitative colonial regime notorious for atrocities in rubber collection.",
+                    region: "africa",
+                    position: "right"
+                },
+                {
+                    year: 1889,
+                    title: "Second International Founded",
+                    description: "Socialist and labor parties formed organization to coordinate activities.",
+                    significance: "Represented growing influence of organized labor and socialist politics.",
+                    region: "social",
+                    position: "left"
+                },
+                {
+                    year: 1893,
+                    title: "New Zealand Women's Suffrage",
+                    description: "New Zealand became first nation to grant women right to vote in national elections.",
+                    significance: "Major advance for women's political rights in industrialized society.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1896,
+                    title: "Battle of Adwa",
+                    description: "Ethiopian forces defeated Italian army attempting colonial conquest.",
+                    significance: "Rare successful resistance to European imperialism, preserving Ethiopian independence.",
+                    region: "resistance",
+                    position: "left"
+                },
+                {
+                    year: 1898,
+                    title: "Battle of Omdurman",
+                    description: "British forces defeated Sudanese Mahdist fighters.",
+                    significance: "Demonstrated technological gap between industrial and non-industrial militaries.",
+                    region: "africa",
+                    position: "right"
+                },
+                {
+                    year: 1899,
+                    title: "Boxer Rebellion Begins",
+                    description: "Chinese nationalists attacked foreigners and Chinese Christians.",
+                    significance: "Reflected growing anti-foreign sentiment in response to imperial incursions.",
+                    region: "resistance",
+                    position: "left"
+                },
+                {
+                    year: 1899,
+                    title: "Second Boer War Begins",
+                    description: "Britain fought Dutch-descended settlers for control of South Africa.",
+                    significance: "Costly colonial war revealing difficulties of imperial control and introducing concentration camps.",
+                    region: "africa",
+                    position: "right"
+                },
+                {
+                    year: 1900,
+                    title: "Boxer Protocol Signed",
+                    description: "China forced to pay massive indemnity to foreign powers after Boxer Rebellion.",
+                    significance: "Further weakened China and strengthened foreign influence.",
+                    region: "asia",
+                    position: "left"
+                },
+                {
+                    year: 1903,
+                    title: "Wright Brothers' First Flight",
+                    description: "First powered, controlled airplane flight at Kitty Hawk.",
+                    significance: "Began aviation era that would transform travel, warfare, and global connections.",
+                    region: "tech",
+                    position: "right"
+                },
+                {
+                    year: 1904,
+                    title: "Russo-Japanese War Begins",
+                    description: "Japan attacked Russian fleet at Port Arthur, starting conflict over Manchuria and Korea.",
+                    significance: "First major victory of Asian power over European power in modern era.",
+                    region: "resistance",
+                    position: "left"
+                },
+                {
+                    year: 1905,
+                    title: "Russian Revolution of 1905",
+                    description: "Failed revolution forced Tsar to establish elected Duma.",
+                    significance: "Demonstrated growing revolutionary sentiment in response to industrialization.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1908,
+                    title: "Ford Model T Production",
+                    description: "Henry Ford began mass production of affordable automobile.",
+                    significance: "Democratized automobile ownership and demonstrated assembly line efficiency.",
+                    region: "tech",
+                    position: "left"
+                },
+                {
+                    year: 1911,
+                    title: "Triangle Shirtwaist Factory Fire",
+                    description: "146 garment workers died in New York factory fire.",
+                    significance: "Highlighted dangerous working conditions and spurred labor law reforms.",
+                    region: "social",
+                    position: "right"
+                },
+                {
+                    year: 1912,
+                    title: "African National Congress Founded",
+                    description: "South African organization formed to advocate for Black civil rights.",
+                    significance: "Beginning of organized political resistance to white minority rule in South Africa.",
+                    region: "resistance",
+                    position: "left"
+                },
+                {
+                    year: 1914,
+                    title: "Panama Canal Opens",
+                    description: "Ship canal connecting Atlantic and Pacific Oceans completed.",
+                    significance: "Major engineering achievement that transformed global shipping routes.",
+                    region: "tech",
+                    position: "right"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

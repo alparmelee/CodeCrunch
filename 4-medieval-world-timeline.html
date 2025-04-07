@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Medieval World and Feudal Societies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        /* Region-specific colors */
+        .europe { border-left-color: #E91E63; }
+        .europe::after, .europe-color { background-color: #E91E63; }
+        .europe-btn.active { background-color: #E91E63; }
+        
+        .byzantine { border-left-color: #673AB7; }
+        .byzantine::after, .byzantine-color { background-color: #673AB7; }
+        .byzantine-btn.active { background-color: #673AB7; }
+        
+        .islamic { border-left-color: #009688; }
+        .islamic::after, .islamic-color { background-color: #009688; }
+        .islamic-btn.active { background-color: #009688; }
+        
+        .asia { border-left-color: #FF5722; }
+        .asia::after, .asia-color { background-color: #FF5722; }
+        .asia-btn.active { background-color: #FF5722; }
+        
+        .church { border-left-color: #9C27B0; }
+        .church::after, .church-color { background-color: #9C27B0; }
+        .church-btn.active { background-color: #9C27B0; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 4: Medieval World and Feudal Societies</h1>
+            <p class="subtitle">Political, Social, and Religious Developments in Medieval Societies (500-1500 CE)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter explores the complex social, political, and religious structures that emerged across Europe, the Islamic world, and East Asia following the collapse of classical empires. We examine how feudal arrangements, religious institutions, and agricultural innovations shaped medieval societies, as well as moments of significant cultural exchange, conflict, and transformation that defined this formative period in world history.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Regions</button>
+            <button class="region-btn europe-btn" data-filter="europe">Western Europe</button>
+            <button class="region-btn byzantine-btn" data-filter="byzantine">Byzantine Empire</button>
+            <button class="region-btn islamic-btn" data-filter="islamic">Islamic World</button>
+            <button class="region-btn asia-btn" data-filter="asia">East Asia</button>
+            <button class="region-btn church-btn" data-filter="church">Catholic Church</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color europe-color"></div>
+                <span>Western Europe</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color byzantine-color"></div>
+                <span>Byzantine Empire</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color islamic-color"></div>
+                <span>Islamic World</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color asia-color"></div>
+                <span>East Asia</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color church-color"></div>
+                <span>Catholic Church</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each region
+            const events = [
+                {
+                    year: 476,
+                    title: "Fall of Western Roman Empire",
+                    description: "The last Roman Emperor, Romulus Augustulus, was deposed by Germanic chieftain Odoacer.",
+                    significance: "Marked the end of Roman authority in Western Europe and the beginning of the Early Middle Ages.",
+                    region: "europe",
+                    position: "left"
+                },
+                {
+                    year: 527,
+                    title: "Reign of Justinian",
+                    description: "Emperor Justinian I began his reign over the Byzantine Empire, attempting to restore Roman glory.",
+                    significance: "Codified Roman law (Justinian Code) and expanded Byzantine territory through military campaigns.",
+                    region: "byzantine",
+                    position: "right"
+                },
+                {
+                    year: 622,
+                    title: "Hijra - Beginning of Islamic Calendar",
+                    description: "Muhammad's migration to Medina established the first Muslim community.",
+                    significance: "Marked year one of the Islamic calendar and the foundation of Islamic political organization.",
+                    region: "islamic",
+                    position: "left"
+                },
+                {
+                    year: 710,
+                    title: "Nara Period Begins in Japan",
+                    description: "Japan established its first permanent capital at Nara, modeled after Chang'an in China.",
+                    significance: "Represented the growing influence of Chinese cultural and political systems in Japan.",
+                    region: "asia",
+                    position: "right"
+                },
+                {
+                    year: 732,
+                    title: "Battle of Tours",
+                    description: "Frankish forces under Charles Martel defeated an Islamic army advancing into Western Europe.",
+                    significance: "Halted Islamic expansion beyond the Iberian Peninsula and strengthened Frankish power.",
+                    region: "europe",
+                    position: "left"
+                },
+                {
+                    year: 800,
+                    title: "Charlemagne Crowned Emperor",
+                    description: "Pope Leo III crowned the Frankish king as 'Emperor of the Romans' on Christmas Day.",
+                    significance: "Revived the concept of empire in Western Europe and strengthened church-state relations.",
+                    region: "europe",
+                    position: "right"
+                },
+                {
+                    year: 843,
+                    title: "Treaty of Verdun",
+                    description: "Charlemagne's empire was divided among his three grandsons, creating distinct regions.",
+                    significance: "Established the foundations for future French and German territories.",
+                    region: "europe",
+                    position: "left"
+                },
+                {
+                    year: 910,
+                    title: "Foundation of Cluny Abbey",
+                    description: "The influential Benedictine monastery was established in Burgundy.",
+                    significance: "Spearheaded monastic reform and centralized religious authority under papal control.",
+                    region: "church",
+                    position: "right"
+                },
+                {
+                    year: 987,
+                    title: "Hugh Capet Becomes King of France",
+                    description: "The election of Hugh Capet began the Capetian dynasty that would rule France for centuries.",
+                    significance: "Started the gradual process of centralizing power in the French monarchy.",
+                    region: "europe",
+                    position: "left"
+                },
+                {
+                    year: 1054,
+                    title: "East-West Schism",
+                    description: "The Christian Church formally split into Eastern Orthodox and Roman Catholic branches.",
+                    significance: "Created enduring religious and cultural division between Eastern and Western Europe.",
+                    region: "church",
+                    position: "right"
+                },
+                {
+                    year: 1066,
+                    title: "Norman Conquest of England",
+                    description: "William of Normandy defeated the Anglo-Saxon king Harold at the Battle of Hastings.",
+                    significance: "Transformed English culture, language, and feudal structure with Norman-French influence.",
+                    region: "europe",
+                    position: "left"
+                },
+                {
+                    year: 1096,
+                    title: "First Crusade Launched",
+                    description: "Pope Urban II called for Christian warriors to reclaim Jerusalem from Muslim control.",
+                    significance: "Began two centuries of religious warfare and increased cultural exchange between East and West.",
+                    region: "church",
+                    position: "right"
+                },
+                {
+                    year: 1185,
+                    title: "Rise of the Kamakura Shogunate",
+                    description: "Minamoto Yoritomo established Japan's first shogunate, a military government.",
+                    significance: "Created Japan's feudal system with samurai warriors serving daimyo lords.",
+                    region: "asia",
+                    position: "left"
+                },
+                {
+                    year: 1215,
+                    title: "Magna Carta Signed",
+                    description: "King John of England was forced to sign a charter limiting royal power.",
+                    significance: "Established that the monarch was subject to law and protected certain rights of the nobility.",
+                    region: "europe",
+                    position: "right"
+                },
+                {
+                    year: 1241,
+                    title: "Mongol Invasion of Europe",
+                    description: "Mongol forces under Batu Khan reached as far as Germany and the Adriatic Sea.",
+                    significance: "Demonstrated the vulnerability of European powers to Eastern military tactics.",
+                    region: "europe",
+                    position: "left"
+                },
+                {
+                    year: 1258,
+                    title: "Fall of Baghdad to Mongols",
+                    description: "Hulagu Khan's forces destroyed Baghdad, ending the Abbasid Caliphate.",
+                    significance: "Marked a major disruption in Islamic political power and intellectual development.",
+                    region: "islamic",
+                    position: "right"
+                },
+                {
+                    year: 1271,
+                    title: "Marco Polo's Journey to China",
+                    description: "Venetian merchant began his famous journey to the court of Kublai Khan.",
+                    significance: "His writings introduced many Europeans to Asian cultures, geography, and technologies.",
+                    region: "asia",
+                    position: "left"
+                },
+                {
+                    year: 1347,
+                    title: "Black Death Reaches Europe",
+                    description: "Bubonic plague spread from ships docking at Mediterranean ports across the continent.",
+                    significance: "Killed approximately one-third of Europe's population, transforming economic and social structures.",
+                    region: "europe",
+                    position: "right"
+                },
+                {
+                    year: 1368,
+                    title: "Founding of Ming Dynasty",
+                    description: "Zhu Yuanzhang expelled the Mongols from China and established the Ming Dynasty.",
+                    significance: "Restored native Chinese rule and began period of economic expansion and naval exploration.",
+                    region: "asia",
+                    position: "left"
+                },
+                {
+                    year: 1453,
+                    title: "Fall of Constantinople",
+                    description: "Ottoman forces under Sultan Mehmed II captured the Byzantine capital after a 53-day siege.",
+                    significance: "Ended the thousand-year Byzantine Empire and accelerated Ottoman expansion into Europe.",
+                    region: "byzantine",
+                    position: "right"
+                },
+                {
+                    year: 1492,
+                    title: "Reconquista Completed",
+                    description: "Ferdinand and Isabella conquered Granada, ending Muslim rule in the Iberian Peninsula.",
+                    significance: "Consolidated Christian power in Spain and redirected resources toward Atlantic exploration.",
+                    region: "europe",
+                    position: "left"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10: The Modern World</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        
+        /* Category-specific colors */
+        .coldwar { border-left-color: #2980b9; }
+        .coldwar::after, .coldwar-color { background-color: #2980b9; }
+        .coldwar-btn.active { background-color: #2980b9; }
+        
+        .decolonization { border-left-color: #c0392b; }
+        .decolonization::after, .decolonization-color { background-color: #c0392b; }
+        .decolonization-btn.active { background-color: #c0392b; }
+        
+        .globalchallenges { border-left-color: #27ae60; }
+        .globalchallenges::after, .globalchallenges-color { background-color: #27ae60; }
+        .globalchallenges-btn.active { background-color: #27ae60; }
+        
+        .contemporaryworld { border-left-color: #8e44ad; }
+        .contemporaryworld::after, .contemporaryworld-color { background-color: #8e44ad; }
+        .contemporaryworld-btn.active { background-color: #8e44ad; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 10: The Modern World</h1>
+            <p class="subtitle">Globalization, Technological Revolution, and Contemporary Challenges (1950-Present)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter explores the dramatic transformations of the modern world since the mid-20th century. Beginning with the Cold War's ideological struggle between capitalism and communism, we trace the decolonization movements that reshaped Africa and Asia, and the civil rights movements that transformed societies internally. The chapter examines globalization's economic and cultural impacts, unprecedented technological innovation, rising environmental challenges, and the complex geopolitical landscape of the 21st century, including the rise of China, terrorism, and increasing global interdependence.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Events</button>
+            <button class="region-btn coldwar-btn" data-filter="coldwar">Cold War Era</button>
+            <button class="region-btn decolonization-btn" data-filter="decolonization">Decolonization & Civil Rights</button>
+            <button class="region-btn globalchallenges-btn" data-filter="globalchallenges">Globalization & Technology</button>
+            <button class="region-btn contemporaryworld-btn" data-filter="contemporaryworld">Contemporary World</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color coldwar-color"></div>
+                <span>Cold War Era</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color decolonization-color"></div>
+                <span>Decolonization & Civil Rights</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color globalchallenges-color"></div>
+                <span>Globalization & Technology</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color contemporaryworld-color"></div>
+                <span>Contemporary World</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each category
+            const events = [
+                {
+                    year: 1950,
+                    title: "Korean War Begins",
+                    description: "North Korean forces invaded South Korea, leading to UN intervention led by the United States.",
+                    significance: "First major military confrontation of the Cold War, establishing the pattern of proxy conflicts.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1955,
+                    title: "Warsaw Pact Formed",
+                    description: "Soviet Union and Eastern European allies created military alliance to counter NATO.",
+                    significance: "Formalized the division of Europe into competing blocs and intensified Cold War tensions.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1956,
+                    title: "Suez Crisis",
+                    description: "Egypt nationalized Suez Canal, leading to failed invasion by Israel, Britain, and France.",
+                    significance: "Demonstrated declining European colonial influence and rising American dominance.",
+                    region: "decolonization",
+                    position: "left"
+                },
+                {
+                    year: 1957,
+                    title: "Sputnik Launch",
+                    description: "Soviet Union launched first artificial satellite, beginning the Space Race.",
+                    significance: "Sparked major U.S. investments in science education and space technology.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1960,
+                    title: "Year of Africa",
+                    description: "Seventeen African nations gained independence from European colonial powers.",
+                    significance: "Marked acceleration of decolonization and emergence of new states in global politics.",
+                    region: "decolonization",
+                    position: "left"
+                },
+                {
+                    year: 1961,
+                    title: "Berlin Wall Construction",
+                    description: "East Germany built wall dividing Berlin to prevent citizens from fleeing to West.",
+                    significance: "Physical manifestation of Iron Curtain and symbol of Cold War division.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1962,
+                    title: "Cuban Missile Crisis",
+                    description: "U.S. discovered Soviet nuclear missiles in Cuba, leading to tense 13-day standoff.",
+                    significance: "Closest the world came to nuclear war; led to improved U.S.-Soviet communication.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1963,
+                    title: "March on Washington",
+                    description: "250,000 people participated in civil rights demonstration where Martin Luther King Jr. delivered 'I Have a Dream' speech.",
+                    significance: "Pivotal moment in American civil rights movement leading to civil rights legislation.",
+                    region: "decolonization",
+                    position: "right"
+                },
+                {
+                    year: 1965,
+                    title: "Vietnam War Escalation",
+                    description: "U.S. dramatically increased military presence in Vietnam following Gulf of Tonkin Resolution.",
+                    significance: "Major Cold War proxy conflict that divided American society and demonstrated limits of superpower intervention.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1969,
+                    title: "Moon Landing",
+                    description: "NASA's Apollo 11 mission landed astronauts on the moon for the first time.",
+                    significance: "Major Cold War victory for U.S. and significant technological achievement for humanity.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1971,
+                    title: "Creation of Microprocessor",
+                    description: "Intel developed first commercial microprocessor chip (Intel 4004).",
+                    significance: "Enabled the personal computer revolution and laid foundation for digital age.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 1972,
+                    title: "Nixon Visits China",
+                    description: "U.S. President Richard Nixon made historic visit to Communist China.",
+                    significance: "Began normalization of U.S.-China relations and changed Cold War dynamics.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1973,
+                    title: "Oil Crisis",
+                    description: "OPEC embargo quadrupled oil prices causing economic shock in Western nations.",
+                    significance: "Revealed Western vulnerability to resource politics and ended post-war economic boom.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 1975,
+                    title: "Fall of Saigon",
+                    description: "North Vietnamese forces captured Saigon, ending Vietnam War with communist victory.",
+                    significance: "Major Cold War defeat for the U.S. and cautionary tale about limits of military power.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1978,
+                    title: "China's Economic Reforms",
+                    description: "Deng Xiaoping initiated market-oriented economic reforms and opening to outside world.",
+                    significance: "Set stage for China's economic rise and transformation into global power.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 1979,
+                    title: "Iranian Revolution",
+                    description: "Islamist revolutionaries overthrew U.S.-backed Shah and established Islamic Republic.",
+                    significance: "Transformed Middle East politics and U.S.-Iran relations for decades to come.",
+                    region: "contemporaryworld",
+                    position: "right"
+                },
+                {
+                    year: 1985,
+                    title: "Gorbachev's Reforms",
+                    description: "Soviet leader Mikhail Gorbachev introduced glasnost (openness) and perestroika (restructuring).",
+                    significance: "Began process that would ultimately lead to Soviet collapse and end of Cold War.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1989,
+                    title: "Fall of Berlin Wall",
+                    description: "East German government opened borders, citizens dismantled Berlin Wall.",
+                    significance: "Symbolic end of divided Europe and beginning of Soviet bloc collapse.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1990,
+                    title: "World Wide Web Created",
+                    description: "Tim Berners-Lee developed HTTP and HTML, creating foundation for the web.",
+                    significance: "Revolutionized information sharing and established infrastructure for digital economy.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 1991,
+                    title: "Dissolution of Soviet Union",
+                    description: "USSR officially dissolved into 15 independent republics after failed coup against Gorbachev.",
+                    significance: "Ended Cold War bipolar world order and created new geopolitical landscape.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1994,
+                    title: "NAFTA Implemented",
+                    description: "North American Free Trade Agreement created free trade zone between U.S., Canada, and Mexico.",
+                    significance: "Exemplified increasing economic integration and regional trade agreements.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 1994,
+                    title: "End of Apartheid",
+                    description: "South Africa held first multi-racial elections, with Nelson Mandela elected president.",
+                    significance: "Peaceful transition from white minority rule completed major civil rights struggle.",
+                    region: "decolonization",
+                    position: "right"
+                },
+                {
+                    year: 1997,
+                    title: "Hong Kong Returns to China",
+                    description: "Britain transferred sovereignty of Hong Kong to China after 156 years of colonial rule.",
+                    significance: "Symbolized end of European colonialism in Asia and China's increasing strength.",
+                    region: "decolonization",
+                    position: "left"
+                },
+                {
+                    year: 2001,
+                    title: "September 11 Attacks",
+                    description: "Al-Qaeda terrorists attacked World Trade Center and Pentagon, killing nearly 3,000.",
+                    significance: "Transformed global security policies and led to U.S. 'War on Terror'.",
+                    region: "contemporaryworld",
+                    position: "right"
+                },
+                {
+                    year: 2003,
+                    title: "Human Genome Project Completed",
+                    description: "International research project successfully mapped complete human genetic code.",
+                    significance: "Opened new era in medical research and personalized medicine.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 2007,
+                    title: "iPhone Released",
+                    description: "Apple introduced first iPhone, combining mobile phone with internet capabilities.",
+                    significance: "Launched smartphone revolution that transformed communication, economy, and society.",
+                    region: "globalchallenges",
+                    position: "right"
+                },
+                {
+                    year: 2008,
+                    title: "Global Financial Crisis",
+                    description: "Collapse of housing market and financial institutions triggered worst recession since Great Depression.",
+                    significance: "Revealed vulnerabilities of global financial system and led to political polarization.",
+                    region: "contemporaryworld",
+                    position: "left"
+                },
+                {
+                    year: 2010,
+                    title: "Arab Spring",
+                    description: "Wave of pro-democracy protests and uprisings across Middle East and North Africa.",
+                    significance: "Briefly raised hopes for democratic reform but led to varying outcomes including civil wars.",
+                    region: "contemporaryworld",
+                    position: "right"
+                },
+                {
+                    year: 2015,
+                    title: "Paris Climate Agreement",
+                    description: "196 nations agreed to limit global warming and help developing countries adapt.",
+                    significance: "Most comprehensive international effort to address climate change to date.",
+                    region: "globalchallenges",
+                    position: "left"
+                },
+                {
+                    year: 2016,
+                    title: "Brexit Referendum",
+                    description: "United Kingdom voted to leave European Union after 43 years of membership.",
+                    significance: "Marked rise of nationalist populism and challenged European integration project.",
+                    region: "contemporaryworld",
+                    position: "right"
+                },
+                {
+                    year: 2019,
+                    title: "China-U.S. Trade War",
+                    description: "Escalating tariffs and trade restrictions between world's two largest economies.",
+                    significance: "Signaled shift toward economic nationalism and changed global trade patterns.",
+                    region: "contemporaryworld",
+                    position: "left"
+                },
+                {
+                    year: 2020,
+                    title: "COVID-19 Pandemic",
+                    description: "Novel coronavirus spread globally, causing millions of deaths and economic disruption.",
+                    significance: "Revealed vulnerabilities of globalization and accelerated digital transformation.",
+                    region: "contemporaryworld",
+                    position: "right"
+                },
+                {
+                    year: 2022,
+                    title: "Russia-Ukraine War",
+                    description: "Russia launched full-scale invasion of Ukraine, largest European conflict since WWII.",
+                    significance: "Reshaped European security architecture and strengthened Western alliances.",
+                    region: "contemporaryworld",
+                    position: "left"
+                },
+                {
+                    year: 2023,
+                    title: "AI Revolution",
+                    description: "Large language models and generative AI became widely accessible to general public.",
+                    significance: "Began new phase of technological disruption with profound implications for work and society.",
+                    region: "globalchallenges",
+                    position: "right"
+                }
+            ];
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

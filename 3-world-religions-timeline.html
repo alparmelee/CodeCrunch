@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3: World Religions and Belief Systems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .religion-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .religion-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .religion-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .religion-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        /* Religion-specific colors */
+        .hinduism { border-left-color: #FF9800; }
+        .hinduism::after, .hinduism-color { background-color: #FF9800; }
+        .hinduism-btn.active { background-color: #FF9800; }
+        
+        .buddhism { border-left-color: #8BC34A; }
+        .buddhism::after, .buddhism-color { background-color: #8BC34A; }
+        .buddhism-btn.active { background-color: #8BC34A; }
+        
+        .judaism { border-left-color: #2196F3; }
+        .judaism::after, .judaism-color { background-color: #2196F3; }
+        .judaism-btn.active { background-color: #2196F3; }
+        
+        .christianity { border-left-color: #9C27B0; }
+        .christianity::after, .christianity-color { background-color: #9C27B0; }
+        .christianity-btn.active { background-color: #9C27B0; }
+        
+        .islam { border-left-color: #009688; }
+        .islam::after, .islam-color { background-color: #009688; }
+        .islam-btn.active { background-color: #009688; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 3: World Religions and Belief Systems</h1>
+            <p class="subtitle">The Origins and Spread of Major World Religions (1500 BCE-1500 CE)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter explores how five major world religions—Hinduism, Buddhism, Judaism, Christianity, and Islam—emerged and spread across regions, profoundly shaping societies, legal systems, cultural practices, and human history. Through sacred texts, key figures, and foundational beliefs, these traditions established frameworks for understanding humanity's place in the cosmos and guidelines for ethical living that continue to influence billions of people today.</p>
+        </div>
+        
+        <div class="religion-nav">
+            <button class="religion-btn all-btn active" data-filter="all">All Religions</button>
+            <button class="religion-btn hinduism-btn" data-filter="hinduism">Hinduism</button>
+            <button class="religion-btn buddhism-btn" data-filter="buddhism">Buddhism</button>
+            <button class="religion-btn judaism-btn" data-filter="judaism">Judaism</button>
+            <button class="religion-btn christianity-btn" data-filter="christianity">Christianity</button>
+            <button class="religion-btn islam-btn" data-filter="islam">Islam</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color hinduism-color"></div>
+                <span>Hinduism</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color buddhism-color"></div>
+                <span>Buddhism</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color judaism-color"></div>
+                <span>Judaism</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color christianity-color"></div>
+                <span>Christianity</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color islam-color"></div>
+                <span>Islam</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each religion
+            const events = [
+                {
+                    year: -1500,
+                    title: "Composition of the Rig Veda",
+                    description: "The earliest of the Vedas, Hinduism's oldest sacred texts, was composed in Sanskrit.",
+                    significance: "Established the foundations for Hindu philosophical and religious thought.",
+                    religion: "hinduism",
+                    position: "left"
+                },
+                {
+                    year: -1200,
+                    title: "Exodus and Torah at Sinai",
+                    description: "According to tradition, Moses led the Israelites from Egypt and received the Torah, establishing the covenant between God and the Jewish people.",
+                    significance: "Founded Jewish monotheism and the concept of a people bound by covenant and law.",
+                    religion: "judaism",
+                    position: "right"
+                },
+                {
+                    year: -563,
+                    title: "Birth of Siddhartha Gautama",
+                    description: "Siddhartha Gautama (Buddha) was born in Lumbini (modern Nepal).",
+                    significance: "His life story of seeking truth would establish one of world's major philosophical traditions.",
+                    religion: "buddhism",
+                    position: "left"
+                },
+                {
+                    year: -528,
+                    title: "Buddha's Enlightenment",
+                    description: "After years of seeking, Siddhartha Gautama achieved enlightenment under a Bodhi tree.",
+                    significance: "Established the Four Noble Truths and the Eightfold Path as a means to liberation from suffering.",
+                    religion: "buddhism",
+                    position: "right"
+                },
+                {
+                    year: -200,
+                    title: "Compilation of the Bhagavad Gita",
+                    description: "The Bhagavad Gita, part of the epic Mahabharata, presented Krishna's teachings on dharma and devotion.",
+                    significance: "Synthesized various strands of Hindu thought and continues to be Hinduism's most influential text.",
+                    religion: "hinduism",
+                    position: "left"
+                },
+                {
+                    year: -70,
+                    title: "Destruction of Second Temple",
+                    description: "Roman forces destroyed the Second Temple in Jerusalem, ending temple-based worship.",
+                    significance: "Transformed Judaism into a diaspora religion centered on synagogues and textual interpretation.",
+                    religion: "judaism",
+                    position: "right"
+                },
+                {
+                    year: 0,
+                    title: "Birth of Jesus Christ",
+                    description: "Jesus of Nazareth was born in Bethlehem, according to Christian tradition.",
+                    significance: "Marked the beginning of the Christian era and the foundation of the world's largest religion.",
+                    religion: "christianity",
+                    position: "left"
+                },
+                {
+                    year: 30,
+                    title: "Jesus's Ministry and Crucifixion",
+                    description: "Jesus taught throughout Judea and was executed by Roman authorities. Christians believe he rose from the dead.",
+                    significance: "His death and resurrection became the central salvific event in Christian theology.",
+                    religion: "christianity",
+                    position: "right"
+                },
+                {
+                    year: 50,
+                    title: "Paul's Mission to Gentiles",
+                    description: "The apostle Paul conducted missionary journeys, establishing Christian communities across the Mediterranean.",
+                    significance: "Transformed Christianity from a Jewish sect into a universal religion with distinct theology.",
+                    religion: "christianity",
+                    position: "left"
+                },
+                {
+                    year: 313,
+                    title: "Edict of Milan",
+                    description: "Roman Emperors Constantine and Licinius granted religious tolerance to Christianity throughout the empire.",
+                    significance: "Began Christianity's transformation from a persecuted faith to the empire's dominant religion.",
+                    religion: "christianity",
+                    position: "right"
+                },
+                {
+                    year: 570,
+                    title: "Birth of Muhammad",
+                    description: "Muhammad, the future prophet of Islam, was born in Mecca in the Arabian Peninsula.",
+                    significance: "Would unite Arabia under monotheism and found a religion that shaped world history.",
+                    religion: "islam",
+                    position: "left"
+                },
+                {
+                    year: 610,
+                    title: "First Quranic Revelation",
+                    description: "Muhammad received his first revelation from the angel Gabriel, beginning the process of Quranic revelation.",
+                    significance: "These revelations formed Islam's holy book, believed to contain God's direct words to humanity.",
+                    religion: "islam",
+                    position: "right"
+                },
+                {
+                    year: 622,
+                    title: "The Hijra",
+                    description: "Muhammad and his followers migrated to Medina, establishing the first Muslim community.",
+                    significance: "Marks the beginning of the Islamic calendar and Islam's transformation into a political system.",
+                    religion: "islam",
+                    position: "left"
+                },
+                {
+                    year: 800,
+                    title: "Shankara's Advaita Vedanta",
+                    description: "The philosopher Shankara systematized non-dualistic (Advaita) Vedanta philosophy.",
+                    significance: "Revitalized Hinduism with sophisticated philosophical framework still influential today.",
+                    religion: "hinduism",
+                    position: "right"
+                },
+                {
+                    year: 1054,
+                    title: "Great Schism",
+                    description: "The Christian Church formally split into Eastern (Orthodox) and Western (Catholic) branches.",
+                    significance: "Created two distinct Christian traditions with different theological emphases and structures.",
+                    religion: "christianity",
+                    position: "left"
+                },
+                {
+                    year: 1250,
+                    title: "Zen Buddhism in Japan",
+                    description: "Zen Buddhism gained prominence in Japan, emphasizing meditation and direct insight.",
+                    significance: "Profoundly shaped Japanese culture, from garden design to martial arts to tea ceremony.",
+                    religion: "buddhism",
+                    position: "right"
+                },
+                {
+                    year: 1325,
+                    title: "Ibn Battuta's Travels",
+                    description: "Scholar Ibn Battuta began his journey across the Islamic world from West Africa to Southeast Asia.",
+                    significance: "Demonstrated Islam's cultural diversity while highlighting shared religious practices.",
+                    religion: "islam",
+                    position: "left"
+                },
+                {
+                    year: 1492,
+                    title: "Expulsion of Jews from Spain",
+                    description: "Ferdinand and Isabella ordered all Jews to convert to Christianity or leave Spain.",
+                    significance: "Dispersed Sephardic Jews throughout Mediterranean, creating new Jewish communities.",
+                    religion: "judaism",
+                    position: "right"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const timeline = document.getElementById('timeline');
+            const religionButtons = document.querySelectorAll('.religion-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = Math.abs(event.year) + (event.year < 0 ? " BCE" : " CE");
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.religion}`;
+                    eventElement.dataset.religion = event.religion;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.religion}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by religion
+            function filterEvents(religion) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (religion === 'all' || event.dataset.religion === religion) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to religion buttons
+            religionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    religionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

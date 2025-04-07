@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 5: Renaissance and Reformation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        /* Region-specific colors */
+        .art { border-left-color: #E91E63; }
+        .art::after, .art-color { background-color: #E91E63; }
+        .art-btn.active { background-color: #E91E63; }
+        
+        .science { border-left-color: #673AB7; }
+        .science::after, .science-color { background-color: #673AB7; }
+        .science-btn.active { background-color: #673AB7; }
+        
+        .literature { border-left-color: #009688; }
+        .literature::after, .literature-color { background-color: #009688; }
+        .literature-btn.active { background-color: #009688; }
+        
+        .reformation { border-left-color: #FF5722; }
+        .reformation::after, .reformation-color { background-color: #FF5722; }
+        .reformation-btn.active { background-color: #FF5722; }
+        
+        .politics { border-left-color: #9C27B0; }
+        .politics::after, .politics-color { background-color: #9C27B0; }
+        .politics-btn.active { background-color: #9C27B0; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 5: Renaissance and Reformation</h1>
+            <p class="subtitle">Rebirth of Classical Knowledge and Religious Reform in Europe (1300-1650 CE)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter explores the intellectual, artistic, and religious transformations that reshaped Europe following the Late Middle Ages. Beginning with the Italian Renaissance's revival of classical learning and artistic innovation, we trace how humanist thinking, scientific inquiry, and religious reform movements fundamentally altered European society. The period witnessed unprecedented achievements in art, literature, and science, alongside religious upheaval that permanently fractured Western Christianity.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Categories</button>
+            <button class="region-btn art-btn" data-filter="art">Art & Architecture</button>
+            <button class="region-btn science-btn" data-filter="science">Science & Discovery</button>
+            <button class="region-btn literature-btn" data-filter="literature">Literature & Philosophy</button>
+            <button class="region-btn reformation-btn" data-filter="reformation">Religious Reform</button>
+            <button class="region-btn politics-btn" data-filter="politics">Politics & Society</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color art-color"></div>
+                <span>Art & Architecture</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color science-color"></div>
+                <span>Science & Discovery</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color literature-color"></div>
+                <span>Literature & Philosophy</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color reformation-color"></div>
+                <span>Religious Reform</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color politics-color"></div>
+                <span>Politics & Society</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each category
+            const events = [
+                {
+                    year: 1304,
+                    title: "Birth of Petrarch",
+                    description: "Francesco Petrarca, considered the 'Father of Humanism,' was born in Arezzo, Italy.",
+                    significance: "His work recovering classical texts and promoting classical learning helped launch the Renaissance movement.",
+                    region: "literature",
+                    position: "left"
+                },
+                {
+                    year: 1397,
+                    title: "Medici Bank Founded",
+                    description: "Giovanni de' Medici established the influential Medici Bank in Florence.",
+                    significance: "Provided financial foundation for Florence's emergence as the center of Renaissance art and culture.",
+                    region: "politics",
+                    position: "right"
+                },
+                {
+                    year: 1420,
+                    title: "Brunelleschi's Dome",
+                    description: "Filippo Brunelleschi began construction of the dome for Florence Cathedral.",
+                    significance: "Revolutionary architectural achievement that revived classical techniques and symbolized Renaissance innovation.",
+                    region: "art",
+                    position: "left"
+                },
+                {
+                    year: 1440,
+                    title: "Gutenberg's Printing Press",
+                    description: "Johannes Gutenberg developed the movable-type printing press in Mainz, Germany.",
+                    significance: "Revolutionized the spread of information and made books accessible beyond elite circles.",
+                    region: "science",
+                    position: "right"
+                },
+                {
+                    year: 1452,
+                    title: "Birth of Leonardo da Vinci",
+                    description: "Leonardo da Vinci was born in Vinci, Republic of Florence.",
+                    significance: "Epitomized the 'Renaissance man' through his genius in art, anatomy, engineering, and many other fields.",
+                    region: "art",
+                    position: "left"
+                },
+                {
+                    year: 1469,
+                    title: "Lorenzo de' Medici Rises to Power",
+                    description: "Lorenzo 'the Magnificent' became the de facto ruler of Florence.",
+                    significance: "His patronage fueled the High Renaissance and protected artists like Botticelli and Michelangelo.",
+                    region: "politics",
+                    position: "right"
+                },
+                {
+                    year: 1473,
+                    title: "Birth of Nicolaus Copernicus",
+                    description: "Copernicus was born in Royal Prussia, Kingdom of Poland.",
+                    significance: "His heliocentric model challenged prevailing views of the universe and sparked the Scientific Revolution.",
+                    region: "science",
+                    position: "left"
+                },
+                {
+                    year: 1486,
+                    title: "Pico della Mirandola's Oration",
+                    description: "Giovanni Pico della Mirandola wrote 'Oration on the Dignity of Man'.",
+                    significance: "Defined Renaissance humanism with its emphasis on human potential and dignity.",
+                    region: "literature",
+                    position: "right"
+                },
+                {
+                    year: 1492,
+                    title: "Columbus Reaches Americas",
+                    description: "Christopher Columbus landed in the Bahamas, believing he had reached Asia.",
+                    significance: "Initiated European exploration and colonization of the Americas, transforming global politics and economy.",
+                    region: "science",
+                    position: "left"
+                },
+                {
+                    year: 1503,
+                    title: "Leonardo Paints Mona Lisa",
+                    description: "Leonardo da Vinci began painting the Mona Lisa in Florence.",
+                    significance: "Exemplifies Renaissance portraiture techniques and became one of history's most famous paintings.",
+                    region: "art",
+                    position: "right"
+                },
+                {
+                    year: 1513,
+                    title: "Machiavelli Writes 'The Prince'",
+                    description: "Niccolò Machiavelli composed his influential political treatise.",
+                    significance: "Introduced realpolitik to political philosophy, separating politics from Christian morality.",
+                    region: "literature",
+                    position: "left"
+                },
+                {
+                    year: 1517,
+                    title: "Luther's 95 Theses",
+                    description: "Martin Luther published his criticisms of Church practices, particularly indulgences.",
+                    significance: "Catalyzed the Protestant Reformation and challenged papal authority throughout Europe.",
+                    region: "reformation",
+                    position: "right"
+                },
+                {
+                    year: 1521,
+                    title: "Diet of Worms",
+                    description: "Martin Luther refused to recant his teachings before Emperor Charles V.",
+                    significance: "Formalized the break with Rome and established Protestantism as a separate Christian tradition.",
+                    region: "reformation",
+                    position: "left"
+                },
+                {
+                    year: 1532,
+                    title: "Michelangelo's David",
+                    description: "Michelangelo completed his colossal marble statue of David in Florence.",
+                    significance: "Embodied Renaissance ideals of human perfectibility and classical form.",
+                    region: "art",
+                    position: "right"
+                },
+                {
+                    year: 1534,
+                    title: "Church of England Established",
+                    description: "Henry VIII declared himself Supreme Head of the Church of England.",
+                    significance: "Created a distinctive English Protestant church and extended royal authority over religious matters.",
+                    region: "reformation",
+                    position: "left"
+                },
+                {
+                    year: 1543,
+                    title: "Copernicus Publishes Heliocentric Theory",
+                    description: "On the Revolutions of the Celestial Spheres' was published, proposing a sun-centered model.",
+                    significance: "Fundamentally altered humanity's understanding of our place in the cosmos.",
+                    region: "science",
+                    position: "right"
+                },
+                {
+                    year: 1545,
+                    title: "Council of Trent Begins",
+                    description: "The Catholic Church initiated major reform council in response to Protestantism.",
+                    significance: "Launched the Counter-Reformation and clarified Catholic doctrine for the modern era.",
+                    region: "reformation",
+                    position: "left"
+                },
+                {
+                    year: 1564,
+                    title: "Birth of Shakespeare",
+                    description: "William Shakespeare was born in Stratford-upon-Avon, England.",
+                    significance: "His works represent the pinnacle of Renaissance literature and continue to shape global culture.",
+                    region: "literature",
+                    position: "right"
+                },
+                {
+                    year: 1589,
+                    title: "Galileo's Law of Falling Bodies",
+                    description: "Galileo Galilei discovered that all objects fall at the same rate regardless of mass.",
+                    significance: "Challenged Aristotelian physics and advanced experimental scientific method.",
+                    region: "science",
+                    position: "left"
+                },
+                {
+                    year: 1598,
+                    title: "Edict of Nantes",
+                    description: "Henry IV of France granted religious freedoms to French Protestants (Huguenots).",
+                    significance: "Established principles of religious tolerance after decades of brutal religious wars.",
+                    region: "politics",
+                    position: "right"
+                },
+                {
+                    year: 1618,
+                    title: "Thirty Years' War Begins",
+                    description: "Religious conflict erupted in the Holy Roman Empire, eventually involving most European powers.",
+                    significance: "Devastated Central Europe and led to the modern state system through the Peace of Westphalia.",
+                    region: "politics",
+                    position: "left"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

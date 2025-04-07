@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 9: World Wars and Global Conflict</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        
+        /* Category-specific colors */
+        .ww1 { border-left-color: #2980b9; }
+        .ww1::after, .ww1-color { background-color: #2980b9; }
+        .ww1-btn.active { background-color: #2980b9; }
+        
+        .interwar { border-left-color: #c0392b; }
+        .interwar::after, .interwar-color { background-color: #c0392b; }
+        .interwar-btn.active { background-color: #c0392b; }
+        
+        .ww2 { border-left-color: #27ae60; }
+        .ww2::after, .ww2-color { background-color: #27ae60; }
+        .ww2-btn.active { background-color: #27ae60; }
+        
+        .coldwar { border-left-color: #8e44ad; }
+        .coldwar::after, .coldwar-color { background-color: #8e44ad; }
+        .coldwar-btn.active { background-color: #8e44ad; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 9: World Wars and Global Conflict</h1>
+            <p class="subtitle">The Age of Total War and International Reorganization (1914-1950)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter examines the era of global conflict that transformed international relations, redrew maps, and caused unprecedented human suffering in the first half of the 20th century. We trace the origins and consequences of World War I, which ended empires and introduced new forms of mechanized warfare. The interwar period saw economic crisis, the rise of totalitarian regimes, and failed attempts at collective security. World War II followed with even greater destruction, genocide, and ultimately the use of atomic weapons. From these catastrophes emerged new international institutions and a bipolar world divided by the Cold War, reshaping global politics for decades to come.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Events</button>
+            <button class="region-btn ww1-btn" data-filter="ww1">World War I</button>
+            <button class="region-btn interwar-btn" data-filter="interwar">Interwar Period</button>
+            <button class="region-btn ww2-btn" data-filter="ww2">World War II</button>
+            <button class="region-btn coldwar-btn" data-filter="coldwar">Post-War & Cold War</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color ww1-color"></div>
+                <span>World War I</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color interwar-color"></div>
+                <span>Interwar Period</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color ww2-color"></div>
+                <span>World War II</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color coldwar-color"></div>
+                <span>Post-War & Cold War</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each category
+            const events = [
+                {
+                    year: 1914,
+                    title: "Assassination of Archduke Franz Ferdinand",
+                    description: "Archduke Franz Ferdinand of Austria assassinated in Sarajevo by Serbian nationalist Gavrilo Princip.",
+                    significance: "Triggered chain of events leading to World War I as Austria-Hungary declared war on Serbia.",
+                    region: "ww1",
+                    position: "left"
+                },
+                {
+                    year: 1914,
+                    title: "Schlieffen Plan and Western Front",
+                    description: "Germany invaded Belgium to attack France, violating Belgian neutrality and bringing Britain into the war.",
+                    significance: "Established Western Front and transformed local conflict into a global war.",
+                    region: "ww1",
+                    position: "right"
+                },
+                {
+                    year: 1915,
+                    title: "Gallipoli Campaign",
+                    description: "Allied powers attempted to secure the Dardanelles and capture Constantinople.",
+                    significance: "Failed campaign caused heavy casualties and strengthened Turkish nationalism.",
+                    region: "ww1",
+                    position: "left"
+                },
+                {
+                    year: 1915,
+                    title: "First Use of Poison Gas",
+                    description: "Germany deployed chlorine gas at Second Battle of Ypres.",
+                    significance: "Introduced chemical warfare and new dimension of horror to modern combat.",
+                    region: "ww1",
+                    position: "right"
+                },
+                {
+                    year: 1916,
+                    title: "Battle of Verdun",
+                    description: "Massive German offensive against French fortifications lasting 10 months.",
+                    significance: "Symbol of attrition warfare with over 700,000 casualties for minimal territorial gain.",
+                    region: "ww1",
+                    position: "left"
+                },
+                {
+                    year: 1917,
+                    title: "Russian Revolution",
+                    description: "Two revolutions overthrew Tsarist regime and established Soviet government under Lenin.",
+                    significance: "Russia left WWI and created first communist state, changing global politics.",
+                    region: "ww1",
+                    position: "right"
+                },
+                {
+                    year: 1917,
+                    title: "United States Enters War",
+                    description: "U.S. declared war on Germany following unrestricted submarine warfare and Zimmermann Telegram.",
+                    significance: "Fresh American troops and resources helped turn tide against Central Powers.",
+                    region: "ww1",
+                    position: "left"
+                },
+                {
+                    year: 1918,
+                    title: "Fourteen Points",
+                    description: "President Wilson outlined peace proposal including self-determination and League of Nations.",
+                    significance: "Established idealistic framework for post-war order based on collective security.",
+                    region: "ww1",
+                    position: "right"
+                },
+                {
+                    year: 1918,
+                    title: "Armistice Day",
+                    description: "Fighting ended on Western Front at 11 AM on November 11.",
+                    significance: "Concluded active hostilities in World War I after over 16 million deaths.",
+                    region: "ww1",
+                    position: "left"
+                },
+                {
+                    year: 1919,
+                    title: "Treaty of Versailles",
+                    description: "Peace treaty assigned war guilt to Germany with reparations and territorial losses.",
+                    significance: "Created resentment in Germany and unstable political situation in Europe.",
+                    region: "interwar",
+                    position: "right"
+                },
+                {
+                    year: 1920,
+                    title: "League of Nations Established",
+                    description: "First international organization aimed at maintaining world peace through collective security.",
+                    significance: "Attempted to prevent future wars but lacked enforcement mechanisms and U.S. participation.",
+                    region: "interwar",
+                    position: "left"
+                },
+                {
+                    year: 1922,
+                    title: "Mussolini Takes Power in Italy",
+                    description: "Benito Mussolini appointed Prime Minister after Fascist March on Rome.",
+                    significance: "First fascist regime established in Europe, serving as model for others.",
+                    region: "interwar",
+                    position: "right"
+                },
+                {
+                    year: 1929,
+                    title: "Wall Street Crash",
+                    description: "Stock market collapse in United States triggered global depression.",
+                    significance: "Economic devastation contributed to political extremism and international tensions.",
+                    region: "interwar",
+                    position: "left"
+                },
+                {
+                    year: 1933,
+                    title: "Hitler Appointed Chancellor",
+                    description: "Adolf Hitler became Chancellor of Germany and quickly established Nazi dictatorship.",
+                    significance: "Beginning of Nazi regime that would lead to Holocaust and World War II.",
+                    region: "interwar",
+                    position: "right"
+                },
+                {
+                    year: 1935,
+                    title: "Nuremberg Laws",
+                    description: "Nazi Germany enacted anti-Jewish legislation removing citizenship rights.",
+                    significance: "Institutionalized antisemitism and laid legal groundwork for Holocaust.",
+                    region: "interwar",
+                    position: "left"
+                },
+                {
+                    year: 1936,
+                    title: "Spanish Civil War Begins",
+                    description: "Nationalist forces under Franco revolted against Spanish Republic.",
+                    significance: "Served as testing ground for WWII weapons and ideological battleground.",
+                    region: "interwar",
+                    position: "right"
+                },
+                {
+                    year: 1938,
+                    title: "Munich Agreement",
+                    description: "Britain and France agreed to German annexation of Sudetenland from Czechoslovakia.",
+                    significance: "Failed appeasement policy emboldened Hitler's expansionism.",
+                    region: "interwar",
+                    position: "left"
+                },
+                {
+                    year: 1939,
+                    title: "Invasion of Poland",
+                    description: "Germany invaded Poland on September 1, prompting British and French declarations of war.",
+                    significance: "Official beginning of World War II in Europe.",
+                    region: "ww2",
+                    position: "right"
+                },
+                {
+                    year: 1940,
+                    title: "Fall of France",
+                    description: "German forces defeated French army and occupied northern France in six weeks.",
+                    significance: "Demonstrated effectiveness of blitzkrieg tactics and left Britain standing alone.",
+                    region: "ww2",
+                    position: "left"
+                },
+                {
+                    year: 1941,
+                    title: "Operation Barbarossa",
+                    description: "Germany invaded Soviet Union in largest military operation in history.",
+                    significance: "Opened Eastern Front that would ultimately drain German resources and turn tide of war.",
+                    region: "ww2",
+                    position: "right"
+                },
+                {
+                    year: 1941,
+                    title: "Pearl Harbor Attack",
+                    description: "Japan attacked U.S. naval base in Hawaii, destroying ships and killing 2,400 Americans.",
+                    significance: "Brought United States into World War II and expanded conflict to truly global scale.",
+                    region: "ww2",
+                    position: "left"
+                },
+                {
+                    year: 1942,
+                    title: "Wannsee Conference",
+                    description: "Nazi officials coordinated implementation of 'Final Solution to the Jewish Question'.",
+                    significance: "Formalized systematic genocide of European Jews in the Holocaust.",
+                    region: "ww2",
+                    position: "right"
+                },
+                {
+                    year: 1942,
+                    title: "Battle of Midway",
+                    description: "U.S. naval victory over Japan in Pacific turned tide in that theater.",
+                    significance: "Ended Japanese naval superiority and began island-hopping campaign toward Japan.",
+                    region: "ww2",
+                    position: "left"
+                },
+                {
+                    year: 1943,
+                    title: "Battle of Stalingrad",
+                    description: "Soviet victory over German forces after months of brutal urban combat.",
+                    significance: "Major turning point on Eastern Front, began Soviet westward advance.",
+                    region: "ww2",
+                    position: "right"
+                },
+                {
+                    year: 1944,
+                    title: "D-Day Landings",
+                    description: "Allied forces landed in Normandy, establishing Western Front in Europe.",
+                    significance: "Largest amphibious invasion in history, began liberation of Western Europe.",
+                    region: "ww2",
+                    position: "left"
+                },
+                {
+                    year: 1945,
+                    title: "Atomic Bombings",
+                    description: "U.S. dropped atomic bombs on Hiroshima and Nagasaki, killing over 200,000 people.",
+                    significance: "First use of nuclear weapons in war, led to Japanese surrender and nuclear age.",
+                    region: "ww2",
+                    position: "right"
+                },
+                {
+                    year: 1945,
+                    title: "United Nations Founded",
+                    description: "International organization established to prevent future wars and promote cooperation.",
+                    significance: "Created more robust framework for international governance than League of Nations.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1946,
+                    title: "Churchill's Iron Curtain Speech",
+                    description: "Winston Churchill declared that 'iron curtain' had descended across Europe.",
+                    significance: "Articulated division between Western and Soviet spheres of influence.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1947,
+                    title: "Truman Doctrine",
+                    description: "U.S. pledged support to countries resisting communism or Soviet pressure.",
+                    significance: "Formalized containment policy that guided U.S. Cold War strategy.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1947,
+                    title: "Marshall Plan",
+                    description: "U.S. provided billions in economic assistance to rebuild Western Europe.",
+                    significance: "Helped European recovery and strengthened ties between U.S. and Western Europe.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1948,
+                    title: "Berlin Blockade",
+                    description: "Soviet Union blocked Western access to Berlin, prompting Allied airlift.",
+                    significance: "First major Berlin crisis of Cold War, demonstrated Western resolve.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1949,
+                    title: "NATO Established",
+                    description: "North Atlantic Treaty Organization formed as military alliance against Soviet threat.",
+                    significance: "Institutionalized Western military cooperation for collective defense.",
+                    region: "coldwar",
+                    position: "right"
+                },
+                {
+                    year: 1949,
+                    title: "Communist Victory in China",
+                    description: "Mao Zedong's communist forces defeated Nationalists in Chinese Civil War.",
+                    significance: "Created People's Republic of China and shifted global power dynamics.",
+                    region: "coldwar",
+                    position: "left"
+                },
+                {
+                    year: 1950,
+                    title: "Korean War Begins",
+                    description: "North Korean forces invaded South Korea, prompting UN intervention led by U.S.",
+                    significance: "First major "hot" conflict of Cold War and test of containment policy.",
+                    region: "coldwar",
+                    position: "right"
+                }
+            ];
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

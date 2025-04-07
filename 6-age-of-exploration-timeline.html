@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 6: Age of Exploration and Global Exchange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        /* Category-specific colors */
+        .exploration { border-left-color: #2980b9; }
+        .exploration::after, .exploration-color { background-color: #2980b9; }
+        .exploration-btn.active { background-color: #2980b9; }
+        
+        .colonization { border-left-color: #c0392b; }
+        .colonization::after, .colonization-color { background-color: #c0392b; }
+        .colonization-btn.active { background-color: #c0392b; }
+        
+        .trade { border-left-color: #27ae60; }
+        .trade::after, .trade-color { background-color: #27ae60; }
+        .trade-btn.active { background-color: #27ae60; }
+        
+        .culture { border-left-color: #8e44ad; }
+        .culture::after, .culture-color { background-color: #8e44ad; }
+        .culture-btn.active { background-color: #8e44ad; }
+        
+        .technology { border-left-color: #f39c12; }
+        .technology::after, .technology-color { background-color: #f39c12; }
+        .technology-btn.active { background-color: #f39c12; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 6: Age of Exploration and Global Exchange</h1>
+            <p class="subtitle">European Expansion and the Birth of Global Networks (1400-1700 CE)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter examines the unprecedented era of European maritime exploration that connected distant continents and cultures. Beginning with Portuguese and Spanish voyages along the African coast and across the Atlantic, we trace how these journeys established global trade networks, colonial empires, and the Columbian Exchange of plants, animals, diseases, and ideas. These encounters transformed societies worldwide, created new economic systems, and led to both cultural exchange and devastating exploitation through slavery and conquest.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Categories</button>
+            <button class="region-btn exploration-btn" data-filter="exploration">Exploration</button>
+            <button class="region-btn colonization-btn" data-filter="colonization">Colonization</button>
+            <button class="region-btn trade-btn" data-filter="trade">Trade & Economics</button>
+            <button class="region-btn culture-btn" data-filter="culture">Cultural Exchange</button>
+            <button class="region-btn technology-btn" data-filter="technology">Technology</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color exploration-color"></div>
+                <span>Exploration</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color colonization-color"></div>
+                <span>Colonization</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color trade-color"></div>
+                <span>Trade & Economics</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color culture-color"></div>
+                <span>Cultural Exchange</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color technology-color"></div>
+                <span>Technology</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each category
+            const events = [
+                {
+                    year: 1418,
+                    title: "Portuguese Exploration of Africa Begins",
+                    description: "Prince Henry the Navigator established a school for navigation and began sponsoring voyages along Africa's coast.",
+                    significance: "Initiated the European Age of Exploration and developed crucial navigational techniques.",
+                    region: "exploration",
+                    position: "left"
+                },
+                {
+                    year: 1434,
+                    title: "Portuguese Round Cape Bojador",
+                    description: "Gil Eanes successfully sailed beyond Cape Bojador on Africa's west coast.",
+                    significance: "Overcame psychological barrier that had limited European exploration southward.",
+                    region: "exploration",
+                    position: "right"
+                },
+                {
+                    year: 1441,
+                    title: "First African Slaves Brought to Portugal",
+                    description: "Portuguese explorers returned with enslaved Africans from their voyages.",
+                    significance: "Beginning of European involvement in the Atlantic slave trade.",
+                    region: "trade",
+                    position: "left"
+                },
+                {
+                    year: 1453,
+                    title: "Fall of Constantinople",
+                    description: "Ottoman Turks captured Constantinople, controlling trade routes to Asia.",
+                    significance: "Motivated Europeans to seek alternative routes to Asian markets.",
+                    region: "trade",
+                    position: "right"
+                },
+                {
+                    year: 1488,
+                    title: "Dias Rounds Cape of Good Hope",
+                    description: "Bartolomeu Dias became the first European to sail around southern Africa.",
+                    significance: "Proved sea route to Indian Ocean was possible, opening path to Asia.",
+                    region: "exploration",
+                    position: "left"
+                },
+                {
+                    year: 1492,
+                    title: "Columbus Reaches Caribbean",
+                    description: "Christopher Columbus reached the Bahamas, believing he had found a route to Asia.",
+                    significance: "First sustained European contact with the Americas, beginning the Columbian Exchange.",
+                    region: "exploration",
+                    position: "right"
+                },
+                {
+                    year: 1494,
+                    title: "Treaty of Tordesillas",
+                    description: "Spain and Portugal signed agreement dividing newly discovered lands outside Europe.",
+                    significance: "First attempt to establish international law regarding colonial territories.",
+                    region: "colonization",
+                    position: "left"
+                },
+                {
+                    year: 1498,
+                    title: "Da Gama Reaches India",
+                    description: "Vasco da Gama arrived in Calicut, establishing direct sea route to India.",
+                    significance: "Began European trade in Asian spice markets and undermined Arab and Venetian trade monopolies.",
+                    region: "trade",
+                    position: "right"
+                },
+                {
+                    year: 1500,
+                    title: "Cabral Claims Brazil",
+                    description: "Pedro Álvares Cabral claimed Brazil for Portugal during voyage to India.",
+                    significance: "Established Portuguese presence in South America and began colonial settlement.",
+                    region: "colonization",
+                    position: "left"
+                },
+                {
+                    year: 1511,
+                    title: "Portuguese Capture Malacca",
+                    description: "Alfonso de Albuquerque conquered the strategic port city of Malacca.",
+                    significance: "Gave Portugal control over spice trade and access to East Asian markets.",
+                    region: "trade",
+                    position: "right"
+                },
+                {
+                    year: 1519,
+                    title: "Cortés Enters Tenochtitlan",
+                    description: "Hernán Cortés made contact with the Aztec Empire in central Mexico.",
+                    significance: "Led to the fall of the Aztec civilization and Spanish conquest of Mexico.",
+                    region: "colonization",
+                    position: "left"
+                },
+                {
+                    year: 1519,
+                    title: "Magellan-Elcano Expedition Begins",
+                    description: "Ferdinand Magellan departed Spain attempting to reach Asia by sailing west.",
+                    significance: "First circumnavigation of globe, completed by Juan Sebastián Elcano in 1522.",
+                    region: "exploration",
+                    position: "right"
+                },
+                {
+                    year: 1532,
+                    title: "Pizarro Conquers Inca Empire",
+                    description: "Francisco Pizarro captured Inca emperor Atahualpa, leading to Spanish conquest of Peru.",
+                    significance: "Ended the largest empire in pre-Columbian America and secured vast silver resources for Spain.",
+                    region: "colonization",
+                    position: "left"
+                },
+                {
+                    year: 1545,
+                    title: "Potosí Silver Mines Discovered",
+                    description: "Spanish colonizers discovered massive silver deposits at Potosí in modern Bolivia.",
+                    significance: "Fueled global trade and became the largest source of silver in the world.",
+                    region: "trade",
+                    position: "right"
+                },
+                {
+                    year: 1557,
+                    title: "Portuguese Establish Macau",
+                    description: "Portugal established permanent trading settlement in Macau, China.",
+                    significance: "Created first European foothold in China and key link in global trade network.",
+                    region: "trade",
+                    position: "left"
+                },
+                {
+                    year: 1565,
+                    title: "Spanish Settlement in Philippines",
+                    description: "Miguel López de Legazpi established first permanent European settlement in the Philippines.",
+                    significance: "Created base for Manila Galleon trade route connecting Asia and the Americas.",
+                    region: "colonization",
+                    position: "right"
+                },
+                {
+                    year: 1571,
+                    title: "Manila Galleon Trade Begins",
+                    description: "First Manila Galleon sailed from Philippines to Acapulco, Mexico with Asian goods.",
+                    significance: "Established first direct trade link between Asia and the Americas.",
+                    region: "trade",
+                    position: "left"
+                },
+                {
+                    year: 1588,
+                    title: "Defeat of Spanish Armada",
+                    description: "English naval forces defeated the Spanish Armada in the English Channel.",
+                    significance: "Weakened Spanish maritime dominance and enabled British colonial expansion.",
+                    region: "colonization",
+                    position: "right"
+                },
+                {
+                    year: 1600,
+                    title: "English East India Company Founded",
+                    description: "Queen Elizabeth I granted charter to English East India Company.",
+                    significance: "Established corporate model for colonization and laid foundation for British Empire in Asia.",
+                    region: "trade",
+                    position: "left"
+                },
+                {
+                    year: 1602,
+                    title: "Dutch East India Company Founded",
+                    description: "Dutch government chartered VOC with monopoly on Asian trade.",
+                    significance: "Created world's first multinational corporation and pioneered modern stock exchange.",
+                    region: "trade",
+                    position: "right"
+                },
+                {
+                    year: 1607,
+                    title: "Jamestown Colony Established",
+                    description: "English settlers founded first permanent English colony in North America.",
+                    significance: "Beginning of successful English colonization in North America.",
+                    region: "colonization",
+                    position: "left"
+                },
+                {
+                    year: 1608,
+                    title: "Quebec City Founded",
+                    description: "Samuel de Champlain established French settlement at Quebec.",
+                    significance: "Created core of New France and French presence in North America.",
+                    region: "colonization",
+                    position: "right"
+                },
+                {
+                    year: 1619,
+                    title: "First Africans in English North America",
+                    description: "First documented Africans arrived in English North America at Jamestown.",
+                    significance: "Preceded development of racial slavery in English colonies.",
+                    region: "culture",
+                    position: "left"
+                },
+                {
+                    year: 1637,
+                    title: "Tulip Mania",
+                    description: "First recorded speculative bubble occurred in Dutch Republic's tulip market.",
+                    significance: "Demonstrated new financial mechanisms and risks of early capitalism.",
+                    region: "trade",
+                    position: "right"
+                },
+                {
+                    year: 1652,
+                    title: "Dutch Cape Colony Established",
+                    description: "Dutch East India Company established refreshment station at Cape of Good Hope.",
+                    significance: "Beginning of European colonization in southern Africa.",
+                    region: "colonization",
+                    position: "left"
+                },
+                {
+                    year: 1661,
+                    title: "British Acquire Bombay",
+                    description: "Portugal ceded Bombay (Mumbai) to England as part of royal dowry.",
+                    significance: "Became foundation of British colonial power in western India.",
+                    region: "colonization",
+                    position: "right"
+                },
+                {
+                    year: 1683,
+                    title: "Introduction of Coffee to Europe",
+                    description: "Coffee houses became popular across Europe after Ottoman siege of Vienna.",
+                    significance: "Transformed European social culture and stimulated global coffee trade.",
+                    region: "culture",
+                    position: "left"
+                },
+                {
+                    year: 1689,
+                    title: "Japan's Sakoku Isolation Policy",
+                    description: "Japan fully implemented isolation policy, restricting foreign contact.",
+                    significance: "Response to European colonial ambitions and Christian missionary activities.",
+                    region: "culture",
+                    position: "right"
+                },
+                {
+                    year: 1694,
+                    title: "Bank of England Established",
+                    description: "First central bank created to finance Britain's imperial ambitions.",
+                    significance: "Revolutionized national financing and supported colonial expansion.",
+                    region: "trade",
+                    position: "left"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

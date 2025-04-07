@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 7: Revolutions and Enlightenment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        .region-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .region-btn {
+            padding: 8px 12px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .region-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .region-btn.active {
+            color: white;
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .event {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            display: none;
+        }
+        .event.visible {
+            display: block;
+        }
+        .event::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 15px;
+            right: -10px;
+            z-index: 1;
+        }
+        .event.left::after {
+            right: -10px;
+        }
+        .event.right::after {
+            left: -10px;
+        }
+        .event.right {
+            left: 50%;
+        }
+        .event-content {
+            padding: 15px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+        }
+        .event-date {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .significance {
+            margin-top: 10px;
+            font-style: italic;
+            color: #555;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .introduction {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 5px solid #3498db;
+        }
+        
+        /* Category-specific colors */
+        .ideas { border-left-color: #2980b9; }
+        .ideas::after, .ideas-color { background-color: #2980b9; }
+        .ideas-btn.active { background-color: #2980b9; }
+        
+        .american { border-left-color: #c0392b; }
+        .american::after, .american-color { background-color: #c0392b; }
+        .american-btn.active { background-color: #c0392b; }
+        
+        .french { border-left-color: #27ae60; }
+        .french::after, .french-color { background-color: #27ae60; }
+        .french-btn.active { background-color: #27ae60; }
+        
+        .haitian { border-left-color: #8e44ad; }
+        .haitian::after, .haitian-color { background-color: #8e44ad; }
+        .haitian-btn.active { background-color: #8e44ad; }
+        
+        .latinam { border-left-color: #f39c12; }
+        .latinam::after, .latinam-color { background-color: #f39c12; }
+        .latinam-btn.active { background-color: #f39c12; }
+        
+        .all-btn.active { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chapter 7: Revolutions and Enlightenment</h1>
+            <p class="subtitle">The Age of Reason and Revolutionary Change (1650-1825 CE)</p>
+        </header>
+        
+        <div class="introduction">
+            <p>This chapter explores the intellectual movement known as the Enlightenment and its profound impact on political revolutions across the Atlantic world. Beginning with key philosophical ideas challenging traditional authority, we examine how Enlightenment principles of natural rights, reason, and liberty fueled revolutionary movements in North America, France, Haiti, and Latin America. These revolutions reshaped political structures, established new nations, and spread democratic ideals, while also revealing tensions between revolutionary rhetoric and practices like slavery and limited suffrage.</p>
+        </div>
+        
+        <div class="region-nav">
+            <button class="region-btn all-btn active" data-filter="all">All Categories</button>
+            <button class="region-btn ideas-btn" data-filter="ideas">Enlightenment Ideas</button>
+            <button class="region-btn american-btn" data-filter="american">American Revolution</button>
+            <button class="region-btn french-btn" data-filter="french">French Revolution</button>
+            <button class="region-btn haitian-btn" data-filter="haitian">Haitian Revolution</button>
+            <button class="region-btn latinam-btn" data-filter="latinam">Latin American Independence</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color ideas-color"></div>
+                <span>Enlightenment Ideas</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color american-color"></div>
+                <span>American Revolution</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color french-color"></div>
+                <span>French Revolution</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color haitian-color"></div>
+                <span>Haitian Revolution</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color latinam-color"></div>
+                <span>Latin American Independence</span>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data - key events for each category
+            const events = [
+                {
+                    year: 1687,
+                    title: "Newton's Principia Published",
+                    description: "Isaac Newton published his groundbreaking work on mathematics and physics.",
+                    significance: "Established scientific method and rational inquiry as basis for understanding natural world.",
+                    region: "ideas",
+                    position: "left"
+                },
+                {
+                    year: 1689,
+                    title: "Locke's Two Treatises of Government",
+                    description: "John Locke argued that government derived its power from the consent of the governed.",
+                    significance: "Developed concept of natural rights and social contract theory that influenced future revolutions.",
+                    region: "ideas",
+                    position: "right"
+                },
+                {
+                    year: 1748,
+                    title: "Montesquieu's Spirit of the Laws",
+                    description: "Baron de Montesquieu proposed separation of powers in government.",
+                    significance: "Provided framework for constitutional governments and checks on power.",
+                    region: "ideas",
+                    position: "left"
+                },
+                {
+                    year: 1762,
+                    title: "Rousseau's Social Contract",
+                    description: "Jean-Jacques Rousseau proposed the concept of the general will of the people.",
+                    significance: "Championed popular sovereignty and influenced democratic movements worldwide.",
+                    region: "ideas",
+                    position: "right"
+                },
+                {
+                    year: 1764,
+                    title: "Voltaire's Philosophical Dictionary",
+                    description: "Voltaire published satirical critique of religious intolerance and superstition.",
+                    significance: "Promoted religious tolerance and criticized established church authority.",
+                    region: "ideas",
+                    position: "left"
+                },
+                {
+                    year: 1765,
+                    title: "Stamp Act Crisis",
+                    description: "British Parliament imposed direct tax on American colonies, sparking protests.",
+                    significance: "Popularized 'no taxation without representation' and colonial resistance.",
+                    region: "american",
+                    position: "right"
+                },
+                {
+                    year: 1773,
+                    title: "Boston Tea Party",
+                    description: "American colonists destroyed British tea shipments in Boston Harbor.",
+                    significance: "Significant act of colonial defiance against British taxation policies.",
+                    region: "american",
+                    position: "left"
+                },
+                {
+                    year: 1774,
+                    title: "First Continental Congress",
+                    description: "Representatives from colonies met to coordinate response to British actions.",
+                    significance: "First step toward unified colonial government and resistance.",
+                    region: "american",
+                    position: "right"
+                },
+                {
+                    year: 1775,
+                    title: "American Revolution Begins",
+                    description: "Battles of Lexington and Concord marked first military conflicts between colonists and British.",
+                    significance: "Transformed political dispute into armed revolutionary movement.",
+                    region: "american",
+                    position: "left"
+                },
+                {
+                    year: 1776,
+                    title: "Declaration of Independence",
+                    description: "Continental Congress adopted document declaring independence from Great Britain.",
+                    significance: "First formal declaration of Enlightenment principles as basis for new nation.",
+                    region: "american",
+                    position: "right"
+                },
+                {
+                    year: 1781,
+                    title: "Articles of Confederation",
+                    description: "First constitution of United States established loose confederation of states.",
+                    significance: "Initial attempt at republican government revealed challenges of federalism.",
+                    region: "american",
+                    position: "left"
+                },
+                {
+                    year: 1783,
+                    title: "Treaty of Paris",
+                    description: "Great Britain formally recognized independence of United States.",
+                    significance: "Concluded American Revolution and established territorial boundaries.",
+                    region: "american",
+                    position: "right"
+                },
+                {
+                    year: 1787,
+                    title: "U.S. Constitutional Convention",
+                    description: "Delegates met in Philadelphia to craft new constitution for United States.",
+                    significance: "Created model for constitutional democracy with checks and balances.",
+                    region: "american",
+                    position: "left"
+                },
+                {
+                    year: 1789,
+                    title: "French Revolution Begins",
+                    description: "Tennis Court Oath and storming of Bastille marked beginning of French Revolution.",
+                    significance: "Challenged Europe's most powerful absolute monarchy and feudal privileges.",
+                    region: "french",
+                    position: "right"
+                },
+                {
+                    year: 1789,
+                    title: "Declaration of Rights of Man and Citizen",
+                    description: "French National Assembly adopted declaration of universal rights.",
+                    significance: "Codified Enlightenment principles of equality and natural rights in Europe.",
+                    region: "french",
+                    position: "left"
+                },
+                {
+                    year: 1791,
+                    title: "U.S. Bill of Rights Ratified",
+                    description: "First ten amendments to U.S. Constitution guaranteed individual liberties.",
+                    significance: "Established legal protection for personal freedoms against government power.",
+                    region: "american",
+                    position: "right"
+                },
+                {
+                    year: 1791,
+                    title: "Saint-Domingue Slave Revolt",
+                    description: "Enslaved people in French colony launched largest slave rebellion in history.",
+                    significance: "Beginning of Haitian Revolution, first successful anti-slavery revolution.",
+                    region: "haitian",
+                    position: "left"
+                },
+                {
+                    year: 1792,
+                    title: "French Republic Established",
+                    description: "Monarchy abolished and First French Republic proclaimed.",
+                    significance: "Eliminated monarchy in France and inspired republican movements elsewhere.",
+                    region: "french",
+                    position: "right"
+                },
+                {
+                    year: 1793,
+                    title: "Reign of Terror Begins",
+                    description: "Jacobins under Robespierre initiated mass executions of perceived enemies.",
+                    significance: "Revealed radical potential and dangers of revolutionary politics.",
+                    region: "french",
+                    position: "left"
+                },
+                {
+                    year: 1794,
+                    title: "Slavery Abolished in French Colonies",
+                    description: "French National Convention abolished slavery in all French territories.",
+                    significance: "First large-scale emancipation decree driven by revolutionary principles.",
+                    region: "haitian",
+                    position: "right"
+                },
+                {
+                    year: 1799,
+                    title: "Napoleon's Coup d'État",
+                    description: "Napoleon Bonaparte seized power in France, ending the Directory.",
+                    significance: "Transformed revolutionary France into authoritarian state with liberal reforms.",
+                    region: "french",
+                    position: "left"
+                },
+                {
+                    year: 1804,
+                    title: "Haiti Declares Independence",
+                    description: "Jean-Jacques Dessalines declared Haiti independent from France.",
+                    significance: "Created first Black-led republic and ended colonial slavery.",
+                    region: "haitian",
+                    position: "right"
+                },
+                {
+                    year: 1808,
+                    title: "Napoleon Invades Spain",
+                    description: "French forces occupied Spain and installed Joseph Bonaparte as king.",
+                    significance: "Created political crisis in Spanish colonies that fueled independence movements.",
+                    region: "latinam",
+                    position: "left"
+                },
+                {
+                    year: 1810,
+                    title: "Mexican War of Independence Begins",
+                    description: "Father Miguel Hidalgo issued Grito de Dolores calling for independence.",
+                    significance: "Initiated popular uprising against Spanish colonial rule in Mexico.",
+                    region: "latinam",
+                    position: "right"
+                },
+                {
+                    year: 1811,
+                    title: "Venezuelan Declaration of Independence",
+                    description: "First Spanish American colony to declare complete independence from Spain.",
+                    significance: "Beginning of South American independence movements led by Simón Bolívar.",
+                    region: "latinam",
+                    position: "left"
+                },
+                {
+                    year: 1815,
+                    title: "Congress of Vienna",
+                    description: "European powers redrew map of Europe after defeat of Napoleon.",
+                    significance: "Attempted to reverse revolutionary changes and restore monarchical order.",
+                    region: "french",
+                    position: "right"
+                },
+                {
+                    year: 1816,
+                    title: "Argentine Independence",
+                    description: "United Provinces of Rio de la Plata (Argentina) declared independence from Spain.",
+                    significance: "Established important independent state in South America.",
+                    region: "latinam",
+                    position: "left"
+                },
+                {
+                    year: 1818,
+                    title: "Chilean Independence",
+                    description: "Bernardo O'Higgins and José de San Martín secured Chilean independence.",
+                    significance: "Created key Pacific nation in Latin American independence movement.",
+                    region: "latinam",
+                    position: "right"
+                },
+                {
+                    year: 1821,
+                    title: "Mexican Independence Achieved",
+                    description: "Mexico gained independence from Spain after 11-year struggle.",
+                    significance: "Established largest independent Spanish-speaking nation in the Americas.",
+                    region: "latinam",
+                    position: "left"
+                },
+                {
+                    year: 1824,
+                    title: "Battle of Ayacucho",
+                    description: "Decisive victory of independence forces over Spanish royalists in Peru.",
+                    significance: "Effectively ended Spanish colonial rule in South America.",
+                    region: "latinam",
+                    position: "right"
+                },
+                {
+                    year: 1825,
+                    title: "Bolivia Declares Independence",
+                    description: "Upper Peru became Bolivia, named after liberation leader Simón Bolívar.",
+                    significance: "Completed liberation of continental Spanish South America.",
+                    region: "latinam",
+                    position: "left"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const timeline = document.getElementById('timeline');
+            const regionButtons = document.querySelectorAll('.region-btn');
+            
+            // Create timeline events
+            function createTimeline() {
+                timeline.innerHTML = '';
+                
+                events.forEach(event => {
+                    const yearDisplay = event.year + " CE";
+                    
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `event ${event.position} ${event.region}`;
+                    eventElement.dataset.region = event.region;
+                    
+                    eventElement.innerHTML = `
+                        <div class="event-content ${event.region}">
+                            <div class="event-date">${yearDisplay} - ${event.title}</div>
+                            <p>${event.description}</p>
+                            <p class="significance">Significance: ${event.significance}</p>
+                        </div>
+                    `;
+                    
+                    timeline.appendChild(eventElement);
+                });
+                
+                // Show all events initially
+                filterEvents('all');
+            }
+            
+            // Filter events by region
+            function filterEvents(region) {
+                const events = document.querySelectorAll('.event');
+                
+                events.forEach(event => {
+                    if (region === 'all' || event.dataset.region === region) {
+                        event.classList.add('visible');
+                    } else {
+                        event.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Add event listeners to region buttons
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter events
+                    filterEvents(this.dataset.filter);
+                });
+            });
+            
+            // Initialize timeline
+            createTimeline();
+        });
+    </script>
+</body>
+</html>

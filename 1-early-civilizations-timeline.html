@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Early Civilizations (8000 BCE-500 BCE)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .mesopotamia { border-left-color: #e74c3c; }
+        .mesopotamia .event-date { background-color: #e74c3c; }
+        .mesopotamia .legend-color { background-color: #e74c3c; }
+        
+        .egypt { border-left-color: #f39c12; }
+        .egypt .event-date { background-color: #f39c12; }
+        .egypt .legend-color { background-color: #f39c12; }
+        
+        .india { border-left-color: #2ecc71; }
+        .india .event-date { background-color: #2ecc71; }
+        .india .legend-color { background-color: #2ecc71; }
+        
+        .china { border-left-color: #3498db; }
+        .china .event-date { background-color: #3498db; }
+        .china .legend-color { background-color: #3498db; }
+        
+        .agriculture { border-left-color: #9b59b6; }
+        .agriculture .event-date { background-color: #9b59b6; }
+        .agriculture .legend-color { background-color: #9b59b6; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Early Civilizations (8000 BCE–500 BCE)</h1>
+            <p class="subtitle">The Birth of Complex Societies</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> This timeline explores the emergence of the world's first civilizations in Mesopotamia, Egypt, India, and China, highlighting key developments in agriculture, writing systems, social structure, government, and technological innovations.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="mesopotamia">Mesopotamia</button>
+                <button class="era-btn" data-era="egypt">Egypt</button>
+                <button class="era-btn" data-era="india">India</button>
+                <button class="era-btn" data-era="china">China</button>
+                <button class="era-btn" data-era="agriculture">Agriculture</button>
+            </div>
+            <div class="year-display">8000 BCE</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Mesopotamia</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Egypt</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>India</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>China</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Agriculture</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: -8000,
+                    title: "Agricultural Revolution Begins",
+                    description: "Around 8000 BCE, humans in the Fertile Crescent (modern-day Iraq, Syria, Lebanon, Israel, and Jordan) began transitioning from hunting and gathering to farming, domesticating plants like wheat and barley.",
+                    significance: "This shift to agriculture allowed for permanent settlements, population growth, food surpluses, and the development of specialized labor—all prerequisites for civilization.",
+                    category: "agriculture"
+                },
+                {
+                    year: -7000,
+                    title: "Çatalhöyük: Early Agricultural Settlement",
+                    description: "One of the world's earliest large agricultural settlements was established in what is now Turkey, housing up to 10,000 people in densely packed mud-brick houses.",
+                    significance: "Çatalhöyük demonstrates how agricultural settlements led to new social structures, religious practices, and artistic traditions before the emergence of true cities.",
+                    category: "agriculture"
+                },
+                {
+                    year: -5000,
+                    title: "Irrigation Systems in Mesopotamia",
+                    description: "Communities in Mesopotamia developed sophisticated irrigation canals to control the unpredictable flooding of the Tigris and Euphrates rivers.",
+                    significance: "These irrigation systems enabled reliable agriculture in an otherwise harsh environment, supporting larger populations and creating the conditions for the world's first urban civilization.",
+                    category: "mesopotamia"
+                },
+                {
+                    year: -4500,
+                    title: "Predynastic Period in Egypt",
+                    description: "Agricultural communities along the Nile River developed increasingly complex societies with distinct cultural practices and early forms of governance.",
+                    significance: "This period laid the groundwork for the unified Egyptian state that would emerge around 3100 BCE, establishing traditions that would define Egyptian civilization for millennia.",
+                    category: "egypt"
+                },
+                {
+                    year: -3500,
+                    title: "Invention of Cuneiform Writing",
+                    description: "Sumerians in southern Mesopotamia developed cuneiform, one of the world's earliest writing systems, using wedge-shaped marks on clay tablets to record economic transactions.",
+                    significance: "Writing allowed for record-keeping, complex administration, and the transmission of knowledge across generations—a defining feature of civilization that transformed human society.",
+                    category: "mesopotamia"
+                },
+                {
+                    year: -3200,
+                    title: "Uruk: First True City",
+                    description: "The city of Uruk in Sumer (southern Mesopotamia) became the world's first true urban center, with monumental architecture, specialized crafts, and a population exceeding 40,000.",
+                    significance: "Uruk represents the birth of urban civilization, with complex social hierarchies, centralized governance, and the concentration of wealth and power that would characterize cities throughout history.",
+                    category: "mesopotamia"
+                },
+                {
+                    year: -3100,
+                    title: "Unification of Upper and Lower Egypt",
+                    description: "King Narmer (Menes) unified Upper and Lower Egypt, establishing the First Dynasty and beginning Egypt's three millennia as a unified kingdom.",
+                    significance: "This unification created one of history's most enduring civilizations, characterized by centralized authority under divine pharaohs and remarkable cultural and architectural achievements.",
+                    category: "egypt"
+                },
+                {
+                    year: -3000,
+                    title: "Egyptian Hieroglyphic Writing Develops",
+                    description: "Egyptians created hieroglyphic script, combining pictographic, symbolic, and phonetic elements to record religious texts, administrative records, and literature.",
+                    significance: "Hieroglyphs enabled the administrative and religious functions of the Egyptian state while preserving the culture's myths, history, and knowledge for posterity.",
+                    category: "egypt"
+                },
+                {
+                    year: -2900,
+                    title: "Indus Valley: Early Farming Communities",
+                    description: "Agricultural settlements began to flourish along the Indus River, laying the foundation for what would become the Indus Valley Civilization.",
+                    significance: "These early farming communities established the agricultural practices and trade networks that would support South Asia's first urban civilization.",
+                    category: "india"
+                },
+                {
+                    year: -2700,
+                    title: "Great Pyramid of Giza Built",
+                    description: "Pharaoh Khufu ordered the construction of the Great Pyramid, the largest of the pyramids at Giza and one of the Seven Wonders of the Ancient World.",
+                    significance: "The Great Pyramid demonstrates Ancient Egypt's sophisticated mathematical knowledge, organizational capacity, and massive investment in funerary monuments for divine rulers.",
+                    category: "egypt"
+                },
+                {
+                    year: -2500,
+                    title: "Indus Valley Civilization Flourishes",
+                    description: "Cities like Harappa and Mohenjo-daro featured advanced urban planning with grid-pattern streets, sophisticated drainage systems, standardized weights, and a still-undeciphered writing system.",
+                    significance: "The Indus Valley Civilization was remarkably egalitarian compared to contemporaries, with high standards of urban planning and sanitation that wouldn't be matched for millennia.",
+                    category: "india"
+                },
+                {
+                    year: -2300,
+                    title: "Akkadian Empire Under Sargon",
+                    description: "Sargon of Akkad conquered the independent city-states of Mesopotamia, creating history's first multi-ethnic empire with a centralized government.",
+                    significance: "The Akkadian Empire established the imperial model that would be followed by later empires, demonstrating how diverse regions could be unified under a single authority.",
+                    category: "mesopotamia"
+                },
+                {
+                    year: -2200,
+                    title: "Early Chinese Agriculture and Settlements",
+                    description: "Along the Yellow River, Chinese communities developed sophisticated agriculture based on millet farming, with evidence of early writing and bronze technology.",
+                    significance: "These agricultural communities would eventually develop into the Xia Dynasty, traditionally considered China's first dynastic civilization.",
+                    category: "china"
+                },
+                {
+                    year: -1900,
+                    title: "Code of Hammurabi",
+                    description: "Babylonian King Hammurabi created one of history's earliest comprehensive legal codes, covering crime, commerce, property rights, family law, and social classes.",
+                    significance: "Hammurabi's Code established the principle of written, public law and influenced legal systems throughout the ancient Near East.",
+                    category: "mesopotamia"
+                },
+                {
+                    year: -1766,
+                    title: "Shang Dynasty Established in China",
+                    description: "The Shang Dynasty became China's first historically confirmed state, with a writing system (oracle bone script), advanced bronze technology, and elaborate rituals.",
+                    significance: "The Shang established core elements of Chinese civilization, including ancestor worship, a hierarchical social structure, and writing that would evolve into modern Chinese characters.",
+                    category: "china"
+                },
+                {
+                    year: -1550,
+                    title: "Egyptian New Kingdom Begins",
+                    description: "Egypt entered its imperial phase, expanding its territory, building magnificent temples, and interacting extensively with neighboring civilizations.",
+                    significance: "The New Kingdom represents Ancient Egypt at its height of power and cultural achievement, producing monuments like Karnak Temple and the tomb of Tutankhamun.",
+                    category: "egypt"
+                },
+                {
+                    year: -1500,
+                    title: "Vedic Period Begins in India",
+                    description: "Indo-Aryan peoples migrated into the Indian subcontinent, bringing Sanskrit language and early Vedic religion that would evolve into Hinduism.",
+                    significance: "The Vedic texts formed the foundation of South Asian religious and philosophical traditions that continue to influence billions of people today.",
+                    category: "india"
+                },
+                {
+                    year: -1200,
+                    title: "Iron Technology Spreads",
+                    description: "Iron smelting technology, first developed by the Hittites, began spreading throughout the ancient world, replacing bronze as the metal of choice for tools and weapons.",
+                    significance: "Iron was more abundant than copper and tin (needed for bronze), democratizing access to metal tools and weapons and transforming agriculture, warfare, and daily life.",
+                    category: "agriculture"
+                },
+                {
+                    year: -1046,
+                    title: "Zhou Dynasty Replaces Shang in China",
+                    description: "The Zhou overthrew the Shang, establishing China's longest-lasting dynasty and introducing the concept of the Mandate of Heaven to justify their rule.",
+                    significance: "The Zhou period saw China's transition from bronze to iron, the development of Confucian philosophy, and the establishment of political concepts that would influence Chinese governance for millennia.",
+                    category: "china"
+                },
+                {
+                    year: -800,
+                    title: "Rise of Assyrian Empire",
+                    description: "The Neo-Assyrian Empire emerged as the dominant power in Mesopotamia and the Near East, known for its military prowess, administrative efficiency, and cultural achievements.",
+                    significance: "The Assyrians created history's first true empire, spanning from Egypt to Persia, with innovations in governance, warfare, and cultural integration that influenced later imperial powers.",
+                    category: "mesopotamia"
+                },
+                {
+                    year: -563,
+                    title: "Birth of Buddha",
+                    description: "Siddhartha Gautama, who would become the Buddha, was born in Lumbini (modern Nepal) to a noble family of the Shakya clan.",
+                    significance: "Buddha's teachings would develop into Buddhism, one of the world's major religions, offering a path to enlightenment and liberation from suffering.",
+                    category: "india"
+                },
+                {
+                    year: -551,
+                    title: "Birth of Confucius",
+                    description: "Confucius was born in the state of Lu during China's Spring and Autumn Period, eventually developing a philosophical system emphasizing social harmony, proper relationships, and ethical government.",
+                    significance: "Confucianism would become China's dominant philosophical tradition, shaping East Asian social values, educational systems, and governance for over two millennia.",
+                    category: "china"
+                },
+                {
+                    year: -500,
+                    title: "Persia: World's Largest Empire",
+                    description: "Under Darius I, the Persian Empire reached its greatest extent, spanning from Macedonia to the Indus Valley and from Egypt to Central Asia.",
+                    significance: "The Persian Empire united diverse ancient civilizations, facilitating unprecedented cultural exchange and establishing models of imperial governance that influenced all later empires.",
+                    category: "mesopotamia"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            // Initialize timeline
+            function initTimeline() {
+                // Create event cards
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                
+                updateDisplay();
+            }
+            
+            // Create event card
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                // Format year for BCE
+                const yearDisplay = Math.abs(event.year) + (event.year < 0 ? " BCE" : " CE");
+                
+                card.innerHTML = `
+                    <div class="event-date">${yearDisplay}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // Update display based on current selection
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                // Format year for BCE/CE display
+                const yearText = Math.abs(currentEvent.year) + (currentEvent.year < 0 ? " BCE" : " CE");
+                yearDisplay.textContent = yearText;
+                
+                // Calculate and update progress bar
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                // Hide all events and show current one
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                // Update navigation buttons
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            // Filter events by category
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to previous event
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to next event
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            // Initialize the timeline
+            initTimeline();
+        });
+    </script>
+</body>
+</html>
