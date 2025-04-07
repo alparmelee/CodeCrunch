@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functions in Discrete Mathematics</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .function-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .set {
+            display: flex;
+            flex-direction: column;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 100px;
+            min-height: 200px;
+        }
+        .set-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .element {
+            background-color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px auto;
+            border: 1px solid #ccc;
+        }
+        .arrows {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 0 20px;
+        }
+        .arrow {
+            position: relative;
+            height: 2px;
+            width: 100px;
+            background-color: #3498db;
+            margin: 20px 0;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 10px solid #3498db;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .interactive {
+            background-color: #e8f5e9;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .example-table th, .example-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .example-table th {
+            background-color: #f2f2f2;
+        }
+        .function-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 60px;
+        }
+        label {
+            font-weight: bold;
+        }
+        #piecewise-result, #recursive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #function-visual-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        .recursive-steps {
+            background-color: #fff3e0;
+            padding: 10px;
+            border-left: 3px solid #ff9800;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Functions in Discrete Mathematics</h1>
+        
+        <div class="section">
+            <h2>What is a Function?</h2>
+            <p>A <span class="highlight">function</span> is a rule that assigns <strong>each input</strong> exactly <strong>one output</strong>. It's a special kind of relation where no input is mapped to multiple outputs.</p>
+            
+            <h3>Key Components:</h3>
+            <ul>
+                <li><strong>Domain:</strong> The set of all possible <em>inputs</em> for a function.</li>
+                <li><strong>Codomain:</strong> The set of all <em>allowable outputs</em> (may include values not actually used).</li>
+                <li><strong>Range:</strong> The set of all <em>actual outputs</em> (values that are actually produced).</li>
+            </ul>
+            
+            <p>Notation: <strong>f: X → Y</strong> means function <strong>f</strong> maps values from set <strong>X</strong> (domain) to set <strong>Y</strong> (codomain).</p>
+        </div>
+        
+        <div class="section">
+            <h2>Visual Representation of a Function</h2>
+            <div class="function-diagram">
+                <div class="set">
+                    <div class="set-title">Domain (X)</div>
+                    <div class="element">1</div>
+                    <div class="element">2</div>
+                    <div class="element">3</div>
+                    <div class="element">4</div>
+                </div>
+                <div class="arrows" id="function-arrows">
+                    <div class="arrow"></div>
+                    <div class="arrow"></div>
+                    <div class="arrow"></div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="set">
+                    <div class="set-title">Codomain (Y)</div>
+                    <div class="element">a</div>
+                    <div class="element">b</div>
+                    <div class="element">c</div>
+                    <div class="element">d</div>
+                </div>
+            </div>
+            
+            <h3>Rules for Functions:</h3>
+            <ul>
+                <li>Each element in the domain maps to <span class="highlight">exactly one</span> element in the codomain.</li>
+                <li>Multiple elements in the domain can map to the same element in the codomain (many-to-one).</li>
+                <li>Not every element in the codomain needs to be mapped to (the range can be smaller than the codomain).</li>
+            </ul>
+        </div>
+
+        <div class="section interactive">
+            <h2>Interactive Example: Piecewise Function</h2>
+            <p>Consider a piecewise function f: {1, 3, 5, 7} → {1, 3, 5, 7} defined by:</p>
+            <div style="padding-left: 20px;">
+                f(n) = {
+                <ul style="list-style-type: none;">
+                    <li>n, if n = 1</li>
+                    <li>n + 2, if n = 3</li>
+                    <li>n - 2, if n = 5</li>
+                    <li>n - 4, if n = 7</li>
+                </ul>
+                }
+            </div>
+            
+            <table class="example-table">
+                <tr>
+                    <th>n</th>
+                    <th>1</th>
+                    <th>3</th>
+                    <th>5</th>
+                    <th>7</th>
+                </tr>
+                <tr>
+                    <th>f(n)</th>
+                    <td>1</td>
+                    <td>5</td>
+                    <td>3</td>
+                    <td>3</td>
+                </tr>
+            </table>
+            
+            <div class="function-form">
+                <label for="piecewise-input">Enter a value (1, 3, 5, or 7):</label>
+                <input type="number" id="piecewise-input" min="1" max="7" step="2">
+                <button class="btn" onclick="calculatePiecewise()">Calculate f(n)</button>
+                <div id="piecewise-result"></div>
+            </div>
+            
+            <div>
+                <p><strong>Range:</strong> {1, 3, 5}</p>
+                <p><strong>Element in codomain not in range:</strong> 7</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Types of Function Definitions</h2>
+            
+            <h3>1. Explicit Definition</h3>
+            <p>A closed-form formula that directly calculates the output for any input.</p>
+            <p>Example: f(n) = n + 14</p>
+            
+            <table class="example-table">
+                <tr>
+                    <th>n</th>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                </tr>
+                <tr>
+                    <th>f(n)</th>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                </tr>
+            </table>
+            
+            <h3>2. Recursive Definition</h3>
+            <p>Defines the function using:</p>
+            <ul>
+                <li><strong>Base case:</strong> Direct value for initial input(s)</li>
+                <li><strong>Recursive step:</strong> Formula relating outputs to previously calculated values</li>
+            </ul>
+            
+            <div style="padding-left: 20px;">
+                f(n) = {
+                <ul style="list-style-type: none;">
+                    <li>14, if n = 0 (base case)</li>
+                    <li>f(n-1) + 1, if n > 0 (recursive step)</li>
+                </ul>
+                }
+            </div>
+            
+            <div class="recursive-steps">
+                <p>Let's compute f(3) recursively:</p>
+                <ol>
+                    <li>f(3) = f(2) + 1</li>
+                    <li>f(2) = f(1) + 1</li>
+                    <li>f(1) = f(0) + 1</li>
+                    <li>f(0) = 14 (base case)</li>
+                    <li>Now work back up: f(1) = 14 + 1 = 15</li>
+                    <li>f(2) = 15 + 1 = 16</li>
+                    <li>f(3) = 16 + 1 = 17</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="section interactive">
+            <h2>Interactive: Recursive Function Calculator</h2>
+            <p>Try the recursive function: f(0) = 14, f(n+1) = f(n) + 1</p>
+            
+            <div class="function-form">
+                <label for="recursive-input">Enter a value (0-10):</label>
+                <input type="number" id="recursive-input" min="0" max="10">
+                <button class="btn" onclick="calculateRecursive()">Calculate f(n)</button>
+                <div id="recursive-result"></div>
+            </div>
+            
+            <div id="recursive-steps-display"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Important Function Types</h2>
+            <ul>
+                <li><strong>One-to-One (Injective):</strong> Each output is mapped to by at most one input.</li>
+                <li><strong>Onto (Surjective):</strong> Every element in the codomain is mapped to by at least one input.</li>
+                <li><strong>Bijective:</strong> Both one-to-one and onto. Each element in the codomain is mapped to by exactly one element from the domain.</li>
+            </ul>
+            
+            <p>Bijective functions are particularly important as they allow for reversible mappings (have inverses).</p>
+        </div>
+        
+        <div class="section">
+            <h2>Applications in Computer Science</h2>
+            <ul>
+                <li><strong>Recursion:</strong> Many algorithms use recursive functions (e.g., factorial, Fibonacci).</li>
+                <li><strong>Hash Functions:</strong> Map data of arbitrary size to fixed-size values.</li>
+                <li><strong>Encryption:</strong> Use functions to transform data securely.</li>
+                <li><strong>Data Structures:</strong> Functions determine how data is accessed and stored.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function calculatePiecewise() {
+            const input = parseInt(document.getElementById('piecewise-input').value);
+            let result;
+            
+            if (input === 1) {
+                result = 1;
+            } else if (input === 3) {
+                result = 5;
+            } else if (input === 5) {
+                result = 3;
+            } else if (input === 7) {
+                result = 3;
+            } else {
+                document.getElementById('piecewise-result').innerHTML = "Please enter 1, 3, 5, or 7";
+                return;
+            }
+            
+            document.getElementById('piecewise-result').innerHTML = `f(${input}) = ${result}`;
+        }
+        
+        function calculateRecursive() {
+            const n = parseInt(document.getElementById('recursive-input').value);
+            if (n < 0 || n > 10 || isNaN(n)) {
+                document.getElementById('recursive-result').innerHTML = "Please enter a number between 0 and 10";
+                return;
+            }
+            
+            let steps = "<div class='recursive-steps'><p>Calculation steps:</p><ol>";
+            let result = recursiveFunction(n, steps);
+            document.getElementById('recursive-result').innerHTML = `f(${n}) = ${result.value}`;
+            
+            // Format and display the steps
+            let stepsDisplay = result.steps + "</ol></div>";
+            document.getElementById('recursive-steps-display').innerHTML = stepsDisplay;
+        }
+        
+        function recursiveFunction(n, steps) {
+            if (n === 0) {
+                return { value: 14, steps: "<li>f(0) = 14 (base case)</li>" };
+            } else {
+                let prevResult = recursiveFunction(n-1);
+                let currentValue = prevResult.value + 1;
+                let allSteps = prevResult.steps + `<li>f(${n}) = f(${n-1}) + 1 = ${prevResult.value} + 1 = ${currentValue}</li>`;
+                return { value: currentValue, steps: allSteps };
+            }
+        }
+        
+        // Animation for function mapping
+        const domainElements = [1, 2, 3, 4];
+        const codomainElements = ['a', 'b', 'c', 'd'];
+        const mapping = [0, 1, 1, 2]; // Indices of codomain elements for each domain element
+        
+        function updateArrows() {
+            const domainNodes = document.querySelectorAll('.set:first-child .element');
+            const codomainNodes = document.querySelectorAll('.set:last-child .element');
+            const arrowContainer = document.getElementById('function-arrows');
+            
+            // Clear existing arrows
+            arrowContainer.innerHTML = '';
+            
+            // Create new arrows based on mapping
+            for (let i = 0; i < domainElements.length; i++) {
+                const arrow = document.createElement('div');
+                arrow.className = 'arrow';
+                arrowContainer.appendChild(arrow);
+            }
+        }
+        
+        // Initialize on load
+        window.onload = function() {
+            updateArrows();
+        };
+    </script>
+</body>
+</html>
