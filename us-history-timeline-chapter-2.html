@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolution and Republic (1776–1800)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .military { border-left-color: #e74c3c; }
+        .military .event-date { background-color: #e74c3c; }
+        .military .legend-color { background-color: #e74c3c; }
+        
+        .politics { border-left-color: #3498db; }
+        .politics .event-date { background-color: #3498db; }
+        .politics .legend-color { background-color: #3498db; }
+        
+        .constitution { border-left-color: #9b59b6; }
+        .constitution .event-date { background-color: #9b59b6; }
+        .constitution .legend-color { background-color: #9b59b6; }
+        
+        .diplomatic { border-left-color: #2ecc71; }
+        .diplomatic .event-date { background-color: #2ecc71; }
+        .diplomatic .legend-color { background-color: #2ecc71; }
+        
+        .social { border-left-color: #f39c12; }
+        .social .event-date { background-color: #f39c12; }
+        .social .legend-color { background-color: #f39c12; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Revolution and Republic (1776–1800)</h1>
+            <p class="subtitle">From Independence to a New Nation</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Independence and Building a Government - This timeline covers the Declaration of Independence, Revolutionary War, Articles of Confederation, the U.S. Constitution, and the early presidencies of Washington and Adams.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="military">Military</button>
+                <button class="era-btn" data-era="politics">Politics</button>
+                <button class="era-btn" data-era="constitution">Constitution</button>
+                <button class="era-btn" data-era="diplomatic">Diplomatic</button>
+                <button class="era-btn" data-era="social">Social</button>
+            </div>
+            <div class="year-display">1776</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Military</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Politics</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Constitution</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Diplomatic</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Social</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1776,
+                    title: "Declaration of Independence",
+                    description: "On July 4, the Continental Congress adopted the Declaration of Independence. Primarily written by Thomas Jefferson, the document announced the colonies' separation from Great Britain and outlined the philosophical principles of liberty and self-government.",
+                    significance: "The Declaration established the foundational values of the new nation and has inspired freedom movements worldwide. It articulated the radical idea that governments derive their just powers from the consent of the governed.",
+                    category: "politics"
+                },
+                {
+                    year: 1776,
+                    title: "Battle of Trenton",
+                    description: "On December 26, after crossing the Delaware River, General Washington led Continental forces to victory against Hessian mercenaries at Trenton, New Jersey, capturing nearly 1,000 prisoners.",
+                    significance: "This crucial victory boosted American morale after a series of defeats and demonstrated Washington's tactical skills. It came at a critical moment when the Revolution seemed to be failing.",
+                    category: "military"
+                },
+                {
+                    year: 1777,
+                    title: "Battle of Saratoga",
+                    description: "American forces under General Horatio Gates defeated British General John Burgoyne's army in upstate New York, forcing the surrender of nearly 6,000 British troops in October.",
+                    significance: "Often called the turning point of the Revolution, this victory convinced France to formally ally with the United States, bringing crucial military and financial support to the American cause.",
+                    category: "military"
+                },
+                {
+                    year: 1777,
+                    title: "Articles of Confederation Drafted",
+                    description: "The Continental Congress adopted the Articles of Confederation, America's first constitution, creating a loose confederation of sovereign states with a weak central government.",
+                    significance: "This first attempt at organizing the new nation reflected Americans' fear of centralized power but ultimately proved inadequate for governing effectively, leading to calls for a stronger federal government.",
+                    category: "constitution"
+                },
+                {
+                    year: 1778,
+                    title: "Franco-American Alliance",
+                    description: "The United States and France signed treaties of alliance and commerce, with France formally recognizing American independence and committing military support against Great Britain.",
+                    significance: "This first American alliance with a foreign power brought essential resources, naval support, and international legitimacy to the revolutionary cause, substantially increasing the probability of American victory.",
+                    category: "diplomatic"
+                },
+                {
+                    year: 1781,
+                    title: "Articles of Confederation Ratified",
+                    description: "Maryland became the final state to ratify the Articles of Confederation, officially putting America's first constitutional government into effect.",
+                    significance: "Though flawed, this accomplishment represented the first formal union of the thirteen states under a national government, marking an important step in American nationhood.",
+                    category: "constitution"
+                },
+                {
+                    year: 1781,
+                    title: "Siege of Yorktown",
+                    description: "Combined American and French forces trapped British General Cornwallis's army at Yorktown, Virginia, forcing his surrender on October 19 in the last major battle of the Revolutionary War.",
+                    significance: "This decisive victory effectively ended major fighting in the Revolution and convinced the British government to begin peace negotiations, securing American independence.",
+                    category: "military"
+                },
+                {
+                    year: 1783,
+                    title: "Treaty of Paris",
+                    description: "Great Britain formally recognized American independence in the Treaty of Paris, which established generous boundaries for the new nation extending to the Mississippi River.",
+                    significance: "This treaty officially ended the Revolutionary War, secured American sovereignty, and established the territorial foundations of the United States as a continental power.",
+                    category: "diplomatic"
+                },
+                {
+                    year: 1786,
+                    title: "Shays' Rebellion",
+                    description: "Debt-ridden farmers led by Revolutionary War veteran Daniel Shays staged an armed uprising in western Massachusetts, attempting to prevent courts from seizing their property.",
+                    significance: "This rebellion highlighted the weakness of the government under the Articles of Confederation and accelerated calls for a stronger central government, directly influencing the movement for a new constitution.",
+                    category: "social"
+                },
+                {
+                    year: 1787,
+                    title: "Constitutional Convention",
+                    description: "Delegates from twelve states met in Philadelphia to revise the Articles of Confederation but instead created an entirely new constitution establishing a stronger federal government.",
+                    significance: "The Convention produced the U.S. Constitution, which has become the world's oldest written national constitution still in use and established America's system of checks and balances.",
+                    category: "constitution"
+                },
+                {
+                    year: 1787,
+                    title: "Northwest Ordinance",
+                    description: "The Confederation Congress passed the Northwest Ordinance, establishing a process for admitting new states from the Northwest Territory and prohibiting slavery in the region.",
+                    significance: "This forward-thinking legislation created a framework for westward expansion and established that new states would enter the Union as equals to the original states, not as colonies.",
+                    category: "politics"
+                },
+                {
+                    year: 1788,
+                    title: "Constitution Ratified",
+                    description: "New Hampshire became the ninth state to ratify the Constitution on June 21, providing the necessary majority to put the new government into effect.",
+                    significance: "This ratification, following intense debates between Federalists and Anti-Federalists, established the constitutional framework that continues to govern the United States today.",
+                    category: "constitution"
+                },
+                {
+                    year: 1789,
+                    title: "Washington Inaugurated",
+                    description: "George Washington was unanimously elected as the first President of the United States and took the oath of office on April 30 in New York City, the temporary capital.",
+                    significance: "Washington's leadership established crucial precedents for the presidency and provided stability during the critical early years of the new government.",
+                    category: "politics"
+                },
+                {
+                    year: 1789,
+                    title: "Bill of Rights Proposed",
+                    description: "Congress approved twelve amendments to the Constitution, of which ten would be ratified by the states in 1791, becoming the Bill of Rights.",
+                    significance: "These amendments protected fundamental civil liberties from government infringement and fulfilled a key promise made during the ratification debates, addressing Anti-Federalist concerns about federal power.",
+                    category: "constitution"
+                },
+                {
+                    year: 1790,
+                    title: "Hamilton's Financial Plan",
+                    description: "Treasury Secretary Alexander Hamilton proposed an economic program that included assuming state debts, establishing a national bank, and promoting manufacturing.",
+                    significance: "Hamilton's plan established the nation's credit, strengthened the federal government, and laid foundations for America's economic development, though it generated significant political controversy.",
+                    category: "politics"
+                },
+                {
+                    year: 1791,
+                    title: "Bill of Rights Ratified",
+                    description: "Virginia became the tenth state to ratify the first ten amendments to the Constitution, officially adding the Bill of Rights to the Constitution on December 15.",
+                    significance: "These protections for individual liberties like freedom of speech, religion, and due process became fundamental to American identity and jurisprudence.",
+                    category: "constitution"
+                },
+                {
+                    year: 1793,
+                    title: "Proclamation of Neutrality",
+                    description: "President Washington declared American neutrality in the conflict between Great Britain and revolutionary France, despite the 1778 treaty with France.",
+                    significance: "This proclamation established the important precedent of presidential authority in foreign affairs and kept America from being drawn into a potentially disastrous European war.",
+                    category: "diplomatic"
+                },
+                {
+                    year: 1794,
+                    title: "Whiskey Rebellion",
+                    description: "Western Pennsylvania farmers violently protested a federal excise tax on whiskey, prompting President Washington to personally lead militia forces to suppress the uprising.",
+                    significance: "The swift suppression of this rebellion demonstrated the new government's resolve and ability to enforce federal law, unlike the previous government under the Articles of Confederation.",
+                    category: "social"
+                },
+                {
+                    year: 1794,
+                    title: "Jay Treaty",
+                    description: "Chief Justice John Jay negotiated a treaty with Great Britain that resolved several outstanding issues from the Revolutionary War and secured British withdrawal from western forts.",
+                    significance: "Though controversial for its concessions to Britain, the treaty averted war with a powerful enemy and gave the young nation time to develop, while intensifying partisan divisions at home.",
+                    category: "diplomatic"
+                },
+                {
+                    year: 1796,
+                    title: "Washington's Farewell Address",
+                    description: "President Washington declined to seek a third term and issued a farewell address warning against permanent alliances abroad and partisan divisions at home.",
+                    significance: "Washington's voluntary retirement established the two-term precedent for presidents (until FDR), while his warnings about parties and foreign entanglements influenced American politics for generations.",
+                    category: "politics"
+                },
+                {
+                    year: 1797,
+                    title: "John Adams Becomes President",
+                    description: "John Adams was inaugurated as the second president after defeating Thomas Jefferson in the first contested presidential election, marking the first peaceful transfer of power.",
+                    significance: "This transition demonstrated that the American system could survive beyond its founding leader and established the precedent of peaceful transfers of power that remains essential to democracy.",
+                    category: "politics"
+                },
+                {
+                    year: 1798,
+                    title: "XYZ Affair",
+                    description: "American diplomats in France were asked to pay bribes (to agents identified as X, Y, and Z) before negotiations could begin, sparking outrage in the United States.",
+                    significance: "This diplomatic crisis led to an undeclared 'Quasi-War' with France at sea and strengthened support for the Federalist Party, which took a hard line against Revolutionary France.",
+                    category: "diplomatic"
+                },
+                {
+                    year: 1798,
+                    title: "Alien and Sedition Acts",
+                    description: "Amid fears of French influence, the Federalist-controlled Congress passed laws restricting immigrants' rights and limiting criticism of the government.",
+                    significance: "These controversial acts represented the first major debate over the limits of free speech and illustrated how foreign threats could be used to justify restrictions on civil liberties.",
+                    category: "politics"
+                },
+                {
+                    year: 1798,
+                    title: "Kentucky and Virginia Resolutions",
+                    description: "James Madison and Thomas Jefferson anonymously authored resolutions passed by the Kentucky and Virginia legislatures, arguing that states could judge the constitutionality of federal laws.",
+                    significance: "These resolutions articulated the concept of states' rights that would later influence debates over nullification and secession, while establishing Jefferson and Madison as leaders of opposition to Federalist policies.",
+                    category: "politics"
+                },
+                {
+                    year: 1800,
+                    title: "Election of 1800",
+                    description: "In a bitterly contested election, Thomas Jefferson and the Democratic-Republicans defeated incumbent President John Adams and the Federalists, resulting in the first transfer of power between opposing political parties.",
+                    significance: "Often called the 'Revolution of 1800,' this peaceful transition despite intense partisan conflict demonstrated the durability of the constitutional system and began the era of Jeffersonian democracy.",
+                    category: "politics"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            // Initialize timeline
+            function initTimeline() {
+                // Create event cards
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                
+                updateDisplay();
+            }
+            
+            // Create event card
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // Update display based on current selection
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                // Calculate and update progress bar
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                // Hide all events and show current one
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                // Update navigation buttons
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            // Filter events by category
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to previous event
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to next event
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            // Initialize the timeline
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

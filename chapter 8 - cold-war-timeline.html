@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cold War America (1945–1991)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .early { border-left-color: #e74c3c; }
+        .early .event-date { background-color: #e74c3c; }
+        .early .legend-color { background-color: #e74c3c; }
+        
+        .korean { border-left-color: #f39c12; }
+        .korean .event-date { background-color: #f39c12; }
+        .korean .legend-color { background-color: #f39c12; }
+        
+        .rights { border-left-color: #2ecc71; }
+        .rights .event-date { background-color: #2ecc71; }
+        .rights .legend-color { background-color: #2ecc71; }
+        
+        .vietnam { border-left-color: #9b59b6; }
+        .vietnam .event-date { background-color: #9b59b6; }
+        .vietnam .legend-color { background-color: #9b59b6; }
+        
+        .detente { border-left-color: #3498db; }
+        .detente .event-date { background-color: #3498db; }
+        .detente .legend-color { background-color: #3498db; }
+        
+        .reagan { border-left-color: #e67e22; }
+        .reagan .event-date { background-color: #e67e22; }
+        .reagan .legend-color { background-color: #e67e22; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cold War America (1945–1991)</h1>
+            <p class="subtitle">Ideology and Influence</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Cold War politics, Korean and Vietnam Wars, Civil Rights Movement, space race, and the fall of the Soviet Union.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="early">Early Cold War</button>
+                <button class="era-btn" data-era="korean">Korean War</button>
+                <button class="era-btn" data-era="rights">Civil Rights Era</button>
+                <button class="era-btn" data-era="vietnam">Vietnam War</button>
+                <button class="era-btn" data-era="detente">Détente</button>
+                <button class="era-btn" data-era="reagan">Reagan Era</button>
+            </div>
+            <div class="year-display">1945</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Early Cold War</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Korean War</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Civil Rights</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Vietnam War</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Détente</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e67e22;"></div>
+                <span>Reagan Era</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {year: 1945, title: "Truman Doctrine", description: "President Truman promised economic and military support to countries threatened by Communist expansion.", significance: "This policy formalized America's commitment to 'containment' of Soviet influence and established the foundation for Cold War foreign policy.", category: "early"},
+                {year: 1947, title: "Marshall Plan", description: "The U.S. provided $13 billion in economic aid to rebuild Western Europe after World War II.", significance: "This massive aid program helped rebuild European economies, prevented Communist expansion, and created strong markets for American exports.", category: "early"},
+                {year: 1948, title: "Berlin Airlift", description: "When Soviets blockaded West Berlin, the U.S. and allies airlifted supplies to the city for nearly a year.", significance: "This demonstrated American resolve to defend West Berlin and represented the first major confrontation of the Cold War without direct military conflict.", category: "early"},
+                {year: 1949, title: "NATO Established", description: "The North Atlantic Treaty Organization created a military alliance between the U.S., Canada, and Western European nations.", significance: "This formal military alliance institutionalized American commitment to European defense and created an enduring security structure that opposed Soviet expansion.", category: "early"},
+                {year: 1950, title: "Korean War Begins", description: "North Korean forces invaded South Korea, leading the U.S. to intervene under UN authority.", significance: "This first major 'hot' conflict of the Cold War established the pattern of U.S. military intervention to contain communism and tested the policy of limited warfare.", category: "korean"},
+                {year: 1953, title: "Korean War Armistice", description: "Fighting ended with a cease-fire that established a demilitarized zone near the 38th parallel.", significance: "This inconclusive end to the conflict established a permanently divided Korea and demonstrated the constraints of limited warfare in the nuclear age.", category: "korean"},
+                {year: 1954, title: "Brown v. Board of Education", description: "The Supreme Court unanimously ruled that racial segregation in public schools was unconstitutional.", significance: "This landmark decision overturned the 'separate but equal' doctrine and provided legal foundation for the civil rights movement.", category: "rights"},
+                {year: 1955, title: "Montgomery Bus Boycott", description: "African Americans boycotted Montgomery buses after Rosa Parks refused to give up her seat, launching Martin Luther King Jr. to national prominence.", significance: "This successful year-long protest demonstrated the effectiveness of nonviolent resistance and economic pressure in challenging segregation.", category: "rights"},
+                {year: 1957, title: "Sputnik Launch", description: "The Soviet Union launched the first artificial satellite, shocking Americans with Soviet technological capabilities.", significance: "This triggered the Space Race, led to major investments in science education, and raised fears of Soviet missile superiority.", category: "early"},
+                {year: 1960, title: "U-2 Incident", description: "An American U-2 spy plane was shot down over Soviet territory, causing the collapse of a Paris summit meeting.", significance: "This diplomatic crisis heightened Cold War tensions and demonstrated the dangers of espionage operations in the nuclear age.", category: "early"},
+                {year: 1961, title: "Berlin Wall Built", description: "East Germany constructed a wall separating East and West Berlin to prevent mass emigration to the West.", significance: "This physical barrier became the primary symbol of the Iron Curtain and the Cold War division of Europe for nearly three decades.", category: "early"},
+                {year: 1962, title: "Cuban Missile Crisis", description: "The U.S. discovered Soviet nuclear missiles in Cuba, resulting in a tense 13-day standoff that brought the world to the brink of nuclear war.", significance: "This most dangerous moment of the Cold War led to improved communication between superpowers and eventually to arms control agreements.", category: "early"},
+                {year: 1963, title: "March on Washington", description: "Over 250,000 people participated in this civil rights demonstration where Martin Luther King Jr. delivered his 'I Have a Dream' speech.", significance: "This massive demonstration showed the strength of the civil rights movement and helped build support for the Civil Rights Act.", category: "rights"},
+                {year: 1964, title: "Civil Rights Act", description: "This landmark legislation prohibited discrimination based on race, color, religion, sex, or national origin in public accommodations and employment.", significance: "This law dismantled legal segregation and expanded federal power to protect civil rights, though implementation remained challenging.", category: "rights"},
+                {year: 1964, title: "Gulf of Tonkin Resolution", description: "Congress authorized President Johnson to use military force in Southeast Asia following a reported attack on U.S. ships.", significance: "This resolution, passed with minimal debate, essentially gave the president a blank check to escalate American involvement in Vietnam.", category: "vietnam"},
+                {year: 1965, title: "Voting Rights Act", description: "This law prohibited racial discrimination in voting, eliminating barriers like literacy tests and providing federal oversight of elections.", significance: "This legislation secured meaningful voting rights for African Americans in the South and dramatically increased Black political participation.", category: "rights"},
+                {year: 1968, title: "Tet Offensive", description: "Vietnamese communists launched coordinated attacks across South Vietnam during a holiday truce, shocking American public opinion.", significance: "Though a military defeat for North Vietnam, these attacks undermined American confidence in the war effort and contributed to growing antiwar sentiment.", category: "vietnam"},
+                {year: 1969, title: "Moon Landing", description: "American astronauts Neil Armstrong and Buzz Aldrin became the first humans to walk on the moon.", significance: "This technological triumph fulfilled Kennedy's pledge, demonstrated American scientific superiority, and represented a symbolic victory in the Cold War.", category: "early"},
+                {year: 1972, title: "Nixon Visits China", description: "President Nixon made a historic visit to Communist China, meeting with Mao Zedong and beginning diplomatic normalization.", significance: "This diplomatic breakthrough ended decades of isolation between the countries and strategically divided the Communist world by exploiting the Sino-Soviet split.", category: "detente"},
+                {year: 1972, title: "SALT I Treaty", description: "The U.S. and Soviet Union signed the first Strategic Arms Limitation Treaty, limiting nuclear weapons and anti-ballistic missile systems.", significance: "This agreement marked the beginning of détente and established the principle that nuclear arsenals could be limited through negotiation.", category: "detente"},
+                {year: 1973, title: "Paris Peace Accords", description: "A peace agreement provided for American withdrawal from Vietnam and release of prisoners of war.", significance: "This agreement allowed for America's exit from its longest war to date, though fighting continued between Vietnamese factions.", category: "vietnam"},
+                {year: 1973, title: "Roe v. Wade", description: "The Supreme Court ruled that the Constitution protected a woman's right to an abortion, striking down many state restrictions.", significance: "This controversial decision legalized abortion nationwide and became a defining issue in American politics for decades.", category: "rights"},
+                {year: 1974, title: "Nixon Resigns", description: "President Nixon resigned amid the Watergate scandal, the only president to do so in U.S. history.", significance: "This constitutional crisis demonstrated the system of checks and balances at work but deepened public cynicism about government.", category: "detente"},
+                {year: 1975, title: "Fall of Saigon", description: "North Vietnamese forces captured Saigon, leading to the evacuation of remaining Americans and the reunification of Vietnam under communist rule.", significance: "This humiliating defeat ended America's longest war and created lasting questions about America's role in the world.", category: "vietnam"},
+                {year: 1979, title: "Iranian Hostage Crisis", description: "Iranian revolutionaries seized the American embassy in Tehran, holding 52 Americans hostage for 444 days.", significance: "This crisis demonstrated America's vulnerability to asymmetric threats and contributed to President Carter's defeat in 1980.", category: "detente"},
+                {year: 1979, title: "Soviet Invasion of Afghanistan", description: "Soviet forces invaded Afghanistan to support the communist government, triggering American sanctions and boycotts.", significance: "This invasion effectively ended détente and initiated renewed Cold War tensions that would last until Gorbachev's reforms.", category: "detente"},
+                {year: 1981, title: "Reagan Becomes President", description: "Ronald Reagan took office with a mandate to rebuild America's military strength and confront Soviet expansionism.", significance: "Reagan's presidency marked a transition to a more confrontational Cold War stance and a revival of American confidence after the Vietnam era.", category: "reagan"},
+                {year: 1983, title: "Strategic Defense Initiative", description: "President Reagan announced a research program to develop space-based missile defenses, dubbed 'Star Wars' by critics.", significance: "This controversial program escalated the arms race and pressured the Soviet economy, though the technology remained largely theoretical.", category: "reagan"},
+                {year: 1985, title: "Gorbachev Becomes Soviet Leader", description: "Mikhail Gorbachev initiated reforms including glasnost (openness) and perestroika (restructuring) in the Soviet Union.", significance: "These reforms aimed to revitalize Soviet society but ultimately accelerated the collapse of the communist system.", category: "reagan"},
+                {year: 1987, title: "INF Treaty", description: "The U.S. and USSR agreed to eliminate intermediate-range nuclear missiles, the first agreement to reduce nuclear arsenals.", significance: "This treaty represented a breakthrough in arms control and signaled improving relations between the superpowers.", category: "reagan"},
+                {year: 1989, title: "Berlin Wall Falls", description: "East German authorities opened the Berlin Wall, allowing free movement between East and West Berlin for the first time since 1961.", significance: "This dramatic event symbolized the collapse of the Iron Curtain and the end of divided Europe.", category: "reagan"},
+                {year: 1991, title: "Soviet Union Dissolves", description: "The Soviet Union officially ceased to exist, replaced by 15 independent republics with Russia as the successor state.", significance: "This peaceful dissolution of America's primary adversary marked the end of the Cold War and the beginning of a new international order.", category: "reagan"}
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => {
+                if (a.year === b.year) {
+                    return events.indexOf(a) - events.indexOf(b);
+                }
+                return a.year - b.year;
+            });
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            function initTimeline() {
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    document.getElementById('eventsContainer').appendChild(eventCard);
+                });
+                updateDisplay();
+            }
+            
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                document.querySelector('.year-display').textContent = currentEvent.year;
+                
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                document.querySelector('.timeline-progress').style.width = `${progress_value}%`;
+                
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                document.getElementById('prevBtn').disabled = currentEventIndex <= 0;
+                document.getElementById('nextBtn').disabled = currentEventIndex >= filteredEvents.length - 1;
+                document.getElementById('leftArrow').disabled = currentEventIndex <= 0;
+                document.getElementById('rightArrow').disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            });
+            
+            document.getElementById('leftArrow').addEventListener('click', () => {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            });
+            
+            document.getElementById('rightArrow').addEventListener('click', () => {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            });
+            
+            document.querySelectorAll('.era-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.era-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A House Divided (1860–1865)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .military { border-left-color: #e74c3c; }
+        .military .event-date { background-color: #e74c3c; }
+        .military .legend-color { background-color: #e74c3c; }
+        
+        .political { border-left-color: #3498db; }
+        .political .event-date { background-color: #3498db; }
+        .political .legend-color { background-color: #3498db; }
+        
+        .slavery { border-left-color: #9b59b6; }
+        .slavery .event-date { background-color: #9b59b6; }
+        .slavery .legend-color { background-color: #9b59b6; }
+        
+        .economic { border-left-color: #2ecc71; }
+        .economic .event-date { background-color: #2ecc71; }
+        .economic .legend-color { background-color: #2ecc71; }
+        
+        .social { border-left-color: #f39c12; }
+        .social .event-date { background-color: #f39c12; }
+        .social .legend-color { background-color: #f39c12; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>A House Divided (1860–1865)</h1>
+            <p class="subtitle">Civil War and National Crisis</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Civil War and National Crisis - This timeline covers the election of Lincoln, secession, Civil War, Emancipation Proclamation, and the eventual Union victory that redefined the nation.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="political">Political</button>
+                <button class="era-btn" data-era="military">Military</button>
+                <button class="era-btn" data-era="slavery">Slavery</button>
+                <button class="era-btn" data-era="economic">Economic</button>
+                <button class="era-btn" data-era="social">Social</button>
+            </div>
+            <div class="year-display">1860</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Political</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Military</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Slavery</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Economic</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Social</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1860,
+                    title: "Election of Abraham Lincoln",
+                    description: "Republican candidate Abraham Lincoln won the presidential election with only 40% of the popular vote, carrying the North but appearing on few Southern ballots. His victory triggered an immediate secession crisis.",
+                    significance: "Lincoln's election, despite his promise not to interfere with slavery where it existed, was viewed by many Southerners as an existential threat to their way of life, setting in motion the events that would lead to civil war.",
+                    category: "political"
+                },
+                {
+                    year: 1860,
+                    title: "South Carolina Secedes",
+                    description: "South Carolina became the first state to secede from the Union on December 20, 1860, just weeks after Lincoln's election but before his inauguration. The state cited Northern hostility to slavery as its primary motivation.",
+                    significance: "This first act of secession marked the beginning of the Confederacy and destroyed decades of compromise efforts. South Carolina's action provided a template that other Southern states would quickly follow.",
+                    category: "political"
+                },
+                {
+                    year: 1861,
+                    title: "Formation of the Confederate States of America",
+                    description: "Seven Deep South states (South Carolina, Mississippi, Florida, Alabama, Georgia, Louisiana, and Texas) formed the Confederate States of America in February 1861, adopting a constitution and electing Jefferson Davis as president.",
+                    significance: "The formation of the Confederacy represented a fundamental challenge to the Union and the Constitution. Their constitution explicitly protected slavery while maintaining most other elements of the U.S. Constitution.",
+                    category: "political"
+                },
+                {
+                    year: 1861,
+                    title: "Lincoln's First Inaugural Address",
+                    description: "On March 4, 1861, President Lincoln delivered his inaugural address, declaring secession illegal while extending an olive branch to the South, stating he had no intention of abolishing slavery where it already existed.",
+                    significance: "This carefully worded speech defined Lincoln's initial position on both secession and slavery. While conciliatory toward the South on slavery, Lincoln firmly rejected the constitutional right to secede.",
+                    category: "political"
+                },
+                {
+                    year: 1861,
+                    title: "Attack on Fort Sumter",
+                    description: "Confederate forces opened fire on the Union-held Fort Sumter in Charleston Harbor on April 12, 1861, after Lincoln announced plans to resupply the fort. After a 34-hour bombardment, the Union garrison surrendered.",
+                    significance: "This attack marked the beginning of the Civil War, transforming a constitutional crisis into armed conflict. In response, Lincoln called for 75,000 volunteers, prompting four more states to secede and join the Confederacy.",
+                    category: "military"
+                },
+                {
+                    year: 1861,
+                    title: "First Battle of Bull Run (Manassas)",
+                    description: "The first major battle of the Civil War ended in a Confederate victory on July 21, 1861, as Union forces retreating from Manassas, Virginia created chaos in Washington, D.C. and dispelled hopes of a quick end to the conflict.",
+                    significance: "This sobering defeat shattered Northern expectations of a rapid victory and forced Lincoln and his generals to prepare for a long, costly war. Both sides began massive recruitment and mobilization efforts.",
+                    category: "military"
+                },
+                {
+                    year: 1861,
+                    title: "Trent Affair",
+                    description: "A diplomatic crisis erupted when the USS San Jacinto intercepted the British mail ship Trent and removed two Confederate diplomats bound for Europe. Britain threatened war until Lincoln released the emissaries.",
+                    significance: "This incident nearly brought Great Britain into the war on the side of the Confederacy, which would have been catastrophic for the Union. Its peaceful resolution helped keep European powers neutral throughout the conflict.",
+                    category: "political"
+                },
+                {
+                    year: 1862,
+                    title: "Legal Tender Act",
+                    description: "Congress authorized the issuance of $150 million in paper currency called 'greenbacks,' which were not backed by gold or silver but by the credibility of the federal government.",
+                    significance: "This marked the first time the U.S. created a national paper currency, dramatically expanding the federal government's financial powers and creating new means to fund the war effort.",
+                    category: "economic"
+                },
+                {
+                    year: 1862,
+                    title: "Battle of Shiloh",
+                    description: "One of the war's bloodiest early battles took place in Tennessee on April 6-7, 1862, as Confederate forces under Albert Sidney Johnston launched a surprise attack on Ulysses S. Grant's army before being pushed back.",
+                    significance: "With over 23,000 casualties, Shiloh shocked both sides with its unprecedented carnage. The battle secured Union control of key Tennessee rivers and revealed that the war would be far more devastating than initially imagined.",
+                    category: "military"
+                },
+                {
+                    year: 1862,
+                    title: "Homestead Act",
+                    description: "Congress passed legislation granting 160 acres of public land to settlers who would live on and develop the land for five years. This law encouraged Western migration during and after the Civil War.",
+                    significance: "Despite the war, this visionary legislation promoted Northern economic development and westward expansion. It also reinforced the Union vision of free labor and small-scale farming in contrast to the Southern plantation system.",
+                    category: "economic"
+                },
+                {
+                    year: 1862,
+                    title: "Morrill Land-Grant College Act",
+                    description: "This legislation provided states with federal land to establish colleges focused on agriculture, engineering, and military science, expanding educational opportunities across the nation.",
+                    significance: "Passed during the depths of civil war, this forward-looking act created the foundation for many state universities and expanded higher education beyond the elite, demonstrating the Union's commitment to public education.",
+                    category: "social"
+                },
+                {
+                    year: 1862,
+                    title: "Battle of Antietam",
+                    description: "The bloodiest single day in American military history occurred on September 17, 1862, near Sharpsburg, Maryland, as Union forces under George McClellan halted Robert E. Lee's first invasion of the North.",
+                    significance: "While tactically a draw, this crucial Union strategic victory gave Lincoln the opportunity to issue the Emancipation Proclamation from a position of military strength rather than desperation.",
+                    category: "military"
+                },
+                {
+                    year: 1862,
+                    title: "Preliminary Emancipation Proclamation",
+                    description: "Five days after Antietam, on September 22, 1862, Lincoln announced that if rebellious states did not return to the Union by January 1, 1863, their slaves would be declared 'forever free.'",
+                    significance: "This proclamation transformed the war's purpose from merely preserving the Union to also ending slavery. It also effectively prevented European intervention on behalf of the Confederacy, as Britain and France could not openly support slave states.",
+                    category: "slavery"
+                },
+                {
+                    year: 1863,
+                    title: "Emancipation Proclamation",
+                    description: "On January 1, 1863, Lincoln's Emancipation Proclamation took effect, declaring slaves in Confederate-controlled territories to be free and authorizing the enlistment of Black soldiers in the Union Army.",
+                    significance: "Though it did not immediately free a single slave (as it applied only to areas under Confederate control), this document fundamentally altered the character of the war and ensured that Union victory would mean abolition of slavery.",
+                    category: "slavery"
+                },
+                {
+                    year: 1863,
+                    title: "Battle of Chancellorsville",
+                    description: "Confederate General Robert E. Lee achieved perhaps his most brilliant victory at Chancellorsville, Virginia in May 1863, defeating a Union force twice his size through bold tactics and superior generalship.",
+                    significance: "This stunning Confederate victory emboldened Lee to launch his second invasion of the North, which would culminate in the Battle of Gettysburg. However, the Confederates lost General 'Stonewall' Jackson, mortally wounded by friendly fire.",
+                    category: "military"
+                },
+                {
+                    year: 1863,
+                    title: "New York City Draft Riots",
+                    description: "For nearly a week in July 1863, working-class New Yorkers, primarily Irish immigrants, rioted against the implementation of a federal draft, attacking draft offices, wealthy neighborhoods, and Black residents.",
+                    significance: "These deadly riots, which required military intervention to suppress, revealed deep Northern divisions over the war, conscription, and racial equality. At least 119 people died, many of them Black victims of mob violence.",
+                    category: "social"
+                },
+                {
+                    year: 1863,
+                    title: "Battle of Gettysburg",
+                    description: "The largest and most costly battle of the Civil War took place over three days in July 1863 in Pennsylvania, ending with the defeat of Lee's Confederate forces and their retreat back to Virginia.",
+                    significance: "This pivotal Union victory, coupled with the simultaneous fall of Vicksburg, marked the turning point of the war. Lee's army would never again mount a major offensive into Union territory.",
+                    category: "military"
+                },
+                {
+                    year: 1863,
+                    title: "Siege of Vicksburg",
+                    description: "After a 47-day siege, Confederate forces at Vicksburg, Mississippi surrendered to Ulysses S. Grant on July 4, 1863, giving the Union complete control of the Mississippi River and splitting the Confederacy.",
+                    significance: "This major Union victory, combined with Gettysburg, shifted momentum decisively in favor of the North. By controlling the Mississippi, the Union effectively cut the Confederacy in two, isolating resources in Texas, Arkansas, and Louisiana.",
+                    category: "military"
+                },
+                {
+                    year: 1863,
+                    title: "Gettysburg Address",
+                    description: "President Lincoln delivered a brief but profound speech at the dedication of the Soldiers' National Cemetery in Gettysburg on November 19, 1863, reframing the war as a struggle for equality and a new birth of freedom.",
+                    significance: "In just 272 words, Lincoln articulated the war's higher purpose, connecting the Union cause to the founding principles of the nation and suggesting that a Union victory would fulfill the promise of the Declaration of Independence.",
+                    category: "political"
+                },
+                {
+                    year: 1864,
+                    title: "Grant Takes Command",
+                    description: "Lincoln appointed Ulysses S. Grant as General-in-Chief of all Union armies in March 1864. Grant implemented a coordinated strategy of continuous pressure against Confederate forces across all theaters.",
+                    significance: "Grant's appointment marked the emergence of a more modern, total war strategy. Unlike previous Union generals, Grant was willing to accept heavy casualties to achieve strategic objectives through a war of attrition.",
+                    category: "military"
+                },
+                {
+                    year: 1864,
+                    title: "Sherman's March to the Sea",
+                    description: "General William Tecumseh Sherman led 60,000 Union troops from Atlanta to Savannah, Georgia, destroying military targets, industry, infrastructure, and civilian property in a campaign of deliberate devastation.",
+                    significance: "Sherman's march demonstrated the Union's overwhelming power and broke the Confederacy's will to fight by bringing the war's destruction directly to the Southern heartland and proving the Confederacy could not protect its citizens.",
+                    category: "military"
+                },
+                {
+                    year: 1864,
+                    title: "Wade-Davis Bill",
+                    description: "Congress passed a harsh Reconstruction plan requiring a majority of prewar voters to swear loyalty to the Union before a state could be readmitted, but Lincoln pocket-vetoed it, favoring a more lenient approach.",
+                    significance: "This confrontation between Lincoln and Radical Republicans revealed deep divisions over how to reintegrate Confederate states and protect freed people's rights, foreshadowing the Reconstruction conflicts to come.",
+                    category: "political"
+                },
+                {
+                    year: 1864,
+                    title: "Nevada Admitted to the Union",
+                    description: "Nevada became the 36th state on October 31, 1864, just days before the presidential election, providing additional electoral votes and congressional support for Lincoln and Republican policies.",
+                    significance: "Nevada's admission demonstrated the continuing expansion of the Union even during wartime and strengthened Republican political power. It also secured important silver resources to back Union currency.",
+                    category: "political"
+                },
+                {
+                    year: 1864,
+                    title: "Lincoln's Reelection",
+                    description: "Despite earlier predictions of defeat, Lincoln won a decisive victory over Democratic candidate George McClellan in the November 1864 election, securing 55% of the popular vote and an overwhelming electoral majority.",
+                    significance: "Lincoln's reelection ensured that the war would be fought to complete victory rather than a negotiated peace that might have preserved slavery. It represented a public mandate to complete both the war and emancipation.",
+                    category: "political"
+                },
+                {
+                    year: 1865,
+                    title: "Freedmen's Bureau Established",
+                    description: "Congress created the Bureau of Refugees, Freedmen, and Abandoned Lands to provide food, housing, medical aid, schools, and legal assistance to former slaves and poor whites in the South.",
+                    significance: "The Freedmen's Bureau represented an unprecedented federal effort to aid the transition from slavery to freedom. Despite limited resources, it established hundreds of schools and hospitals and helped negotiate labor contracts.",
+                    category: "social"
+                },
+                {
+                    year: 1865,
+                    title: "Lincoln's Second Inaugural Address",
+                    description: "On March 4, 1865, President Lincoln delivered a brief, powerful inaugural address reflecting on the war's meaning and calling for reconciliation 'with malice toward none, with charity for all.'",
+                    significance: "This eloquent speech avoided triumphalism despite imminent Union victory, acknowledging shared national guilt for slavery while expressing hope for a just peace. It would stand as Lincoln's final major public address.",
+                    category: "political"
+                },
+                {
+                    year: 1865,
+                    title: "Surrender at Appomattox Court House",
+                    description: "General Robert E. Lee surrendered the Army of Northern Virginia to General Ulysses S. Grant on April 9, 1865, effectively ending major Confederate military resistance.",
+                    significance: "Grant's generous surrender terms, allowing Confederate soldiers to return home with their horses and personal weapons, helped set a tone of reconciliation. Other Confederate forces would surrender in the following weeks.",
+                    category: "military"
+                },
+                {
+                    year: 1865,
+                    title: "Assassination of Abraham Lincoln",
+                    description: "Just five days after Lee's surrender, on April 14, 1865, President Lincoln was shot by Confederate sympathizer John Wilkes Booth while attending a play at Ford's Theatre in Washington, D.C. He died the next morning.",
+                    significance: "Lincoln's assassination deprived the nation of his leadership during the critical early Reconstruction period and elevated Andrew Johnson to the presidency, drastically altering the course of Reconstruction politics.",
+                    category: "political"
+                },
+                {
+                    year: 1865,
+                    title: "Thirteenth Amendment Ratified",
+                    description: "On December 6, 1865, the Thirteenth Amendment to the Constitution was ratified, permanently abolishing slavery throughout the United States.",
+                    significance: "This amendment completed the legal destruction of slavery that had begun with the Emancipation Proclamation, ensuring that slavery could not return even in areas not covered by Lincoln's proclamation.",
+                    category: "slavery"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => {
+                if (a.year === b.year) {
+                    return events.indexOf(a) - events.indexOf(b); // Maintain original order for same year
+                }
+                return a.year - b.year;
+            });
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            // Initialize timeline
+            function initTimeline() {
+                // Create event cards
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                
+                updateDisplay();
+            }
+            
+            // Create event card
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // Update display based on current selection
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                // Calculate and update progress bar
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                // Hide all events and show current one
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                // Update navigation buttons
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            // Filter events by category
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to previous event
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to next event
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            // Initialize the timeline
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

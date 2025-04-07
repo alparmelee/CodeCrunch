@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Nation Transformed (1991–2008)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .globalization { border-left-color: #3498db; }
+        .globalization .event-date { background-color: #3498db; }
+        .globalization .legend-color { background-color: #3498db; }
+        
+        .technology { border-left-color: #2ecc71; }
+        .technology .event-date { background-color: #2ecc71; }
+        .technology .legend-color { background-color: #2ecc71; }
+        
+        .politics { border-left-color: #e74c3c; }
+        .politics .event-date { background-color: #e74c3c; }
+        .politics .legend-color { background-color: #e74c3c; }
+        
+        .terrorism { border-left-color: #9b59b6; }
+        .terrorism .event-date { background-color: #9b59b6; }
+        .terrorism .legend-color { background-color: #9b59b6; }
+        
+        .wars { border-left-color: #f39c12; }
+        .wars .event-date { background-color: #f39c12; }
+        .wars .legend-color { background-color: #f39c12; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>A Nation Transformed (1991–2008)</h1>
+            <p class="subtitle">Globalization, Technology, and Terror</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Post-Cold War optimism, the internet revolution, 9/11, wars in Iraq and Afghanistan, and growing political polarization.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="globalization">Globalization</button>
+                <button class="era-btn" data-era="technology">Technology</button>
+                <button class="era-btn" data-era="politics">Politics</button>
+                <button class="era-btn" data-era="terrorism">Terrorism</button>
+                <button class="era-btn" data-era="wars">Wars</button>
+            </div>
+            <div class="year-display">1991</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Globalization</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Technology</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Politics</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Terrorism</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Wars</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {year: 1991, title: "Gulf War", description: "U.S.-led coalition forces defeated Iraq in a brief conflict after Iraq invaded Kuwait.", significance: "First major post-Cold War military action demonstrated American military dominance and established a new model for coalition warfare.", category: "wars"},
+                {year: 1992, title: "NAFTA Signed", description: "The North American Free Trade Agreement was signed, creating a trilateral trade bloc between the U.S., Canada, and Mexico.", significance: "This landmark trade agreement accelerated economic integration in North America but became controversial for its impact on American manufacturing jobs.", category: "globalization"},
+                {year: 1993, title: "World Trade Center Bombing", description: "Terrorists detonated a truck bomb beneath the World Trade Center in New York City, killing six people.", significance: "This early act of international terrorism on U.S. soil foreshadowed future threats but received limited public attention.", category: "terrorism"},
+                {year: 1994, title: "Internet Commercialization", description: "The internet began significant commercial expansion as restrictions on commercial use were lifted.", significance: "This transition from primarily academic to commercial use began the internet revolution that would transform American society and economy.", category: "technology"},
+                {year: 1995, title: "Oklahoma City Bombing", description: "Domestic terrorists bombed a federal building, killing 168 people in the deadliest domestic terrorism attack before 9/11.", significance: "This attack highlighted the threat of domestic extremism and changed perceptions about terrorism originating within American borders.", category: "terrorism"},
+                {year: 1995, title: "Windows 95 Released", description: "Microsoft released Windows 95, bringing graphical computing to the mainstream consumer market.", significance: "This operating system helped standardize personal computing and accelerated computer adoption in American homes.", category: "technology"},
+                {year: 1996, title: "Welfare Reform", description: "The Personal Responsibility and Work Opportunity Act significantly changed the American welfare system.", significance: "This bipartisan legislation represented a major shift in social policy, limiting federal assistance and emphasizing work requirements.", category: "politics"},
+                {year: 1997, title: "Asian Financial Crisis", description: "A financial crisis spread across East Asian economies, affecting global markets.", significance: "This crisis demonstrated the interconnectedness of the global economy and vulnerabilities created by rapid financial integration.", category: "globalization"},
+                {year: 1998, title: "Clinton Impeachment", description: "President Clinton was impeached by the House but acquitted by the Senate following the Monica Lewinsky scandal.", significance: "This political crisis intensified partisan divisions and set precedents for future impeachment proceedings.", category: "politics"},
+                {year: 1999, title: "Euro Introduced", description: "The euro was introduced as the common currency for participating European Union members.", significance: "This development strengthened European economic integration and challenged the dollar's global dominance.", category: "globalization"},
+                {year: 1999, title: "Y2K Preparations", description: "Massive efforts were undertaken to prevent potential computer failures as the year changed to 2000.", significance: "This event highlighted society's growing dependence on computer systems and the challenges of digital infrastructure.", category: "technology"},
+                {year: 2000, title: "Dotcom Bubble Burst", description: "The speculative bubble in internet-related stocks collapsed, wiping out trillions in market value.", significance: "This market correction forced a reevaluation of internet business models but didn't stop the broader digital transformation.", category: "technology"},
+                {year: 2000, title: "Bush v. Gore", description: "The Supreme Court effectively decided the presidential election, ending a contested Florida recount.", significance: "This controversial decision intensified partisan divisions and raised questions about electoral processes and judicial intervention.", category: "politics"},
+                {year: 2001, title: "September 11 Attacks", description: "Terrorists hijacked four planes, crashing them into the World Trade Center, Pentagon, and a field in Pennsylvania, killing nearly 3,000 people.", significance: "These attacks fundamentally altered American foreign policy, domestic security, and national psychology.", category: "terrorism"},
+                {year: 2001, title: "War in Afghanistan Begins", description: "The U.S. invaded Afghanistan to dismantle Al-Qaeda and remove the Taliban government.", significance: "This initiated what would become America's longest war and marked the beginning of the Global War on Terror.", category: "wars"},
+                {year: 2001, title: "PATRIOT Act", description: "Congress passed sweeping legislation expanding government surveillance powers after 9/11.", significance: "This act significantly altered the balance between security and civil liberties in American society.", category: "politics"},
+                {year: 2002, title: "Department of Homeland Security Created", description: "A new cabinet department was established to coordinate domestic security efforts.", significance: "This represented the largest government reorganization since 1947 and institutionalized counterterrorism as a permanent priority.", category: "politics"},
+                {year: 2003, title: "Iraq War Begins", description: "The U.S. invaded Iraq, quickly toppling Saddam Hussein's regime but becoming entangled in a lengthy occupation.", significance: "This controversial war based on faulty intelligence regarding weapons of mass destruction severely damaged American credibility.", category: "wars"},
+                {year: 2004, title: "Facebook Founded", description: "Mark Zuckerberg launched Facebook from his Harvard dorm room.", significance: "This platform would transform social interaction, media consumption, and eventually political discourse in America.", category: "technology"},
+                {year: 2005, title: "Hurricane Katrina", description: "This devastating hurricane overwhelmed New Orleans' levee system, leading to catastrophic flooding and over 1,800 deaths.", significance: "The inadequate government response exposed social inequalities and raised questions about disaster preparedness.", category: "politics"},
+                {year: 2006, title: "Twitter Launched", description: "The social media platform Twitter was created, introducing microblogging to the public.", significance: "This platform would revolutionize real-time communication and eventually become a crucial tool for political messaging.", category: "technology"},
+                {year: 2007, title: "iPhone Released", description: "Apple introduced the iPhone, revolutionizing mobile technology and computing.", significance: "This device fundamentally changed how Americans access information, communicate, and interact with technology.", category: "technology"},
+                {year: 2007, title: "Iraq Surge", description: "President Bush ordered additional troops to Iraq to counter the growing insurgency.", significance: "This controversial strategy temporarily reduced violence but didn't resolve the fundamental political challenges in Iraq.", category: "wars"},
+                {year: 2008, title: "Financial Crisis", description: "The collapse of Lehman Brothers triggered a global financial crisis and the Great Recession.", significance: "This economic disaster revealed systemic vulnerabilities in the financial system and led to major regulatory changes.", category: "globalization"},
+                {year: 2008, title: "Obama Elected President", description: "Barack Obama was elected as the first African American president of the United States.", significance: "This historic election represented both racial progress and a desire for change after the Bush presidency.", category: "politics"}
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => {
+                if (a.year === b.year) {
+                    return events.indexOf(a) - events.indexOf(b);
+                }
+                return a.year - b.year;
+            });
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            function initTimeline() {
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    document.getElementById('eventsContainer').appendChild(eventCard);
+                });
+                updateDisplay();
+            }
+            
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                document.querySelector('.year-display').textContent = currentEvent.year;
+                
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                document.querySelector('.timeline-progress').style.width = `${progress_value}%`;
+                
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                document.getElementById('prevBtn').disabled = currentEventIndex <= 0;
+                document.getElementById('nextBtn').disabled = currentEventIndex >= filteredEvents.length - 1;
+                document.getElementById('leftArrow').disabled = currentEventIndex <= 0;
+                document.getElementById('rightArrow').disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            });
+            
+            document.getElementById('leftArrow').addEventListener('click', () => {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            });
+            
+            document.getElementById('rightArrow').addEventListener('click', () => {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            });
+            
+            document.querySelectorAll('.era-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.era-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

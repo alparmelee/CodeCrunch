@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expanding the Frontier (1800–1860)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .territorial { border-left-color: #3498db; }
+        .territorial .event-date { background-color: #3498db; }
+        .territorial .legend-color { background-color: #3498db; }
+        
+        .indigenous { border-left-color: #e74c3c; }
+        .indigenous .event-date { background-color: #e74c3c; }
+        .indigenous .legend-color { background-color: #e74c3c; }
+        
+        .slavery { border-left-color: #9b59b6; }
+        .slavery .event-date { background-color: #9b59b6; }
+        .slavery .legend-color { background-color: #9b59b6; }
+        
+        .economic { border-left-color: #2ecc71; }
+        .economic .event-date { background-color: #2ecc71; }
+        .economic .legend-color { background-color: #2ecc71; }
+        
+        .political { border-left-color: #f39c12; }
+        .political .event-date { background-color: #f39c12; }
+        .political .legend-color { background-color: #f39c12; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Expanding the Frontier (1800–1860)</h1>
+            <p class="subtitle">Growth, Conflict, and Identity</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Growth, Conflict, and Identity - This timeline covers the Louisiana Purchase, Manifest Destiny, westward expansion, Indian removal, slavery debates, and growing sectionalism between North and South.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="territorial">Territorial</button>
+                <button class="era-btn" data-era="indigenous">Indigenous</button>
+                <button class="era-btn" data-era="slavery">Slavery</button>
+                <button class="era-btn" data-era="economic">Economic</button>
+                <button class="era-btn" data-era="political">Political</button>
+            </div>
+            <div class="year-display">1800</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Territorial</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Indigenous</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Slavery</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Economic</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Political</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1803,
+                    title: "Louisiana Purchase",
+                    description: "President Thomas Jefferson purchased the Louisiana Territory from France for $15 million, doubling the size of the United States and extending its boundaries from the Mississippi River to the Rocky Mountains.",
+                    significance: "This massive land acquisition dramatically expanded American territory, securing control of the Mississippi River and New Orleans, while providing enormous land resources for future settlement and development.",
+                    category: "territorial"
+                },
+                {
+                    year: 1804,
+                    title: "Lewis and Clark Expedition Begins",
+                    description: "Meriwether Lewis and William Clark began their exploration of the Louisiana Territory, traveling up the Missouri River with the Corps of Discovery to map the region and establish relations with Native peoples.",
+                    significance: "The expedition produced valuable scientific, geographic, and cultural information about previously uncharted territories, facilitating future American expansion and settlement in the West.",
+                    category: "territorial"
+                },
+                {
+                    year: 1807,
+                    title: "Embargo Act",
+                    description: "President Jefferson signed the Embargo Act, prohibiting American ships from trading with European nations to protest British and French interference with American shipping during the Napoleonic Wars.",
+                    significance: "This failed policy severely damaged the American economy while proving ineffective at changing European behavior, demonstrating the challenges of maintaining neutrality in international conflicts.",
+                    category: "economic"
+                },
+                {
+                    year: 1808,
+                    title: "Atlantic Slave Trade Ends",
+                    description: "Congress banned the importation of slaves from Africa, although the domestic slave trade continued to flourish and the institution of slavery remained legal in the South.",
+                    significance: "While this represented a significant moral step and fulfilled a Constitutional provision, it also increased the value of existing slaves and led to more intensive breeding practices to maintain the slave population.",
+                    category: "slavery"
+                },
+                {
+                    year: 1812,
+                    title: "War of 1812 Begins",
+                    description: "The United States declared war on Great Britain over maritime disputes, trade restrictions, British support for Native American resistance, and American territorial ambitions in Canada.",
+                    significance: "Often called the 'Second War of Independence,' this conflict strengthened American nationalism and respect from European powers, while severely diminishing British influence over Native Americans in the Northwest Territory.",
+                    category: "political"
+                },
+                {
+                    year: 1819,
+                    title: "Adams-Onís Treaty",
+                    description: "Secretary of State John Quincy Adams negotiated a treaty with Spain in which Spain ceded Florida to the United States and defined the boundary between U.S. and Spanish territories in the West.",
+                    significance: "This diplomatic achievement secured American control of Florida and established a clear western boundary to the Pacific Ocean, advancing American continental aspirations.",
+                    category: "territorial"
+                },
+                {
+                    year: 1820,
+                    title: "Missouri Compromise",
+                    description: "Congress admitted Missouri as a slave state and Maine as a free state, while prohibiting slavery in the remainder of the Louisiana Territory north of the 36°30' parallel.",
+                    significance: "This compromise temporarily resolved the first major sectional crisis over slavery expansion, establishing a pattern of balancing free and slave states that would continue for decades.",
+                    category: "slavery"
+                },
+                {
+                    year: 1823,
+                    title: "Monroe Doctrine",
+                    description: "President James Monroe declared that the American continents were closed to future European colonization and that the United States would view European intervention in the Americas as a hostile act.",
+                    significance: "This bold foreign policy statement asserted American influence in the Western Hemisphere and established a principle of American isolationism from European affairs that would guide policy for generations.",
+                    category: "political"
+                },
+                {
+                    year: 1824,
+                    title: "Gibbons v. Ogden",
+                    description: "The Supreme Court ruled that Congress had the power to regulate interstate commerce, striking down a New York monopoly on steamboat operation and establishing federal authority over state laws in commercial matters.",
+                    significance: "This landmark decision expanded federal power under the Commerce Clause, promoting economic integration and preventing states from enacting protectionist policies that could hinder national development.",
+                    category: "economic"
+                },
+                {
+                    year: 1828,
+                    title: "Tariff of Abominations",
+                    description: "Congress passed a protective tariff with high duties on imported goods, benefiting Northern manufacturers but raising prices for Southern agricultural interests dependent on European trade.",
+                    significance: "This controversial tariff intensified sectional tensions between North and South and sparked the Nullification Crisis when South Carolina claimed the right to nullify federal laws it deemed unconstitutional.",
+                    category: "economic"
+                },
+                {
+                    year: 1830,
+                    title: "Indian Removal Act",
+                    description: "Congress passed legislation authorizing the president to negotiate treaties to remove eastern Native American tribes to lands west of the Mississippi River, clearing valuable land for white settlement.",
+                    significance: "This policy, aggressively implemented by President Andrew Jackson, led to the forced relocation of tens of thousands of Native Americans, most notoriously the Cherokee 'Trail of Tears,' with devastating humanitarian consequences.",
+                    category: "indigenous"
+                },
+                {
+                    year: 1831,
+                    title: "Nat Turner's Rebellion",
+                    description: "Nat Turner led a slave rebellion in Southampton County, Virginia, killing approximately 60 white people before being suppressed with brutal retaliation against the Black population.",
+                    significance: "This largest and most successful slave revolt in American history sparked intense fear among white Southerners, leading to stricter slave codes and increased repression of both enslaved and free Black people.",
+                    category: "slavery"
+                },
+                {
+                    year: 1835,
+                    title: "Texas Revolution Begins",
+                    description: "American settlers in Texas rebelled against Mexican rule, declaring independence and establishing the Republic of Texas after defeating Mexican forces at the Battle of San Jacinto in 1836.",
+                    significance: "The Texas Revolution added a vast new territory of American settlers that would eventually join the United States, while creating lasting tensions with Mexico and fueling debates about slavery expansion.",
+                    category: "territorial"
+                },
+                {
+                    year: 1837,
+                    title: "Panic of 1837",
+                    description: "A financial crisis triggered by speculative land purchases, the collapse of the cotton market, and restrictive British credit policies caused widespread bank failures and a severe economic depression.",
+                    significance: "This depression lasted for several years, exposing vulnerabilities in the American financial system and influencing political debates about banking, currency, and government economic policy.",
+                    category: "economic"
+                },
+                {
+                    year: 1838,
+                    title: "Trail of Tears",
+                    description: "The U.S. Army forcibly relocated the Cherokee Nation from their homeland in Georgia to Indian Territory (present-day Oklahoma), resulting in thousands of deaths during the brutal journey.",
+                    significance: "This tragic implementation of the Indian Removal Act became a symbol of the injustice of removal policies and the devastating impact of westward expansion on Native American peoples.",
+                    category: "indigenous"
+                },
+                {
+                    year: 1845,
+                    title: "Texas Annexation",
+                    description: "The United States annexed the Republic of Texas as the 28th state, incorporating its territory and assuming its border dispute with Mexico, which claimed Texas remained Mexican territory.",
+                    significance: "This controversial annexation fulfilled American expansionist ambitions but exacerbated tensions with Mexico, directly contributing to the outbreak of the Mexican-American War in 1846.",
+                    category: "territorial"
+                },
+                {
+                    year: 1846,
+                    title: "Mexican-American War Begins",
+                    description: "The United States and Mexico went to war over border disputes after President James K. Polk sent troops into contested territory between the Rio Grande and Nueces River.",
+                    significance: "This war, which some viewed as an unjust grab for territory, resulted in Mexico ceding roughly half its territory to the United States, dramatically expanding American boundaries and future settlement opportunities.",
+                    category: "territorial"
+                },
+                {
+                    year: 1846,
+                    title: "Oregon Treaty",
+                    description: "The United States and Great Britain resolved their competing claims to the Oregon Territory, establishing the 49th parallel as the northern boundary of the United States, with exceptions for Vancouver Island.",
+                    significance: "This diplomatic resolution of the Oregon Question extended American territory to the Pacific Ocean and secured the Pacific Northwest for American settlement without resorting to war with Britain.",
+                    category: "territorial"
+                },
+                {
+                    year: 1848,
+                    title: "Treaty of Guadalupe Hidalgo",
+                    description: "Mexico ceded California and the Southwest to the United States, receiving $15 million in compensation and ending the Mexican-American War.",
+                    significance: "This treaty added vast territories to the United States, including California with its gold deposits, while creating a large Mexican American population within U.S. borders and raising new questions about slavery's expansion.",
+                    category: "territorial"
+                },
+                {
+                    year: 1848,
+                    title: "Gold Discovered in California",
+                    description: "Gold was discovered at Sutter's Mill in California, triggering a massive migration of prospectors and settlers seeking fortune in the newly acquired territory.",
+                    significance: "The California Gold Rush accelerated American settlement of the West, diversified the population, stimulated economic growth, and hastened California's admission as a state in 1850.",
+                    category: "economic"
+                },
+                {
+                    year: 1850,
+                    title: "Compromise of 1850",
+                    description: "Congress passed a package of bills that admitted California as a free state, organized Utah and New Mexico territories without restrictions on slavery, ended the slave trade in Washington D.C., and strengthened the Fugitive Slave Act.",
+                    significance: "This compromise temporarily resolved sectional tensions over slavery, but the enhanced Fugitive Slave Act provoked Northern resistance and intensified moral opposition to slavery.",
+                    category: "slavery"
+                },
+                {
+                    year: 1852,
+                    title: "Uncle Tom's Cabin Published",
+                    description: "Harriet Beecher Stowe's novel about the harsh realities of slavery became an immediate bestseller, selling over 300,000 copies in its first year and dramatically increasing antislavery sentiment in the North.",
+                    significance: "This influential book humanized enslaved people and highlighted slavery's cruelty for many Northern readers, deepening the moral dimension of the sectional conflict and strengthening the abolitionist movement.",
+                    category: "slavery"
+                },
+                {
+                    year: 1854,
+                    title: "Kansas-Nebraska Act",
+                    description: "Congress organized Kansas and Nebraska territories under the principle of popular sovereignty, allowing settlers to determine whether slavery would be permitted and effectively repealing the Missouri Compromise.",
+                    significance: "This controversial legislation sparked violent conflict in Kansas between pro-slavery and anti-slavery settlers, destroyed the Whig Party, and led to the formation of the Republican Party committed to preventing slavery's expansion.",
+                    category: "slavery"
+                },
+                {
+                    year: 1857,
+                    title: "Dred Scott Decision",
+                    description: "The Supreme Court ruled that African Americans, whether enslaved or free, were not citizens and had no standing to sue in federal court, while also declaring the Missouri Compromise unconstitutional.",
+                    significance: "This decision denied Black Americans basic rights, protected slavery in the territories, outraged Northerners, and pushed the nation closer to civil war by undermining legislative compromises on slavery.",
+                    category: "slavery"
+                },
+                {
+                    year: 1859,
+                    title: "John Brown's Raid on Harpers Ferry",
+                    description: "Abolitionist John Brown led a raid on the federal arsenal at Harpers Ferry, Virginia, hoping to initiate a slave uprising, before being captured and executed for treason against Virginia.",
+                    significance: "This failed raid heightened Southern fears of slave insurrections, radicalized both sides of the slavery debate, and moved the nation closer to civil war as Brown became a martyr to Northern abolitionists.",
+                    category: "slavery"
+                },
+                {
+                    year: 1860,
+                    title: "Lincoln Elected President",
+                    description: "Abraham Lincoln, the Republican candidate opposed to slavery's expansion, won the presidential election with only 40% of the popular vote but a clear majority in the Electoral College.",
+                    significance: "Lincoln's election, despite not appearing on many Southern ballots, triggered the secession of seven Southern states and the formation of the Confederate States of America, leading directly to the Civil War.",
+                    category: "political"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            // Initialize timeline
+            function initTimeline() {
+                // Create event cards
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                
+                updateDisplay();
+            }
+            
+            // Create event card
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // Update display based on current selection
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                // Calculate and update progress bar
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                // Hide all events and show current one
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                // Update navigation buttons
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            // Filter events by category
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to previous event
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to next event
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            // Initialize the timeline
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

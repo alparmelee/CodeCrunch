@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconstruction and Reaction (1865–1900)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .political { border-left-color: #3498db; }
+        .political .event-date { background-color: #3498db; }
+        .political .legend-color { background-color: #3498db; }
+        
+        .racial { border-left-color: #9b59b6; }
+        .racial .event-date { background-color: #9b59b6; }
+        .racial .legend-color { background-color: #9b59b6; }
+        
+        .economic { border-left-color: #2ecc71; }
+        .economic .event-date { background-color: #2ecc71; }
+        .economic .legend-color { background-color: #2ecc71; }
+        
+        .social { border-left-color: #f39c12; }
+        .social .event-date { background-color: #f39c12; }
+        .social .legend-color { background-color: #f39c12; }
+        
+        .labor { border-left-color: #e74c3c; }
+        .labor .event-date { background-color: #e74c3c; }
+        .labor .legend-color { background-color: #e74c3c; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Reconstruction and Reaction (1865–1900)</h1>
+            <p class="subtitle">Rebuilding and Backlash</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Post-war Reconstruction, amendments to grant citizenship and voting rights to Black Americans, rise of Jim Crow, industrialization, and immigration.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="political">Political</button>
+                <button class="era-btn" data-era="racial">Racial</button>
+                <button class="era-btn" data-era="economic">Economic</button>
+                <button class="era-btn" data-era="social">Social</button>
+                <button class="era-btn" data-era="labor">Labor</button>
+            </div>
+            <div class="year-display">1865</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Political</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Racial</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Economic</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Social</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Labor</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1865,
+                    title: "Andrew Johnson's Reconstruction Plan",
+                    description: "President Andrew Johnson implemented a lenient Reconstruction plan that allowed former Confederate states to quickly rejoin the Union with minimal conditions and no guarantees for freed people's rights.",
+                    significance: "Johnson's approach created tension with Radical Republicans in Congress and allowed Southern states to establish restrictive 'Black Codes' that severely limited freedmen's rights and opportunities.",
+                    category: "political"
+                },
+                {
+                    year: 1865,
+                    title: "Black Codes",
+                    description: "Southern states enacted laws restricting African Americans' freedoms, requiring them to sign yearly labor contracts, limiting property ownership, and creating harsh vagrancy laws that could force them into unpaid labor.",
+                    significance: "These laws revealed Southern whites' determination to maintain control over Black labor and preserve racial hierarchy despite emancipation, provoking Northern outrage and Congressional intervention.",
+                    category: "racial"
+                },
+                {
+                    year: 1866,
+                    title: "Civil Rights Act of 1866",
+                    description: "Congress passed the first federal civil rights legislation, declaring all persons born in the U.S. (except Native Americans) to be citizens with equal rights to make contracts, own property, and seek legal protection.",
+                    significance: "This landmark law, passed over President Johnson's veto, established birthright citizenship and federal protection of civil rights, concepts later incorporated into the Fourteenth Amendment.",
+                    category: "racial"
+                },
+                {
+                    year: 1866,
+                    title: "Ku Klux Klan Founded",
+                    description: "Former Confederate soldiers formed the Ku Klux Klan in Tennessee, beginning as a social club before evolving into a violent terrorist organization targeting Black Americans and their white Republican allies.",
+                    significance: "The KKK became the most notorious of several white supremacist organizations that used violence, intimidation, and terror to undermine Reconstruction and restore white Democratic control in the South.",
+                    category: "racial"
+                },
+                {
+                    year: 1867,
+                    title: "Military Reconstruction Acts",
+                    description: "Congress divided the former Confederacy into five military districts, requiring states to ratify the 14th Amendment, draft new constitutions, and grant Black male suffrage before readmission to the Union.",
+                    significance: "These acts initiated 'Radical Reconstruction,' temporarily disenfranchising many ex-Confederates while placing federal troops in the South to protect Black rights and oversee political transformation.",
+                    category: "political"
+                },
+                {
+                    year: 1868,
+                    title: "Impeachment of Andrew Johnson",
+                    description: "The House of Representatives impeached President Johnson for violating the Tenure of Office Act when he removed Secretary of War Edwin Stanton, but the Senate acquitted him by a single vote.",
+                    significance: "This first presidential impeachment resulted from the struggle between Johnson and Radical Republicans over Reconstruction policy, showing the intense constitutional conflicts of the era.",
+                    category: "political"
+                },
+                {
+                    year: 1868,
+                    title: "Fourteenth Amendment Ratified",
+                    description: "This constitutional amendment defined citizenship to include all people born or naturalized in the U.S., guaranteed equal protection under the law, and prevented states from denying rights without due process.",
+                    significance: "The 14th Amendment became the most important constitutional change of the Reconstruction era, laying the groundwork for future civil rights efforts by establishing federal protection of individual rights against state action.",
+                    category: "racial"
+                },
+                {
+                    year: 1869,
+                    title: "Transcontinental Railroad Completed",
+                    description: "The Union Pacific and Central Pacific railroads met at Promontory Summit, Utah, completing the first railroad connection across the continent, significantly reducing travel time between the East and West coasts.",
+                    significance: "This engineering marvel accelerated westward expansion, economic growth, and national integration while displacing Native Americans and facilitating environmental exploitation. The project relied heavily on immigrant labor, particularly Chinese workers.",
+                    category: "economic"
+                },
+                {
+                    year: 1870,
+                    title: "Fifteenth Amendment Ratified",
+                    description: "This amendment prohibited federal and state governments from denying voting rights to citizens based on 'race, color, or previous condition of servitude,' though it did not address gender or other voting restrictions.",
+                    significance: "The amendment marked the high point of Reconstruction-era efforts to ensure Black political participation, though its effectiveness would be undermined by later restrictions including literacy tests and poll taxes.",
+                    category: "racial"
+                },
+                {
+                    year: 1870,
+                    title: "Enforcement Acts",
+                    description: "Congress passed three laws authorizing federal prosecution of Ku Klux Klan members and other violent groups who prevented Blacks from voting, holding office, or exercising other rights of citizenship.",
+                    significance: "These acts represented the federal government's strongest effort to protect Black citizens from organized white violence and allowed President Grant to temporarily suppress the first wave of KKK terrorism.",
+                    category: "racial"
+                },
+                {
+                    year: 1873,
+                    title: "Panic of 1873",
+                    description: "A financial crisis began with the failure of Jay Cooke & Company bank and led to a six-year depression featuring widespread business failures, unemployment, labor strife, and deflation.",
+                    significance: "This severe economic downturn weakened Northern commitment to Reconstruction, contributed to Democratic political gains, and intensified labor conflict as workers organized to resist wage cuts and poor conditions.",
+                    category: "economic"
+                },
+                {
+                    year: 1875,
+                    title: "Civil Rights Act of 1875",
+                    description: "This law prohibited discrimination in public accommodations and facilities such as restaurants, theaters, and public transportation, representing the last major civil rights legislation until the 1950s.",
+                    significance: "The act marked Congress's final significant attempt to protect Black civil rights during Reconstruction, though it was poorly enforced and ultimately struck down by the Supreme Court in 1883.",
+                    category: "racial"
+                },
+                {
+                    year: 1876,
+                    title: "Disputed Presidential Election of 1876",
+                    description: "The election between Republican Rutherford B. Hayes and Democrat Samuel Tilden ended in dispute over electoral votes from Florida, Louisiana, and South Carolina, requiring a special commission for resolution.",
+                    significance: "The resulting Compromise of 1877 awarded the presidency to Hayes in exchange for the removal of federal troops from the South, effectively ending federal enforcement of Reconstruction policies.",
+                    category: "political"
+                },
+                {
+                    year: 1877,
+                    title: "Great Railroad Strike",
+                    description: "Workers on the Baltimore & Ohio Railroad launched a strike against wage cuts that spread across the country, shutting down much of the nation's rail system and leading to violent confrontations with militia and federal troops.",
+                    significance: "This first major national labor uprising revealed growing tensions between workers and industrial capitalism, reinforced anti-labor attitudes among business leaders, and highlighted the federal government's readiness to use force against striking workers.",
+                    category: "labor"
+                },
+                {
+                    year: 1881,
+                    title: "Tuskegee Institute Founded",
+                    description: "Booker T. Washington established the Tuskegee Normal and Industrial Institute in Alabama to provide practical education and vocational training for African Americans in the post-Reconstruction South.",
+                    significance: "Under Washington's leadership, Tuskegee became a leading Black educational institution, embodying his philosophy of economic self-improvement and accommodation to segregation as the best strategy for African American advancement.",
+                    category: "social"
+                },
+                {
+                    year: 1882,
+                    title: "Chinese Exclusion Act",
+                    description: "Congress passed legislation prohibiting Chinese laborers from immigrating to the United States and preventing Chinese already in the country from becoming citizens, the first major law restricting immigration based on nationality.",
+                    significance: "This act reflected growing anti-immigrant sentiment and established a precedent for race-based immigration restriction that would expand in later decades. It remained in effect until 1943.",
+                    category: "racial"
+                },
+                {
+                    year: 1883,
+                    title: "Civil Rights Cases",
+                    description: "The Supreme Court struck down the Civil Rights Act of 1875, ruling that the 14th Amendment prohibited only government discrimination, not discrimination by private individuals or businesses.",
+                    significance: "This decision severely limited federal power to protect civil rights and allowed private businesses to legally discriminate, providing constitutional sanction for the segregation that would characterize the Jim Crow era.",
+                    category: "racial"
+                },
+                {
+                    year: 1886,
+                    title: "Haymarket Affair",
+                    description: "A labor rally in Chicago's Haymarket Square turned deadly when someone threw a bomb at police, leading to gunfire that killed several people. Eight anarchist leaders were convicted despite little evidence of their involvement.",
+                    significance: "This incident sparked widespread fear of radical labor activism and immigrants, set back the eight-hour workday movement, and made May Day (May 1) an international labor commemoration day.",
+                    category: "labor"
+                },
+                {
+                    year: 1887,
+                    title: "Dawes Act",
+                    description: "This legislation divided tribal lands into individual allotments, forcing assimilation by abolishing communal ownership. Native Americans who accepted allotments would be granted U.S. citizenship.",
+                    significance: "The act devastated Native American communities and culture while opening 'surplus' reservation land to white settlement. Native Americans lost approximately 90 million acres (about two-thirds of their land) by 1934.",
+                    category: "racial"
+                },
+                {
+                    year: 1890,
+                    title: "Sherman Antitrust Act",
+                    description: "Congress passed the first federal legislation designed to limit monopolies and business practices that restrained trade or competition, though initial enforcement was weak and often directed against labor unions.",
+                    significance: "This landmark law established the legal foundation for federal regulation of increasingly powerful corporations, though it would take decades of reform to develop effective antitrust enforcement.",
+                    category: "economic"
+                },
+                {
+                    year: 1892,
+                    title: "Homestead Strike",
+                    description: "Workers at Carnegie Steel's Homestead plant near Pittsburgh fought armed Pinkerton detectives hired to break their union, resulting in multiple deaths before state militia restored order and broke the strike.",
+                    significance: "This violent confrontation weakened the powerful Amalgamated Association of Iron and Steel Workers and represented a major defeat for organized labor in basic industry, enabling wage cuts and longer hours.",
+                    category: "labor"
+                },
+                {
+                    year: 1893,
+                    title: "Panic of 1893",
+                    description: "A financial crisis triggered by railroad bankruptcies and bank failures led to the worst economic depression in American history up to that time, with unemployment reaching 20-25% in some areas.",
+                    significance: "This severe downturn intensified political conflict over currency policy, contributed to labor unrest like the Pullman Strike, and accelerated populist political organizing among farmers and workers.",
+                    category: "economic"
+                },
+                {
+                    year: 1894,
+                    title: "Pullman Strike",
+                    description: "Workers at the Pullman Palace Car Company in Chicago struck against wage cuts. The dispute escalated when the American Railway Union led by Eugene V. Debs boycotted all trains with Pullman cars.",
+                    significance: "President Cleveland's deployment of federal troops to break the strike, the first such use of federal power in a labor dispute without a governor's request, established a precedent for intervention against national strikes.",
+                    category: "labor"
+                },
+                {
+                    year: 1895,
+                    title: "Booker T. Washington's Atlanta Compromise",
+                    description: "In a speech at the Cotton States Exposition, Washington urged Black Americans to accept segregation and focus on economic self-improvement rather than social equality or political rights.",
+                    significance: "Washington's accommodationist approach made him the most influential Black leader of his era and appealed to white moderates, but faced growing criticism from others who advocated more direct challenges to discrimination.",
+                    category: "social"
+                },
+                {
+                    year: 1896,
+                    title: "Plessy v. Ferguson",
+                    description: "The Supreme Court upheld Louisiana's racial segregation law, establishing the 'separate but equal' doctrine that allowed states to legally mandate segregation in public facilities.",
+                    significance: "This ruling provided constitutional sanction for Jim Crow segregation across the South and border states, legitimizing racial separation that would persist until the civil rights movement of the mid-20th century.",
+                    category: "racial"
+                },
+                {
+                    year: 1898,
+                    title: "Wilmington Race Riot",
+                    description: "White supremacists in Wilmington, North Carolina violently overthrew the legitimately elected local government, killed dozens of Black residents, and forced thousands to flee in the only successful coup d'état in U.S. history.",
+                    significance: "This bloody insurrection marked the violent culmination of white Democrats' campaign to eliminate Black political influence in North Carolina and symbolized the complete rollback of Reconstruction-era gains.",
+                    category: "racial"
+                },
+                {
+                    year: 1898,
+                    title: "Spanish-American War",
+                    description: "The United States defeated Spain in a brief war, gaining control of Puerto Rico, Guam, and the Philippines, while establishing dominance over nominally independent Cuba.",
+                    significance: "This 'splendid little war' transformed America into a colonial power with overseas territories and increased international responsibilities, marking the culmination of late 19th-century American expansion.",
+                    category: "political"
+                },
+                {
+                    year: 1900,
+                    title: "Gold Standard Act",
+                    description: "Congress formally placed the United States on the gold standard, ending decades of debate over monetary policy between advocates of gold and supporters of bimetallism or silver currency.",
+                    significance: "This act marked the defeat of Populist monetary reforms advocated by farmers and debtors, solidifying the conservative economic policies favored by Eastern financial interests and large corporations.",
+                    category: "economic"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => {
+                if (a.year === b.year) {
+                    return events.indexOf(a) - events.indexOf(b); // Maintain original order for same year
+                }
+                return a.year - b.year;
+            });
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            function initTimeline() {
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                updateDisplay();
+            }
+            
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

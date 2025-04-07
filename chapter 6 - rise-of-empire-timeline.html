@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rise of an Empire (1900–1919)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .reform { border-left-color: #3498db; }
+        .reform .event-date { background-color: #3498db; }
+        .reform .legend-color { background-color: #3498db; }
+        
+        .foreign { border-left-color: #e74c3c; }
+        .foreign .event-date { background-color: #e74c3c; }
+        .foreign .legend-color { background-color: #e74c3c; }
+        
+        .labor { border-left-color: #f39c12; }
+        .labor .event-date { background-color: #f39c12; }
+        .labor .legend-color { background-color: #f39c12; }
+        
+        .rights { border-left-color: #9b59b6; }
+        .rights .event-date { background-color: #9b59b6; }
+        .rights .legend-color { background-color: #9b59b6; }
+        
+        .economic { border-left-color: #2ecc71; }
+        .economic .event-date { background-color: #2ecc71; }
+        .economic .legend-color { background-color: #2ecc71; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rise of an Empire (1900–1919)</h1>
+            <p class="subtitle">Industry, Progress, and Global Power</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> The Progressive Era, labor rights, women's suffrage, American imperialism, and America's emergence as a world power through World War I.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="reform">Progressive Reform</button>
+                <button class="era-btn" data-era="foreign">Foreign Policy</button>
+                <button class="era-btn" data-era="labor">Labor Movement</button>
+                <button class="era-btn" data-era="rights">Civil Rights</button>
+                <button class="era-btn" data-era="economic">Economic</button>
+            </div>
+            <div class="year-display">1900</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Progressive Reform</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Foreign Policy</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Labor Movement</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Civil Rights</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Economic</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1901,
+                    title: "Theodore Roosevelt Becomes President",
+                    description: "After the assassination of President William McKinley, Vice President Theodore Roosevelt became the youngest president in American history at 42 years old.",
+                    significance: "Roosevelt's ascension to the presidency marked the beginning of the Progressive Era in American politics. His 'Square Deal' policies expanded federal power to regulate monopolies, protect consumers, and conserve natural resources.",
+                    category: "reform"
+                },
+                {
+                    year: 1903,
+                    title: "Wright Brothers' First Flight",
+                    description: "Orville and Wilbur Wright successfully conducted the first powered, sustained, and controlled airplane flight at Kitty Hawk, North Carolina, traveling 120 feet in 12 seconds.",
+                    significance: "This breakthrough launched the aviation age, revolutionizing transportation, commerce, warfare, and global connectivity in the 20th century, while symbolizing America's technological innovation and ingenuity.",
+                    category: "economic"
+                },
+                {
+                    year: 1903,
+                    title: "Women's Trade Union League Founded",
+                    description: "The Women's Trade Union League was established as a coalition of working-class and middle-class women to support the organization of women workers and advocate for improved wages and working conditions.",
+                    significance: "This organization bridged class divides within the women's movement and provided crucial support for female workers, contributing to both labor activism and the broader struggle for women's rights.",
+                    category: "labor"
+                },
+                {
+                    year: 1904,
+                    title: "Roosevelt Corollary to Monroe Doctrine",
+                    description: "President Roosevelt expanded the Monroe Doctrine, asserting the U.S. right to intervene in Latin American countries facing economic instability or European interference.",
+                    significance: "This policy formalized American imperialism in the Western Hemisphere, leading to numerous U.S. military interventions in Caribbean and Central American nations throughout the early 20th century.",
+                    category: "foreign"
+                },
+                {
+                    year: 1905,
+                    title: "Industrial Workers of the World Founded",
+                    description: "Radical labor activists founded the Industrial Workers of the World (IWW or 'Wobblies'), advocating 'One Big Union' for all workers regardless of skill, race, or gender.",
+                    significance: "The IWW represented a more radical alternative to the conservative AFL, organizing unskilled workers and minorities through direct action tactics while promoting a revolutionary vision of worker control.",
+                    category: "labor"
+                },
+                {
+                    year: 1906,
+                    title: "Pure Food and Drug Act",
+                    description: "Following public outrage sparked by Upton Sinclair's novel 'The Jungle,' Congress passed legislation prohibiting the sale of misbranded or adulterated food and drugs in interstate commerce.",
+                    significance: "This landmark consumer protection law established federal regulatory authority over food and drug production, marking the birth of the FDA and setting a precedent for government oversight of public health.",
+                    category: "reform"
+                },
+                {
+                    year: 1906,
+                    title: "San Francisco Earthquake",
+                    description: "A devastating earthquake and subsequent fires destroyed over 80% of San Francisco, killing approximately 3,000 people and leaving hundreds of thousands homeless.",
+                    significance: "The disaster showcased both government emergency response capabilities and private sector power, as corporations like Standard Oil helped finance reconstruction. The rebuilt city embodied modern urban planning principles.",
+                    category: "economic"
+                },
+                {
+                    year: 1908,
+                    title: "Ford Model T Introduced",
+                    description: "Henry Ford's affordable, mass-produced Model T automobile transformed American manufacturing and culture, selling over 15 million vehicles by 1927.",
+                    significance: "Ford's moving assembly line revolutionized industrial production, while mass automobile ownership changed American geography, culture, and consumption patterns, accelerating suburbanization and consumer culture.",
+                    category: "economic"
+                },
+                {
+                    year: 1909,
+                    title: "NAACP Founded",
+                    description: "The National Association for the Advancement of Colored People was established by an interracial group of activists in response to continued violence against Black Americans and the growth of Jim Crow segregation.",
+                    significance: "The NAACP became the nation's most influential civil rights organization, pursuing legal and political strategies to challenge segregation and discrimination that would eventually lead to landmark victories like Brown v. Board of Education.",
+                    category: "rights"
+                },
+                {
+                    year: 1911,
+                    title: "Triangle Shirtwaist Factory Fire",
+                    description: "Fire at the Triangle Shirtwaist Factory in New York City killed 146 workers, mostly young immigrant women, who were trapped inside because exits were locked to prevent theft and unauthorized breaks.",
+                    significance: "Public outrage over this preventable tragedy accelerated the labor movement and led to numerous workplace safety reforms, fire codes, and factory regulations in New York and across the country.",
+                    category: "labor"
+                },
+                {
+                    year: 1912,
+                    title: "Progressive Party Founded",
+                    description: "Former President Theodore Roosevelt formed a third party after failing to secure the Republican nomination, advocating a 'New Nationalism' platform of social and economic reforms.",
+                    significance: "Though unsuccessful in electing Roosevelt, the Progressive 'Bull Moose' Party's platform—including women's suffrage, social insurance, and stronger business regulation—influenced both major parties and shaped future reforms.",
+                    category: "reform"
+                },
+                {
+                    year: 1913,
+                    title: "Federal Reserve System Created",
+                    description: "Congress established a central banking system to provide a flexible currency, supervise banking activities, and reduce financial panics through the Federal Reserve Act.",
+                    significance: "This fundamental reform of America's financial system created more stable monetary policy, prevented bank failures, and established a modern central bank with emergency lending powers and control over money supply.",
+                    category: "economic"
+                },
+                {
+                    year: 1913,
+                    title: "Sixteenth Amendment (Income Tax)",
+                    description: "The Constitution was amended to authorize Congress to collect taxes on incomes, overturning an 1895 Supreme Court decision that had declared the income tax unconstitutional.",
+                    significance: "This amendment fundamentally transformed federal finance by creating a progressive revenue source beyond tariffs and excise taxes, enabling the expansion of federal programs and military capacity.",
+                    category: "economic"
+                },
+                {
+                    year: 1913,
+                    title: "Seventeenth Amendment (Direct Election of Senators)",
+                    description: "This constitutional amendment established direct popular election of U.S. Senators, replacing the original system where state legislatures chose senators.",
+                    significance: "This democratic reform, advocated by progressives to reduce corruption and corporate influence in the Senate, strengthened popular control over government and reduced state influence in federal politics.",
+                    category: "reform"
+                },
+                {
+                    year: 1914,
+                    title: "Clayton Antitrust Act",
+                    description: "Congress strengthened existing antitrust laws, prohibited specific anticompetitive practices, and exempted labor unions from being considered illegal combinations in restraint of trade.",
+                    significance: "The act provided stronger tools to combat monopolies while offering crucial legal protection for labor organizing, which labor leader Samuel Gompers called 'labor's Magna Carta.'",
+                    category: "reform"
+                },
+                {
+                    year: 1914,
+                    title: "Panama Canal Opens",
+                    description: "After a decade of American engineering and labor, the Panama Canal opened, connecting the Atlantic and Pacific Oceans and dramatically shortening global shipping routes.",
+                    significance: "This engineering marvel displayed American technological prowess and imperial power. The canal enhanced U.S. naval capabilities, commercial dominance, and strategic control of the Western Hemisphere.",
+                    category: "foreign"
+                },
+                {
+                    year: 1914,
+                    title: "World War I Begins in Europe",
+                    description: "The assassination of Archduke Franz Ferdinand triggered a chain reaction that plunged Europe into the most destructive war the world had yet seen, involving all major powers.",
+                    significance: "While initially remaining neutral, America's economic ties to the Allies and incidents like the Lusitania sinking gradually drew the U.S. toward intervention and global leadership.",
+                    category: "foreign"
+                },
+                {
+                    year: 1915,
+                    title: "The Birth of a Nation Released",
+                    description: "D.W. Griffith's technically innovative but deeply racist silent film glorified the Ku Klux Klan as saviors of white civilization during Reconstruction.",
+                    significance: "The film sparked protests from the NAACP while fueling racial violence and contributing to the KKK's nationwide revival. It demonstrated cinema's power to shape historical narratives and social attitudes.",
+                    category: "rights"
+                },
+                {
+                    year: 1916,
+                    title: "Jeannette Rankin Elected to Congress",
+                    description: "Montana's Jeannette Rankin became the first woman elected to Congress, four years before the Nineteenth Amendment granted women nationwide suffrage.",
+                    significance: "Rankin's election represented a breakthrough for women's political participation. She used her position to advocate for women's rights and peace, voting against U.S. entry into both World Wars.",
+                    category: "rights"
+                },
+                {
+                    year: 1916,
+                    title: "National Park Service Established",
+                    description: "Congress created the National Park Service to manage the nation's growing system of parks, monuments, and historic sites under unified professional administration.",
+                    significance: "This achievement of the conservation movement institutionalized the concept of public lands managed for preservation rather than development, ensuring these natural and cultural treasures would be protected for future generations.",
+                    category: "reform"
+                },
+                {
+                    year: 1917,
+                    title: "U.S. Enters World War I",
+                    description: "After three years of neutrality, President Woodrow Wilson asked Congress to declare war on Germany, citing submarine warfare against American shipping and the Zimmermann Telegram.",
+                    significance: "American entry proved decisive for the Allied victory. The war mobilization transformed the U.S. economy, expanded federal power, altered civil liberties, and positioned America as a global military and financial power.",
+                    category: "foreign"
+                },
+                {
+                    year: 1917,
+                    title: "Espionage and Sedition Acts",
+                    description: "Congress passed legislation criminalizing interference with the war effort and prohibiting 'disloyal' speech, allowing the government to suppress antiwar activism.",
+                    significance: "These wartime measures severely restricted free speech and led to the imprisonment of prominent antiwar figures, setting precedents for government suppression of dissent in future conflicts.",
+                    category: "rights"
+                },
+                {
+                    year: 1917,
+                    title: "Russian Revolution",
+                    description: "The Bolshevik Revolution overthrew Russia's provisional government, establishing the world's first communist state and withdrawing Russia from World War I.",
+                    significance: "This seismic event heightened American fears of radicalism, contributing to the Red Scare and influencing U.S. foreign policy throughout the 20th century as anti-communism became a defining principle.",
+                    category: "foreign"
+                },
+                {
+                    year: 1918,
+                    title: "Influenza Pandemic",
+                    description: "A deadly strain of influenza spread globally, killing approximately 675,000 Americans and an estimated 50 million people worldwide, often targeting young adults.",
+                    significance: "This public health catastrophe, exacerbated by wartime conditions and censorship, overwhelmed medical facilities and highlighted shortcomings in public health infrastructure, influencing future disease control measures.",
+                    category: "economic"
+                },
+                {
+                    year: 1918,
+                    title: "Fourteen Points Speech",
+                    description: "President Wilson outlined American war aims and his vision for a postwar settlement based on open diplomacy, free trade, national self-determination, and a League of Nations.",
+                    significance: "This idealistic blueprint for world peace and collective security represented America's assumption of moral leadership in international affairs, though many of its principles were compromised in the eventual peace treaty.",
+                    category: "foreign"
+                },
+                {
+                    year: 1919,
+                    title: "Treaty of Versailles",
+                    description: "The peace settlement ending World War I redrew European boundaries, imposed harsh penalties on Germany, and created the League of Nations as Wilson had advocated.",
+                    significance: "The treaty's compromises disappointed Wilson and many others. Its punitive measures against Germany contributed to economic instability and resentment that would later fuel the rise of fascism.",
+                    category: "foreign"
+                },
+                {
+                    year: 1919,
+                    title: "Nineteenth Amendment Passed by Congress",
+                    description: "After decades of women's suffrage activism, Congress finally passed the constitutional amendment guaranteeing women's right to vote, sending it to the states for ratification.",
+                    significance: "This milestone represented the largest expansion of democratic participation in American history and marked the culmination of over 70 years of organized struggle by suffragists.",
+                    category: "rights"
+                },
+                {
+                    year: 1919,
+                    title: "Red Summer Race Riots",
+                    description: "Racial violence erupted in dozens of American cities as white mobs attacked Black communities, while Black veterans fresh from fighting for democracy abroad sometimes fought back.",
+                    significance: "These conflicts reflected heightened racial and social tensions following the Great Migration and war mobilization, revealing the violent resistance to Black advancement and equality in the North as well as the South.",
+                    category: "rights"
+                },
+                {
+                    year: 1919,
+                    title: "Seattle General Strike",
+                    description: "Nearly all of Seattle's 65,000 union workers walked off their jobs in solidarity with shipyard workers seeking higher wages, effectively shutting down the city for five days.",
+                    significance: "This unprecedented demonstration of labor unity triggered nationwide fears of class warfare and revolution, contributing to the First Red Scare and a conservative backlash against organized labor.",
+                    category: "labor"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => {
+                if (a.year === b.year) {
+                    return events.indexOf(a) - events.indexOf(b); // Maintain original order for same year
+                }
+                return a.year - b.year;
+            });
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            function initTimeline() {
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                updateDisplay();
+            }
+            
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

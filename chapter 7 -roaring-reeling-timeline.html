@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roaring and Reeling (1920–1945)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .twenties { border-left-color: #e74c3c; }
+        .twenties .event-date { background-color: #e74c3c; }
+        .twenties .legend-color { background-color: #e74c3c; }
+        
+        .depression { border-left-color: #f39c12; }
+        .depression .event-date { background-color: #f39c12; }
+        .depression .legend-color { background-color: #f39c12; }
+        
+        .newdeal { border-left-color: #2ecc71; }
+        .newdeal .event-date { background-color: #2ecc71; }
+        .newdeal .legend-color { background-color: #2ecc71; }
+        
+        .wwii { border-left-color: #9b59b6; }
+        .wwii .event-date { background-color: #9b59b6; }
+        .wwii .legend-color { background-color: #9b59b6; }
+        
+        .culture { border-left-color: #3498db; }
+        .culture .event-date { background-color: #3498db; }
+        .culture .legend-color { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Roaring and Reeling (1920–1945)</h1>
+            <p class="subtitle">Boom, Bust, and War</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> The Roaring Twenties, Prohibition, Great Depression, New Deal, and World War II—ending with the U.S. as a global superpower.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="twenties">Roaring Twenties</button>
+                <button class="era-btn" data-era="depression">Great Depression</button>
+                <button class="era-btn" data-era="newdeal">New Deal</button>
+                <button class="era-btn" data-era="wwii">World War II</button>
+                <button class="era-btn" data-era="culture">Cultural Shifts</button>
+            </div>
+            <div class="year-display">1920</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Roaring Twenties</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Great Depression</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>New Deal</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>World War II</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Cultural Shifts</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1920,
+                    title: "Nineteenth Amendment Ratified",
+                    description: "The Nineteenth Amendment to the Constitution was ratified, guaranteeing women the right to vote nationwide after decades of suffrage activism.",
+                    significance: "This amendment represented the single largest expansion of democratic participation in American history, adding millions of women to the electorate and marking a major milestone in women's political equality.",
+                    category: "twenties"
+                },
+                {
+                    year: 1920,
+                    title: "Prohibition Begins",
+                    description: "The Eighteenth Amendment and Volstead Act banned the production, sale, and transportation of alcoholic beverages across the United States.",
+                    significance: "This 'noble experiment' reflected Progressive Era reform but led to widespread lawlessness, the rise of organized crime, and underground speakeasies. It fundamentally altered American attitudes toward government regulation of personal behavior.",
+                    category: "twenties"
+                },
+                {
+                    year: 1921,
+                    title: "Tulsa Race Massacre",
+                    description: "White mobs attacked the prosperous Greenwood District of Tulsa, Oklahoma, known as 'Black Wall Street,' killing hundreds of Black residents and destroying over 1,200 homes and businesses.",
+                    significance: "This devastating act of racial violence illustrated the violent backlash against Black economic success and remains one of the worst incidents of racial violence in American history, with long-lasting economic impacts.",
+                    category: "twenties"
+                },
+                {
+                    year: 1922,
+                    title: "Radio Broadcasting Begins",
+                    description: "The first commercial radio station, KDKA in Pittsburgh, began regular broadcasting, followed by rapid growth in radio ownership and programming across America.",
+                    significance: "Radio transformed American culture by creating the first truly national mass medium, standardizing American language and culture while connecting remote communities in real-time to news, entertainment, and advertising.",
+                    category: "culture"
+                },
+                {
+                    year: 1924,
+                    title: "Immigration Act of 1924",
+                    description: "This restrictive legislation established national origin quotas dramatically limiting immigration, especially from Southern and Eastern Europe and completely excluding Asian immigrants.",
+                    significance: "The act reflected rising nativism and ended America's open immigration era, reshaping the nation's demographic development and creating harsh restrictions that would last until 1965.",
+                    category: "twenties"
+                },
+                {
+                    year: 1925,
+                    title: "Scopes 'Monkey' Trial",
+                    description: "John Scopes was prosecuted for teaching evolution in a Tennessee public school, with famous attorney Clarence Darrow defending him against prosecutor William Jennings Bryan.",
+                    significance: "This highly publicized trial highlighted the growing cultural divide between traditional religious values and modern scientific thinking, becoming a symbol of the struggle between modernism and fundamentalism in American society.",
+                    category: "culture"
+                },
+                {
+                    year: 1927,
+                    title: "Lindbergh's Transatlantic Flight",
+                    description: "Charles Lindbergh completed the first solo non-stop flight across the Atlantic Ocean, flying from New York to Paris in 33.5 hours.",
+                    significance: "This historic achievement made Lindbergh an international celebrity and symbol of American innovation while accelerating public interest in aviation and demonstrating aviation's potential for connecting continents.",
+                    category: "culture"
+                },
+                {
+                    year: 1927,
+                    title: "The Jazz Singer Released",
+                    description: "The first feature-length motion picture with synchronized dialogue sequences marked the beginning of the end for silent films.",
+                    significance: "This technological breakthrough revolutionized the film industry, ushering in the era of 'talkies' and transforming movies into a more immersive entertainment medium with enormous cultural influence.",
+                    category: "culture"
+                },
+                {
+                    year: 1929,
+                    title: "Stock Market Crash",
+                    description: "The stock market collapsed in October, losing over 40% of its value in a matter of weeks, triggering financial panic and economic contraction.",
+                    significance: "This catastrophic market failure marked the beginning of the Great Depression, exposing fundamental weaknesses in the American economic system and ending the prosperity of the Roaring Twenties.",
+                    category: "depression"
+                },
+                {
+                    year: 1932,
+                    title: "Bonus Army March",
+                    description: "Thousands of World War I veterans and their families marched on Washington demanding early payment of promised service bonuses, leading to violent confrontation with federal troops.",
+                    significance: "This confrontation illustrated the devastating human impact of the Depression and the Hoover administration's failure to respond effectively to economic distress, damaging Hoover's reputation before the 1932 election.",
+                    category: "depression"
+                },
+                {
+                    year: 1932,
+                    title: "Roosevelt Elected President",
+                    description: "Franklin D. Roosevelt won a landslide victory over Herbert Hoover, promising a 'New Deal' for the American people amid the deepening Great Depression.",
+                    significance: "This election marked a fundamental realignment in American politics, beginning the Roosevelt era that would transform the federal government's role in American life and the Democratic Party's coalition.",
+                    category: "depression"
+                },
+                {
+                    year: 1933,
+                    title: "Hundred Days and First New Deal",
+                    description: "Roosevelt's administration launched an unprecedented flurry of legislation addressing banking, agriculture, industry, and unemployment relief in the first months of his presidency.",
+                    significance: "This period of extraordinary legislative productivity saved the banking system, provided immediate relief, and established new federal programs that profoundly expanded government's role in American economic life.",
+                    category: "newdeal"
+                },
+                {
+                    year: 1933,
+                    title: "Prohibition Repeal",
+                    description: "The Twenty-First Amendment repealed the Eighteenth Amendment, ending national Prohibition and returning alcohol regulation to state authority.",
+                    significance: "This reversal of a major Progressive reform reflected changing social attitudes and a pragmatic recognition of Prohibition's failures, returning alcohol taxation as an important revenue source during the Depression.",
+                    category: "newdeal"
+                },
+                {
+                    year: 1935,
+                    title: "Social Security Act",
+                    description: "This cornerstone of the Second New Deal established a federal system of old-age pensions, unemployment insurance, and welfare benefits for vulnerable populations.",
+                    significance: "This landmark legislation created America's first comprehensive social safety net, fundamentally altering government's relationship with citizens by ensuring basic economic security in old age and adversity.",
+                    category: "newdeal"
+                },
+                {
+                    year: 1935,
+                    title: "National Labor Relations Act (Wagner Act)",
+                    description: "This legislation guaranteed workers' rights to organize unions, engage in collective bargaining, and strike, while creating the National Labor Relations Board to enforce these protections.",
+                    significance: "This transformative law legitimized unions and established legal protections for labor organizing, leading to dramatic growth in union membership and working-class power in the following decade.",
+                    category: "newdeal"
+                },
+                {
+                    year: 1936,
+                    title: "Roosevelt Reelected in Landslide",
+                    description: "FDR won reelection with 60.8% of the popular vote and carried 46 of 48 states, decisively defeating Republican opponent Alf Landon.",
+                    significance: "This overwhelming victory endorsed the New Deal and consolidated the New Deal coalition of urban workers, farmers, immigrants, and African Americans that would dominate American politics for decades.",
+                    category: "newdeal"
+                },
+                {
+                    year: 1937,
+                    title: "Court-Packing Plan and 'Roosevelt Recession'",
+                    description: "Roosevelt's controversial attempt to expand the Supreme Court failed, while the economy slipped back into recession after spending cuts.",
+                    significance: "These setbacks demonstrated the limits of presidential power and New Deal liberalism, emboldening conservative opposition and temporarily halting the momentum of New Deal reform.",
+                    category: "depression"
+                },
+                {
+                    year: 1939,
+                    title: "World War II Begins in Europe",
+                    description: "Germany invaded Poland on September 1, triggering declarations of war by Britain and France and beginning the Second World War in Europe.",
+                    significance: "While America remained officially neutral, Roosevelt began preparing for possible U.S. involvement through rearmament programs that would ultimately end the Depression through wartime production.",
+                    category: "wwii"
+                },
+                {
+                    year: 1940,
+                    title: "Roosevelt Elected to Third Term",
+                    description: "Breaking the traditional two-term precedent, Roosevelt won an unprecedented third term as president as war raged in Europe and Asia.",
+                    significance: "This election reflected public trust in Roosevelt's leadership during international crisis and would lead to the Twenty-Second Amendment limiting presidents to two terms after Roosevelt's death.",
+                    category: "wwii"
+                },
+                {
+                    year: 1941,
+                    title: "Lend-Lease Act",
+                    description: "Congress authorized the president to transfer war supplies to any country deemed vital to the defense of the United States, primarily aiding Britain against Nazi Germany.",
+                    significance: "This policy established America as the 'Arsenal of Democracy,' effectively ending neutrality and committing the nation's industrial might to the Allied cause before formal entry into the war.",
+                    category: "wwii"
+                },
+                {
+                    year: 1941,
+                    title: "Pearl Harbor Attack",
+                    description: "Japanese aircraft attacked the U.S. naval base at Pearl Harbor, Hawaii, killing 2,403 Americans and damaging or destroying numerous ships and aircraft.",
+                    significance: "This 'date which will live in infamy' ended American isolation, unified the country, and triggered U.S. entry into World War II, fundamentally changing America's role in world affairs.",
+                    category: "wwii"
+                },
+                {
+                    year: 1942,
+                    title: "Japanese American Internment",
+                    description: "Executive Order 9066 authorized the forced relocation and incarceration of approximately 120,000 Japanese Americans, most of them U.S. citizens, in concentration camps.",
+                    significance: "This mass violation of civil liberties based solely on ethnicity represented one of the most serious abuses of government power in American history, later acknowledged as a grave injustice.",
+                    category: "wwii"
+                },
+                {
+                    year: 1942,
+                    title: "Women Enter Wartime Workforce",
+                    description: "Millions of American women entered the industrial workforce to replace men serving in the military, taking jobs in defense industries previously reserved for men.",
+                    significance: "Symbolized by the iconic 'Rosie the Riveter,' this mass entry of women into manufacturing demonstrated women's capabilities and permanently altered gender roles, though many women were displaced after the war.",
+                    category: "culture"
+                },
+                {
+                    year: 1944,
+                    title: "D-Day Invasion",
+                    description: "Allied forces launched the largest amphibious invasion in history on the beaches of Normandy, France, beginning the liberation of Western Europe from Nazi control.",
+                    significance: "This massive operation demonstrated America's military might and logistical capability while ensuring that Western Europe would not fall under Soviet domination after Germany's defeat.",
+                    category: "wwii"
+                },
+                {
+                    year: 1944,
+                    title: "GI Bill of Rights",
+                    description: "The Servicemen's Readjustment Act provided returning veterans with funding for education, low-cost mortgages, business loans, and unemployment benefits.",
+                    significance: "This landmark legislation helped millions of veterans join the middle class, drove the postwar economic boom, expanded higher education, and created the suburban landscape of postwar America.",
+                    category: "culture"
+                },
+                {
+                    year: 1945,
+                    title: "Yalta Conference",
+                    description: "Roosevelt, Churchill, and Stalin met to plan for the postwar world, discussing Germany's occupation, Soviet entry into the war against Japan, and the United Nations.",
+                    significance: "This meeting of the 'Big Three' laid the groundwork for the postwar international order but also revealed growing tensions between the Soviet Union and Western allies that would lead to the Cold War.",
+                    category: "wwii"
+                },
+                {
+                    year: 1945,
+                    title: "Roosevelt Dies, Truman Becomes President",
+                    description: "Franklin Roosevelt died of a cerebral hemorrhage in April, just months into his fourth term, elevating Vice President Harry S. Truman to the presidency.",
+                    significance: "This unexpected transition occurred at a crucial moment in world history as World War II neared its conclusion, placing the relatively inexperienced Truman in charge of critical wartime decisions.",
+                    category: "wwii"
+                },
+                {
+                    year: 1945,
+                    title: "Atomic Bombs Dropped on Japan",
+                    description: "The United States dropped atomic bombs on the Japanese cities of Hiroshima and Nagasaki, causing unprecedented destruction and leading to Japan's surrender.",
+                    significance: "These first uses of nuclear weapons in warfare not only ended World War II but inaugurated the atomic age, fundamentally changing the nature of global conflict and establishing America as the world's preeminent military power.",
+                    category: "wwii"
+                },
+                {
+                    year: 1945,
+                    title: "United Nations Founded",
+                    description: "Representatives of 50 nations met in San Francisco to create the United Nations, an international organization dedicated to maintaining peace and security.",
+                    significance: "This organization represented America's commitment to collective security and international cooperation in the postwar world, avoiding the isolationism that followed World War I.",
+                    category: "wwii"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => {
+                if (a.year === b.year) {
+                    return events.indexOf(a) - events.indexOf(b); // Maintain original order for same year
+                }
+                return a.year - b.year;
+            });
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            function initTimeline() {
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                updateDisplay();
+            }
+            
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            });
+            
+            leftArrow.addEventListener('click', () => {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            });
+            
+            rightArrow.addEventListener('click', () => {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            });
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            initTimeline();
+        });
+    </script>
+</body>
+</html>

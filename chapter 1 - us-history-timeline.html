@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founding a Nation (1492-1776)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .theme {
+            background-color: #eaf2f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .time-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .era-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .era-btn {
+            padding: 10px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .era-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .era-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .year-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timeline-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-bar {
+            position: relative;
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .timeline-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .arrow-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .arrow-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .events-container {
+            min-height: 400px;
+        }
+        
+        .event-card {
+            display: none;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .event-date {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .event-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-text p {
+            margin-bottom: 10px;
+        }
+        
+        .significance {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .significance h4 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        .exploration { border-left-color: #3498db; }
+        .exploration .event-date { background-color: #3498db; }
+        .exploration .legend-color { background-color: #3498db; }
+        
+        .colonization { border-left-color: #2ecc71; }
+        .colonization .event-date { background-color: #2ecc71; }
+        .colonization .legend-color { background-color: #2ecc71; }
+        
+        .conflict { border-left-color: #e74c3c; }
+        .conflict .event-date { background-color: #e74c3c; }
+        .conflict .legend-color { background-color: #e74c3c; }
+        
+        .social { border-left-color: #f39c12; }
+        .social .event-date { background-color: #f39c12; }
+        .social .legend-color { background-color: #f39c12; }
+        
+        .revolution { border-left-color: #9b59b6; }
+        .revolution .event-date { background-color: #9b59b6; }
+        .revolution .legend-color { background-color: #9b59b6; }
+        
+        @media (max-width: 768px) {
+            .era-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .era-btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Founding a Nation (1492–1776)</h1>
+            <p class="subtitle">From Columbus to the American Revolution</p>
+        </header>
+        
+        <div class="theme">
+            <strong>Theme:</strong> Exploration, Colonization, and Revolution - This timeline covers Native American societies, European colonization, the 13 colonies, and the growing tension that led to independence.
+        </div>
+        
+        <div class="time-controls">
+            <div class="era-buttons">
+                <button class="era-btn active" data-era="all">All Events</button>
+                <button class="era-btn" data-era="exploration">Exploration</button>
+                <button class="era-btn" data-era="colonization">Colonization</button>
+                <button class="era-btn" data-era="conflict">Conflicts</button>
+                <button class="era-btn" data-era="social">Social</button>
+                <button class="era-btn" data-era="revolution">Revolution</button>
+            </div>
+            <div class="year-display">1492</div>
+        </div>
+        
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress"></div>
+            </div>
+            <div class="timeline-navigation">
+                <button class="arrow-btn" id="leftArrow" disabled>&larr;</button>
+                <button class="arrow-btn" id="rightArrow">&rarr;</button>
+            </div>
+        </div>
+        
+        <div class="events-container" id="eventsContainer">
+            <!-- Events will be added here dynamically -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>Previous Event</button>
+            <button class="nav-btn" id="nextBtn">Next Event</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Exploration</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Colonization</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Conflicts</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Social</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Revolution</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline data
+            const events = [
+                {
+                    year: 1492,
+                    title: "Columbus Reaches the Americas",
+                    description: "Christopher Columbus, sailing for Spain, reached the Caribbean islands, marking the beginning of sustained European contact with the Americas.",
+                    significance: "This voyage initiated European colonization and profound changes for indigenous peoples across the Americas. It connected previously separate hemispheres, beginning the Columbian Exchange of plants, animals, diseases, and cultures.",
+                    category: "exploration"
+                },
+                {
+                    year: 1497,
+                    title: "John Cabot Explores North America",
+                    description: "Sailing for England, John Cabot (Giovanni Caboto) explored the North American coast, likely landing in Newfoundland and establishing England's claim to North America.",
+                    significance: "Cabot's voyage gave England its first claim to North American territory and laid the groundwork for future English colonization efforts.",
+                    category: "exploration"
+                },
+                {
+                    year: 1513,
+                    title: "Ponce de León Explores Florida",
+                    description: "Spanish explorer Juan Ponce de León became the first known European to reach Florida, naming it for Spain during his search for the legendary Fountain of Youth.",
+                    significance: "This expedition expanded Spanish territorial claims in North America and began European exploration of what would become the southeastern United States.",
+                    category: "exploration"
+                },
+                {
+                    year: 1565,
+                    title: "St. Augustine Founded",
+                    description: "Spanish admiral Pedro Menéndez de Avilés established St. Augustine in Florida, which became the first permanent European settlement in what would become the United States.",
+                    significance: "As the oldest continuously inhabited European-established city in the U.S., St. Augustine represented Spain's determination to maintain control of Florida against French and later English encroachment.",
+                    category: "colonization"
+                },
+                {
+                    year: 1607,
+                    title: "Jamestown Colony Established",
+                    description: "The Virginia Company founded Jamestown, the first permanent English settlement in North America, on the banks of the James River in Virginia.",
+                    significance: "Despite early struggles with disease, starvation, and conflict with Native Americans, Jamestown's survival established England's foothold in North America and introduced tobacco as a profitable cash crop.",
+                    category: "colonization"
+                },
+                {
+                    year: 1619,
+                    title: "First Africans Arrive in Virginia",
+                    description: "A Dutch ship brought the first recorded Africans to English North America at Point Comfort, Virginia, where they were sold in exchange for supplies.",
+                    significance: "This event marked the beginning of slavery in the English colonies, an institution that would profoundly shape American society, economy, and politics for centuries to come.",
+                    category: "social"
+                },
+                {
+                    year: 1620,
+                    title: "Mayflower Compact & Plymouth Colony",
+                    description: "The Pilgrims, seeking religious freedom, landed at Plymouth Rock and established Plymouth Colony after signing the Mayflower Compact, an early example of self-government.",
+                    significance: "The Mayflower Compact established the principle that colonists could govern themselves through agreed-upon rules, laying groundwork for later democratic institutions.",
+                    category: "colonization"
+                },
+                {
+                    year: 1636,
+                    title: "Harvard College Founded",
+                    description: "The Great and General Court of Massachusetts Bay Colony established Harvard College, the first institution of higher learning in the English colonies.",
+                    significance: "Harvard's founding reflected the Puritan commitment to education and learning, particularly for training ministers, and began the tradition of higher education in America.",
+                    category: "social"
+                },
+                {
+                    year: 1642,
+                    title: "New Amsterdam Founded",
+                    description: "The Dutch West India Company established New Amsterdam (later New York) as the capital of New Netherland, creating a strategic port at the mouth of the Hudson River.",
+                    significance: "This multicultural trading center would later become one of America's most important cities after being taken by the English and renamed New York in 1664.",
+                    category: "colonization"
+                },
+                {
+                    year: 1675,
+                    title: "King Philip's War",
+                    description: "Native American leader Metacom (known to the English as King Philip) led a coalition of tribes against English colonists in New England in one of the deadliest conflicts of the colonial era.",
+                    significance: "This devastating war resulted in substantial casualties on both sides and effectively ended Native American independence in southern New England, accelerating English colonial expansion.",
+                    category: "conflict"
+                },
+                {
+                    year: 1692,
+                    title: "Salem Witch Trials",
+                    description: "A series of hearings and prosecutions of people accused of witchcraft occurred in colonial Massachusetts, resulting in the execution of 20 people, mostly women.",
+                    significance: "The trials revealed the dangers of religious extremism, mass hysteria, and flawed judicial proceedings, becoming a powerful cautionary tale in American history.",
+                    category: "social"
+                },
+                {
+                    year: 1733,
+                    title: "Georgia Founded",
+                    description: "James Oglethorpe founded Georgia, the 13th and final English colony in North America, originally as a haven for debtors and the poor.",
+                    significance: "Georgia served as a buffer between Spanish Florida and the valuable Carolinas, completing the roster of colonies that would later form the United States.",
+                    category: "colonization"
+                },
+                {
+                    year: 1754,
+                    title: "French and Indian War Begins",
+                    description: "The French and Indian War (part of the Seven Years' War) began, pitting British colonists and their native allies against the French and their native allies for control of North America.",
+                    significance: "This conflict resulted in British dominance in North America, but left Britain with enormous war debts that would lead to taxation policies triggering the American Revolution.",
+                    category: "conflict"
+                },
+                {
+                    year: 1763,
+                    title: "Treaty of Paris & Proclamation Line",
+                    description: "The Treaty of Paris ended the French and Indian War, with France ceding most of its North American territories to Britain. The Proclamation of 1763 prohibited colonial settlement west of the Appalachian Mountains.",
+                    significance: "The proclamation, designed to prevent conflicts with Native Americans, angered colonists who sought western lands and became an early source of tension with Britain.",
+                    category: "colonization"
+                },
+                {
+                    year: 1765,
+                    title: "Stamp Act",
+                    description: "The British Parliament passed the Stamp Act, imposing a direct tax on printed materials in the colonies to help pay for troops stationed in North America.",
+                    significance: "The Stamp Act sparked widespread protests and the rallying cry 'no taxation without representation,' uniting colonists in opposition to British policies for the first time.",
+                    category: "revolution"
+                },
+                {
+                    year: 1770,
+                    title: "Boston Massacre",
+                    description: "British soldiers fired into a crowd of colonists in Boston, killing five people and increasing anti-British sentiment throughout the colonies.",
+                    significance: "Though relatively small in scale, this incident was powerfully used by colonial leaders like Samuel Adams to portray British rule as tyrannical and brutal.",
+                    category: "revolution"
+                },
+                {
+                    year: 1773,
+                    title: "Boston Tea Party",
+                    description: "Colonists disguised as Mohawk Indians dumped 342 chests of British tea into Boston Harbor to protest British tax policies, particularly the Tea Act.",
+                    significance: "This act of defiance against British authority provoked a harsh response from Parliament, accelerating the colonies' movement toward revolution.",
+                    category: "revolution"
+                },
+                {
+                    year: 1774,
+                    title: "First Continental Congress",
+                    description: "Delegates from 12 colonies met in Philadelphia to coordinate a response to British policies, particularly the Intolerable Acts imposed after the Boston Tea Party.",
+                    significance: "This meeting marked the first time the colonies acted together politically, establishing boycotts against British goods and calling for colonial rights.",
+                    category: "revolution"
+                },
+                {
+                    year: 1775,
+                    title: "Battles of Lexington and Concord",
+                    description: "British troops and colonial militiamen exchanged fire at Lexington and Concord, Massachusetts, marking the beginning of armed conflict in the American Revolution.",
+                    significance: "These 'shots heard round the world' began the military phase of the American Revolution and transformed a political dispute into an armed struggle for independence.",
+                    category: "revolution"
+                },
+                {
+                    year: 1776,
+                    title: "Declaration of Independence",
+                    description: "The Second Continental Congress adopted the Declaration of Independence, formally announcing the colonies' separation from Great Britain and establishing the United States of America.",
+                    significance: "This revolutionary document articulated American ideals of liberty, equality, and self-government that would guide the nation's development and inspire independence movements worldwide.",
+                    category: "revolution"
+                }
+            ];
+            
+            // Sort events by year
+            events.sort((a, b) => a.year - b.year);
+            
+            const yearDisplay = document.querySelector('.year-display');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const progress = document.querySelector('.timeline-progress');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const leftArrow = document.getElementById('leftArrow');
+            const rightArrow = document.getElementById('rightArrow');
+            const eraButtons = document.querySelectorAll('.era-btn');
+            
+            let currentEventIndex = 0;
+            let filteredEvents = [...events];
+            
+            // Initialize timeline
+            function initTimeline() {
+                // Create event cards
+                events.forEach((event, index) => {
+                    const eventCard = createEventCard(event, index);
+                    eventsContainer.appendChild(eventCard);
+                });
+                
+                updateDisplay();
+            }
+            
+            // Create event card
+            function createEventCard(event, index) {
+                const card = document.createElement('div');
+                card.className = `event-card ${event.category}`;
+                card.dataset.year = event.year;
+                card.dataset.index = index;
+                card.dataset.category = event.category;
+                
+                card.innerHTML = `
+                    <div class="event-date">${event.year}</div>
+                    <h3>${event.title}</h3>
+                    <div class="event-content">
+                        <div class="event-text">
+                            <p>${event.description}</p>
+                            <div class="significance">
+                                <h4>Historical Significance:</h4>
+                                <p>${event.significance}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // Update display based on current selection
+            function updateDisplay() {
+                const currentEvent = filteredEvents[currentEventIndex];
+                yearDisplay.textContent = currentEvent.year;
+                
+                // Calculate and update progress bar
+                const startYear = events[0].year;
+                const endYear = events[events.length - 1].year;
+                const totalYears = endYear - startYear;
+                const progress_value = ((currentEvent.year - startYear) / totalYears) * 100;
+                progress.style.width = `${progress_value}%`;
+                
+                // Hide all events and show current one
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                const currentEventCard = document.querySelector(`.event-card[data-index="${events.indexOf(currentEvent)}"]`);
+                if (currentEventCard) {
+                    currentEventCard.classList.add('active');
+                }
+                
+                // Update navigation buttons
+                prevBtn.disabled = currentEventIndex <= 0;
+                nextBtn.disabled = currentEventIndex >= filteredEvents.length - 1;
+                leftArrow.disabled = currentEventIndex <= 0;
+                rightArrow.disabled = currentEventIndex >= filteredEvents.length - 1;
+            }
+            
+            // Filter events by category
+            function filterEvents(category) {
+                if (category === 'all') {
+                    filteredEvents = [...events];
+                } else {
+                    filteredEvents = events.filter(event => event.category === category);
+                }
+                
+                if (filteredEvents.length > 0) {
+                    currentEventIndex = 0;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to previous event
+            function goToPrevEvent() {
+                if (currentEventIndex > 0) {
+                    currentEventIndex--;
+                    updateDisplay();
+                }
+            }
+            
+            // Navigate to next event
+            function goToNextEvent() {
+                if (currentEventIndex < filteredEvents.length - 1) {
+                    currentEventIndex++;
+                    updateDisplay();
+                }
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', goToPrevEvent);
+            nextBtn.addEventListener('click', goToNextEvent);
+            leftArrow.addEventListener('click', goToPrevEvent);
+            rightArrow.addEventListener('click', goToNextEvent);
+            
+            eraButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    eraButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    filterEvents(this.dataset.era);
+                });
+            });
+            
+            // Initialize the timeline
+            initTimeline();
+        });
+    </script>
+</body>
+</html>
