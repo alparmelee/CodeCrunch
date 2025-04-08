@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Constitution Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 2: The U.S. Constitution</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="historical-background">Historical Background</button>
+        <button class="filter-button" data-category="constitutional-principles">Constitutional Principles</button>
+        <button class="filter-button" data-category="structure">Structure of the Constitution</button>
+        <button class="filter-button" data-category="government-branches">Branches of Government</button>
+        <button class="filter-button" data-category="key-figures">Key Historical Figures</button>
+        <button class="filter-button" data-category="ratification">Ratification Process</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="historical-background">
+            <h2>Historical Background</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Articles of Confederation</h3>
+                <p>America's first national constitution that was in effect from 1781 - 1787. It created a very weak central (or national) government that was incapable of effectively dealing with the problems facing the country.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Constitutional Convention</h3>
+                <p>A meeting that took place between May and September of 1787 in Philadelphia with the original goal of fixing the Articles of Confederation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👤</span> Delegate</h3>
+                <p>An individual sent to represent a state at the Constitutional Convention. Twelve of the 13 states sent representatives to the Convention. In total, 55 were sent to Constitutional Convention in 1787.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Virginia Plan</h3>
+                <p>One of the two main plans proposed at the Constitutional Convention. The plan was written by James Madison and proposed a two-house (bicameral) legislature in which representation was based on population. It was favored by large states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> New Jersey Plan</h3>
+                <p>One of the two main plans proposed at the Constitutional Convention. The plan proposed a single house (unicameral) legislature in which representation was equal. It was favored by small states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Great Compromise</h3>
+                <p>An agreement struck between the large and small states over the issue of representation. Combining aspects of the Virginia and New Jersey plans, it proposed a two-house legislature. In the lower house, representation would be based on population; in the upper house, representation would be equal.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Three Fifths Compromise</h3>
+                <p>An agreement struck between the free and slave states over whether or not slaves should count as part of the population for the purposes of representation and taxation. According to the compromise, every 5 slaves would count as equal to 3 free persons.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="constitutional-principles">
+            <h2>Constitutional Principles</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Separation of Powers</h3>
+                <p>The principle that the power of government (the ability to write, interpret, and enforce laws) should be divided between different branches of government to ensure that no one person or group becomes too powerful.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Checks and Balances</h3>
+                <p>The principle that the branches of government (Legislative, Executive, and Judicial) should have some power over each other.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Federalism</h3>
+                <p>A key principle of the Constitution that divides power between the national (federal) government and the state governments. As an American citizen, you must obey federal law and the laws of the state in which you live.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛑</span> Limited Government</h3>
+                <p>A principle of the U.S. Constitution that says the government can only do what the Constitution gives it the power to do.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Popular Sovereignty</h3>
+                <p>The principle that the people are the primary source of power in the United States. This is best seen in the Preamble of the Constitution, which states: "We the people of the United States...do ordain and establish this Constitution for the United States of America."</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="structure">
+            <h2>Structure of the Constitution</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> U.S. Constitution</h3>
+                <p>The document created during the Constitutional Convention in 1787. It contains the framework, or fundamental laws, governing the United States of America. It is the supreme law of the land in that no other law may contradict it.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Preamble</h3>
+                <p>The opening paragraph of the Constitution. It outlines the purpose/goals of the U.S. Constitution.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📄</span> Articles</h3>
+                <p>The main body of the Constitution. There are seven in total and they outline the framework (basic rules and structure) for the national government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✏️</span> Amendments</h3>
+                <p>Changes to the U.S. Constitution. There have been 27 made to the Constitution since its creation in 1787.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Bill of Rights</h3>
+                <p>The first ten amendments to the Constitution; guarantees certain individual rights, like freedom of speech and religion.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="government-branches">
+            <h2>Branches of Government</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Legislative Branch</h3>
+                <p>The branch of government responsible for writing laws. Known as Congress, it is divided into two houses: the House of Representatives and the Senate.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👨‍⚖️</span> Judicial Branch</h3>
+                <p>The branch of government responsible for interpreting laws. It is made up of the federal court system, with the Supreme Court as the highest court in the nation. It has the power to declare laws unconstitutional.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Executive Branch</h3>
+                <p>The branch of government responsible for enforcing laws. It is headed by the President of the United States and made up of several departments (the Department of Defense, Department of Justice) and agencies (the FBI, the CIA) and the U.S. Military.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> House of Representatives</h3>
+                <p>Considered the lower house of Congress (the legislative branch of the national government). Together with the Senate, it introduces national laws. With 435 members, representation is based on population (the more people a state has the more representatives it gets).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Senate</h3>
+                <p>Considered the upper house of Congress (the legislative branch of the national government). Together with the House of Representatives, it introduces national laws. Each state has two senators; therefore, states are equal in the Senate regardless of population.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="key-figures">
+            <h2>Key Historical Figures</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> George Washington</h3>
+                <p>The commander-in-chief of the Continental Army during the American Revolution; the president of the Constitutional Convention; and the first president of the United States of America under the U.S. Constitution. Often referred to as the "Father of His Country."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✍️</span> Thomas Jefferson</h3>
+                <p>The primary author of the Declaration of Independence and the third president of the United States.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> James Madison</h3>
+                <p>Often considered the "Father of the Constitution," he was the delegate most responsible for the language and ideas in the U.S. Constitution. He became the fourth president of the United States.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Alexander Hamilton</h3>
+                <p>A leading delegate at the Constitutional Convention and leading member of the Federalists during the debate over ratification.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="ratification">
+            <h2>Ratification Process</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">✅</span> Ratification</h3>
+                <p>The official approval process of the Constitution. Before going into effect, the Constitution had to be ratified by 9 of the 13 states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👍</span> Federalists</h3>
+                <p>The group during the debate over ratification that supported the U.S. Constitution. Typically, they were supporters of a strong central government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👎</span> Anti-Federalists</h3>
+                <p>The group during the debate over ratification that did not support the U.S. Constitution. They thought the national government it created was too powerful.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

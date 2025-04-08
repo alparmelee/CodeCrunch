@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Policy and Government in Action Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 7: Public Policy and Government in Action</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="policy-process">Policy Process</button>
+        <button class="filter-button" data-category="economic-policy">Economic Policy</button>
+        <button class="filter-button" data-category="social-policy">Social Policy</button>
+        <button class="filter-button" data-category="foreign-policy">Foreign Policy</button>
+        <button class="filter-button" data-category="environmental-policy">Environmental Policy</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="policy-process">
+            <h2>Policy Process</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Public Policy</h3>
+                <p>A course of action or inaction chosen by public authorities to address a problem. Public policies can take various forms, including laws, regulations, executive orders, and court decisions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚙️</span> Policy Cycle</h3>
+                <p>A conceptual model of how policies are developed, implemented, and evaluated. Typically includes stages such as agenda setting, policy formulation, adoption, implementation, evaluation, and termination or renewal.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Agenda Setting</h3>
+                <p>The process by which problems come to the attention of government officials and are considered for possible action. Issues can reach the agenda through media attention, interest group activity, elected officials, or crisis events.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Policy Formulation</h3>
+                <p>The development of proposed solutions to policy problems. This stage involves research, analysis, and debate about potential options for addressing the identified issue.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✅</span> Policy Adoption</h3>
+                <p>The stage where a specific policy option is chosen and formalized through legislation, executive action, or other means. This often involves negotiation and compromise among different stakeholders.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏗️</span> Policy Implementation</h3>
+                <p>The process of putting policies into practice. This stage involves the actions of bureaucratic agencies, which often have discretion in how they carry out policies established by elected officials.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Policy Evaluation</h3>
+                <p>Assessment of whether a policy has achieved its intended goals. May lead to policy continuation, modification, or termination. Can be conducted by government agencies, independent researchers, or oversight bodies.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧠</span> Think Tanks</h3>
+                <p>Research organizations that conduct policy analysis and advocate for particular approaches to public problems. Examples include the Brookings Institution, Heritage Foundation, and Center for American Progress.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📚</span> Policy Analysis</h3>
+                <p>Systematic evaluation of the technical and political dimensions of public policy. Involves defining problems, identifying alternatives, predicting consequences, and recommending optimal solutions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧩</span> Incrementalism</h3>
+                <p>A policy-making approach characterized by small, gradual changes rather than comprehensive reforms. Often described as "muddling through," it reflects the practical and political constraints on policy-making.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="economic-policy">
+            <h2>Economic Policy</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💵</span> Fiscal Policy</h3>
+                <p>The use of government spending and taxation to influence the economy. Used to promote economic growth, combat inflation, or address other economic objectives. Primary responsibility of Congress and the President.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏦</span> Monetary Policy</h3>
+                <p>The regulation of the money supply and interest rates to achieve economic goals. Controlled by the Federal Reserve, which can expand or contract the money supply through various tools like setting interest rates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📈</span> Federal Budget</h3>
+                <p>The annual financial plan for the federal government, detailing expected revenues and planned expenditures. The President proposes a budget, but Congress has the ultimate authority to approve spending.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Budget Process</h3>
+                <p>The annual cycle for developing and approving the federal budget. Begins with the President's budget proposal, followed by Congressional budget resolution, appropriations bills, and ongoing oversight.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📉</span> Budget Deficit</h3>
+                <p>Occurs when government spending exceeds revenue in a fiscal year. Must be financed by borrowing, which adds to the national debt. Deficits may be used to stimulate economic growth during recessions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> National Debt</h3>
+                <p>The total amount the federal government owes to creditors, accumulated through annual deficits. Consists of bonds and securities held by individuals, corporations, foreign governments, and government trust funds.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💸</span> Progressive Taxation</h3>
+                <p>A tax system where the tax rate increases as income increases. The federal income tax is progressive, with higher earners paying a larger percentage of their income in taxes.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛒</span> Regressive Taxation</h3>
+                <p>A tax system where the tax rate decreases as income increases. Sales taxes are often regressive because lower-income households spend a larger portion of their income on taxable goods.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💼</span> Corporate Tax</h3>
+                <p>Tax levied on the profits of corporations. The Tax Cuts and Jobs Act of 2017 reduced the corporate tax rate from 35% to 21%, representing a significant shift in U.S. tax policy.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔨</span> Monetary Tools</h3>
+                <p>Mechanisms used by the Federal Reserve to control the money supply, including open market operations, the discount rate, and reserve requirements. Used to manage inflation, employment, and economic growth.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="social-policy">
+            <h2>Social Policy</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏥</span> Healthcare Policy</h3>
+                <p>Government decisions regarding the provision, regulation, and financing of healthcare services. Major programs include Medicare, Medicaid, and the Affordable Care Act (Obamacare).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👵</span> Social Security</h3>
+                <p>Federal program providing benefits to retired workers, disabled persons, and survivors of deceased workers. Funded through payroll taxes and operates as a pay-as-you-go system rather than a fully funded pension.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏫</span> Education Policy</h3>
+                <p>Government decisions regarding educational systems, standards, funding, and access. In the U.S., education policy is primarily set at state and local levels, with some federal oversight and funding.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧓</span> Medicare</h3>
+                <p>Federal health insurance program primarily for those aged 65 and older. Consists of Part A (hospital insurance), Part B (medical insurance), Part C (Medicare Advantage), and Part D (prescription drug coverage).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤲</span> Medicaid</h3>
+                <p>Joint federal-state program providing health coverage for low-income individuals. States administer the program under federal guidelines but have significant flexibility in eligibility and benefits.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧪</span> Affordable Care Act</h3>
+                <p>Comprehensive healthcare reform law passed in 2010, aimed at expanding coverage, improving quality, and reducing costs. Key provisions include insurance market reforms, individual mandate (repealed in 2019), and Medicaid expansion.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍎</span> No Child Left Behind</h3>
+                <p>Education law enacted in 2002 that increased federal influence over K-12 education through testing requirements, accountability provisions, and school improvement measures. Later replaced by the Every Student Succeeds Act.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📚</span> Every Student Succeeds Act</h3>
+                <p>2015 law that replaced No Child Left Behind, maintaining standardized testing requirements but returning more control over education policy to states and local districts.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Housing Policy</h3>
+                <p>Government efforts to ensure access to safe, affordable housing. Includes programs like Section 8 housing vouchers, public housing, and the Department of Housing and Urban Development (HUD).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💊</span> Drug Policy</h3>
+                <p>Government approaches to controlling drug production, distribution, and use. In recent years, some states have moved toward decriminalization or legalization of marijuana, creating tension with federal policy.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="foreign-policy">
+            <h2>Foreign Policy</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Foreign Policy</h3>
+                <p>The strategies and approaches governments use to guide their actions in the international arena. U.S. foreign policy aims to protect national security, promote economic interests, and advance democratic values.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🕊️</span> Diplomacy</h3>
+                <p>The practice of conducting negotiations and maintaining relations between nations. Conducted primarily by the State Department and diplomatic corps, led by the Secretary of State under direction from the President.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛡️</span> National Security</h3>
+                <p>The protection of a nation against threats to its existence, sovereignty, and interests. U.S. national security policy involves multiple agencies, including the Department of Defense, intelligence community, and State Department.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌐</span> Multilateralism</h3>
+                <p>An approach to foreign policy that emphasizes cooperation among multiple countries. Involves working through international organizations like the United Nations, NATO, and the World Trade Organization.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Unilateralism</h3>
+                <p>An approach to foreign policy where a country acts independently without coordination with other nations. Critics argue this undermines international cooperation; supporters emphasize flexibility and sovereignty.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Treaties</h3>
+                <p>Formal agreements between nations. Under the U.S. Constitution, treaties require approval by two-thirds of the Senate. Executive agreements, which don't require Senate approval, are increasingly used as alternatives.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Foreign Aid</h3>
+                <p>Economic and military assistance provided to other countries. Can take many forms, including direct grants, loans, technical assistance, and military equipment. Often used to advance foreign policy objectives.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Trade Policy</h3>
+                <p>Government policies regarding imports and exports. May include tariffs, quotas, subsidies, and trade agreements. In the U.S., trade policy involves both the President and Congress.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛢️</span> Sanctions</h3>
+                <p>Economic penalties imposed on countries, entities, or individuals to influence their behavior. Can include asset freezes, travel bans, trade restrictions, and limits on financial transactions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚁</span> Military Intervention</h3>
+                <p>The use of armed forces in another country. May range from limited operations to full-scale warfare. Under the Constitution, Congress has the power to declare war, but presidents have often deployed forces without formal declarations.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="environmental-policy">
+            <h2>Environmental Policy</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌱</span> Environmental Protection Agency</h3>
+                <p>Federal agency created in 1970 to protect human health and the environment through regulation and enforcement. Implements major environmental laws and develops regulations on issues like air and water pollution.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌧️</span> Clean Air Act</h3>
+                <p>Federal law that regulates air emissions to protect public health and the environment. Authorizes the EPA to establish National Ambient Air Quality Standards and regulate hazardous air pollutants.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Clean Water Act</h3>
+                <p>Federal law that regulates water pollution. Establishes a system of water quality standards, discharge limitations, and permitting requirements for point source pollutants.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">☢️</span> Superfund</h3>
+                <p>Program established by the Comprehensive Environmental Response, Compensation, and Liability Act to clean up sites contaminated with hazardous substances. Funded by taxes on chemical and petroleum industries.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌡️</span> Climate Policy</h3>
+                <p>Government actions to address climate change through mitigation (reducing greenhouse gas emissions) and adaptation (preparing for climate impacts). Has been politically contentious in the U.S.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌍</span> Paris Agreement</h3>
+                <p>International treaty on climate change adopted in 2015. Sets goals for limiting global warming and requires countries to submit national plans for reducing emissions. The U.S. withdrew under President Trump but rejoined under President Biden.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦅</span> Endangered Species Act</h3>
+                <p>Federal law designed to protect imperiled species from extinction. Prohibits the "taking" of listed species and requires federal agencies to ensure their actions do not jeopardize listed species or their habitats.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌲</span> National Parks</h3>
+                <p>Protected areas managed by the National Park Service for conservation and public enjoyment. The system includes over 400 areas covering more than 85 million acres.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚡</span> Energy Policy</h3>
+                <p>Government decisions regarding energy production, distribution, and consumption. Involves considerations of security, environmental impact, and economic development. Has shifted over time with changing technologies and priorities.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">♻️</span> Regulatory Tools</h3>
+                <p>Instruments used to implement environmental policy, including command-and-control regulations, market-based mechanisms (like cap-and-trade), subsidies, and information disclosure requirements.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

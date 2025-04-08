@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branches of Government Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 3: Branches of Government</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="core-principles">Core Principles</button>
+        <button class="filter-button" data-category="legislative-branch">Legislative Branch</button>
+        <button class="filter-button" data-category="executive-branch">Executive Branch</button>
+        <button class="filter-button" data-category="judicial-branch">Judicial Branch</button>
+        <button class="filter-button" data-category="government-powers">Government Powers</button>
+        <button class="filter-button" data-category="constitutional-concepts">Constitutional Concepts</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="core-principles">
+            <h2>Core Principles</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Checks and Balances</h3>
+                <p>Idea that allows different branches of government to limit or check the power of other branches of government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Separation of Powers</h3>
+                <p>Consisting of 3 independent and coequal branches of government (Executive, Legislative, and Judicial).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛑</span> Limited Government</h3>
+                <p>The Constitution outlines our plan of government and restricts its powers. Everyone must obey the law.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Republicanism</h3>
+                <p>Belief that people exercise power by voting for representatives.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Federalism</h3>
+                <p>System of government in which power is divided and shared between National (Federal) and State governments.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Popular Sovereignty</h3>
+                <p>A government in which the people rule.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🕊️</span> Individual Rights</h3>
+                <p>Personal liberties or privileges.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="legislative-branch">
+            <h2>Legislative Branch</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Legislative Branch</h3>
+                <p>Article I of the Constitution; makes laws, has the power to declare war, override a veto, approves federal appointees, create a federal budget; bicameral, senate and house of representatives, 535 total members.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Congress</h3>
+                <p>Collective group of legislative Branch; has power to Collect taxes, Borrow Money, Regulate Trade, Raise an Army, Impeach the president, Propose amendments.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> House of Representatives</h3>
+                <p>House of congress that has representation based on population; must be 25 yrs old, resident for 7 yrs; currently 435 members (fixed).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👔</span> Senate</h3>
+                <p>House of congress that each state is guaranteed 2 representatives; must be 30 yrs old, resident for 9 yrs; Leader is Vice President.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Bicameral</h3>
+                <p>A legislature consisting of two parts, or houses.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📄</span> Bill</h3>
+                <p>A written proposal for a law.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="executive-branch">
+            <h2>Executive Branch</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👔</span> Executive Branch</h3>
+                <p>Article II of the Constitution; enforces laws, power to veto, appoint federal judges, lead armed forces, represents our nation; must be 35 yrs old, a U.S. citizen, and a resident of the U.S. for 14 years.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> President</h3>
+                <p>Head of the executive Branch. Must be at least 35 years old and a U.S. citizen.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Cabinet</h3>
+                <p>Advisors to the President.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❌</span> Veto</h3>
+                <p>A vote that blocks a decision.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Pardon</h3>
+                <p>A declaration of forgiveness and freedom from punishment.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="judicial-branch">
+            <h2>Judicial Branch</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Judicial Branch</h3>
+                <p>Article III of the Constitution; a system of courts that decide arguments about the meaning of laws, how they are applied, and whether they violate the Constitution.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👨‍⚖️</span> Supreme Court</h3>
+                <p>Main group within the judicial Branch. Consists of 9 justices.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❌</span> Unconstitutional</h3>
+                <p>A law that is not agreeable with the constitution and is no longer valid.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Jurisdiction</h3>
+                <p>An area of authority or control; the right to administer justice.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="government-powers">
+            <h2>Government Powers</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Expressed Powers</h3>
+                <p>Powers directly stated in the constitution.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💭</span> Implied Powers</h3>
+                <p>Powers not specifically mentioned in the constitution.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="constitutional-concepts">
+            <h2>Constitutional Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Bill of Rights</h3>
+                <p>First 10 amendments to the U.S. Constitution that explain the powers of the citizens. An example of Individual Rights.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

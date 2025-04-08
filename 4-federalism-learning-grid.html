@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federalism Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 4: Federalism</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="federalism-basics">Federalism Basics</button>
+        <button class="filter-button" data-category="types-of-federalism">Types of Federalism</button>
+        <button class="filter-button" data-category="federal-state-relations">Federal-State Relations</button>
+        <button class="filter-button" data-category="constitutional-provisions">Constitutional Provisions</button>
+        <button class="filter-button" data-category="landmark-cases">Landmark Cases</button>
+        <button class="filter-button" data-category="contemporary-issues">Contemporary Issues</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="federalism-basics">
+            <h2>Federalism Basics</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Federalism</h3>
+                <p>A system of government in which powers are divided between a national government and regional government. It allows for shared power, dual sovereignty and creates a compound republic.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✅</span> Advantages of Federalism</h3>
+                <p>It prevents abuse of power, reflects preferences of citizens, is more responsive to citizens, and allows for innovation - states can act as laboratories of democracy.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❌</span> Disadvantages of Federalism</h3>
+                <p>Inequities are the price of federalism. There are often coordination problems and confusion. Also a race to the bottom - in which states purposely do little to improve standing so they can receive aid.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔬</span> Laboratories of Democracy</h3>
+                <p>Term coined by Supreme Court Justice Louis Brandeis meaning voters in states could implement policies to see if they work at the state level, before they are implemented at the national levels. Examples include California limiting greenhouse gas emissions, states funding stem cell research, and expanding health care.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏙️</span> Local Governments</h3>
+                <p>Local governments are not included in the definition of the state. They are creatures of the state.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Supremacy Clause</h3>
+                <p>National laws and treaties are always superior to state laws whenever the two clash.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="types-of-federalism">
+            <h2>Types of Federalism</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🍰</span> Dual Federalism (Layer Cake)</h3>
+                <p>Prominent from 1787-1932, it's the idea that states and federal government have separate domains (different layers of a cake). It's a clear division of governing authority between the national and state governments.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🍡</span> Cooperative Federalism (Marble Cake)</h3>
+                <p>Prominent from 1933-1964, it's the idea that both levels of government should work together. The federal government should identify problems and provide funding to states to solve problems. Functions overlap across governments.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧠</span> Moral Federalism</h3>
+                <p>According to Rauch, moral federalism means leaving states free to go their separate ways when a national moral consensus is lacking.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="federal-state-relations">
+            <h2>Federal-State Relations</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🥕</span> Carrots and Sticks</h3>
+                <p>The government gets states to act as they wish through incentives. The carrots are grants in aid (categorical or block), but in order to receive grants they must pass mandates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚡</span> Preemptions</h3>
+                <p>The invalidation of state law that conflicts with federal law. (Example: sports gambling)</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚧</span> Cross-over Sanctions</h3>
+                <p>A technique of Congress to establish federal regulations. These sanctions permit the use of federal money in one program to influence state and local policy in another (example: drinking age or highway trust fund).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Partial Preemptions</h3>
+                <p>Federal government's assumption of some regulatory powers in a particular field, with the stipulation that a state law on the same subject as a federal law is valid if it does not conflict with the federal law in the same area (example: ACA).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛠️</span> State Responses to Federal Action</h3>
+                <p>States can reject federal dollars, take the federal government to court, stall or refuse to act, or lobby for change in the federal law.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👨‍⚖️</span> Arbiter of Federal-State Disputes</h3>
+                <p>The Supreme Court. They interpret Federal-State Activities.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="constitutional-provisions">
+            <h2>Constitutional Provisions</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> 10th Amendment</h3>
+                <p>Reserves to states all powers not expressly granted to the government branches.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛒</span> Commerce Clause</h3>
+                <p>Allows the federal government to regulate trade between states. Court findings have flipped-flopped significantly, but gravitated towards a weaker federal role.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Full Faith and Credit</h3>
+                <p>The constitutional requirement (in article 1, section 4) that each state recognize and uphold laws passed by any other state. Important exceptions include gay marriage and gun laws.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔑</span> Privileges and Immunities</h3>
+                <p>Prevents a state from treating citizens of other states in a discriminatory manner. An example is McDonald v Chicago - said right to keep and bear arms is incorporated by the 14th amendment is applied to the states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> State Powers in the Constitution</h3>
+                <p>States can amend the constitution, propose a constitutional convention, elect senators (at the beginning), elect electors and form interstate compacts.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Enumerated Federal Powers</h3>
+                <p>Government can only use the powers specifically listed in the Constitution. Important to federalism because they define federal authority.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Concurrent Powers</h3>
+                <p>Governmental authority shared by national and state governments, such as the power to tax residents. These include power to tax, borrow and spend.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="landmark-cases">
+            <h2>Landmark Cases</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> McCulloch v. Maryland (1819)</h3>
+                <p>It ruled Congress had implied powers granted to it by elastic clause - it granted Congress the authority to make all laws which shall be necessary and proper for carrying into execution the work of the federal government without state's attacking.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔫</span> McDonald v. Chicago</h3>
+                <p>Said right to keep and bear arms is incorporated by the 14th amendment and applied to the states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💧</span> Chattahoochee River Dispute</h3>
+                <p>An example of federalism that raises the issue of interstate boundaries - who has proper right to use what amount of the water.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="contemporary-issues">
+            <h2>Contemporary Issues</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💒</span> Gay Marriage</h3>
+                <p>Federal Defense of Marriage Act was an issue where federal government and state governments battled over powers. An exception to full faith and credit.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏥</span> Health Care</h3>
+                <p>Patient Protection and Affordable Care Act is an example of federal and state governments battling over powers. A case of partial preemption.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧳</span> Immigration</h3>
+                <p>AZ Immigration Laws are an example of federal and state governments battling over powers granted to the federal government over the state government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Pluralism</h3>
+                <p>A system of government in which multiple competing and responsive groups vie for power. How James Madison controlled factions according to the Federalist Papers.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Republic</h3>
+                <p>System of government that rests ultimate governing power in its people, who rule via representatives. According to Madison, a republic can better protect liberties than a democracy because the majority cannot easily overwhelm the minority.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

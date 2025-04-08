@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civil Liberties and Civil Rights Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 5: Civil Liberties and Civil Rights</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="first-amendment">First Amendment</button>
+        <button class="filter-button" data-category="key-amendments">Key Amendments</button>
+        <button class="filter-button" data-category="civil-rights">Civil Rights</button>
+        <button class="filter-button" data-category="supreme-court-cases">Supreme Court Cases</button>
+        <button class="filter-button" data-category="rights-concepts">Rights Concepts</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="first-amendment">
+            <h2>First Amendment Rights</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🗣️</span> Freedom of Speech</h3>
+                <p>The right to express opinions without government restraint. Protected by the First Amendment, though certain categories of speech (like obscenity, true threats, and incitement) receive limited or no protection.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⛪</span> Freedom of Religion</h3>
+                <p>The right to practice any religion or no religion. Includes both the Establishment Clause (preventing government from establishing an official religion) and the Free Exercise Clause (protecting religious practices from government interference).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📰</span> Freedom of the Press</h3>
+                <p>The right to publish and disseminate information, opinions, and other material without government interference. Protected by the First Amendment as vital to democratic governance.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Freedom of Assembly</h3>
+                <p>The right to gather peacefully in groups for lawful purposes. Often interlinked with freedom of association and the right to petition the government for redress of grievances.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Right to Petition</h3>
+                <p>The right to ask the government to right a wrong or correct a problem without fear of punishment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚫</span> Establishment Clause</h3>
+                <p>Prohibits the government from making any law "respecting an establishment of religion." Creates a "wall of separation" between church and state.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✝️</span> Free Exercise Clause</h3>
+                <p>Protects citizens' right to practice their religion as they please, so long as the practice does not run afoul of a "public morals" or a "compelling" governmental interest.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="key-amendments">
+            <h2>Key Constitutional Amendments</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> First Amendment</h3>
+                <p>Protects freedom of religion, speech, press, assembly, and petition (1791). "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔫</span> Second Amendment</h3>
+                <p>Protects the right to keep and bear arms (1791). "A well regulated Militia, being necessary to the security of a free State, the right of the people to keep and bear Arms, shall not be infringed."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Fourth Amendment</h3>
+                <p>Protects against unreasonable searches and seizures and requires warrants supported by probable cause (1791). "The right of the people to be secure in their persons, houses, papers, and effects, against unreasonable searches and seizures, shall not be violated..."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔒</span> Fifth Amendment</h3>
+                <p>Protects against self-incrimination, double jeopardy, and guarantees due process (1791). "No person shall...be compelled in any criminal case to be a witness against himself, nor be deprived of life, liberty, or property, without due process of law..."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Sixth Amendment</h3>
+                <p>Guarantees right to speedy trial by jury, to confront witnesses, and to legal counsel (1791). "In all criminal prosecutions, the accused shall enjoy the right to a speedy and public trial, by an impartial jury..."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔓</span> Eighth Amendment</h3>
+                <p>Prohibits excessive bail, excessive fines, and cruel and unusual punishment (1791). "Excessive bail shall not be required, nor excessive fines imposed, nor cruel and unusual punishments inflicted."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗽</span> Thirteenth Amendment</h3>
+                <p>Abolished slavery and involuntary servitude (1865). "Neither slavery nor involuntary servitude, except as a punishment for crime whereof the party shall have been duly convicted, shall exist within the United States..."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Fourteenth Amendment</h3>
+                <p>Guarantees citizenship, due process, and equal protection under the law (1868). "No State shall...deprive any person of life, liberty, or property, without due process of law; nor deny to any person within its jurisdiction the equal protection of the laws."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Fifteenth Amendment</h3>
+                <p>Prohibits denial of voting rights based on race, color, or previous condition of servitude (1870). "The right of citizens of the United States to vote shall not be denied or abridged by the United States or by any State on account of race, color, or previous condition of servitude."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👩</span> Nineteenth Amendment</h3>
+                <p>Guarantees women's right to vote (1920). "The right of citizens of the United States to vote shall not be denied or abridged by the United States or by any State on account of sex."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Twenty-Sixth Amendment</h3>
+                <p>Lowers the voting age to 18 (1971). "The right of citizens of the United States, who are eighteen years of age or older, to vote shall not be denied or abridged by the United States or by any State on account of age."</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="civil-rights">
+            <h2>Civil Rights</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Equal Protection</h3>
+                <p>The guarantee in the Fourteenth Amendment that the government must treat individuals in the same manner as others in similar conditions and circumstances. A key basis for civil rights litigation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✊</span> Civil Rights Movement</h3>
+                <p>A decades-long struggle by African Americans and their allies to end legalized racial discrimination, disenfranchisement, and racial segregation. Notable leaders included Martin Luther King Jr., Rosa Parks, and Malcolm X.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚫</span> Jim Crow Laws</h3>
+                <p>State and local laws that enforced racial segregation in the Southern United States after Reconstruction until 1965. These laws were designed to marginalize African Americans by denying them the right to vote, hold jobs, get an education, or other opportunities.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Civil Rights Act of 1964</h3>
+                <p>Landmark legislation that outlawed discrimination based on race, color, religion, sex, or national origin. It prohibited unequal application of voter registration requirements and racial segregation in schools, employment, and public accommodations.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Voting Rights Act of 1965</h3>
+                <p>Federal legislation that prohibits racial discrimination in voting, aimed at the elimination of discriminatory practices such as literacy tests that had been used to disenfranchise Black voters in the South.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Fair Housing Act of 1968</h3>
+                <p>Federal law that prohibits discrimination in the sale, rental, or financing of housing based on race, color, religion, sex, or national origin. Later amended to include protections for disability and families with children.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌈</span> LGBTQ+ Rights Movement</h3>
+                <p>Social and political movement advocating for equal rights and protections for LGBTQ+ individuals. Notable events include the Stonewall riots (1969) and the legalization of same-sex marriage nationwide in 2015.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👩</span> Women's Rights Movement</h3>
+                <p>Social movement focused on issues such as reproductive rights, domestic violence, maternity leave, equal pay, women's suffrage, sexual harassment, and sexual violence. Key achievements include the 19th Amendment and Title IX.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">♿</span> Americans with Disabilities Act (1990)</h3>
+                <p>Civil rights law that prohibits discrimination against individuals with disabilities in all areas of public life, including jobs, schools, transportation, and all public and private places that are open to the general public.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="supreme-court-cases">
+            <h2>Landmark Supreme Court Cases</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Marbury v. Madison (1803)</h3>
+                <p>Established the principle of judicial review, giving the Supreme Court the power to strike down laws as unconstitutional.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Dred Scott v. Sandford (1857)</h3>
+                <p>Ruled that people of African descent could not be U.S. citizens and that Congress could not prohibit slavery in U.S. territories. Widely regarded as one of the worst decisions in Supreme Court history.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Plessy v. Ferguson (1896)</h3>
+                <p>Upheld the constitutionality of racial segregation under the "separate but equal" doctrine. This decision effectively legalized Jim Crow segregation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Brown v. Board of Education (1954)</h3>
+                <p>Overturned Plessy v. Ferguson, ruling that racial segregation in public schools was unconstitutional. Declared that "separate educational facilities are inherently unequal."</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Gideon v. Wainwright (1963)</h3>
+                <p>Established the right of an indigent defendant in a criminal trial to have counsel appointed at state expense.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Miranda v. Arizona (1966)</h3>
+                <p>Required police to inform arrested persons of their rights to remain silent, to have an attorney present during questioning, and to have an attorney appointed if they cannot afford one.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Loving v. Virginia (1967)</h3>
+                <p>Struck down laws banning interracial marriage as violations of the Equal Protection and Due Process Clauses of the Fourteenth Amendment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Tinker v. Des Moines (1969)</h3>
+                <p>Established that students do not "shed their constitutional rights to freedom of speech or expression at the schoolhouse gate." Protected students' right to protest peacefully.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Roe v. Wade (1973)</h3>
+                <p>Recognized a woman's constitutional right to abortion under the right to privacy. Overturned by Dobbs v. Jackson Women's Health Organization in 2022.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Texas v. Johnson (1989)</h3>
+                <p>Ruled that flag burning is a form of symbolic speech protected by the First Amendment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Obergefell v. Hodges (2015)</h3>
+                <p>Ruled that the fundamental right to marry is guaranteed to same-sex couples by the Due Process Clause and Equal Protection Clause of the 14th Amendment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Dobbs v. Jackson Women's Health Organization (2022)</h3>
+                <p>Overturned Roe v. Wade, ruling that the Constitution does not confer a right to abortion and returning the authority to regulate abortion to the states.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="rights-concepts">
+            <h2>Rights Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Civil Liberties</h3>
+                <p>Basic rights and freedoms guaranteed to individuals, typically by the Constitution. These limit what the government can do and ensure autonomy for individuals. Examples include freedom of speech and religion.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Civil Rights</h3>
+                <p>Guarantees of equal social opportunities and equal protection under the law regardless of race, religion, or other characteristics. These rights ensure people are treated equally by both the government and society.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Due Process</h3>
+                <p>Legal requirement that the state must respect all legal rights owed to a person. Includes both procedural due process (fair procedures) and substantive due process (protection from government action that violates fundamental rights).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Incorporation Doctrine</h3>
+                <p>Legal doctrine through which the Supreme Court has applied portions of the Bill of Rights to the states through the Due Process Clause of the Fourteenth Amendment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚫</span> Prior Restraint</h3>
+                <p>Government action that prohibits speech or other expression before it can take place. Generally considered a violation of First Amendment rights.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Selective Incorporation</h3>
+                <p>Process by which the Supreme Court has incorporated specific protections found in the Bill of Rights against the states through the Fourteenth Amendment.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔎</span> Strict Scrutiny</h3>
+                <p>Highest standard of judicial review used by courts when a fundamental constitutional right is infringed or a suspect classification is used. Government action must be narrowly tailored to achieve a compelling state interest.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👁️</span> Privacy Rights</h3>
+                <p>Though not explicitly mentioned in the Constitution, the Supreme Court has recognized certain zones of privacy as constitutionally protected. These rights have been derived from several amendments, including the First, Third, Fourth, Fifth, and Ninth.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

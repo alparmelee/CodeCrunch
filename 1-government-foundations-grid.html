@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundations of Government Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 1: Foundations of Government</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="basic-concepts">Basic Concepts</button>
+        <button class="filter-button" data-category="state-elements">Elements of a State</button>
+        <button class="filter-button" data-category="origin-theories">Origins of Government</button>
+        <button class="filter-button" data-category="government-systems">Systems of Government</button>
+        <button class="filter-button" data-category="government-types">Types of Government</button>
+        <button class="filter-button" data-category="democracy-principles">Democracy Principles</button>
+        <button class="filter-button" data-category="economic-systems">Economic Systems</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="basic-concepts">
+            <h2>Basic Concepts</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Government</h3>
+                <p>An institution through which leaders exercise power to make and enforce laws affecting the people under its control.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Functions of Government</h3>
+                <p>The key roles of government include: 1) maintaining order, 2) providing public services, 3) ensuring national security, and 4) promoting economic security.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚫</span> Anarchy</h3>
+                <p>A state without government or laws.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Constitution</h3>
+                <p>A plan that provides the rules for government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚓</span> Constitutional Government</h3>
+                <p>A government in which a constitution has authority to place clearly recognized limits on the powers of those who govern.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="state-elements">
+            <h2>Elements of a State</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌍</span> State</h3>
+                <p>A political community that occupies a definite territory and has an organized government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏁</span> Country</h3>
+                <p>A political community that occupies a definite territory and has an organized government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Nation</h3>
+                <p>A group of people united by bonds of race, language, custom, tradition, and sometimes religion.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> Sovereignty</h3>
+                <p>The supreme and absolute authority within territorial boundaries.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Essential Features of a State</h3>
+                <p>The four essential elements that define a state: 1) population, 2) territory, 3) sovereignty, and 4) government.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="origin-theories">
+            <h2>Origins of Government</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌱</span> Evolutionary Theory</h3>
+                <p>The notion that the state evolved from the family... people governed according to family and clan traditions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💪</span> Force Theory</h3>
+                <p>A state emerges when everyone in an area was brought under the authority of one person or group by use of force.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">😇</span> Divine Right Theory</h3>
+                <p>The idea that people are chosen by god or gods to rule.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Social Contract Theory</h3>
+                <p>The theory that by contract, people surrender to the state the power needed to maintain order and the state, in turn, agrees to protect its citizens.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="government-systems">
+            <h2>Systems of Government</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Systems of Government</h3>
+                <p>The three primary systems for organizing government power: 1) unitary system, 2) confederate system, and 3) federal system.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⬆️</span> Unitary System</h3>
+                <p>A government that gives all key powers to the national or central government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">↔️</span> Confederacy</h3>
+                <p>A loose union of independent states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⬇️</span> Federal System</h3>
+                <p>A government that divides the powers of government between the national government and state or provincial governments.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="government-types">
+            <h2>Types of Government</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👮</span> Authoritarian</h3>
+                <p>Controlling all aspects of citizens' economic, political, and social lives.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔒</span> Totalitarian</h3>
+                <p>(A type of authoritarian government) A system of government in which the government has total control.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> Dictatorship</h3>
+                <p>A system of government in which power is in the hands of one person who has total control.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Oligarchy</h3>
+                <p>A system of government in which a small group holds power.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👸</span> Monarchy</h3>
+                <p>A system of government in which a king, queen, or emperor exercises supreme powers of government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Democracy</h3>
+                <p>Government in which the people rule.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Republic</h3>
+                <p>A government in which voters hold sovereign power, elected representatives, responsible to the people, exercise that power (like the U.S., which is a representative government without a monarch in charge).</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Assembly</h3>
+                <p>A gathering of people, often for political purposes.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="democracy-principles">
+            <h2>Democracy Principles</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🗣️</span> Citizen Participation</h3>
+                <p>The principle that citizens should actively engage in governance and civic life.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Regular Free and Fair Elections</h3>
+                <p>Elections must be conducted regularly, providing equal opportunity for candidates and voters without manipulation or coercion.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Accepting Election Results</h3>
+                <p>The commitment to accept the legitimate outcome of elections, even when one's preferred candidate loses.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Rule of Law</h3>
+                <p>The principle that laws apply equally to all citizens, including government officials.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Majority Rule with Minority Rights</h3>
+                <p>While the majority makes decisions, the fundamental rights of minority groups must be protected.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👁️</span> Accountability</h3>
+                <p>Government officials are answerable for their actions and decisions to the citizens they serve.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Transparency</h3>
+                <p>Government operations and decision-making should be open and accessible to public scrutiny.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛑</span> Limited Government</h3>
+                <p>Government powers are restricted, typically by a constitution and bill of rights.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Control of Abuse of Power</h3>
+                <p>Systems are in place to prevent and address misuse of governmental authority.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Economic Freedom</h3>
+                <p>Citizens have the right to own property and engage in economic activity with limited government interference.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Equality</h3>
+                <p>All citizens are equal under the law and have equal access to opportunity.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🕊️</span> Individual/Human Rights</h3>
+                <p>Fundamental rights and freedoms to which all humans are entitled.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Independent Judiciary</h3>
+                <p>Courts that are free from influence by other branches of government.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏆</span> Competing Political Parties</h3>
+                <p>Multiple parties compete for power through elections, providing voters with choices.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="economic-systems">
+            <h2>Economic Systems</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Economics</h3>
+                <p>The study of how people and nations use their limited resources to attempt to satisfy wants and needs.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏭</span> Factors of Production</h3>
+                <p>The resources needed for economic activity, including producers, distributors, consumers, labor, resources, capital, and entrepreneurs.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">❓</span> Key Economic Questions</h3>
+                <p>Essential questions that all economic systems must answer: 1) What and how much should be produced? 2) How should goods and services be produced? 3) Who gets the goods and services that are produced?</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Regulation</h3>
+                <p>Rule of procedure that has the force of law.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Capitalism</h3>
+                <p>An economic system that emphasizes freedom of choice and individual incentive.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛒</span> Consumer</h3>
+                <p>A person who purchases and uses goods and services.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Free Market</h3>
+                <p>An economic system in which buyers and sellers make free choices in the marketplace.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚀</span> Free Enterprise</h3>
+                <p>The opportunity to control one's own economic decisions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👐</span> Laissez-faire</h3>
+                <p>The philosophy that government should keep its hands off the economy.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Mixed Economy</h3>
+                <p>A system in which the government regulates private enterprise.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Socialism</h3>
+                <p>An economic system in which the government owns the basic means of production, distributes the products and wages, and provides social services such as health care and welfare.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Democratic Socialism</h3>
+                <p>A socialist who is committed to a democracy but wants government involvement in the distribution of wealth.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👆</span> Command Economy</h3>
+                <p>An economic system in which the government controls the factors of production.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏢</span> Bourgeoisie</h3>
+                <p>Capitalists who own the means of production.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👷</span> Proletariat</h3>
+                <p>Workers who produce the goods.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">☭</span> Communism</h3>
+                <p>An economic system in which the central government directs all major economic decisions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

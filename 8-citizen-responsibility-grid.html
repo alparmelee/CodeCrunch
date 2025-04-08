@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Responsibility Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 8: Citizen Responsibility</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="civic-duties">Civic Duties</button>
+        <button class="filter-button" data-category="civic-virtues">Civic Virtues</button>
+        <button class="filter-button" data-category="civic-engagement">Civic Engagement</button>
+        <button class="filter-button" data-category="civic-knowledge">Civic Knowledge</button>
+        <button class="filter-button" data-category="citizenship">Citizenship</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="civic-duties">
+            <h2>Civic Duties</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Voting</h3>
+                <p>The act of participating in elections to choose representatives and decide on ballot measures. While voting is considered a fundamental responsibility of citizenship in a democracy, the U.S. has relatively low voter turnout compared to other democracies.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Jury Duty</h3>
+                <p>The obligation to serve on a jury when called upon. Ensures that defendants receive a trial by a jury of their peers, as guaranteed by the Sixth and Seventh Amendments. Failure to respond to a jury summons can result in penalties.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Obeying Laws</h3>
+                <p>The responsibility to follow local, state, and federal laws. This duty is fundamental to maintaining social order and the rule of law. Citizens are expected to know and comply with laws, though ignorance of the law is not generally accepted as a defense.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Paying Taxes</h3>
+                <p>The obligation to pay taxes to fund government services and programs. The Sixteenth Amendment authorizes Congress to collect income taxes. Tax evasion is a federal crime, though legal tax avoidance through deductions and credits is permitted.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🪖</span> Military Service</h3>
+                <p>The duty to serve in the armed forces if called upon. The U.S. currently maintains a volunteer military, but has used conscription (the draft) during major conflicts. Males ages 18-25 must register with the Selective Service System.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Census Participation</h3>
+                <p>The constitutional requirement to be counted in the census every ten years. Census data determines congressional representation, electoral votes, and the distribution of federal funds. Participation is mandated by law.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📢</span> Reporting Crimes</h3>
+                <p>The responsibility to report crimes and cooperate with law enforcement. While not always legally required, reporting criminal activity helps maintain public safety and assists in the administration of justice.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👮</span> Respecting Authority</h3>
+                <p>The duty to comply with legitimate exercises of authority by government officials. This includes following police instructions during lawful encounters, though citizens retain constitutional rights during these interactions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏫</span> School Attendance</h3>
+                <p>The legal requirement for children to receive education, either through public schools, private schools, or approved homeschooling. All states have compulsory education laws, typically requiring attendance until age 16-18.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="civic-virtues">
+            <h2>Civic Virtues</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🤝</span> Respect</h3>
+                <p>Demonstrating consideration for others' rights, opinions, and dignity even when they differ from our own. Essential for civil discourse and democratic deliberation, respect enables diverse groups to coexist peacefully in a pluralistic society.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧠</span> Tolerance</h3>
+                <p>Accepting differences in backgrounds, beliefs, and lifestyles. Goes beyond mere endurance to embrace diversity as strengthening society. Tolerance does not require agreement but recognizes the right of others to hold different views.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🤲</span> Compassion</h3>
+                <p>Concern for the welfare of others and a desire to alleviate suffering. Motivates citizens to help vulnerable populations through charitable giving, volunteer work, and support for social safety net programs.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Justice</h3>
+                <p>Commitment to fairness, equality, and the rule of law. Citizens demonstrate this virtue by standing against discrimination, supporting equal treatment under the law, and working to correct systemic inequities.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗣️</span> Honesty</h3>
+                <p>Truthfulness and integrity in personal and public life. Essential for building trust in democratic institutions and among citizens. Includes rejecting misinformation and being forthright in civic discourse.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧩</span> Cooperation</h3>
+                <p>Working together to achieve common goals despite differences. Democracy requires citizens to collaborate, compromise, and find consensus to address shared challenges, even across political or social divides.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Critical Thinking</h3>
+                <p>The ability to analyze information, evaluate evidence, and form reasoned judgments. Citizens need to critically assess political claims, media reports, and policy proposals to make informed decisions as voters and participants.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Civic Responsibility</h3>
+                <p>Recognition that citizenship involves not just rights but obligations to the community and nation. Includes being informed about public affairs, participating in civic life, and considering the common good in personal decisions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💪</span> Self-Reliance</h3>
+                <p>Taking personal responsibility for one's well-being while recognizing the social supports that enable individual success. Balances independence with acknowledgment of interdependence in a functioning society.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="civic-engagement">
+            <h2>Civic Engagement</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🗣️</span> Political Participation</h3>
+                <p>Activities aimed at influencing government decisions and policies. Includes voting, contacting elected officials, attending public meetings, supporting campaigns, and running for office. Essential for representative democracy to reflect citizen preferences.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Community Service</h3>
+                <p>Voluntary work undertaken to benefit one's community. Addresses local needs, builds social capital, and develops civic skills. Examples include volunteering at food banks, cleaning public spaces, and mentoring youth.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">✊</span> Peaceful Protest</h3>
+                <p>Public expression of dissent protected by the First Amendment. Historically effective for advocating social change, from civil rights to environmental protection. Nonviolent resistance has been a cornerstone of American reform movements.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Public Forums</h3>
+                <p>Spaces where citizens gather to discuss public issues. Includes town halls, school board meetings, and digital platforms. These forums enable deliberative democracy where diverse perspectives can be shared and considered.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Petitioning</h3>
+                <p>Collecting signatures to demonstrate public support for a cause or policy change. Protected by the First Amendment right "to petition the Government for a redress of grievances." Can lead to ballot initiatives or influence elected officials.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💻</span> Digital Citizenship</h3>
+                <p>Responsible use of technology for civic purposes. Includes online advocacy, fact-checking information before sharing, respectful dialogue in digital spaces, and using technology to increase government transparency and accessibility.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗞️</span> Media Literacy</h3>
+                <p>The ability to access, analyze, evaluate, and create media. Crucial for navigating information environments filled with biased or false content. Helps citizens become critical consumers who can distinguish credible sources.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏢</span> Organizational Involvement</h3>
+                <p>Membership and participation in civic organizations. Includes religious congregations, labor unions, professional associations, neighborhood groups, and issue-based nonprofits. These intermediary institutions connect individuals to broader civic life.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Philanthropic Giving</h3>
+                <p>Donating money or resources to support causes and organizations. Americans give billions annually to charities addressing social needs, from education to disaster relief. Reflects a tradition of private initiative for public benefit.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="civic-knowledge">
+            <h2>Civic Knowledge</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Constitutional Literacy</h3>
+                <p>Understanding the U.S. Constitution, its principles, and how it structures government. Includes knowledge of rights, separation of powers, federalism, and amendment processes. Essential for citizens to recognize violations and exercise their rights.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Electoral Process</h3>
+                <p>Knowledge of how elections work, including registration requirements, voting procedures, and electoral systems. Understanding these processes helps citizens navigate voting and recognize the legitimacy of electoral outcomes.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Legal System</h3>
+                <p>Basic understanding of laws, courts, and legal processes. Includes knowledge of rights when interacting with law enforcement, how courts function, and avenues for legal recourse. Helps citizens access justice and comply with legal obligations.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Government Structure</h3>
+                <p>Understanding the three branches of government, their functions, and relationships. Includes knowledge of federalism and how authority is distributed among federal, state, and local governments. Crucial for knowing where to direct advocacy efforts.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Policy Issues</h3>
+                <p>Awareness of current policy debates and their implications. Includes understanding economic, social, environmental, and foreign policy challenges facing the nation. Necessary for making informed electoral choices and participating in public discourse.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌐</span> Global Affairs</h3>
+                <p>Knowledge of international relations, U.S. foreign policy, and global interconnections. Understanding America's role in the world and how global issues affect domestic concerns provides context for citizenship in an interconnected world.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📚</span> Historical Context</h3>
+                <p>Understanding American history and how it shapes current realities. Includes knowledge of democratic development, civil rights struggles, and changing interpretations of citizenship. Provides perspective on contemporary challenges.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📰</span> Media System</h3>
+                <p>Understanding how news media functions, including ownership patterns, business models, and journalism norms. Helps citizens evaluate information sources, recognize bias, and seek diverse perspectives. Critical for democratic deliberation.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💵</span> Economic Literacy</h3>
+                <p>Basic understanding of economic principles, financial systems, and public finance. Includes knowledge of taxation, budgeting, and economic policy tools. Helps citizens evaluate economic claims and understand policy trade-offs.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="citizenship">
+            <h2>Citizenship</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🌟</span> Citizenship Types</h3>
+                <p>Legal categories of citizenship: birthright (jus soli, born on U.S. soil), descent (jus sanguinis, born to U.S. citizens abroad), and naturalization (legal process for immigrants). The 14th Amendment establishes birthright citizenship regardless of parents' status.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📝</span> Naturalization Process</h3>
+                <p>The legal procedure by which immigrants become citizens. Requirements include legal permanent residence (typically 5 years), good moral character, English proficiency, knowledge of U.S. history and government (civics test), and an oath of allegiance.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔄</span> Dual Citizenship</h3>
+                <p>The status of being a citizen of two countries simultaneously. The U.S. permits dual citizenship but doesn't formally recognize it. Dual citizens must follow the laws of both countries and may have obligations (like taxes or military service) to both.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📋</span> Rights of Citizens</h3>
+                <p>Legal protections and privileges reserved for citizens. Include the right to vote in federal elections, run for federal office, serve on juries, hold certain government jobs, and receive full protection from deportation. Many constitutional rights apply to all persons in the U.S.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Global Citizenship</h3>
+                <p>A concept emphasizing responsibilities to the broader human community beyond national borders. Involves awareness of global issues, respect for diversity, and commitment to addressing transnational challenges like climate change or human rights.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧩</span> Digital Citizenship</h3>
+                <p>The ability to participate safely, ethically, and responsibly in the digital world. Includes online etiquette, digital literacy, privacy management, and cybersecurity awareness. Increasingly important as civic engagement moves online.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏙️</span> Local Citizenship</h3>
+                <p>Engagement with issues and institutions at the community level. Often has the most direct impact on daily life through school boards, zoning decisions, and local services. Local participation rates are declining despite their importance.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Historical Evolution</h3>
+                <p>The changing definition of citizenship throughout American history. Initially limited to white male property owners, citizenship rights gradually expanded through constitutional amendments, legislation, and social movements to include all races, women, and indigenous peoples.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Citizenship Revocation</h3>
+                <p>The rare process of removing citizenship status. Naturalized citizens can lose citizenship if their application involved fraud or misrepresentation. The Supreme Court has ruled that birthright citizens cannot have citizenship revoked involuntarily.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Presidents Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .president {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .president:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .president h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .president h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .president p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>All 47 U.S. Presidents</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for presidents, terms, or facts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="founding-era">Founding Era</button>
+        <button class="filter-button" data-category="early-republic">Early Republic</button>
+        <button class="filter-button" data-category="civil-war-reconstruction">Civil War & Reconstruction</button>
+        <button class="filter-button" data-category="gilded-age">Gilded Age</button>
+        <button class="filter-button" data-category="progressive-era">Progressive Era</button>
+        <button class="filter-button" data-category="world-wars">World Wars & Depression</button>
+        <button class="filter-button" data-category="cold-war">Cold War Era</button>
+        <button class="filter-button" data-category="modern-era">Modern Era</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="founding-era">
+            <h2>Founding Era (1789-1817)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">🇺🇸</span> 1. George Washington (1789-1797)</h3>
+                <p>First U.S. President, Commander of the Continental Army, established many presidential precedents including two-term tradition. Known for warning against political parties in his farewell address.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">📜</span> 2. John Adams (1797-1801)</h3>
+                <p>First Vice President, second President. Federalist who helped negotiate the end of Revolutionary War. His presidency was marked by the XYZ Affair and controversial Alien and Sedition Acts.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🖋️</span> 3. Thomas Jefferson (1801-1809)</h3>
+                <p>Principal author of the Declaration of Independence, founder of Democratic-Republican Party. Doubled the nation's size with the Louisiana Purchase and commissioned Lewis and Clark expedition.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">📚</span> 4. James Madison (1809-1817)</h3>
+                <p>"Father of the Constitution," co-author of the Federalist Papers. Led the nation through the War of 1812. His wife Dolley saved White House treasures when British burned Washington.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="early-republic">
+            <h2>Early Republic (1817-1849)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">🌊</span> 5. James Monroe (1817-1825)</h3>
+                <p>Last Founding Father to be president, his administration was known as "Era of Good Feelings." Established Monroe Doctrine warning European powers against colonization in the Americas.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🧭</span> 6. John Quincy Adams (1825-1829)</h3>
+                <p>Son of second president John Adams, brilliant diplomat who secured Florida from Spain. First president elected despite losing popular vote, leading to claims of a "corrupt bargain."</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🎖️</span> 7. Andrew Jackson (1829-1837)</h3>
+                <p>Military hero nicknamed "Old Hickory." Champion of the common man and architect of Indian removal policy. First president to survive an assassination attempt. Founded Democratic Party.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🦊</span> 8. Martin Van Buren (1837-1841)</h3>
+                <p>First president born a U.S. citizen. Political architect known as the "Little Magician." His presidency was dominated by the Panic of 1837 economic crisis.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">⏱️</span> 9. William Henry Harrison (1841)</h3>
+                <p>First president to die in office, just 31 days after inauguration. War hero who defeated Tecumseh at the Battle of Tippecanoe. Gave longest inaugural address in history during bad weather, caught pneumonia.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🔄</span> 10. John Tyler (1841-1845)</h3>
+                <p>First vice president to succeed to presidency upon death of a president. Nicknamed "His Accidency." Annexed Texas. Later supported the Confederacy during Civil War.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🗺️</span> 11. James K. Polk (1845-1849)</h3>
+                <p>"Dark horse" candidate who accomplished all campaign goals in one term. Oversaw Mexican-American War, adding vast western territories. Established independent treasury system.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="civil-war-reconstruction">
+            <h2>Civil War & Reconstruction (1849-1877)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">⚔️</span> 12. Zachary Taylor (1849-1850)</h3>
+                <p>Mexican-American War hero nicknamed "Old Rough and Ready." Died just 16 months into his term from stomach illness. Despite being a slaveholder, opposed expansion of slavery.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🤝</span> 13. Millard Fillmore (1850-1853)</h3>
+                <p>Last Whig president. Supported Compromise of 1850 which temporarily delayed Civil War. Later became presidential nominee of anti-immigrant Know-Nothing Party.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">📄</span> 14. Franklin Pierce (1853-1857)</h3>
+                <p>Handsome but ineffective president. Signed Kansas-Nebraska Act which inflamed tensions over slavery. His personal life was marked by tragedy after all three of his sons died young.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🌽</span> 15. James Buchanan (1857-1861)</h3>
+                <p>Only bachelor president. Failed to prevent Civil War, often ranked among worst presidents. Supported Dred Scott decision that denied citizenship to African Americans.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🎩</span> 16. Abraham Lincoln (1861-1865)</h3>
+                <p>Led nation through Civil War, issued Emancipation Proclamation, preserved the Union. Delivered Gettysburg Address. First president to be assassinated, shot by John Wilkes Booth at Ford's Theatre.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">✂️</span> 17. Andrew Johnson (1865-1869)</h3>
+                <p>Only senator from a Confederate state to remain loyal to Union. First president to be impeached, acquitted by one vote. Clashed with Radical Republicans over Reconstruction.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🏆</span> 18. Ulysses S. Grant (1869-1877)</h3>
+                <p>Union Army General who led victory in Civil War. Supported civil rights for freed slaves. Administration plagued by corruption scandals despite his personal honesty.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="gilded-age">
+            <h2>Gilded Age (1877-1897)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">🗳️</span> 19. Rutherford B. Hayes (1877-1881)</h3>
+                <p>Won disputed 1876 election by compromise that ended Reconstruction. Known as "Rutherfraud" by opponents. Supported civil service reform and moderate reconciliation with South.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🔫</span> 20. James A. Garfield (1881)</h3>
+                <p>Last president born in a log cabin. Scholar who could write with both hands simultaneously. Assassinated just four months into presidency by disappointed office seeker.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">💍</span> 21. Chester A. Arthur (1881-1885)</h3>
+                <p>Former New York customs collector known for elegant attire. Surprised many by championing civil service reform through Pendleton Act despite previous spoils system connections.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🧸</span> 22. Grover Cleveland (1885-1889)</h3>
+                <p>Only president to serve non-consecutive terms. Known for honesty and opposition to political corruption. Democrat who opposed high tariffs and federal spending.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🏛️</span> 23. Benjamin Harrison (1889-1893)</h3>
+                <p>Grandson of President William Henry Harrison. Supported high tariffs through McKinley Tariff. First president to have electricity in White House but was afraid to touch light switches.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🧸</span> 24. Grover Cleveland (1893-1897)</h3>
+                <p>Only president counted twice (22nd and 24th). Dealt with severe economic depression. Secretly underwent cancer surgery on a yacht to avoid public panic about his health.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="progressive-era">
+            <h2>Progressive Era (1897-1921)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">💰</span> 25. William McKinley (1897-1901)</h3>
+                <p>Last Civil War veteran to be president. Led nation in Spanish-American War, acquiring territories including Philippines. Assassinated by anarchist Leon Czolgosz in 1901.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🧸</span> 26. Theodore Roosevelt (1901-1909)</h3>
+                <p>Youngest president at 42. Trust-buster, conservationist who established national parks. Won Nobel Peace Prize for mediating Russo-Japanese War. Known for "speak softly and carry a big stick" diplomacy.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🥸</span> 27. William Howard Taft (1909-1913)</h3>
+                <p>Only person to serve as both President and Chief Justice of Supreme Court. Largest president physically at over 300 pounds. Split with mentor Theodore Roosevelt, dividing Republican Party.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🎓</span> 28. Woodrow Wilson (1913-1921)</h3>
+                <p>Former Princeton University president. Led U.S. through World War I with "make the world safe for democracy" vision. Established Federal Reserve. Suffered debilitating stroke while campaigning for League of Nations.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="world-wars">
+            <h2>World Wars & Depression (1921-1945)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">📰</span> 29. Warren G. Harding (1921-1923)</h3>
+                <p>Former newspaper publisher. Promoted "return to normalcy" after WWI. Administration marred by Teapot Dome and other scandals. Died suddenly of heart attack during western tour.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🔒</span> 30. Calvin Coolidge (1923-1929)</h3>
+                <p>Known as "Silent Cal" for being a man of few words. Presided over "Roaring Twenties" prosperity. Believed "the business of America is business" and favored limited government.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🏗️</span> 31. Herbert Hoover (1929-1933)</h3>
+                <p>Self-made millionaire mining engineer, humanitarian who aided WWI relief. Presidency defined by Great Depression. His name became associated with homeless settlements called "Hoovervilles."</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🌟</span> 32. Franklin D. Roosevelt (1933-1945)</h3>
+                <p>Only president elected to four terms. Implemented New Deal to combat Great Depression. Led U.S. through most of World War II. Only president to use wheelchair (due to polio).</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="cold-war">
+            <h2>Cold War Era (1945-1989)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">💣</span> 33. Harry S. Truman (1945-1953)</h3>
+                <p>Made difficult decision to use atomic bombs on Japan. Implemented Marshall Plan, Truman Doctrine, and NATO. Desegregated armed forces. Known for "The buck stops here" motto.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">⭐</span> 34. Dwight D. Eisenhower (1953-1961)</h3>
+                <p>Supreme Allied Commander in WWII. Created interstate highway system. Warned of "military-industrial complex" in farewell address. Sent federal troops to enforce school desegregation in Little Rock.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🚀</span> 35. John F. Kennedy (1961-1963)</h3>
+                <p>Youngest elected president at 43. Led through Cuban Missile Crisis. Established Peace Corps and set goal to land on moon. Assassinated in Dallas by Lee Harvey Oswald.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🗽</span> 36. Lyndon B. Johnson (1963-1969)</h3>
+                <p>Skilled legislator who enacted Civil Rights Act, Voting Rights Act, "Great Society" programs including Medicare. Escalated Vietnam War which damaged his popularity.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">✌️</span> 37. Richard Nixon (1969-1974)</h3>
+                <p>Opened relations with China, pursued détente with Soviet Union. First president to resign due to Watergate scandal. Domestic achievements included creating EPA and ending draft.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🏈</span> 38. Gerald Ford (1974-1977)</h3>
+                <p>Only president never elected as president or vice president. Pardoned Nixon, which damaged his popularity. Helped heal nation after Watergate but struggled with inflation.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🥜</span> 39. Jimmy Carter (1977-1981)</h3>
+                <p>Former peanut farmer and naval officer. Brokered Camp David Accords between Egypt and Israel. Presidency challenged by energy crisis, inflation, and Iran hostage crisis.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🎬</span> 40. Ronald Reagan (1981-1989)</h3>
+                <p>Former actor and California governor. Survived assassination attempt. Promoted supply-side economics ("Reaganomics"), expanded military, and helped end Cold War with "tear down this wall" challenge.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="modern-era">
+            <h2>Modern Era (1989-Present)</h2>
+            
+            <div class="president">
+                <h3><span class="emoji">🌐</span> 41. George H. W. Bush (1989-1993)</h3>
+                <p>Former CIA Director and Reagan's VP. Led coalition in Gulf War after Iraq invaded Kuwait. Oversaw fall of Soviet Union and Berlin Wall. Broke "no new taxes" pledge.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🎷</span> 42. Bill Clinton (1993-2001)</h3>
+                <p>Youngest president since Kennedy. Presided over economic boom and budget surplus. Impeached by House but acquitted by Senate in scandal involving White House intern.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🏛️</span> 43. George W. Bush (2001-2009)</h3>
+                <p>Son of 41st president. Led response to 9/11 terrorist attacks. Launched wars in Afghanistan and Iraq. Implemented No Child Left Behind education reform and Medicare drug benefit.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🌈</span> 44. Barack Obama (2009-2017)</h3>
+                <p>First African American president. Implemented Affordable Care Act ("Obamacare"). Authorized mission that killed Osama bin Laden. Faced Great Recession and pioneered clean energy initiatives.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">💼</span> 45. Donald Trump (2017-2021)</h3>
+                <p>First president with no prior government or military experience. Businessman and TV personality. Cut taxes, appointed three Supreme Court justices. Second president to be impeached twice.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">😴</span> 46. Joe Biden (2021-2025)</h3>
+                <p>Oldest president at inauguration. Former VP under Obama and long-time senator. Focused on pandemic recovery, infrastructure, and climate change. Withdrew troops from Afghanistan.</p>
+            </div>
+            
+            <div class="president">
+                <h3><span class="emoji">🔄</span> 47. Donald Trump (2025-present)</h3>
+                <p>First president since Grover Cleveland to serve non-consecutive terms. Won 2024 election after losing in 2020. Only president to be elected after being impeached twice.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const presidents = document.querySelectorAll('.president');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                presidents.forEach(president => {
+                    const presidentTitle = president.querySelector('h3').textContent.toLowerCase();
+                    const presidentInfo = president.querySelector('p').textContent.toLowerCase();
+                    
+                    if (presidentTitle.includes(searchTerm) || presidentInfo.includes(searchTerm)) {
+                        president.classList.remove('hide');
+                    } else {
+                        president.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                presidents.forEach(president => {
+                    if (!president.classList.contains('hide-by-search') && searchInput.value) {
+                        const presidentTitle = president.querySelector('h3').textContent.toLowerCase();
+                        const presidentInfo = president.querySelector('p').textContent.toLowerCase();
+                        
+                        if (presidentTitle.includes(searchInput.value.toLowerCase()) || 
+                            presidentInfo.includes(searchInput.value.toLowerCase())) {
+                            president.classList.remove('hide');
+                        } else {
+                            president.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any presidents are visible in this category
+                        const hasVisiblePresidents = Array.from(category.querySelectorAll('.president')).some(
+                            president => !president.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisiblePresidents && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

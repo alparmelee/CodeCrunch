@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elections and Political Participation Learning Grid</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #search {
+            padding: 10px 15px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        
+        #search:focus {
+            border-color: #2980b9;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .filter-button:hover {
+            background-color: #d5dbdb;
+        }
+
+        .filter-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .category {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.2s;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category h2 {
+            color: #3498db;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .term {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .term:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .term h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .term h3 .emoji {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .term p {
+            margin: 0;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .hide {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .category {
+                max-width: 100%;
+            }
+            
+            .filter-buttons {
+                padding: 0 10px;
+            }
+            
+            .filter-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chapter 6: Elections and Political Participation</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for terms, definitions, or concepts...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button class="filter-button active" data-category="all">All</button>
+        <button class="filter-button" data-category="voting-rights">Voting Rights</button>
+        <button class="filter-button" data-category="electoral-process">Electoral Process</button>
+        <button class="filter-button" data-category="political-parties">Political Parties</button>
+        <button class="filter-button" data-category="interest-groups">Interest Groups</button>
+        <button class="filter-button" data-category="campaigns">Campaigns & Elections</button>
+    </div>
+    
+    <div class="categories">
+        <div class="category" data-category="voting-rights">
+            <h2>Voting Rights</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🗳️</span> Suffrage</h3>
+                <p>The right to vote in political elections. Throughout U.S. history, the expansion of suffrage has broadened from property-owning white men to include all citizens over 18, regardless of race, sex, or economic status.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📃</span> Fifteenth Amendment (1870)</h3>
+                <p>Prohibits the federal and state governments from denying a citizen the right to vote based on "race, color, or previous condition of servitude." Despite this amendment, many states used poll taxes, literacy tests, and other measures to prevent Black Americans from voting until the 1960s.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👩</span> Nineteenth Amendment (1920)</h3>
+                <p>Guarantees American women the right to vote, stating that "the right of citizens of the United States to vote shall not be denied or abridged by the United States or by any State on account of sex." Culmination of the women's suffrage movement.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💵</span> Twenty-Fourth Amendment (1964)</h3>
+                <p>Prohibits both Congress and the states from conditioning the right to vote in federal elections on payment of a poll tax or other types of tax. This was designed to remove financial barriers to voting.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧑</span> Twenty-Sixth Amendment (1971)</h3>
+                <p>Lowered the voting age to 18. It was largely a response to the Vietnam War draft, which conscripted 18-year-olds who were unable to vote.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📜</span> Voting Rights Act of 1965</h3>
+                <p>Landmark legislation that prohibits racial discrimination in voting. It ended discriminatory voting practices like literacy tests and provided federal oversight of voter registration in areas with historic discrimination.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Shelby County v. Holder (2013)</h3>
+                <p>Supreme Court case that struck down the formula used to determine which jurisdictions were subject to preclearance under the Voting Rights Act, effectively ending federal oversight of local election rules in states with histories of discrimination.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🪪</span> Voter ID Laws</h3>
+                <p>State laws requiring voters to present identification before voting. Supporters argue they prevent fraud; critics contend they suppress turnout among marginalized groups who may face barriers to obtaining IDs.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗑️</span> Voter Purges</h3>
+                <p>The process of removing registered voters from voter rolls. While necessary for maintaining accurate records, controversial purges have removed eligible voters, particularly affecting minority communities.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="electoral-process">
+            <h2>Electoral Process</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Electoral College</h3>
+                <p>The system established by the Constitution for choosing the president, consisting of 538 electors who cast votes based on the popular vote in their states. A candidate needs 270 electoral votes to win. Most states (except Maine and Nebraska) use a winner-take-all system.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗓️</span> Primary Elections</h3>
+                <p>Elections that determine each political party's nominee for an office before the general election. Can be open (any registered voter can participate), closed (only registered party members can participate), or semi-closed.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗣️</span> Caucuses</h3>
+                <p>Local gatherings where voters openly show support for candidates instead of casting private ballots. Requires more time commitment than primaries and often has lower participation rates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👑</span> "First-in-the-Nation" Status</h3>
+                <p>Iowa and New Hampshire traditionally hold the first caucus and primary, respectively, giving them outsized influence in the nomination process. Candidates often spend significant time and resources in these states.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧮</span> Plurality Voting System</h3>
+                <p>Electoral system where the candidate who receives the most votes wins, even if they don't secure a majority. This is the most common system in U.S. elections.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏆</span> Runoff Elections</h3>
+                <p>Second-round election held when no candidate receives a required percentage (usually a majority) of votes in the first round. Common in some state and local elections.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💯</span> Ranked-Choice Voting</h3>
+                <p>Electoral system where voters rank candidates by preference. If no candidate wins a majority of first-preference votes, the candidate with the fewest is eliminated, and their votes are redistributed based on voters' next choices.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗺️</span> Redistricting</h3>
+                <p>The process of redrawing electoral district boundaries after each decennial census. Can be conducted by state legislatures, independent commissions, or courts.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🦎</span> Gerrymandering</h3>
+                <p>The manipulation of district boundaries to favor one political party or group. Named after Elbridge Gerry, who as Massachusetts governor approved a redistricting plan with a salamander-shaped district.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="political-parties">
+            <h2>Political Parties</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">🐘</span> Republican Party</h3>
+                <p>Major U.S. political party founded in 1854. Generally advocates for conservative policies including limited government, lower taxes, free market capitalism, and traditional social values. Symbolized by an elephant.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🐴</span> Democratic Party</h3>
+                <p>Oldest major U.S. political party, founded in 1828. Generally advocates for progressive policies including social programs, labor rights, civil rights, environmental protections, and regulation of business. Symbolized by a donkey.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌿</span> Third Parties</h3>
+                <p>Political parties beyond the two major parties, such as the Libertarian, Green, and Constitution parties. They rarely win major elections but can influence policy debates and occasionally act as "spoilers" in close races.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧱</span> Party Platform</h3>
+                <p>A formal document stating a party's positions on issues and its intentions if elected. Adopted at national conventions, platforms reflect party values but individual candidates may not follow them entirely.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏢</span> Party Organization</h3>
+                <p>The formal structure of a political party, including national committees, state committees, local organizations, and affiliated groups. Responsible for fundraising, candidate recruitment, voter mobilization, and policy development.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🧠</span> Party Identification</h3>
+                <p>A voter's psychological attachment to a political party, often developed through family influence and personal experiences. One of the strongest predictors of voting behavior.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌊</span> Realigning Elections</h3>
+                <p>Elections that result in substantial, lasting change in party coalitions and voter allegiances. Examples include the elections of 1860, 1932, and potentially 1980.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚔️</span> Polarization</h3>
+                <p>The growing ideological divide between political parties and their supporters. In recent decades, parties have become more ideologically consistent internally and more distinct from each other.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📖</span> Party-in-the-Electorate</h3>
+                <p>Ordinary citizens who identify with a party and generally vote for its candidates. Often have weaker ideological commitments than party activists.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏛️</span> Party-in-Government</h3>
+                <p>Elected officials who are affiliated with a party and work to advance its agenda through legislation and policy implementation.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="interest-groups">
+            <h2>Interest Groups</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">👥</span> Interest Groups</h3>
+                <p>Organizations that seek to influence public policy on specific issues. They represent particular segments of society and try to advance their goals by lobbying government officials, mobilizing public opinion, and supporting candidates.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💼</span> Business Interest Groups</h3>
+                <p>Organizations like the U.S. Chamber of Commerce and industry-specific associations that advocate for policies favorable to business interests, such as lower corporate taxes and reduced regulations.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🛠️</span> Labor Unions</h3>
+                <p>Organizations that represent workers and advocate for better wages, benefits, and working conditions. Once a dominant force in American politics, union membership and influence have declined significantly since the 1970s.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🌎</span> Public Interest Groups</h3>
+                <p>Organizations like the Sierra Club or Common Cause that advocate for causes they believe benefit society as a whole rather than a specific segment, such as environmental protection or government transparency.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">👨‍⚕️</span> Professional Associations</h3>
+                <p>Organizations like the American Medical Association or National Education Association that represent members of specific professions and advocate for their interests.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🗣️</span> Lobbying</h3>
+                <p>The practice of attempting to influence government officials' decisions through direct communication. Professional lobbyists often have specialized knowledge and extensive networks that help them advocate effectively.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Amicus Curiae Briefs</h3>
+                <p>"Friend of the court" briefs filed by interest groups to provide additional information or arguments in cases before the Supreme Court or other courts. Allow groups to influence judicial decisions.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔍</span> Iron Triangles</h3>
+                <p>Close, mutually beneficial relationships between congressional committees, executive agencies, and interest groups in specific policy areas. These relationships can dominate policymaking in their domain.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🚪</span> Revolving Door</h3>
+                <p>The movement of individuals between positions in government and industry, especially in fields they previously regulated. Critics argue this creates conflicts of interest and undue industry influence.</p>
+            </div>
+        </div>
+        
+        <div class="category" data-category="campaigns">
+            <h2>Campaigns & Elections</h2>
+            
+            <div class="term">
+                <h3><span class="emoji">💰</span> Campaign Finance</h3>
+                <p>The raising and spending of money for political campaigns. Regulated by federal laws including contribution limits for individuals and disclosure requirements, though Super PACs can raise unlimited funds.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">💼</span> Political Action Committees (PACs)</h3>
+                <p>Organizations that pool campaign contributions from members and donate to campaigns. Traditional PACs have contribution limits, while Super PACs can raise unlimited funds for independent expenditures.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏦</span> Super PACs</h3>
+                <p>Independent expenditure-only political committees that may raise unlimited sums from corporations, unions, and individuals but cannot contribute directly to or coordinate with parties or candidates. Created following the Citizens United decision.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Citizens United v. FEC (2010)</h3>
+                <p>Supreme Court case that held political spending is protected speech under the First Amendment, allowing corporations and unions to spend unlimited funds on political activities as long as they're independent of a party or candidate.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📊</span> Polling</h3>
+                <p>The systematic collection of opinions from a specific population through sampling. Used by campaigns to gauge public opinion, identify potential supporters, and test messages.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🎯</span> Microtargeting</h3>
+                <p>The use of data analytics to identify specific groups of voters and deliver tailored messages to them. Involves collecting vast amounts of personal data to predict voting behavior.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📱</span> Social Media Campaigns</h3>
+                <p>The use of platforms like Facebook, Twitter, and Instagram to reach voters, raise money, and organize supporters. Has transformed campaigning by allowing direct communication with voters and rapid response to events.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">📺</span> Political Advertising</h3>
+                <p>Paid messages promoting candidates or issues. Television ads remain important, but digital advertising has grown significantly due to its lower cost and targeting capabilities.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🎤</span> Debates</h3>
+                <p>Structured discussions between candidates on policy issues. Presidential debates, organized by the Commission on Presidential Debates since 1988, are major campaign events that can influence undecided voters.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🔵</span> Blue States/Red States</h3>
+                <p>States that consistently vote for Democratic (blue) or Republican (red) presidential candidates. This color coding, which became standard after the 2000 election, reflects the increasing geographic polarization of American politics.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">⚖️</span> Swing States</h3>
+                <p>States that could reasonably be won by either major party candidate. These states receive disproportionate attention during presidential campaigns because they can determine the Electoral College outcome.</p>
+            </div>
+            
+            <div class="term">
+                <h3><span class="emoji">🏠</span> Get Out The Vote (GOTV)</h3>
+                <p>Campaign efforts to increase voter turnout among supporters through direct contact, transportation assistance, and reminders. Critical in close elections where turnout can determine the outcome.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const terms = document.querySelectorAll('.term');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            const categories = document.querySelectorAll('.category');
+            
+            // Filter by search term
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                terms.forEach(term => {
+                    const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                    const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                    
+                    if (termTitle.includes(searchTerm) || termDefinition.includes(searchTerm)) {
+                        term.classList.remove('hide');
+                    } else {
+                        term.classList.add('hide');
+                    }
+                });
+                
+                // Show/hide categories based on active filter and search
+                const activeCategory = document.querySelector('.filter-button.active').getAttribute('data-category');
+                updateCategoryVisibility(activeCategory);
+            });
+            
+            // Filter by category button
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected category
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Update categories visibility
+                    updateCategoryVisibility(selectedCategory);
+                });
+            });
+            
+            function updateCategoryVisibility(selectedCategory) {
+                // First reset visibility based on search
+                terms.forEach(term => {
+                    if (!term.classList.contains('hide-by-search') && searchInput.value) {
+                        const termTitle = term.querySelector('h3').textContent.toLowerCase();
+                        const termDefinition = term.querySelector('p').textContent.toLowerCase();
+                        
+                        if (termTitle.includes(searchInput.value.toLowerCase()) || 
+                            termDefinition.includes(searchInput.value.toLowerCase())) {
+                            term.classList.remove('hide');
+                        } else {
+                            term.classList.add('hide');
+                        }
+                    }
+                });
+                
+                // Then apply category filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    
+                    if (selectedCategory === 'all' || categoryType === selectedCategory) {
+                        category.classList.remove('hide');
+                        
+                        // Check if any terms are visible in this category
+                        const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(
+                            term => !term.classList.contains('hide')
+                        );
+                        
+                        if (!hasVisibleTerms && searchInput.value) {
+                            category.classList.add('hide');
+                        }
+                    } else {
+                        category.classList.add('hide');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
