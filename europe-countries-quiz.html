@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virtual World Map</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    #map {
+      height: 70vh;
+      width: 100%;
+      border: 2px solid #444;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #regionKey {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .region {
+      margin: 0 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      opacity: 0.5;
+    }
+
+    .region.active {
+      opacity: 1;
+    }
+
+    .western { background-color: #ff5733; }
+    .central { background-color: #33c1ff; }
+    .southern { background-color: #33ff57; }
+    .balkans { background-color: #ff33a8; }
+    .eastern { background-color: #ffc733; }
+    .nordic { background-color: #8a33ff; }
+  </style>
+</head>
+<body>
+  <h1>Europe Country Guesser</h1>
+  <div id="regionKey">
+    <div class="region western">Western</div>
+    <div class="region central">Central</div>
+    <div class="region southern">Southern</div>
+    <div class="region balkans">Balkans</div>
+    <div class="region eastern">Eastern</div>
+    <div class="region nordic">Nordic</div>
+  </div>
+  <button id="startQuizButton">New Country</button>
+  <input type="text" id="countryInput" placeholder="Type the country name" disabled />
+  <button id="submitAnswerButton" disabled>Submit Answer</button>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map').setView([20, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const europeanCountries = [
+      { name: "Albania", coords: [41.3275, 19.8189], region: "balkans" },
+      { name: "Andorra", coords: [42.5078, 1.5211], region: "western" },
+      { name: "Austria", coords: [47.5162, 14.5501], region: "central" },
+      { name: "Belarus", coords: [53.9006, 27.5590], region: "eastern" },
+      { name: "Belgium", coords: [50.8503, 4.3517], region: "western" },
+      { name: "Bosnia and Herzegovina", coords: [43.9159, 17.6791], region: "balkans" },
+      { name: "Bulgaria", coords: [42.6977, 23.3219], region: "balkans" },
+      { name: "Croatia", coords: [45.8150, 15.9819], region: "balkans" },
+      { name: "Cyprus", coords: [35.1856, 33.3823], region: "southern" },
+      { name: "Czech Republic", coords: [50.0755, 14.4378], region: "central" },
+      { name: "Denmark", coords: [55.6761, 12.5683], region: "nordic" },
+      { name: "Estonia", coords: [59.4370, 24.7536], region: "nordic" },
+      { name: "Finland", coords: [60.1695, 24.9354], region: "nordic" },
+      { name: "France", coords: [48.8566, 2.3522], region: "western" },
+      { name: "Germany", coords: [52.5200, 13.4050], region: "central" },
+      { name: "Greece", coords: [37.9838, 23.7275], region: "southern" },
+      { name: "Hungary", coords: [47.4979, 19.0402], region: "central" },
+      { name: "Iceland", coords: [64.1355, -21.8954], region: "nordic" },
+      { name: "Ireland", coords: [53.3498, -6.2603], region: "western" },
+      { name: "Italy", coords: [41.9028, 12.4964], region: "southern" },
+      { name: "Kosovo", coords: [42.6629, 21.1655], region: "balkans" },
+      { name: "Latvia", coords: [56.9496, 24.1052], region: "nordic" },
+      { name: "Liechtenstein", coords: [47.1416, 9.5215], region: "central" },
+      { name: "Lithuania", coords: [54.6872, 25.2797], region: "nordic" },
+      { name: "Luxembourg", coords: [49.6117, 6.1319], region: "western" },
+      { name: "Malta", coords: [35.8997, 14.5146], region: "southern" },
+      { name: "Moldova", coords: [47.0105, 28.8638], region: "eastern" },
+      { name: "Monaco", coords: [43.7384, 7.4246], region: "western" },
+      { name: "Montenegro", coords: [42.4304, 19.2594], region: "balkans" },
+      { name: "Netherlands", coords: [52.3676, 4.9041], region: "western" },
+      { name: "North Macedonia", coords: [41.9981, 21.4254], region: "balkans" },
+      { name: "Norway", coords: [59.9139, 10.7522], region: "nordic" },
+      { name: "Poland", coords: [52.2297, 21.0122], region: "eastern" },
+      { name: "Portugal", coords: [38.7169, -9.1390], region: "southern" },
+      { name: "Romania", coords: [44.4268, 26.1025], region: "eastern" },
+      { name: "Russia", coords: [55.7558, 37.6173], region: "eastern" },
+      { name: "San Marino", coords: [43.9336, 12.4508], region: "southern" },
+      { name: "Serbia", coords: [44.8176, 20.4569], region: "balkans" },
+      { name: "Slovakia", coords: [48.1486, 17.1077], region: "central" },
+      { name: "Slovenia", coords: [46.0569, 14.5058], region: "balkans" },
+      { name: "Spain", coords: [40.4168, -3.7038], region: "southern" },
+      { name: "Sweden", coords: [59.3293, 18.0686], region: "nordic" },
+      { name: "Switzerland", coords: [46.9481, 7.4474], region: "central" },
+      { name: "Ukraine", coords: [50.4501, 30.5234], region: "eastern" },
+      { name: "United Kingdom", coords: [51.5074, -0.1278], region: "western" }
+    ];
+
+    let remainingCountries = [...europeanCountries];
+    let currentCountry = null;
+
+    const regionElements = document.querySelectorAll('.region');
+
+    function highlightRegion(region) {
+      regionElements.forEach(el => {
+        el.classList.remove('active');
+        if (el.classList.contains(region)) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    document.getElementById('startQuizButton').addEventListener('click', () => {
+      if (remainingCountries.length === 0) {
+        alert("Quiz completed! You've gone through all the countries.");
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+      currentCountry = remainingCountries.splice(randomIndex, 1)[0];
+
+      map.setView(currentCountry.coords, 5);
+      L.marker(currentCountry.coords).addTo(map);
+
+      highlightRegion(currentCountry.region);
+
+      document.getElementById('countryInput').disabled = false;
+      document.getElementById('submitAnswerButton').disabled = false;
+    });
+
+    document.getElementById('submitAnswerButton').addEventListener('click', () => {
+      const userAnswer = document.getElementById('countryInput').value.trim();
+      if (userAnswer.toLowerCase() === currentCountry.name.toLowerCase()) {
+        alert("Correct!");
+      } else {
+        alert(`Wrong! The correct answer was ${currentCountry.name}.`);
+      }
+
+      document.getElementById('countryInput').value = '';
+      document.getElementById('countryInput').disabled = true;
+      document.getElementById('submitAnswerButton').disabled = true;
+
+      if (remainingCountries.length === 0) {
+        alert("Quiz completed! You've gone through all the countries.");
+      }
+    });
+  </script>
+</body>
+</html>

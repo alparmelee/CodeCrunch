@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>50 States Guesser</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    #map {
+      height: 70vh;
+      width: 100%;
+      border: 2px solid #444;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #regionKey {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .region {
+      margin: 0 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      opacity: 0.5;
+    }
+
+    .region.active {
+      opacity: 1;
+    }
+
+    .southern { background-color: #ff5733; }
+    .western { background-color: #33c1ff; }
+    .northeast { background-color: #ffc733; }
+    .midwest { background-color: #33ff57; }
+    .other { background-color: #8a33ff; }
+  </style>
+</head>
+<body>
+  <h1>50 States Guesser</h1>
+  <div id="regionKey">
+    <div class="region southern">Southern</div>
+    <div class="region western">Western</div>
+    <div class="region northeast">Northeast</div>
+    <div class="region midwest">Midwest</div>
+    <div class="region other">Other</div>
+  </div>
+  <button id="startQuizButton">New State</button>
+  <input type="text" id="stateInput" placeholder="Type the state name" disabled />
+  <button id="submitAnswerButton" disabled>Submit Answer</button>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map').setView([37.8, -96], 4);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const usStates = [
+      { name: "Alabama", coords: [32.8067, -86.7911], region: "southern" },
+      { name: "Alaska", coords: [61.3707, -152.4044], region: "other" },
+      { name: "Arizona", coords: [34.0489, -111.0937], region: "western" },
+      { name: "Arkansas", coords: [34.7465, -92.2896], region: "southern" },
+      { name: "California", coords: [36.7783, -119.4179], region: "western" },
+      { name: "Colorado", coords: [39.5501, -105.7821], region: "western" },
+      { name: "Connecticut", coords: [41.6032, -73.0877], region: "northeast" },
+      { name: "Delaware", coords: [38.9108, -75.5277], region: "northeast" },
+      { name: "Florida", coords: [27.9944, -81.7603], region: "southern" },
+      { name: "Georgia", coords: [32.1656, -82.9001], region: "southern" },
+      { name: "Hawaii", coords: [19.8968, -155.5828], region: "other" },
+      { name: "Idaho", coords: [44.0682, -114.742], region: "western" },
+      { name: "Illinois", coords: [40.6331, -89.3985], region: "midwest" },
+      { name: "Indiana", coords: [40.2672, -86.1349], region: "midwest" },
+      { name: "Iowa", coords: [41.878, -93.0977], region: "midwest" },
+      { name: "Kansas", coords: [39.0119, -98.4842], region: "midwest" },
+      { name: "Kentucky", coords: [37.8393, -84.270], region: "southern" },
+      { name: "Louisiana", coords: [30.9843, -91.9623], region: "southern" },
+      { name: "Maine", coords: [45.2538, -69.4455], region: "northeast" },
+      { name: "Maryland", coords: [39.0458, -76.6413], region: "northeast" },
+      { name: "Massachusetts", coords: [42.4072, -71.3824], region: "northeast" },
+      { name: "Michigan", coords: [44.3148, -85.6024], region: "midwest" },
+      { name: "Minnesota", coords: [46.7296, -94.6859], region: "midwest" },
+      { name: "Mississippi", coords: [32.3547, -89.3985], region: "southern" },
+      { name: "Missouri", coords: [37.9643, -91.8318], region: "midwest" },
+      { name: "Montana", coords: [46.8797, -110.3626], region: "western" },
+      { name: "Nebraska", coords: [41.4925, -99.9018], region: "midwest" },
+      { name: "Nevada", coords: [38.8026, -116.4194], region: "western" },
+      { name: "New Hampshire", coords: [43.1939, -71.5724], region: "northeast" },
+      { name: "New Jersey", coords: [40.0583, -74.4057], region: "northeast" },
+      { name: "New Mexico", coords: [34.5199, -105.8701], region: "western" },
+      { name: "New York", coords: [40.7128, -74.006], region: "northeast" },
+      { name: "North Carolina", coords: [35.7596, -79.0193], region: "southern" },
+      { name: "North Dakota", coords: [47.5515, -101.002], region: "midwest" },
+      { name: "Ohio", coords: [40.4173, -82.9071], region: "midwest" },
+      { name: "Oklahoma", coords: [35.0078, -97.0929], region: "southern" },
+      { name: "Oregon", coords: [43.8041, -120.5542], region: "western" },
+      { name: "Pennsylvania", coords: [41.2033, -77.1945], region: "northeast" },
+      { name: "Rhode Island", coords: [41.5801, -71.4774], region: "northeast" },
+      { name: "South Carolina", coords: [33.8361, -81.1637], region: "southern" },
+      { name: "South Dakota", coords: [43.9695, -99.9018], region: "midwest" },
+      { name: "Tennessee", coords: [35.5175, -86.5804], region: "southern" },
+      { name: "Texas", coords: [31.9686, -99.9018], region: "southern" },
+      { name: "Utah", coords: [39.32098, -111.0937], region: "western" },
+      { name: "Vermont", coords: [44.5588, -72.5778], region: "northeast" },
+      { name: "Virginia", coords: [37.4316, -78.6569], region: "southern" },
+      { name: "Washington", coords: [47.7511, -120.7401], region: "western" },
+      { name: "West Virginia", coords: [38.5976, -80.4549], region: "southern" },
+      { name: "Wisconsin", coords: [43.7844, -88.7879], region: "midwest" },
+      { name: "Wyoming", coords: [43.0759, -107.2903], region: "western" }
+    ];
+
+    let remainingStates = [...usStates];
+    let currentState = null;
+
+    const regionElements = document.querySelectorAll('.region');
+
+    function highlightRegion(region) {
+      regionElements.forEach(el => {
+        el.classList.remove('active');
+        if (el.classList.contains(region)) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    document.getElementById('startQuizButton').addEventListener('click', () => {
+      if (remainingStates.length === 0) {
+        alert("Quiz completed! You've gone through all the states.");
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * remainingStates.length);
+      currentState = remainingStates.splice(randomIndex, 1)[0];
+
+      map.setView(currentState.coords, 5);
+      L.marker(currentState.coords).addTo(map);
+
+      highlightRegion(currentState.region);
+
+      document.getElementById('stateInput').disabled = false;
+      document.getElementById('submitAnswerButton').disabled = false;
+    });
+
+    document.getElementById('submitAnswerButton').addEventListener('click', () => {
+      const userAnswer = document.getElementById('stateInput').value.trim();
+      if (userAnswer.toLowerCase() === currentState.name.toLowerCase()) {
+        alert("Correct!");
+      } else {
+        alert(`Wrong! The correct answer was ${currentState.name}.`);
+      }
+
+      document.getElementById('stateInput').value = '';
+      document.getElementById('stateInput').disabled = true;
+      document.getElementById('submitAnswerButton').disabled = true;
+
+      if (remainingStates.length === 0) {
+        alert("Quiz completed! You've gone through all the states.");
+      }
+    });
+  </script>
+</body>
+</html>

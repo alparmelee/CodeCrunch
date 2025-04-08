@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virtual World Map</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    #map {
+      height: 80vh;
+      width: 100%;
+      border: 2px solid #444;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #colorKey {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .key-item {
+      display: flex;
+      align-items: center;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .key-box {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      border: 1px solid #444;
+      background: #ccc;
+    }
+
+    .active {
+      background: #ff0;
+    }
+  </style>
+</head>
+<body>
+  <h1>North America Country Guesser</h1>
+  <div id="colorKey">
+    <div class="key-item">
+      <div id="mainlandKey" class="key-box"></div> Mainland North America
+    </div>
+    <div class="key-item">
+      <div id="centralAmericaKey" class="key-box"></div> Central America
+    </div>
+    <div class="key-item">
+      <div id="otherKey" class="key-box"></div> Other
+    </div>
+  </div>
+  <button id="startQuizButton">New Country</button>
+  <input type="text" id="countryInput" placeholder="Type the country name" disabled />
+  <button id="submitAnswerButton" disabled>Submit Answer</button>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map').setView([20, -100], 3);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const northAmericanCountries = [
+      { name: "Canada", coords: [56.1304, -106.3468], region: "mainland" },
+      { name: "United States", coords: [37.0902, -95.7129], region: "mainland" },
+      { name: "Mexico", coords: [23.6345, -102.5528], region: "mainland" },
+      { name: "Guatemala", coords: [15.7835, -90.2308], region: "central" },
+      { name: "Belize", coords: [17.1899, -88.4976], region: "central" },
+      { name: "El Salvador", coords: [13.7942, -88.8965], region: "central" },
+      { name: "Honduras", coords: [15.2000, -86.2419], region: "central" },
+      { name: "Nicaragua", coords: [12.8654, -85.2072], region: "central" },
+      { name: "Costa Rica", coords: [9.7489, -83.7534], region: "central" },
+      { name: "Panama", coords: [8.5379, -80.7821], region: "central" }
+    ];
+
+    let remainingCountries = [...northAmericanCountries];
+    let currentCountry = null;
+
+    const mainlandKey = document.getElementById('mainlandKey');
+    const centralAmericaKey = document.getElementById('centralAmericaKey');
+    const otherKey = document.getElementById('otherKey');
+
+    function resetKeys() {
+      mainlandKey.classList.remove('active');
+      centralAmericaKey.classList.remove('active');
+      otherKey.classList.remove('active');
+    }
+
+    document.getElementById('startQuizButton').addEventListener('click', () => {
+      if (remainingCountries.length === 0) {
+        alert("Quiz completed! You've gone through all the countries.");
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+      currentCountry = remainingCountries.splice(randomIndex, 1)[0];
+
+      map.setView(currentCountry.coords, 5);
+      L.marker(currentCountry.coords).addTo(map);
+
+      resetKeys();
+      if (currentCountry.region === "mainland") {
+        mainlandKey.classList.add('active');
+      } else if (currentCountry.region === "central") {
+        centralAmericaKey.classList.add('active');
+      } else {
+        otherKey.classList.add('active');
+      }
+
+      document.getElementById('countryInput').disabled = false;
+      document.getElementById('submitAnswerButton').disabled = false;
+    });
+
+    document.getElementById('submitAnswerButton').addEventListener('click', () => {
+      const userAnswer = document.getElementById('countryInput').value.trim();
+      if (userAnswer.toLowerCase() === currentCountry.name.toLowerCase()) {
+        alert("Correct!");
+      } else {
+        alert(`Wrong! The correct answer was ${currentCountry.name}.`);
+      }
+
+      document.getElementById('countryInput').value = '';
+      document.getElementById('countryInput').disabled = true;
+      document.getElementById('submitAnswerButton').disabled = true;
+
+      if (remainingCountries.length === 0) {
+        alert("Quiz completed! You've gone through all the countries.");
+      }
+    });
+  </script>
+</body>
+</html>
