@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVN Virtual Network Project Glossary</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-box {
+            flex-grow: 1;
+            max-width: 500px;
+            position: relative;
+        }
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #search:focus {
+            border-color: #3498db;
+        }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+        .categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            background-color: #ecf0f1;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #d5dbdb;
+        }
+        .category-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .glossary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .term-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .term-emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .term-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .term-definition {
+            color: #555;
+            font-size: 15px;
+        }
+        .category-tag {
+            display: inline-block;
+            background-color: #e8f4fc;
+            color: #3498db;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            .search-box {
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+            .glossary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔑 Essential Glossary for SAVN Virtual Network Project</h1>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search for terms...">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="categories">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="virtualization">Virtualization</button>
+                <button class="category-btn" data-category="active-directory">Active Directory</button>
+                <button class="category-btn" data-category="tools">Tools & Features</button>
+                <button class="category-btn" data-category="file-access">File Access</button>
+            </div>
+        </div>
+
+        <div class="glossary" id="glossary-container">
+            <!-- Terms will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script>
+        const glossaryData = [
+            // Virtualization & Network Infrastructure
+            {
+                emoji: "💻",
+                term: "Virtual Machine (VM)",
+                definition: "A software emulation of a physical computer system. This project uses three VMs for domain control, file serving, and client access.",
+                category: "virtualization"
+            },
+            {
+                emoji: "🔄",
+                term: "Virtualization Software",
+                definition: "Software like Oracle VM VirtualBox used to create and run virtual machines on a physical host.",
+                category: "virtualization"
+            },
+            {
+                emoji: "🌐",
+                term: "Virtual Network",
+                definition: "A simulated network environment created between virtual machines to mimic a real physical network.",
+                category: "virtualization"
+            },
+            {
+                emoji: "🔄",
+                term: "Internal Network (Host-Only Networking)",
+                definition: "A virtual network mode where VMs can communicate with each other and the host but not with external networks.",
+                category: "virtualization"
+            },
+            {
+                emoji: "🖥️",
+                term: "MJL-SP25-S22-1",
+                definition: "A VM running Windows Server 2022 that acts as the domain controller for the savn.local domain.",
+                category: "virtualization"
+            },
+            {
+                emoji: "🖥️",
+                term: "MJL-SP25-S22-2",
+                definition: "A VM running Windows Server 2022 used as an application and file server.",
+                category: "virtualization"
+            },
+            {
+                emoji: "💻",
+                term: "MJL-SP25-W10-1",
+                definition: "A VM running Windows 10, used as a client machine in the domain.",
+                category: "virtualization"
+            },
+            
+            // Active Directory & Domain Management
+            {
+                emoji: "📁",
+                term: "Active Directory Domain Services (AD DS)",
+                definition: "A Windows Server role that enables centralized authentication and management of users, computers, and resources.",
+                category: "active-directory"
+            },
+            {
+                emoji: "🏢",
+                term: "Domain Controller",
+                definition: "A server (like MJL-SP25-S22-1) that hosts AD DS and authenticates users and devices in the network.",
+                category: "active-directory"
+            },
+            {
+                emoji: "🌐",
+                term: "savn.local",
+                definition: "The domain name used in this project, acting as the root of the Active Directory environment.",
+                category: "active-directory"
+            },
+            {
+                emoji: "🏢",
+                term: "Domain",
+                definition: "A logical grouping of users and computers managed under a single directory database via AD DS.",
+                category: "active-directory"
+            },
+            {
+                emoji: "🌳",
+                term: "Forest",
+                definition: "A collection of domains that share a common schema and global catalog; savn.local is the forest root in this setup.",
+                category: "active-directory"
+            },
+            {
+                emoji: "📝",
+                term: "Group Policies",
+                definition: "Settings applied to users and computers in the domain to control security, desktop environments, and software behavior.",
+                category: "active-directory"
+            },
+            {
+                emoji: "👤",
+                term: "Domain User Account",
+                definition: "A user account created in AD DS that can log in to any machine in the domain.",
+                category: "active-directory"
+            },
+            {
+                emoji: "👤",
+                term: "Local User Account",
+                definition: "An account specific to a single computer; not managed by AD DS.",
+                category: "active-directory"
+            },
+            {
+                emoji: "🔧",
+                term: "Active Directory Users and Computers (ADUC)",
+                definition: "An MMC snap-in used to manage users, groups, and computers within Active Directory.",
+                category: "active-directory"
+            },
+            
+            // Tools & Server Features
+            {
+                emoji: "🔧",
+                term: "Server Manager",
+                definition: "A Windows Server tool used to add/remove roles and features, monitor server health, and manage system settings.",
+                category: "tools"
+            },
+            {
+                emoji: "⚙️",
+                term: "Roles and Features",
+                definition: "Server functionalities (e.g., AD DS, DNS, File Services) that can be installed via Server Manager.",
+                category: "tools"
+            },
+            {
+                emoji: "📡",
+                term: "DNS Server",
+                definition: "A server role that resolves domain names (like savn.local) to IP addresses; critical for AD to function properly.",
+                category: "tools"
+            },
+            {
+                emoji: "🏷️",
+                term: "FQDN (Fully Qualified Domain Name)",
+                definition: "The full domain name of a host (e.g., MJL-SP25-S22-1.savn.local).",
+                category: "tools"
+            },
+            {
+                emoji: "🛠️",
+                term: "Administrative Tools",
+                definition: "A set of system tools in Windows used for managing various server functions, including ADUC and DNS.",
+                category: "tools"
+            },
+            {
+                emoji: "🧰",
+                term: "MMC (Microsoft Management Console)",
+                definition: "A framework for building and running Windows administrative tools like ADUC or Local Users and Groups.",
+                category: "tools"
+            },
+            
+            // File Access & Accounts
+            {
+                emoji: "💾",
+                term: "File Server",
+                definition: "A server that stores and manages access to files and folders for clients on the network.",
+                category: "file-access"
+            },
+            {
+                emoji: "💻",
+                term: "Desktop Client",
+                definition: "A user-facing machine (e.g., MJL-SP25-W10-1) used to access resources from servers on the domain.",
+                category: "file-access"
+            },
+            {
+                emoji: "👤",
+                term: "domainUser01",
+                definition: "An example of a domain user account created for logging into domain-joined machines.",
+                category: "file-access"
+            },
+            {
+                emoji: "👤",
+                term: "localuser01",
+                definition: "An example of a local-only user account created on a single server (not part of the domain).",
+                category: "file-access"
+            }
+        ];
+
+        // Function to render terms
+        function renderTerms(terms) {
+            const container = document.getElementById('glossary-container');
+            container.innerHTML = '';
+
+            if (terms.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'No matching terms found. Try different search criteria.';
+                container.appendChild(noResults);
+                return;
+            }
+
+            terms.forEach(item => {
+                const termCard = document.createElement('div');
+                termCard.className = 'term-card';
+                termCard.setAttribute('data-category', item.category);
+                
+                termCard.innerHTML = `
+                    <div class="term-header">
+                        <span class="term-emoji">${item.emoji}</span>
+                        <span class="term-name">${item.term}</span>
+                    </div>
+                    <div class="term-definition">${item.definition}</div>
+                    <div class="category-tag">${getCategoryDisplayName(item.category)}</div>
+                `;
+                
+                container.appendChild(termCard);
+            });
+        }
+
+        // Function to get display name for category
+        function getCategoryDisplayName(category) {
+            const categoryMap = {
+                'virtualization': 'Virtualization & Network',
+                'active-directory': 'Active Directory & Domain',
+                'tools': 'Tools & Server Features',
+                'file-access': 'File Access & Accounts'
+            };
+            return categoryMap[category] || category;
+        }
+
+        // Filter terms by category and search term
+        function filterTerms() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+            
+            let filteredTerms = glossaryData;
+            
+            // Filter by category
+            if (activeCategory !== 'all') {
+                filteredTerms = filteredTerms.filter(term => term.category === activeCategory);
+            }
+            
+            // Filter by search term
+            if (searchTerm) {
+                filteredTerms = filteredTerms.filter(term => 
+                    term.term.toLowerCase().includes(searchTerm) || 
+                    term.definition.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            renderTerms(filteredTerms);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial render
+            renderTerms(glossaryData);
+            
+            // Search functionality
+            document.getElementById('search').addEventListener('input', filterTerms);
+            
+            // Category buttons
+            document.querySelectorAll('.category-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Filter terms
+                    filterTerms();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
