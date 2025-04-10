@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Property Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .calculator {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .function-type {
+            margin-bottom: 20px;
+        }
+        .mapping-inputs, .piecewise-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .input-pair {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            margin: 0 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .explanation {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .piecewise-condition {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .conditions-section {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Function Property Calculator</h1>
+    <p>Determine if a function is injective, surjective, bijective, or neither.</p>
+    
+    <div class="calculator">
+        <div class="function-type">
+            <h2>Select Function Type</h2>
+            <label>
+                <input type="radio" name="functionType" value="mapping" checked> Mapping Notation (e.g., f = [(1,4), (2,4), (3,2), (4,3), (5,1)])
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="functionType" value="piecewise"> Piecewise Function (e.g., f(x) = { 4-x if x < 4, 9-x if x ≥ 4 })
+            </label>
+        </div>
+        
+        <!-- Mapping Notation Interface -->
+        <div id="mappingSection" class="input-section">
+            <h2>Mapping Notation</h2>
+            <p>Enter the domain and codomain values: {1, 2, 3, 4, 5}</p>
+            
+            <div class="mapping-inputs">
+                <div class="input-pair">
+                    <div class="input-group">
+                        <span>f(1) =</span>
+                        <input type="number" id="mapping1" min="1" max="5" value="4">
+                    </div>
+                </div>
+                <div class="input-pair">
+                    <div class="input-group">
+                        <span>f(2) =</span>
+                        <input type="number" id="mapping2" min="1" max="5" value="4">
+                    </div>
+                </div>
+                <div class="input-pair">
+                    <div class="input-group">
+                        <span>f(3) =</span>
+                        <input type="number" id="mapping3" min="1" max="5" value="2">
+                    </div>
+                </div>
+                <div class="input-pair">
+                    <div class="input-group">
+                        <span>f(4) =</span>
+                        <input type="number" id="mapping4" min="1" max="5" value="3">
+                    </div>
+                </div>
+                <div class="input-pair">
+                    <div class="input-group">
+                        <span>f(5) =</span>
+                        <input type="number" id="mapping5" min="1" max="5" value="1">
+                    </div>
+                </div>
+            </div>
+            
+            <button id="calculateMapping">Calculate Properties</button>
+        </div>
+        
+        <!-- Piecewise Function Interface -->
+        <div id="piecewiseSection" class="input-section" style="display: none;">
+            <h2>Piecewise Function</h2>
+            <p>Enter the piecewise function conditions for domain {1, 2, 3, 4, 5}</p>
+            
+            <div class="piecewise-inputs">
+                <div class="conditions-section">
+                    <h3>First Condition</h3>
+                    <div class="piecewise-condition">
+                        <span>f(x) = </span>
+                        <input type="text" id="formula1" value="4-x" placeholder="e.g., 4-x">
+                        <span> if x </span>
+                        <select id="operator1">
+                            <option value="<">< (less than)</option>
+                            <option value="<=">≤ (less than or equal)</option>
+                            <option value=">"> > (greater than)</option>
+                            <option value=">=">≥ (greater than or equal)</option>
+                            <option value="==">= (equal to)</option>
+                        </select>
+                        <input type="number" id="threshold1" min="1" max="5" value="4">
+                    </div>
+                    
+                    <h3>Second Condition</h3>
+                    <div class="piecewise-condition">
+                        <span>f(x) = </span>
+                        <input type="text" id="formula2" value="9-x" placeholder="e.g., 9-x">
+                        <span> if x </span>
+                        <select id="operator2">
+                            <option value="<">< (less than)</option>
+                            <option value="<=">≤ (less than or equal)</option>
+                            <option value=">" selected> > (greater than)</option>
+                            <option value=">=">≥ (greater than or equal)</option>
+                            <option value="==">= (equal to)</option>
+                        </select>
+                        <input type="number" id="threshold2" min="1" max="5" value="3">
+                    </div>
+                </div>
+            </div>
+            
+            <button id="calculatePiecewise">Calculate Properties</button>
+        </div>
+        
+        <div class="result" id="result"></div>
+        <div class="explanation" id="explanation"></div>
+    </div>
+    
+    <script>
+        // Toggle between mapping and piecewise interfaces
+        document.querySelectorAll('input[name="functionType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'mapping') {
+                    document.getElementById('mappingSection').style.display = 'block';
+                    document.getElementById('piecewiseSection').style.display = 'none';
+                } else {
+                    document.getElementById('mappingSection').style.display = 'none';
+                    document.getElementById('piecewiseSection').style.display = 'block';
+                }
+            });
+        });
+        
+        // Calculate properties for mapping notation
+        document.getElementById('calculateMapping').addEventListener('click', function() {
+            const values = [
+                parseInt(document.getElementById('mapping1').value),
+                parseInt(document.getElementById('mapping2').value),
+                parseInt(document.getElementById('mapping3').value),
+                parseInt(document.getElementById('mapping4').value),
+                parseInt(document.getElementById('mapping5').value)
+            ];
+            
+            analyzeFunction(values);
+        });
+        
+        // Calculate properties for piecewise function
+        document.getElementById('calculatePiecewise').addEventListener('click', function() {
+            const formula1 = document.getElementById('formula1').value;
+            const operator1 = document.getElementById('operator1').value;
+            const threshold1 = parseInt(document.getElementById('threshold1').value);
+            
+            const formula2 = document.getElementById('formula2').value;
+            const operator2 = document.getElementById('operator2').value;
+            const threshold2 = parseInt(document.getElementById('threshold2').value);
+            
+            // Calculate the function values for domain {1, 2, 3, 4, 5}
+            const values = [];
+            for (let x = 1; x <= 5; x++) {
+                let value;
+                
+                // First condition
+                if (evaluateCondition(x, operator1, threshold1)) {
+                    value = evaluateFormula(formula1, x);
+                }
+                // Second condition
+                else if (evaluateCondition(x, operator2, threshold2)) {
+                    value = evaluateFormula(formula2, x);
+                }
+                // Default (if no condition is met)
+                else {
+                    value = null;
+                }
+                
+                values.push(value);
+            }
+            
+            analyzeFunction(values);
+        });
+        
+        // Evaluate a piecewise condition
+        function evaluateCondition(x, operator, threshold) {
+            switch (operator) {
+                case '<': return x < threshold;
+                case '<=': return x <= threshold;
+                case '>': return x > threshold;
+                case '>=': return x >= threshold;
+                case '==': return x === threshold;
+                default: return false;
+            }
+        }
+        
+        // Evaluate a formula expression with x
+        function evaluateFormula(formula, x) {
+            try {
+                // Replace x with its value and evaluate
+                const result = eval(formula.replace(/x/g, x));
+                return Math.round(result); // Round to make sure we get integers
+            } catch (error) {
+                console.error("Error evaluating formula:", error);
+                return null;
+            }
+        }
+        
+        // Analyze function properties
+        function analyzeFunction(values) {
+            // Check if all values are within the codomain range
+            const validValues = values.every(v => v >= 1 && v <= 5);
+            if (!validValues) {
+                document.getElementById('result').textContent = "Error: All values must be between 1 and 5.";
+                document.getElementById('result').style.backgroundColor = "#ffcccc";
+                document.getElementById('explanation').textContent = "";
+                return;
+            }
+            
+            // Check injectivity (one-to-one)
+            const uniqueValues = new Set(values).size;
+            const isInjective = uniqueValues === values.length;
+            
+            // Check surjectivity (onto)
+            const allCodomainValues = new Set([1, 2, 3, 4, 5]);
+            const isSurjective = [...allCodomainValues].every(v => values.includes(v));
+            
+            // Determine the function property
+            let property;
+            if (isInjective && isSurjective) {
+                property = "Bijective";
+                document.getElementById('result').style.backgroundColor = "#d1e7dd";
+            } else if (isInjective) {
+                property = "Injective (only)";
+                document.getElementById('result').style.backgroundColor = "#d1ecf1";
+            } else if (isSurjective) {
+                property = "Surjective (only)";
+                document.getElementById('result').style.backgroundColor = "#fff3cd";
+            } else {
+                property = "Neither injective nor surjective";
+                document.getElementById('result').style.backgroundColor = "#f8d7da";
+            }
+            
+            document.getElementById('result').textContent = `This function is: ${property}`;
+            
+            // Provide explanation
+            let explanation = "";
+            explanation += `Function values: f(1)=${values[0]}, f(2)=${values[1]}, f(3)=${values[2]}, f(4)=${values[3]}, f(5)=${values[4]}\n\n`;
+            
+            if (isInjective) {
+                explanation += "Injective: Yes - each output value appears exactly once, so each element in the domain maps to a unique element in the codomain.\n\n";
+            } else {
+                // Find duplicates
+                const valueCounts = {};
+                values.forEach(v => {
+                    valueCounts[v] = (valueCounts[v] || 0) + 1;
+                });
+                
+                const duplicates = Object.entries(valueCounts)
+                    .filter(([_, count]) => count > 1)
+                    .map(([value, count]) => `Value ${value} appears ${count} times`);
+                
+                explanation += `Injective: No - the function is not one-to-one because some values in the codomain are used multiple times: ${duplicates.join(', ')}.\n\n`;
+            }
+            
+            if (isSurjective) {
+                explanation += "Surjective: Yes - every value in the codomain {1, 2, 3, 4, 5} appears at least once in the range.\n\n";
+            } else {
+                const unusedValues = [...allCodomainValues].filter(v => !values.includes(v));
+                explanation += `Surjective: No - the function is not onto because these values from the codomain are never reached: ${unusedValues.join(', ')}.\n\n`;
+            }
+            
+            if (isInjective && isSurjective) {
+                explanation += "Bijective: Yes - the function is both injective and surjective.";
+            } else {
+                explanation += "Bijective: No - the function must be both injective and surjective to be bijective.";
+            }
+            
+            document.getElementById('explanation').textContent = explanation;
+        }
+    </script>
+</body>
+</html>

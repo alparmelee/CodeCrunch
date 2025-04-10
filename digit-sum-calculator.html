@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Sum Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .calculator {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .work-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            border: 1px solid #d0e4fe;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: white;
+            border-left: 3px solid #6495ED;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fffaf0;
+            border-left: 4px solid #ffa500;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Digit Sum Calculator</h1>
+        
+        <div>
+            <h3>Calculate f(n) - Digit Sum</h3>
+            <p>Function f(abc) = a + b + c, where a, b, and c are the digits of the number (with leading zeros for numbers less than 100).</p>
+            <div>
+                <label for="number">Enter a number (0-999):</label>
+                <input type="number" id="number" min="0" max="999" placeholder="Enter a number">
+                <button onclick="calculateDigitSum()">Calculate f(n)</button>
+                <div id="calculator-result" class="result"></div>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div>
+            <h3>Calculate f<sup>-1</sup>(sum) - Inverse Function with Work Shown</h3>
+            <p>Find all numbers whose digits sum to a given value.</p>
+            <div>
+                <label for="digit-sum">Enter a digit sum (0-27):</label>
+                <input type="number" id="digit-sum" min="0" max="27" placeholder="Enter a digit sum">
+                <button onclick="findInverseFunction()">Calculate f<sup>-1</sup>(sum)</button>
+                <div id="inverse-result" class="result"></div>
+                <div id="work-explanation" class="work-section"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to calculate digit sum
+        function digitSum(num) {
+            // Convert to 3-digit format with leading zeros
+            let numStr = num.toString().padStart(3, '0');
+            let sum = 0;
+            
+            for (let i = 0; i < numStr.length; i++) {
+                sum += parseInt(numStr[i]);
+            }
+            
+            return sum;
+        }
+        
+        // Function to calculate digit sum
+        function calculateDigitSum() {
+            const number = parseInt(document.getElementById("number").value);
+            const resultDiv = document.getElementById("calculator-result");
+            
+            if (isNaN(number) || number < 0 || number > 999) {
+                resultDiv.innerHTML = "<p>Please enter a valid number between 0 and 999.</p>";
+                return;
+            }
+            
+            const sum = digitSum(number);
+            
+            // Format with leading zeros
+            const formattedNumber = number.toString().padStart(3, '0');
+            const a = parseInt(formattedNumber[0]);
+            const b = parseInt(formattedNumber[1]);
+            const c = parseInt(formattedNumber[2]);
+            
+            resultDiv.innerHTML = `
+                <p>f(${number}) = f(${formattedNumber}) = ${a} + ${b} + ${c} = ${sum}</p>
+            `;
+        }
+        
+        // Function to find inverse with work shown
+        function findInverseFunction() {
+            const sum = parseInt(document.getElementById("digit-sum").value);
+            const resultDiv = document.getElementById("inverse-result");
+            const workDiv = document.getElementById("work-explanation");
+            
+            if (isNaN(sum)) {
+                resultDiv.innerHTML = "<p>Please enter a valid digit sum.</p>";
+                workDiv.innerHTML = "";
+                return;
+            }
+            
+            if (sum > 27) {
+                resultDiv.innerHTML = `<p>f<sup>-1</sup>(${sum}) = ∅ (empty set)</p>`;
+                workDiv.innerHTML = `
+                    <h3>Explanation of Work</h3>
+                    <div class="step">
+                        <p>A 3-digit number can have digits from 0-9.</p>
+                        <p>The maximum possible digit sum is 9+9+9 = 27.</p>
+                        <p>Since ${sum} > 27, there are no 3-digit numbers with this digit sum.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let result = [];
+            let workHTML = `<h3>Detailed Work for Finding f<sup>-1</sup>(${sum})</h3>`;
+            
+            // First, explain the strategy
+            workHTML += `
+                <div class="explanation">
+                    <h4>Strategy</h4>
+                    <p>To find all numbers whose digits sum to ${sum}, we need to find all three-digit combinations (with possible leading zeros) where the digits add up to ${sum}.</p>
+                    <p>We'll systematically examine the possible first digits (a), then find valid combinations of second (b) and third (c) digits such that a + b + c = ${sum}.</p>
+                </div>
+            `;
+            
+            // Add a detailed step for each first digit
+            for (let a = 0; a <= 9; a++) {
+                let remainingSum = sum - a;
+                let validCombinations = [];
+                
+                if (remainingSum >= 0 && remainingSum <= 18) {
+                    // This first digit could be part of a solution
+                    workHTML += `<div class="step"><h4>First Digit = ${a}</h4>`;
+                    workHTML += `<p>After using ${a} as the first digit, we need the remaining digits to sum to ${remainingSum}</p>`;
+                    
+                    // Find all valid combinations of second and third digits
+                    for (let b = 0; b <= 9; b++) {
+                        let c = remainingSum - b;
+                        if (c >= 0 && c <= 9) {
+                            validCombinations.push({ b, c });
+                            const number = a * 100 + b * 10 + c;
+                            result.push(number);
+                        }
+                    }
+                    
+                    if (validCombinations.length > 0) {
+                        workHTML += `<p>Valid combinations for second and third digits:</p><ul>`;
+                        validCombinations.forEach(combo => {
+                            workHTML += `<li>${a} + ${combo.b} + ${combo.c} = ${sum} → Number: ${a}${combo.b}${combo.c}</li>`;
+                        });
+                        workHTML += `</ul>`;
+                    } else {
+                        workHTML += `<p>No valid combinations found with ${a} as the first digit.</p>`;
+                    }
+                    
+                    workHTML += `</div>`;
+                }
+            }
+            
+            // Sort the results
+            result.sort((a, b) => a - b);
+            
+            // Summary
+            workHTML += `
+                <div class="step">
+                    <h4>Summary</h4>
+                    <p>Total numbers with digit sum = ${sum}: ${result.length}</p>
+                </div>
+            `;
+            
+            if (result.length === 0) {
+                resultDiv.innerHTML = `<p>f<sup>-1</sup>(${sum}) = ∅ (empty set)</p>`;
+            } else if (result.length <= 25) {
+                resultDiv.innerHTML = `<p>f<sup>-1</sup>(${sum}) = {${result.join(', ')}}</p>`;
+            } else {
+                resultDiv.innerHTML = `
+                    <p>f<sup>-1</sup>(${sum}) = {${result.slice(0, 25).join(', ')}, ...}</p>
+                    <p>Total elements: ${result.length}</p>
+                    <button onclick="showAllResults()">Show All Results</button>
+                    <div id="all-results" style="display: none;"></div>
+                `;
+                // Store results for later display
+                window.allResults = result;
+            }
+            
+            workDiv.innerHTML = workHTML;
+        }
+        
+        // Function to show all results
+        function showAllResults() {
+            const allResultsDiv = document.getElementById("all-results");
+            allResultsDiv.style.display = "block";
+            
+            // Display results in a more readable format
+            let resultHTML = "<table><tr><th>Number</th><th>Digits</th><th>Sum</th></tr>";
+            for (let i = 0; i < window.allResults.length; i++) {
+                const num = window.allResults[i];
+                const formattedNum = num.toString().padStart(3, '0');
+                const a = parseInt(formattedNum[0]);
+                const b = parseInt(formattedNum[1]);
+                const c = parseInt(formattedNum[2]);
+                
+                resultHTML += `<tr><td>${num}</td><td>${a}, ${b}, ${c}</td><td>${a + b + c}</td></tr>`;
+            }
+            resultHTML += "</table>";
+            
+            allResultsDiv.innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>

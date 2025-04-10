@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Properties Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .calculator {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .domain-codomain {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .domain-input, .codomain-input {
+            flex: 1;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .counts {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .function-list {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .function-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .normal {
+            background-color: #f8f9fa;
+        }
+        .injective {
+            background-color: #d1ecf1;
+        }
+        .surjective {
+            background-color: #fff3cd;
+        }
+        .bijective {
+            background-color: #d1e7dd;
+        }
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .preset-button {
+            background-color: #6c757d;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Function Properties Counter</h1>
+    <p>Calculate all possible functions between two sets and analyze their properties.</p>
+    
+    <div class="calculator">
+        <div class="input-section">
+            <h2>Define the Domain and Codomain</h2>
+            
+            <div class="preset-buttons">
+                <button class="preset-button" onclick="loadPreset1()">Load Problem 1: f : {1, 2, 3, 4} → {a, b}</button>
+                <button class="preset-button" onclick="loadPreset2()">Load Problem 2: f : {1, 2} → {a, b, c, d}</button>
+            </div>
+            
+            <div class="domain-codomain">
+                <div class="domain-input">
+                    <label for="domain">Domain (comma-separated values):</label>
+                    <input type="text" id="domain" placeholder="e.g., 1, 2, 3, 4">
+                </div>
+                
+                <div class="codomain-input">
+                    <label for="codomain">Codomain (comma-separated values):</label>
+                    <input type="text" id="codomain" placeholder="e.g., a, b">
+                </div>
+            </div>
+            
+            <button id="calculate">Calculate Functions</button>
+        </div>
+        
+        <div class="results" id="results" style="display: none;">
+            <h2>Results</h2>
+            
+            <div class="counts" id="counts">
+                <!-- Counts will be inserted here -->
+            </div>
+            
+            <h3>Functions in Two-Line Notation</h3>
+            <div class="function-list" id="functionList">
+                <!-- Functions will be listed here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Load preset for Problem 1
+        function loadPreset1() {
+            document.getElementById('domain').value = '1, 2, 3, 4';
+            document.getElementById('codomain').value = 'a, b';
+            document.getElementById('calculate').click();
+        }
+        
+        // Load preset for Problem 2
+        function loadPreset2() {
+            document.getElementById('domain').value = '1, 2';
+            document.getElementById('codomain').value = 'a, b, c, d';
+            document.getElementById('calculate').click();
+        }
+        
+        // Generate all possible functions
+        function generateAllFunctions(domain, codomain) {
+            const functions = [];
+            
+            // Generate all possible mappings using recursion
+            function generateMapping(currentMapping, index) {
+                if (index === domain.length) {
+                    functions.push([...currentMapping]);
+                    return;
+                }
+                
+                for (let i = 0; i < codomain.length; i++) {
+                    currentMapping[index] = codomain[i];
+                    generateMapping(currentMapping, index + 1);
+                }
+            }
+            
+            generateMapping(Array(domain.length), 0);
+            return functions;
+        }
+        
+        // Check if a function is injective (one-to-one)
+        function isInjective(mapping, domain, codomain) {
+            const usedValues = new Set();
+            for (let i = 0; i < mapping.length; i++) {
+                const value = mapping[i];
+                if (usedValues.has(value)) {
+                    return false;
+                }
+                usedValues.add(value);
+            }
+            return true;
+        }
+        
+        // Check if a function is surjective (onto)
+        function isSurjective(mapping, domain, codomain) {
+            const usedValues = new Set(mapping);
+            return usedValues.size === codomain.length;
+        }
+        
+        // Calculate and display the results
+        document.getElementById('calculate').addEventListener('click', function() {
+            const domainInput = document.getElementById('domain').value.trim();
+            const codomainInput = document.getElementById('codomain').value.trim();
+            
+            if (!domainInput || !codomainInput) {
+                alert('Please enter both domain and codomain values.');
+                return;
+            }
+            
+            // Parse domain and codomain
+            const domain = domainInput.split(',').map(item => item.trim());
+            const codomain = codomainInput.split(',').map(item => item.trim());
+            
+            // Generate all functions
+            const allFunctions = generateAllFunctions(domain, codomain);
+            
+            // Count properties
+            let injectiveCount = 0;
+            let surjectiveCount = 0;
+            let bijectiveCount = 0;
+            
+            // Prepare function display HTML
+            let functionsHTML = '';
+            
+            // Analyze each function
+            allFunctions.forEach((mapping, index) => {
+                const isInj = isInjective(mapping, domain, codomain);
+                const isSurj = isSurjective(mapping, domain, codomain);
+                const isBij = isInj && isSurj;
+                
+                // Update counts
+                if (isInj) injectiveCount++;
+                if (isSurj) surjectiveCount++;
+                if (isBij) bijectiveCount++;
+                
+                // Determine CSS class
+                let cssClass = 'normal';
+                if (isBij) cssClass = 'bijective';
+                else if (isInj) cssClass = 'injective';
+                else if (isSurj) cssClass = 'surjective';
+                
+                // Format two-line notation
+                const topLine = domain.join(' ');
+                const bottomLine = mapping.join(' ');
+                
+                // Add function to HTML with proper formatting and classification
+                functionsHTML += `
+                    <div class="function-item ${cssClass}">
+                        Function ${index + 1}: f = (
+                        <table>
+                            <tr><td>${topLine}</td></tr>
+                            <tr><td>${bottomLine}</td></tr>
+                        </table>
+                        )
+                        <p>
+                            ${isBij ? '<strong>Bijective</strong>' : 
+                              isInj ? '<strong>Injective (only)</strong>' : 
+                              isSurj ? '<strong>Surjective (only)</strong>' : 
+                              '<strong>Neither injective nor surjective</strong>'}
+                        </p>
+                    </div>
+                `;
+            });
+            
+            // Display counts
+            const countsHTML = `
+                <h3>Summary</h3>
+                <p>Total number of functions: <strong>${allFunctions.length}</strong></p>
+                <p>Number of injective functions: <strong>${injectiveCount}</strong></p>
+                <p>Number of surjective functions: <strong>${surjectiveCount}</strong></p>
+                <p>Number of bijective functions: <strong>${bijectiveCount}</strong></p>
+                <p>Number of functions that are neither injective nor surjective: <strong>${allFunctions.length - injectiveCount - surjectiveCount + bijectiveCount}</strong></p>
+            `;
+            
+            // Update the DOM
+            document.getElementById('counts').innerHTML = countsHTML;
+            document.getElementById('functionList').innerHTML = functionsHTML;
+            document.getElementById('results').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
