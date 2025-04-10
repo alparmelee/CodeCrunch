@@ -24,6 +24,25 @@
             border: 2px solid #ddd;
             border-radius: 5px;
         }
+        #category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 8px 15px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn.active {
+            background-color: #4a86e8;
+            color: white;
+        }
         #flashcards-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -38,6 +57,15 @@
         }
         .flashcard:hover {
             transform: scale(1.03);
+        }
+        .category-tag {
+            display: inline-block;
+            font-size: 12px;
+            background-color: #e8f0fe;
+            color: #4a86e8;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-bottom: 8px;
         }
         .term {
             font-size: 20px;
@@ -55,6 +83,7 @@
     <div id="search-container">
         <input type="text" id="search-input" placeholder="🔍 Search Advanced Database Design Definitions...">
     </div>
+    <div id="category-filter"></div>
     <div id="flashcards-container"></div>
 
     <script>
@@ -62,157 +91,239 @@
             {
                 term: "Physical Database 💽",
                 definition: "A form of database specification that indicates all parameters for data storage, which are then input into database implementation.",
-                emoji: "💽"
+                emoji: "💽",
+                category: "Database Design"
             },
             {
                 term: "Impact of Physical Database Design 🔍",
                 definition: "Affects data accessibility, response times, and security.",
-                emoji: "🔍"
+                emoji: "🔍",
+                category: "Database Design"
             },
             {
                 term: "Relational Data Model Components 🧩",
                 definition: "Includes data structure, data integrity, and data manipulation.",
-                emoji: "🧩"
+                emoji: "🧩",
+                category: "Data Modeling"
             },
             {
                 term: "Data Integrity 🛡️",
                 definition: "A component of the relational data model used to specify business rules to maintain the integrity of data when manipulated.",
-                emoji: "🛡️"
+                emoji: "🛡️",
+                category: "Data Integrity"
             },
             {
                 term: "Properties of Relations 📋",
                 definition: "Each relation has a unique name, attributes are atomic, each row is unique, attribute names are unique, and the sequence of columns and rows is insignificant.",
-                emoji: "📋"
+                emoji: "📋",
+                category: "Data Modeling"
             },
             {
                 term: "Entity Integrity Rule 🚫",
                 definition: "States that no primary key attribute can be null.",
-                emoji: "🚫"
+                emoji: "🚫",
+                category: "Data Integrity"
             },
             {
                 term: "Domain Definition Components 📝",
                 definition: "Includes domain name, meaning, data type, size, allowable values, or allowable range.",
-                emoji: "📝"
+                emoji: "📝",
+                category: "Data Modeling"
             },
             {
                 term: "Referential Integrity Constraint 🔗",
                 definition: "A rule stating that each foreign key value must match a primary key value in another relation.",
-                emoji: "🔗"
+                emoji: "🔗",
+                category: "Data Integrity"
             },
             {
                 term: "Transforming EER Diagrams into Relations 🔄",
                 definition: "Ensures accurate database output and corrects errors from CASE tools.",
-                emoji: "🔄"
+                emoji: "🔄",
+                category: "Database Design"
             },
             {
                 term: "Normalization Goals 🎯",
                 definition: "Minimize redundancy, enforce referential integrity, simplify data maintenance, and create a better real-world representation.",
-                emoji: "🎯"
+                emoji: "🎯",
+                category: "Normalization"
             },
             {
                 term: "First Normal Form (1NF) 1️⃣",
                 definition: "A relation without multivalued attributes.",
-                emoji: "1️⃣"
+                emoji: "1️⃣",
+                category: "Normalization"
             },
             {
                 term: "Second Normal Form (2NF) 2️⃣",
                 definition: "A relation without multivalued attributes, where all non-key attributes depend only on the primary key, but transitive dependencies may exist.",
-                emoji: "2️⃣"
+                emoji: "2️⃣",
+                category: "Normalization"
             },
             {
                 term: "Candidate Key Conditions 🔑",
                 definition: "Must uniquely identify a row and be non-redundant.",
-                emoji: "🔑"
+                emoji: "🔑",
+                category: "Data Modeling"
             },
             {
                 term: "Determinant 🧮",
                 definition: "The attribute on the left-hand side of a functional dependency.",
-                emoji: "🧮"
+                emoji: "🧮",
+                category: "Normalization"
             },
             {
                 term: "Transitive Dependency 🔀",
                 definition: "A functional dependency between two or more non-key attributes.",
-                emoji: "🔀"
+                emoji: "🔀",
+                category: "Normalization"
             },
             {
                 term: "Physical File and Database Design Requirements 📊",
                 definition: "Normalized data, attribute definitions, and technology descriptions.",
-                emoji: "📊"
+                emoji: "📊",
+                category: "Database Design"
             },
             {
                 term: "Estimating Database Access Frequencies 📈",
                 definition: "Derived from transaction volumes.",
-                emoji: "📈"
+                emoji: "📈",
+                category: "Performance"
             },
             {
                 term: "Data Type Selection Objectives 🎛️",
                 definition: "Represent values, improve integrity, support data manipulations, and minimize storage.",
-                emoji: "🎛️"
+                emoji: "🎛️",
+                category: "Implementation"
             },
             {
                 term: "Oracle 11G Data Types 💾",
                 definition: "Includes VARCHAR2, CHAR, CLOB, NUMBER, DATE, and BLOB.",
-                emoji: "💾"
+                emoji: "💾",
+                category: "Implementation"
             },
             {
                 term: "Field 🏷️",
                 definition: "The smallest unit of application data recognized by system software.",
-                emoji: "🏷️"
+                emoji: "🏷️",
+                category: "Data Modeling"
             },
             {
                 term: "Integrity Control in DBMS 🛡️",
                 definition: "Includes default values, range control, null value control, and referential integrity.",
-                emoji: "🛡️"
+                emoji: "🛡️",
+                category: "Data Integrity"
             },
             {
                 term: "Default Value ➡️",
                 definition: "The value a field assumes unless a user explicitly enters a different value.",
-                emoji: "➡️"
+                emoji: "➡️",
+                category: "Implementation"
             },
             {
                 term: "Handling Missing Data 🕳️",
                 definition: "Includes substitution, tracking with special reports, and sensitivity testing.",
-                emoji: "🕳️"
+                emoji: "🕳️",
+                category: "Data Integrity"
             },
             {
                 term: "Sensitivity Testing 🔬",
                 definition: "Evaluates whether missing data significantly impacts results.",
-                emoji: "🔬"
+                emoji: "🔬",
+                category: "Performance"
             },
             {
                 term: "Denormalization Opportunities 🔄",
                 definition: "Occur in 1:1 relationships, M:M relationships with non-key attributes, and reference data.",
-                emoji: "🔄"
+                emoji: "🔄",
+                category: "Performance"
             },
             {
                 term: "Horizontal Partitioning ➡️",
                 definition: "The process of distributing rows of data into separate files.",
-                emoji: "➡️"
+                emoji: "➡️",
+                category: "Performance"
             },
             {
                 term: "When Horizontal Partitioning is Useful 🧩",
                 definition: "When different categories of rows are processed separately.",
-                emoji: "🧩"
+                emoji: "🧩",
+                category: "Performance"
             },
             {
                 term: "Advantages of Partitioning ✅",
                 definition: "Includes efficiency, local optimization, security, recovery, uptime, and load balancing.",
-                emoji: "✅"
+                emoji: "✅",
+                category: "Performance"
             },
             {
                 term: "Disadvantages of Partitioning ❌",
                 definition: "Includes inconsistent access speed, complexity, extra space, and update time.",
-                emoji: "❌"
+                emoji: "❌",
+                category: "Performance"
             },
             {
                 term: "Pointer 🔗",
                 definition: "A field of data used to locate a related field or record.",
-                emoji: "🔗"
+                emoji: "🔗",
+                category: "Implementation"
             }
         ];
 
         const flashcardsContainer = document.getElementById('flashcards-container');
         const searchInput = document.getElementById('search-input');
+        const categoryFilter = document.getElementById('category-filter');
+        
+        // Extract unique categories
+        const categories = ["All", ...new Set(flashcards.map(card => card.category))];
+        
+        // Create category filter buttons
+        categories.forEach(category => {
+            const button = document.createElement('button');
+            button.classList.add('category-btn');
+            if (category === "All") {
+                button.classList.add('active');
+            }
+            button.textContent = category;
+            button.dataset.category = category;
+            button.addEventListener('click', filterByCategory);
+            categoryFilter.appendChild(button);
+        });
+        
+        let currentCategory = "All";
+        let searchTerm = "";
+        
+        function filterByCategory(e) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            e.target.classList.add('active');
+            
+            currentCategory = e.target.dataset.category;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filteredCards = flashcards;
+            
+            // Filter by search term
+            if (searchTerm) {
+                filteredCards = filteredCards.filter(card => 
+                    card.term.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    card.definition.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            // Filter by category
+            if (currentCategory !== "All") {
+                filteredCards = filteredCards.filter(card => card.category === currentCategory);
+            }
+            
+            renderFlashcards(filteredCards);
+        }
 
         function renderFlashcards(cardsToShow) {
             flashcardsContainer.innerHTML = '';
@@ -220,6 +331,7 @@
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('flashcard');
                 cardElement.innerHTML = `
+                    <div class="category-tag">${card.category}</div>
                     <div class="term">${card.term}</div>
                     <div class="definition">${card.definition}</div>
                 `;
@@ -227,20 +339,14 @@
             });
         }
 
-        function filterFlashcards() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const filteredCards = flashcards.filter(card => 
-                card.term.toLowerCase().includes(searchTerm) || 
-                card.definition.toLowerCase().includes(searchTerm)
-            );
-            renderFlashcards(filteredCards);
-        }
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+            searchTerm = this.value;
+            applyFilters();
+        });
 
         // Initial render of all cards
         renderFlashcards(flashcards);
-
-        // Add search functionality
-        searchInput.addEventListener('input', filterFlashcards);
     </script>
 </body>
 </html>
