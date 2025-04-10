@@ -11,6 +11,14 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
         #search-container {
             display: flex;
             justify-content: center;
@@ -23,6 +31,29 @@
             font-size: 16px;
             border: 2px solid #ddd;
             border-radius: 5px;
+        }
+        #categories-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .category-btn.active {
+            background-color: #4285f4;
+            color: white;
         }
         #flashcards-container {
             display: grid;
@@ -39,6 +70,15 @@
         .flashcard:hover {
             transform: scale(1.03);
         }
+        .category-tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 8px;
+        }
         .term {
             font-size: 20px;
             font-weight: bold;
@@ -49,12 +89,33 @@
             font-size: 16px;
             color: #666;
         }
+        #results-info {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Database & Systems Development Flashcards</h1>
+    </header>
+    
     <div id="search-container">
         <input type="text" id="search-input" placeholder="🔍 Search Database and Systems Development Definitions...">
     </div>
+    
+    <div id="categories-container">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="db-basics">Database Basics</button>
+        <button class="category-btn" data-category="db-models">Data Modeling</button>
+        <button class="category-btn" data-category="entities">Entities & Attributes</button>
+        <button class="category-btn" data-category="systems">Systems Development</button>
+        <button class="category-btn" data-category="relationships">Relationships</button>
+        <button class="category-btn" data-category="architecture">Architecture & Design</button>
+    </div>
+    
+    <div id="results-info"></div>
     <div id="flashcards-container"></div>
 
     <script>
@@ -62,164 +123,256 @@
             {
                 term: "Database 💾",
                 definition: "An organized collection of logically related data.",
-                emoji: "💾"
+                emoji: "💾",
+                category: "db-basics"
             },
             {
                 term: "Legacy Systems 🕰️",
                 definition: "Older systems that often contain data of poor quality.",
-                emoji: "🕰️"
+                emoji: "🕰️",
+                category: "systems"
             },
             {
                 term: "Program-Data Dependence 🔗",
                 definition: "Caused by file descriptors being stored in each application.",
-                emoji: "🔗"
+                emoji: "🔗",
+                category: "architecture"
             },
             {
                 term: "File Processing Systems 📁",
                 definition: "Often lead to unplanned duplicate data files.",
-                emoji: "📁"
+                emoji: "📁",
+                category: "systems"
             },
             {
                 term: "Relation 🔀",
                 definition: "A file in a relational database that includes common fields to establish relationships.",
-                emoji: "🔀"
+                emoji: "🔀",
+                category: "relationships"
             },
             {
                 term: "User View 👀",
                 definition: "Often developed by identifying a form or report that a user needs regularly.",
-                emoji: "👀"
+                emoji: "👀",
+                category: "architecture"
             },
             {
                 term: "Data Model 📊",
                 definition: "A graphical system used to capture the nature and relationships among data.",
-                emoji: "📊"
+                emoji: "📊",
+                category: "db-models"
             },
             {
                 term: "Metadata 📝",
                 definition: "Data that describe the properties of other data.",
-                emoji: "📝"
+                emoji: "📝",
+                category: "db-basics"
             },
             {
                 term: "Entity 🏷️",
                 definition: "A person, place, object, event, or concept that an organization wants to track.",
-                emoji: "🏷️"
+                emoji: "🏷️",
+                category: "entities"
             },
             {
                 term: "Relationships 🔗",
                 definition: "Established between entities in a well-structured database to enable data retrieval.",
-                emoji: "🔗"
+                emoji: "🔗",
+                category: "relationships"
             },
             {
                 term: "Database Management System (DBMS) 💻",
                 definition: "Software that manages databases; excludes providing an integrated development environment.",
-                emoji: "💻"
+                emoji: "💻",
+                category: "db-basics"
             },
             {
                 term: "Repository 🗃️",
                 definition: "A central location storing data descriptions in a database system.",
-                emoji: "🗃️"
+                emoji: "🗃️",
+                category: "architecture"
             },
             {
                 term: "Constraint 🚧",
                 definition: "A rule that database users cannot violate.",
-                emoji: "🚧"
+                emoji: "🚧",
+                category: "db-basics"
             },
             {
                 term: "Three-Schema Architecture 🏗️",
                 definition: "Includes internal, conceptual, and external schemas.",
-                emoji: "🏗️"
+                emoji: "🏗️",
+                category: "architecture"
             },
             {
                 term: "Prototyping 🧩",
                 definition: "A popular rapid application development (RAD) method.",
-                emoji: "🧩"
+                emoji: "🧩",
+                category: "systems"
             },
             {
                 term: "Analysis Phase 🔍",
                 definition: "The SDLC phase where the detailed conceptual data model is created.",
-                emoji: "🔍"
+                emoji: "🔍",
+                category: "systems"
             },
             {
                 term: "Systems Development Life Cycle (SDLC) 🔄",
                 definition: "The traditional methodology for developing, maintaining, and replacing information systems.",
-                emoji: "🔄"
+                emoji: "🔄",
+                category: "systems"
             },
             {
                 term: "Enterprise Data Modeling 🌐",
                 definition: "The first step in database development, establishing the scope of databases.",
-                emoji: "🌐"
+                emoji: "🌐",
+                category: "db-models"
             },
             {
                 term: "Workgroup Database 🖥️",
                 definition: "Stored on a central server.",
-                emoji: "🖥️"
+                emoji: "🖥️",
+                category: "db-basics"
             },
             {
                 term: "E. F. Codd 👨‍💻",
                 definition: "Developed the relational model in the 1970s.",
-                emoji: "👨‍💻"
+                emoji: "👨‍💻",
+                category: "db-basics"
             },
             {
                 term: "Entity-Relationship Model (E-R Model) 📈",
                 definition: "The logical representation of an organization's data.",
-                emoji: "📈"
+                emoji: "📈",
+                category: "db-models"
             },
             {
                 term: "Strong Entity 💪",
                 definition: "An entity that exists independently of other entity types.",
-                emoji: "💪"
+                emoji: "💪",
+                category: "entities"
             },
             {
                 term: "Weak Entity 🤝",
                 definition: "An entity whose existence depends on another entity type.",
-                emoji: "🤝"
+                emoji: "🤝",
+                category: "entities"
             },
             {
                 term: "Identifying Relationship 🔍",
                 definition: "The relationship between a weak entity and its owner.",
-                emoji: "🔍"
+                emoji: "🔍",
+                category: "relationships"
             },
             {
                 term: "Attribute 🏷️",
                 definition: "A property or characteristic of an entity type.",
-                emoji: "🏷️"
+                emoji: "🏷️",
+                category: "entities"
             },
             {
                 term: "Required Attribute ❗",
                 definition: "An attribute that must have a value for every entity instance.",
-                emoji: "❗"
+                emoji: "❗",
+                category: "entities"
             },
             {
                 term: "Composite Attribute 🧩",
                 definition: "An attribute that can be broken down into smaller parts.",
-                emoji: "🧩"
+                emoji: "🧩",
+                category: "entities"
             },
             {
                 term: "Degree of a Relationship 📏",
                 definition: "The number of entity types that participate in a relationship.",
-                emoji: "📏"
+                emoji: "📏",
+                category: "relationships"
             },
             {
                 term: "Unary Relationship 🔄",
                 definition: "A relationship between instances of a single entity type.",
-                emoji: "🔄"
+                emoji: "🔄",
+                category: "relationships"
             },
             {
                 term: "Ternary Relationship 🔀",
                 definition: "A simultaneous relationship among three entity types.",
-                emoji: "🔀"
+                emoji: "🔀",
+                category: "relationships"
             }
         ];
 
         const flashcardsContainer = document.getElementById('flashcards-container');
         const searchInput = document.getElementById('search-input');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const resultsInfo = document.getElementById('results-info');
+
+        let currentCategory = 'all';
+        let currentSearchTerm = '';
+
+        // Category display names for better readability
+        const categoryNames = {
+            'all': 'All Categories',
+            'db-basics': 'Database Basics',
+            'db-models': 'Data Modeling',
+            'entities': 'Entities & Attributes',
+            'systems': 'Systems Development',
+            'relationships': 'Relationships',
+            'architecture': 'Architecture & Design'
+        };
+
+        function filterFlashcards() {
+            const searchTerm = currentSearchTerm.toLowerCase();
+            let filteredCards = flashcards;
+            
+            // Filter by category first
+            if (currentCategory !== 'all') {
+                filteredCards = filteredCards.filter(card => card.category === currentCategory);
+            }
+            
+            // Then filter by search term
+            if (searchTerm !== '') {
+                filteredCards = filteredCards.filter(card => 
+                    card.term.toLowerCase().includes(searchTerm) || 
+                    card.definition.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Update results info
+            updateResultsInfo(filteredCards.length);
+            
+            // Render the filtered cards
+            renderFlashcards(filteredCards);
+        }
+
+        function updateResultsInfo(count) {
+            let categoryText = categoryNames[currentCategory];
+            let searchText = currentSearchTerm ? ` matching "${currentSearchTerm}"` : '';
+            resultsInfo.textContent = `Showing ${count} flashcard${count !== 1 ? 's' : ''} in ${categoryText}${searchText}`;
+        }
 
         function renderFlashcards(cardsToShow) {
             flashcardsContainer.innerHTML = '';
+            
+            if (cardsToShow.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.style.gridColumn = '1 / -1';
+                noResults.style.textAlign = 'center';
+                noResults.style.padding = '40px';
+                noResults.style.color = '#666';
+                noResults.innerHTML = `
+                    <h3>No flashcards found</h3>
+                    <p>Try adjusting your search or selecting a different category</p>
+                `;
+                flashcardsContainer.appendChild(noResults);
+                return;
+            }
+            
             cardsToShow.forEach(card => {
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('flashcard');
                 cardElement.innerHTML = `
+                    <div class="category-tag">${categoryNames[card.category]}</div>
                     <div class="term">${card.term}</div>
                     <div class="definition">${card.definition}</div>
                 `;
@@ -227,20 +380,27 @@
             });
         }
 
-        function filterFlashcards() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const filteredCards = flashcards.filter(card => 
-                card.term.toLowerCase().includes(searchTerm) || 
-                card.definition.toLowerCase().includes(searchTerm)
-            );
-            renderFlashcards(filteredCards);
-        }
+        // Add search functionality
+        searchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value;
+            filterFlashcards();
+        });
+
+        // Add category filter functionality
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update current category and filter
+                currentCategory = button.dataset.category;
+                filterFlashcards();
+            });
+        });
 
         // Initial render of all cards
-        renderFlashcards(flashcards);
-
-        // Add search functionality
-        searchInput.addEventListener('input', filterFlashcards);
+        filterFlashcards();
     </script>
 </body>
 </html>
