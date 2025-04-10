@@ -11,6 +11,14 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
         #search-container {
             display: flex;
             justify-content: center;
@@ -23,6 +31,29 @@
             font-size: 16px;
             border: 2px solid #ddd;
             border-radius: 5px;
+        }
+        #categories-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .category-btn.active {
+            background-color: #4285f4;
+            color: white;
         }
         #flashcards-container {
             display: grid;
@@ -39,6 +70,15 @@
         .flashcard:hover {
             transform: scale(1.03);
         }
+        .category-tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 8px;
+        }
         .term {
             font-size: 20px;
             font-weight: bold;
@@ -49,12 +89,34 @@
             font-size: 16px;
             color: #666;
         }
+        #results-info {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1>HR & Project Management Flashcards</h1>
+    </header>
+    
     <div id="search-container">
         <input type="text" id="search-input" placeholder="🔍 Search HR and Project Management Definitions...">
     </div>
+    
+    <div id="categories-container">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="hr-basics">HR Basics</button>
+        <button class="category-btn" data-category="motivation">Motivation Theories</button>
+        <button class="category-btn" data-category="team-management">Team Management</button>
+        <button class="category-btn" data-category="project-roles">Project Roles</button>
+        <button class="category-btn" data-category="communication">Communication</button>
+        <button class="category-btn" data-category="risk">Risk Management</button>
+        <button class="category-btn" data-category="resource">Resource Management</button>
+    </div>
+    
+    <div id="results-info"></div>
     <div id="flashcards-container"></div>
 
     <script>
@@ -62,164 +124,257 @@
             {
                 term: "Human Resource Management 👥",
                 definition: "Making the most effective use of the people involved with a project.",
-                emoji: "👥"
+                emoji: "👥",
+                category: "hr-basics"
             },
             {
                 term: "Planning Human Resource Management 📝",
                 definition: "Identifying and documenting project roles, responsibilities, and reporting relationships.",
-                emoji: "📝"
+                emoji: "📝",
+                category: "hr-basics"
             },
             {
                 term: "Acquiring the Project Team 🤝",
                 definition: "Assigning the appropriate type and number of people to work on projects at the appropriate times.",
-                emoji: "🤝"
+                emoji: "🤝",
+                category: "hr-basics"
             },
             {
                 term: "Developing the Project Team 🌱",
                 definition: "Building individual and group skills to enhance project performance.",
-                emoji: "🌱"
+                emoji: "🌱",
+                category: "team-management"
             },
             {
                 term: "Managing the Project Team 🏆",
                 definition: "Tracking performance, motivating members, resolving issues, and coordinating changes to enhance project performance.",
-                emoji: "🏆"
+                emoji: "🏆",
+                category: "team-management"
             },
             {
                 term: "Intrinsic Motivation 💡",
                 definition: "Causes people to participate in an activity for their own enjoyment.",
-                emoji: "💡"
+                emoji: "💡",
+                category: "motivation"
             },
             {
                 term: "Extrinsic Motivation 🏅",
                 definition: "Causes people to do something for a reward or to avoid a penalty.",
-                emoji: "🏅"
+                emoji: "🏅",
+                category: "motivation"
             },
             {
                 term: "Maslow's Hierarchy of Needs 🧩",
                 definition: "Motivational theory with five levels: physiological, safety, social, esteem, and self-actualization.",
-                emoji: "🧩"
+                emoji: "🧩",
+                category: "motivation"
             },
             {
                 term: "Herzberg's Motivation-Hygiene Theory 📊",
                 definition: "Distinguishes between motivational factors (job satisfaction) and hygiene factors (dissatisfaction if absent).",
-                emoji: "📊"
+                emoji: "📊",
+                category: "motivation"
             },
             {
                 term: "McClelland's Acquired-Needs Theory 🌟",
                 definition: "People develop needs (achievement, affiliation, power) over time through life experiences.",
-                emoji: "🌟"
+                emoji: "🌟",
+                category: "motivation"
             },
             {
                 term: "McGregor's Theory X 🚫",
                 definition: "Assumes workers dislike work and require coercion to meet objectives.",
-                emoji: "🚫"
+                emoji: "🚫",
+                category: "motivation"
             },
             {
                 term: "McGregor's Theory Y ✅",
                 definition: "Assumes work is as natural as play, and workers can be self-motivated.",
-                emoji: "✅"
+                emoji: "✅",
+                category: "motivation"
             },
             {
                 term: "Authority 👑",
                 definition: "The legitimate hierarchical right to issue orders.",
-                emoji: "👑"
+                emoji: "👑",
+                category: "project-roles"
             },
             {
                 term: "Power 💪",
                 definition: "The potential ability to influence behavior to get people to do things they otherwise wouldn't.",
-                emoji: "💪"
+                emoji: "💪",
+                category: "project-roles"
             },
             {
                 term: "Responsibility Assignment Matrix (RAM) 📋",
                 definition: "Maps project work to responsible individuals.",
-                emoji: "📋"
+                emoji: "📋",
+                category: "project-roles"
             },
             {
                 term: "RACI Chart 🗂️",
                 definition: "Defines roles in projects as Responsible, Accountable, Consulted, and Informed.",
-                emoji: "🗂️"
+                emoji: "🗂️",
+                category: "project-roles"
             },
             {
                 term: "Resource Loading 📊",
                 definition: "The amount of individual resources required during specific periods.",
-                emoji: "📊"
+                emoji: "📊",
+                category: "resource"
             },
             {
                 term: "Resource Leveling 🔄",
                 definition: "Resolving resource conflicts by delaying tasks.",
-                emoji: "🔄"
+                emoji: "🔄",
+                category: "resource"
             },
             {
                 term: "Tuckman Model 🚀",
                 definition: "Describes five stages of team development: forming, storming, norming, performing, and adjourning.",
-                emoji: "🚀"
+                emoji: "🚀",
+                category: "team-management"
             },
             {
                 term: "Conflict Management 🤼",
                 definition: "Includes confrontation, compromise, smoothing, withdrawal, and collaboration.",
-                emoji: "🤼"
+                emoji: "🤼",
+                category: "team-management"
             },
             {
                 term: "Communication Management Plan 📧",
                 definition: "Defines communication details such as format, content, recipients, and frequency.",
-                emoji: "📧"
+                emoji: "📧",
+                category: "communication"
             },
             {
                 term: "Push Communication 📨",
                 definition: "Sender delivers information to recipients (e.g., emails, reports).",
-                emoji: "📨"
+                emoji: "📨",
+                category: "communication"
             },
             {
                 term: "Pull Communication 📥",
                 definition: "Receivers retrieve the needed information (e.g., dashboards, repositories).",
-                emoji: "📥"
+                emoji: "📥",
+                category: "communication"
             },
             {
                 term: "Status Reports 📝",
                 definition: "Describe where the project stands at a specific point in time.",
-                emoji: "📝"
+                emoji: "📝",
+                category: "communication"
             },
             {
                 term: "Risk Management 🛡️",
                 definition: "Identifying, analyzing, and responding to risks throughout the project lifecycle.",
-                emoji: "🛡️"
+                emoji: "🛡️",
+                category: "risk"
             },
             {
                 term: "Risk Register 📑",
                 definition: "A document tracking identified risks, their impact, and response plans.",
-                emoji: "📑"
+                emoji: "📑",
+                category: "risk"
             },
             {
                 term: "Decision Tree Analysis 🌳",
                 definition: "A technique for selecting the best course of action in uncertain conditions.",
-                emoji: "🌳"
+                emoji: "🌳",
+                category: "risk"
             },
             {
                 term: "Monte Carlo Analysis 🎲",
                 definition: "Uses simulations to predict project outcomes under different risk scenarios.",
-                emoji: "🎲"
+                emoji: "🎲",
+                category: "risk"
             },
             {
                 term: "Negative Risk (Threats) ⚠️",
                 definition: "Risks that may hinder project success, managed by avoidance, mitigation, transference, or acceptance.",
-                emoji: "⚠️"
+                emoji: "⚠️",
+                category: "risk"
             },
             {
                 term: "Positive Risk (Opportunities) 🌈",
                 definition: "Risks that may benefit the project, managed by exploitation, enhancement, sharing, or acceptance.",
-                emoji: "🌈"
+                emoji: "🌈",
+                category: "risk"
             }
         ];
 
         const flashcardsContainer = document.getElementById('flashcards-container');
         const searchInput = document.getElementById('search-input');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const resultsInfo = document.getElementById('results-info');
+
+        let currentCategory = 'all';
+        let currentSearchTerm = '';
+
+        // Category display names for better readability
+        const categoryNames = {
+            'all': 'All Categories',
+            'hr-basics': 'HR Basics',
+            'motivation': 'Motivation Theories',
+            'team-management': 'Team Management',
+            'project-roles': 'Project Roles',
+            'communication': 'Communication',
+            'risk': 'Risk Management',
+            'resource': 'Resource Management'
+        };
+
+        function filterFlashcards() {
+            const searchTerm = currentSearchTerm.toLowerCase();
+            let filteredCards = flashcards;
+            
+            // Filter by category first
+            if (currentCategory !== 'all') {
+                filteredCards = filteredCards.filter(card => card.category === currentCategory);
+            }
+            
+            // Then filter by search term
+            if (searchTerm !== '') {
+                filteredCards = filteredCards.filter(card => 
+                    card.term.toLowerCase().includes(searchTerm) || 
+                    card.definition.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Update results info
+            updateResultsInfo(filteredCards.length);
+            
+            // Render the filtered cards
+            renderFlashcards(filteredCards);
+        }
+
+        function updateResultsInfo(count) {
+            let categoryText = categoryNames[currentCategory];
+            let searchText = currentSearchTerm ? ` matching "${currentSearchTerm}"` : '';
+            resultsInfo.textContent = `Showing ${count} flashcard${count !== 1 ? 's' : ''} in ${categoryText}${searchText}`;
+        }
 
         function renderFlashcards(cardsToShow) {
             flashcardsContainer.innerHTML = '';
+            
+            if (cardsToShow.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.style.gridColumn = '1 / -1';
+                noResults.style.textAlign = 'center';
+                noResults.style.padding = '40px';
+                noResults.style.color = '#666';
+                noResults.innerHTML = `
+                    <h3>No flashcards found</h3>
+                    <p>Try adjusting your search or selecting a different category</p>
+                `;
+                flashcardsContainer.appendChild(noResults);
+                return;
+            }
+            
             cardsToShow.forEach(card => {
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('flashcard');
                 cardElement.innerHTML = `
+                    <div class="category-tag">${categoryNames[card.category]}</div>
                     <div class="term">${card.term}</div>
                     <div class="definition">${card.definition}</div>
                 `;
@@ -227,20 +382,27 @@
             });
         }
 
-        function filterFlashcards() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const filteredCards = flashcards.filter(card => 
-                card.term.toLowerCase().includes(searchTerm) || 
-                card.definition.toLowerCase().includes(searchTerm)
-            );
-            renderFlashcards(filteredCards);
-        }
+        // Add search functionality
+        searchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value;
+            filterFlashcards();
+        });
+
+        // Add category filter functionality
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update current category and filter
+                currentCategory = button.dataset.category;
+                filterFlashcards();
+            });
+        });
 
         // Initial render of all cards
-        renderFlashcards(flashcards);
-
-        // Add search functionality
-        searchInput.addEventListener('input', filterFlashcards);
+        filterFlashcards();
     </script>
 </body>
 </html>
