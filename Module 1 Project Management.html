@@ -11,6 +11,14 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
         #search-container {
             display: flex;
             justify-content: center;
@@ -24,6 +32,29 @@
             border: 2px solid #ddd;
             border-radius: 5px;
         }
+        #category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .category-btn.active {
+            background-color: #4a86e8;
+            color: white;
+        }
         #flashcards-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -35,184 +66,277 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             padding: 20px;
             transition: transform 0.3s;
+            position: relative;
         }
         .flashcard:hover {
             transform: scale(1.03);
         }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .category-tag {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            color: #666;
+            white-space: nowrap;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
         .term {
             font-size: 20px;
             font-weight: bold;
-            margin-bottom: 10px;
             color: #333;
+            flex-grow: 1;
+            padding-right: 10px;
         }
         .definition {
             font-size: 16px;
+            color: #666;
+            clear: both;
+        }
+        #stats {
+            text-align: center;
+            margin-top: 20px;
             color: #666;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Project Management Flashcards 📚</h1>
+    </header>
+    
     <div id="search-container">
         <input type="text" id="search-input" placeholder="🔍 Search Project Management Terms...">
     </div>
+    
+    <div id="category-filter"></div>
+    
     <div id="flashcards-container"></div>
+    
+    <div id="stats">
+        <p>Showing <span id="cards-count">0</span> of <span id="total-cards">0</span> flashcards</p>
+    </div>
 
     <script>
         const flashcards = [
             {
                 term: "Project Sponsor 💼",
                 definition: "The person who provides direction and funding for a project.",
-                emoji: "💼"
+                emoji: "💼",
+                category: "Roles and Stakeholders"
             },
             {
                 term: "Project 🚀",
                 definition: "A temporary endeavor undertaken to create a unique product, service, or result, ending when objectives are met or terminated.",
-                emoji: "🚀"
+                emoji: "🚀",
+                category: "Fundamentals"
             },
             {
                 term: "Quality Management ✅",
                 definition: "Ensures that the project will satisfy stated or implied needs.",
-                emoji: "✅"
+                emoji: "✅",
+                category: "Knowledge Areas"
             },
             {
                 term: "System Analysis 🔍",
                 definition: "A problem-solving approach that defines a system's scope, components, and constraints.",
-                emoji: "🔍"
+                emoji: "🔍",
+                category: "Technical Approaches"
             },
             {
                 term: "Symbolic Frame 🎭",
                 definition: "Focuses on the meaning of events rather than what actually happened.",
-                emoji: "🎭"
+                emoji: "🎭",
+                category: "Frameworks and Models"
             },
             {
                 term: "Executing (Process Group) 🛠️",
                 definition: "Involves acquiring and developing the project team, managing quality assurance, distributing information, and conducting procurements.",
-                emoji: "🛠️"
+                emoji: "🛠️",
+                category: "Process Groups"
             },
             {
                 term: "Planning (Process Group) 📋",
                 definition: "The process group where most project management activities occur.",
-                emoji: "📋"
+                emoji: "📋",
+                category: "Process Groups"
             },
             {
                 term: "Integrated Change Control 🔄",
                 definition: "Identifying, evaluating, and managing changes throughout a project's lifecycle.",
-                emoji: "🔄"
+                emoji: "🔄",
+                category: "Project Controls"
             },
             {
                 term: "Project Charter 📜",
                 definition: "A document recognizing the existence of a project and providing direction on objectives and management.",
-                emoji: "📜"
+                emoji: "📜",
+                category: "Project Documents"
             },
             {
                 term: "Triple Constraint ⚖️",
                 definition: "The three key project constraints: time, cost, and scope.",
-                emoji: "⚖️"
+                emoji: "⚖️",
+                category: "Fundamentals"
             },
             {
                 term: "Project Stakeholders 👥",
                 definition: "People involved in or affected by project activities, including sponsors, managers, teams, and customers.",
-                emoji: "👥"
+                emoji: "👥",
+                category: "Roles and Stakeholders"
             },
             {
                 term: "Project Management Knowledge Areas 📚",
                 definition: "Includes scope, time, cost, quality, integration, HR, communications, risk, procurement, and stakeholder management.",
-                emoji: "📚"
+                emoji: "📚",
+                category: "Knowledge Areas"
             },
             {
                 term: "Scope Management 🎯",
                 definition: "Defining and managing all required work to complete the project successfully.",
-                emoji: "🎯"
+                emoji: "🎯",
+                category: "Knowledge Areas"
             },
             {
                 term: "Time Management ⏰",
                 definition: "Estimating project duration, developing schedules, and ensuring timely completion.",
-                emoji: "⏰"
+                emoji: "⏰",
+                category: "Knowledge Areas"
             },
             {
                 term: "Cost Management 💰",
                 definition: "Preparing and managing a project budget.",
-                emoji: "💰"
+                emoji: "💰",
+                category: "Knowledge Areas"
             },
             {
                 term: "Risk Management 🛡️",
                 definition: "Identifying, analyzing, and responding to risks in a project.",
-                emoji: "🛡️"
+                emoji: "🛡️",
+                category: "Knowledge Areas"
             },
             {
                 term: "Procurement Management 📦",
                 definition: "Acquiring goods and services for the project from external sources.",
-                emoji: "📦"
+                emoji: "📦",
+                category: "Knowledge Areas"
             },
             {
                 term: "Stakeholder Management 🤝",
                 definition: "Identifying and managing stakeholder engagement throughout the project.",
-                emoji: "🤝"
+                emoji: "🤝",
+                category: "Knowledge Areas"
             },
             {
                 term: "Project Management Office (PMO) 🏢",
                 definition: "An organizational group responsible for coordinating project management functions.",
-                emoji: "🏢"
+                emoji: "🏢",
+                category: "Organizational Structures"
             },
             {
                 term: "Project Management Institute (PMI) 🎓",
                 definition: "A professional society for project managers, offering certifications like PMP.",
-                emoji: "🎓"
+                emoji: "🎓",
+                category: "Organizations and Standards"
             },
             {
                 term: "Systems Thinking 🧩",
                 definition: "A holistic and analytical approach to solving complex problems.",
-                emoji: "🧩"
+                emoji: "🧩",
+                category: "Technical Approaches"
             },
             {
                 term: "Organizational Culture 🌐",
                 definition: "A set of shared assumptions, values, and behaviors within an organization.",
-                emoji: "🌐"
+                emoji: "🌐",
+                category: "Organizational Structures"
             },
             {
                 term: "Functional Organization 📊",
                 definition: "A structure where employees are grouped by specialized functions such as marketing or HR.",
-                emoji: "📊"
+                emoji: "📊",
+                category: "Organizational Structures"
             },
             {
                 term: "Matrix Organization 🔗",
                 definition: "A structure where employees report to multiple managers for specific projects and functional roles.",
-                emoji: "🔗"
+                emoji: "🔗",
+                category: "Organizational Structures"
             },
             {
                 term: "Project Life Cycle 🔁",
                 definition: "Defines project phases, deliverables, responsibilities, and management processes.",
-                emoji: "🔁"
+                emoji: "🔁",
+                category: "Frameworks and Models"
             },
             {
                 term: "Predictive Life Cycle 🔮",
                 definition: "A project approach where scope, schedule, and cost are clearly defined in advance.",
-                emoji: "🔮"
+                emoji: "🔮",
+                category: "Frameworks and Models"
             },
             {
                 term: "Systems Development Life Cycle (SDLC) 💻",
                 definition: "The phases involved in developing and maintaining information systems.",
-                emoji: "💻"
+                emoji: "💻",
+                category: "Frameworks and Models"
             },
             {
                 term: "Waterfall Model 🌊",
                 definition: "A linear SDLC approach with sequential phases: analysis, design, construction, testing, and support.",
-                emoji: "🌊"
+                emoji: "🌊",
+                category: "Frameworks and Models"
             },
             {
                 term: "Scrum 🏉",
                 definition: "A leading agile development methodology emphasizing cross-functional teamwork and iterative progress.",
-                emoji: "🏉"
+                emoji: "🏉",
+                category: "Frameworks and Models"
             },
             {
                 term: "Monitoring and Controlling 📊",
                 definition: "Measures project progress, identifies deviations, and implements corrective actions.",
-                emoji: "📊"
+                emoji: "📊",
+                category: "Process Groups"
             }
         ];
 
         const flashcardsContainer = document.getElementById('flashcards-container');
         const searchInput = document.getElementById('search-input');
+        const categoryFilter = document.getElementById('category-filter');
+        const cardsCountElement = document.getElementById('cards-count');
+        const totalCardsElement = document.getElementById('total-cards');
+
+        // Extract unique categories
+        const categories = ['All', ...new Set(flashcards.map(card => card.category))].sort();
+
+        // Populate category buttons
+        categories.forEach(category => {
+            const button = document.createElement('button');
+            button.classList.add('category-btn');
+            if (category === 'All') {
+                button.classList.add('active');
+            }
+            button.textContent = category;
+            button.dataset.category = category;
+            button.addEventListener('click', () => {
+                // Update active button
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+                
+                // Filter cards
+                filterFlashcards();
+            });
+            categoryFilter.appendChild(button);
+        });
 
         function renderFlashcards(cardsToShow) {
             flashcardsContainer.innerHTML = '';
@@ -220,19 +344,32 @@
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('flashcard');
                 cardElement.innerHTML = `
-                    <div class="term">${card.term}</div>
+                    <div class="card-header">
+                        <div class="term">${card.term}</div>
+                        <div class="category-tag">${card.category}</div>
+                    </div>
                     <div class="definition">${card.definition}</div>
                 `;
                 flashcardsContainer.appendChild(cardElement);
             });
+            
+            // Update stats
+            cardsCountElement.textContent = cardsToShow.length;
+            totalCardsElement.textContent = flashcards.length;
         }
 
         function filterFlashcards() {
             const searchTerm = searchInput.value.toLowerCase();
-            const filteredCards = flashcards.filter(card => 
-                card.term.toLowerCase().includes(searchTerm) || 
-                card.definition.toLowerCase().includes(searchTerm)
-            );
+            const selectedCategory = document.querySelector('.category-btn.active').dataset.category;
+            
+            const filteredCards = flashcards.filter(card => {
+                const matchesSearch = card.term.toLowerCase().includes(searchTerm) || 
+                                    card.definition.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'All' || card.category === selectedCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
             renderFlashcards(filteredCards);
         }
 
