@@ -11,6 +11,14 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
         #search-container {
             display: flex;
             justify-content: center;
@@ -23,6 +31,29 @@
             font-size: 16px;
             border: 2px solid #ddd;
             border-radius: 5px;
+        }
+        #category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #d0d0d0;
+        }
+        .category-btn.active {
+            background-color: #4a86e8;
+            color: white;
         }
         #flashcards-container {
             display: grid;
@@ -55,13 +86,29 @@
             font-size: 16px;
             color: #666;
         }
+        #stats {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Project Management Definitions 📚</h1>
+    </header>
+    
     <div id="search-container">
         <input type="text" id="search-input" placeholder="🔍 Search Project Management Definitions...">
     </div>
+    
+    <div id="category-filter"></div>
+    
     <div id="flashcards-container"></div>
+    
+    <div id="stats">
+        <p>Showing <span id="cards-count">0</span> of <span id="total-cards">0</span> definitions</p>
+    </div>
 
     <script>
         const flashcards = [
@@ -255,6 +302,34 @@
 
         const flashcardsContainer = document.getElementById('flashcards-container');
         const searchInput = document.getElementById('search-input');
+        const categoryFilter = document.getElementById('category-filter');
+        const cardsCountElement = document.getElementById('cards-count');
+        const totalCardsElement = document.getElementById('total-cards');
+
+        // Extract unique categories
+        const categories = ['All', ...new Set(flashcards.map(card => card.category))].sort();
+
+        // Populate category buttons
+        categories.forEach(category => {
+            const button = document.createElement('button');
+            button.classList.add('category-btn');
+            if (category === 'All') {
+                button.classList.add('active');
+            }
+            button.textContent = category;
+            button.dataset.category = category;
+            button.addEventListener('click', () => {
+                // Update active button
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+                
+                // Filter cards
+                filterFlashcards();
+            });
+            categoryFilter.appendChild(button);
+        });
 
         function renderFlashcards(cardsToShow) {
             flashcardsContainer.innerHTML = '';
@@ -268,15 +343,25 @@
                 `;
                 flashcardsContainer.appendChild(cardElement);
             });
+            
+            // Update stats
+            cardsCountElement.textContent = cardsToShow.length;
+            totalCardsElement.textContent = flashcards.length;
         }
 
         function filterFlashcards() {
             const searchTerm = searchInput.value.toLowerCase();
-            const filteredCards = flashcards.filter(card => 
-                card.term.toLowerCase().includes(searchTerm) || 
-                card.definition.toLowerCase().includes(searchTerm) ||
-                card.category.toLowerCase().includes(searchTerm)
-            );
+            const selectedCategory = document.querySelector('.category-btn.active').dataset.category;
+            
+            const filteredCards = flashcards.filter(card => {
+                const matchesSearch = card.term.toLowerCase().includes(searchTerm) || 
+                                    card.definition.toLowerCase().includes(searchTerm) || 
+                                    card.category.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'All' || card.category === selectedCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
             renderFlashcards(filteredCards);
         }
 
