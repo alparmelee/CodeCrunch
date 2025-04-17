@@ -166,6 +166,7 @@
                 <button class="category-btn" data-category="active-directory">Active Directory</button>
                 <button class="category-btn" data-category="tools">Tools & Features</button>
                 <button class="category-btn" data-category="file-access">File Access</button>
+                <button class="category-btn" data-category="task-scheduling">Task Scheduling</button>
             </div>
         </div>
 
@@ -338,6 +339,38 @@
                 term: "localuser01",
                 definition: "An example of a local-only user account created on a single server (not part of the domain).",
                 category: "file-access"
+            },
+            
+            // Task Scheduling Terms
+            {
+                emoji: "⏰",
+                term: "Task Scheduler",
+                definition: "A Windows utility that allows users to automatically perform routine tasks on a chosen computer by scheduling programs or scripts to run at specific times or when triggered by certain events.",
+                category: "task-scheduling"
+            },
+            {
+                emoji: "🔄",
+                term: "Remote Task",
+                definition: "A scheduled task that is created or managed on one computer but is designed to execute on a different networked computer within the same domain.",
+                category: "task-scheduling"
+            },
+            {
+                emoji: "🔔",
+                term: "Task Trigger",
+                definition: "A specified event, time, or condition that causes a scheduled task to execute, such as user logon, system startup, or a specific time of day.",
+                category: "task-scheduling"
+            },
+            {
+                emoji: "▶️",
+                term: "Task Action",
+                definition: "The operation that the scheduled task performs when triggered, such as launching an application, running a script, or sending an email.",
+                category: "task-scheduling"
+            },
+            {
+                emoji: "👤",
+                term: "Execution Context",
+                definition: "The user account under which a scheduled task runs, determining the permissions and access rights available to the task during execution.",
+                category: "task-scheduling"
             }
         ];
 
@@ -378,7 +411,8 @@
                 'virtualization': 'Virtualization & Network',
                 'active-directory': 'Active Directory & Domain',
                 'tools': 'Tools & Server Features',
-                'file-access': 'File Access & Accounts'
+                'file-access': 'File Access & Accounts',
+                'task-scheduling': 'Task Scheduling'
             };
             return categoryMap[category] || category;
         }
