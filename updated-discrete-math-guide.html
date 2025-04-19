@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Math Final Exam Study Guide</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+            padding: 15px;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #2c3e50;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tab-container {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            background-color: #2c3e50;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            background-color: rgba(255,255,255,0.2);
+            border-bottom: 3px solid #3498db;
+        }
+        .content {
+            padding: 15px;
+            background-color: white;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #2c3e50;
+            margin: 15px 0 5px;
+        }
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        .topic-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+        }
+        .topic-header {
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .topic-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+        .topic-card.expanded .topic-content {
+            max-height: 1000px;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            padding: 5px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        .example {
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-left: 3px solid #3498db;
+            margin: 5px 0;
+        }
+        .tip {
+            background-color: #fff3cd;
+            padding: 8px;
+            border-left: 3px solid #ffc107;
+            margin: 5px 0;
+        }
+        .practice-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Discrete Mathematics Final Exam Study Guide</h1>
+            <p>Comprehensive review of all test topics</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="logic">Logic & Proofs</div>
+                <div class="tab" data-tab="graphs">Graph Theory</div>
+                <div class="tab" data-tab="counting">Counting & Sets</div>
+                <div class="tab" data-tab="functions">Functions</div>
+                <div class="tab" data-tab="induction">Induction</div>
+            </div>
+            
+            <div class="content">
+                <!-- LOGIC & PROOFS SECTION -->
+                <div class="content-section active" id="logic">
+                    <h2>Logic & Proofs</h2>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Propositional Logic & Truth Tables</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Logical Operators</h3>
+                            <ul>
+                                <li><strong>Negation (¬):</strong> "not P"</li>
+                                <li><strong>Conjunction (∧):</strong> "P and Q"</li>
+                                <li><strong>Disjunction (∨):</strong> "P or Q"</li>
+                                <li><strong>Conditional (→):</strong> "if P then Q"</li>
+                                <li><strong>Biconditional (↔):</strong> "P if and only if Q"</li>
+                            </ul>
+                            
+                            <h3>Truth Tables</h3>
+                            <p>Essential for determining validity of logical statements and arguments.</p>
+                            <table>
+                                <tr>
+                                    <th>P</th>
+                                    <th>Q</th>
+                                    <th>P → Q</th>
+                                    <th>P ∧ Q</th>
+                                    <th>P ∨ Q</th>
+                                </tr>
+                                <tr>
+                                    <td>T</td>
+                                    <td>T</td>
+                                    <td>T</td>
+                                    <td>T</td>
+                                    <td>T</td>
+                                </tr>
+                                <tr>
+                                    <td>T</td>
+                                    <td>F</td>
+                                    <td>F</td>
+                                    <td>F</td>
+                                    <td>T</td>
+                                </tr>
+                                <tr>
+                                    <td>F</td>
+                                    <td>T</td>
+                                    <td>T</td>
+                                    <td>F</td>
+                                    <td>T</td>
+                                </tr>
+                                <tr>
+                                    <td>F</td>
+                                    <td>F</td>
+                                    <td>T</td>
+                                    <td>F</td>
+                                    <td>F</td>
+                                </tr>
+                            </table>
+                            
+                            <div class="example">
+                                <strong>Key insight:</strong> P → Q is only false when P is true and Q is false.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Conditional Statements</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Forms of Conditionals</h3>
+                            <ul>
+                                <li><strong>Original:</strong> P → Q</li>
+                                <li><strong>Converse:</strong> Q → P</li>
+                                <li><strong>Contrapositive:</strong> ¬Q → ¬P (logically equivalent to original)</li>
+                                <li><strong>Negation:</strong> ¬(P → Q) ≡ P ∧ ¬Q</li>
+                            </ul>
+                            
+                            <div class="example">
+                                <p><strong>Example:</strong> For "If it rains, then the ground is wet."</p>
+                                <p><strong>Converse:</strong> "If the ground is wet, then it rains."</p>
+                                <p><strong>Contrapositive:</strong> "If the ground is not wet, then it does not rain."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Quantifiers & Proof Techniques</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Quantifiers</h3>
+                            <ul>
+                                <li><strong>Universal (∀x):</strong> "For all x"</li>
+                                <li><strong>Existential (∃x):</strong> "There exists an x"</li>
+                                <li>¬(∀xP(x)) ≡ ∃x¬P(x)</li>
+                                <li>¬(∃xP(x)) ≡ ∀x¬P(x)</li>
+                            </ul>
+                            
+                            <h3>Proof Methods</h3>
+                            <ul>
+                                <li><strong>Direct:</strong> Assume P, prove Q follows</li>
+                                <li><strong>Contrapositive:</strong> Prove ¬Q → ¬P instead of P → Q</li>
+                                <li><strong>Contradiction:</strong> Assume P and ¬Q, derive contradiction</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GRAPH THEORY SECTION -->
+                <div class="content-section" id="graphs">
+                    <h2>Graph Theory</h2>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Basic Concepts & Trees</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Graph Basics</h3>
+                            <ul>
+                                <li><strong>Degree:</strong> Number of edges at a vertex</li>
+                                <li><strong>Handshaking Theorem:</strong> Sum of all degrees = 2 × |E|</li>
+                            </ul>
+                            
+                            <h3>Trees</h3>
+                            <ul>
+                                <li>Connected graph with no cycles</li>
+                                <li>|E| = |V| - 1</li>
+                                <li>Exactly one path between any two vertices</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Euler & Hamilton Paths</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Euler Paths/Circuits</h3>
+                            <ul>
+                                <li><strong>Euler Path:</strong> Uses each edge exactly once</li>
+                                <li><strong>Euler Circuit:</strong> Euler path returning to start</li>
+                                <li><strong>Condition for Euler Circuit:</strong> All vertices have even degree</li>
+                                <li><strong>Condition for Euler Path:</strong> Exactly 0 or 2 vertices have odd degree</li>
+                            </ul>
+                            
+                            <h3>Hamilton Paths/Circuits</h3>
+                            <ul>
+                                <li><strong>Hamilton Path:</strong> Visits each vertex exactly once</li>
+                                <li><strong>Hamilton Circuit:</strong> Hamilton path returning to start</li>
+                                <li>No simple degree-based characterization like Euler paths</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- COUNTING & SETS SECTION -->
+                <div class="content-section" id="counting">
+                    <h2>Counting & Sets</h2>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Set Operations & Counting Principles</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Set Operations</h3>
+                            <ul>
+                                <li><strong>Union:</strong> A ∪ B = {x | x ∈ A or x ∈ B}</li>
+                                <li><strong>Intersection:</strong> A ∩ B = {x | x ∈ A and x ∈ B}</li>
+                                <li><strong>Difference:</strong> A \ B = {x | x ∈ A and x ∉ B}</li>
+                                <li><strong>Complement:</strong> A' = {x ∈ U | x ∉ A}</li>
+                            </ul>
+                            
+                            <h3>Counting Rules</h3>
+                            <ul>
+                                <li><strong>Sum Rule:</strong> |A ∪ B| = |A| + |B| - |A ∩ B|</li>
+                                <li><strong>Product Rule:</strong> If task A: m ways, task B: n ways, then sequence A→B: m×n ways</li>
+                                <li><strong>Permutations:</strong> P(n,r) = n!/(n-r)!</li>
+                                <li><strong>Combinations:</strong> C(n,r) = n!/[r!(n-r)!]</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FUNCTIONS SECTION -->
+                <div class="content-section" id="functions">
+                    <h2>Functions</h2>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Types of Functions</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Function Properties</h3>
+                            <ul>
+                                <li><strong>One-to-one (Injective):</strong> Each element in the codomain is mapped to by at most one element from the domain</li>
+                                <li><strong>Onto (Surjective):</strong> Every element in the codomain is mapped to by at least one element from the domain</li>
+                                <li><strong>Bijective:</strong> Both one-to-one and onto</li>
+                            </ul>
+                            
+                            <div class="example">
+                                <p><strong>Testing one-to-one:</strong> If f(a) = f(b), then a = b</p>
+                                <p><strong>Testing onto:</strong> For every y in codomain, there exists x in domain where f(x) = y</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Piecewise Functions</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Definition</h3>
+                            <p>Functions defined by different expressions for different parts of the domain.</p>
+                            
+                            <div class="example">
+                                <p><strong>Example:</strong> f(x) = {
+                                    x² if x ≥ 0,
+                                    -x if x < 0
+                                }</p>
+                            </div>
+                            
+                            <h3>Key Points</h3>
+                            <ul>
+                                <li>Verify continuity at boundary points</li>
+                                <li>Check domain and range carefully</li>
+                                <li>Ensure complete coverage of intended domain</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Sequences & Recurrence Relations</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Sequence Types</h3>
+                            <ul>
+                                <li><strong>Arithmetic:</strong> a_n = a_1 + (n-1)d</li>
+                                <li><strong>Geometric:</strong> a_n = a_1 × r^(n-1)</li>
+                            </ul>
+                            
+                            <h3>Common Recurrence Relations</h3>
+                            <ul>
+                                <li><strong>Fibonacci:</strong> F_n = F_(n-1) + F_(n-2)</li>
+                                <li><strong>Tower of Hanoi:</strong> T_n = 2T_(n-1) + 1</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- INDUCTION SECTION -->
+                <div class="content-section" id="induction">
+                    <h2>Mathematical Induction</h2>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Induction Principles</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <h3>Principle of Mathematical Induction</h3>
+                            <p>To prove P(n) for all n ≥ n₀:</p>
+                            <ol>
+                                <li><strong>Base case:</strong> Prove P(n₀) is true</li>
+                                <li><strong>Inductive step:</strong> Prove P(k) → P(k+1) for all k ≥ n₀</li>
+                            </ol>
+                            
+                            <h3>Strong Induction</h3>
+                            <p>To prove P(n) for all n ≥ n₀:</p>
+                            <ol>
+                                <li><strong>Base case:</strong> Prove P(n₀) is true</li>
+                                <li><strong>Inductive step:</strong> Prove [P(n₀) ∧ P(n₀+1) ∧ ... ∧ P(k)] → P(k+1) for all k ≥ n₀</li>
+                            </ol>
+                            
+                            <div class="example">
+                                <p><strong>Example:</strong> Prove 1 + 2 + ... + n = n(n+1)/2</p>
+                                <p><strong>Base case:</strong> n = 1: 1 = 1(1+1)/2 = 1 ✓</p>
+                                <p><strong>Inductive step:</strong> Assume P(k): 1 + 2 + ... + k = k(k+1)/2</p>
+                                <p>Prove P(k+1): 1 + 2 + ... + k + (k+1) = (k+1)(k+2)/2</p>
+                                <p>[1 + 2 + ... + k] + (k+1) = k(k+1)/2 + (k+1) = (k+1)(k/2 + 1) = (k+1)(k+2)/2 ✓</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <span>Common Induction Applications</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="topic-content">
+                            <ul>
+                                <li>Sum formulas (arithmetic, geometric series)</li>
+                                <li>Divisibility proofs</li>
+                                <li>Algorithm correctness</li>
+                                <li>Inequality proofs</li>
+                                <li>Properties of recursively defined sequences</li>
+                            </ul>
+                            
+                            <div class="tip">
+                                <p><strong>Strategy tip:</strong> For divisibility proofs, use factoring or congruence modulo.</p>
+                                <p><strong>Strategy tip:</strong> For inequality proofs, consider algebraic manipulations of the induction hypothesis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Topic expansion functionality
+        document.querySelectorAll('.topic-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('expanded');
+            });
+        });
+    </script>
+</body>
+</html>
