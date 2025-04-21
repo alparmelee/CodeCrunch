@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Test 3 (Functions, Sequences, Induction)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Styles (incorporating previous styles) */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .question-container {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        label, .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 0.5rem;
+            margin-left: 0.25rem;
+        }
+        select, input[type="text"], input[type="number"], textarea {
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.5rem;
+            margin-right: 0.5rem;
+            width: auto;
+            min-width: 80px;
+            background-color: white;
+        }
+        textarea {
+            width: 100%;
+            min-height: 80px;
+        }
+        /* Styling for the check/try again buttons */
+        .check-button {
+            background-color: #10b981;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+        .check-button:hover {
+            background-color: #059669;
+        }
+        .check-button[data-state='try-again'] {
+             background-color: #6b7280;
+        }
+         .check-button[data-state='try-again']:hover {
+             background-color: #4b5563;
+        }
+
+        .feedback {
+            margin-left: 0.5rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 0.25rem;
+            vertical-align: middle;
+        }
+        .correct {
+            color: #16a34a;
+        }
+        .incorrect {
+            color: #dc2626;
+        }
+         /* Input feedback borders */
+         input.correct-input, select.correct-input, textarea.correct-input {
+             border-color: #16a34a !important;
+             background-color: #f0fdf4;
+         }
+         input.incorrect-input, select.incorrect-input, textarea.incorrect-input {
+             border-color: #dc2626 !important;
+             background-color: #fef2f2;
+         }
+         /* Use monospace font for logic/code */
+         .code-text {
+            font-family: monospace;
+            font-size: 1.05em;
+            background-color: #e5e7eb;
+            padding: 0.1em 0.3em;
+            border-radius: 0.25rem;
+            display: inline-block;
+            /* Prevent line breaks within code snippets */
+            white-space: nowrap;
+         }
+         /* Styling for function notation */
+         .function-notation {
+             font-family: monospace;
+             background-color: #f3f4f6;
+             padding: 0.5rem;
+             border-radius: 0.375rem;
+             display: inline-block;
+             margin-bottom: 0.5rem;
+             white-space: pre; /* Preserve spacing in matrix */
+         }
+          /* Styling for induction proof list */
+         .proof-options-list {
+             list-style-type: upper-alpha; /* A, B, C... */
+             margin-left: 1.5rem; /* Indent list */
+             margin-top: 0.5rem;
+             margin-bottom: 1rem;
+         }
+         .proof-options-list li {
+             margin-bottom: 0.3rem;
+         }
+         .proof-step-input {
+             display: flex;
+             align-items: center;
+             margin-bottom: 0.5rem;
+         }
+         .proof-step-input span {
+             margin-right: 0.5rem;
+             min-width: 50px; /* Align labels */
+         }
+         /* Fix for subscripts */
+         .sub {
+             vertical-align: sub;
+             font-size: smaller;
+         }
+
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-lg">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Quiz - Test 3 (Functions, Sequences, Induction)</h1>
+
+        <div id="quiz-content">
+
+            <div class="question-container" id="q1-container" data-question-id="q1">
+                <p class="question-title">1. Why do we want to learn about recursive functions?</p>
+                <p class="text-sm text-gray-600 mb-2">(This question is for reflection and is not auto-graded).</p>
+                <textarea name="q1" rows="3" placeholder="Enter your thoughts here..."></textarea>
+            </div>
+
+            <div class="question-container" id="q2-container" data-question-id="q2">
+                <p class="question-title">2. Function Properties</p>
+                <p class="mb-2">Consider the following functions <span class="code-text">f: {1, 2, 3, 4, 5} → {1, 2, 3}</span>. For each, determine whether it is only injective (I), only surjective (S), bijective (B), or neither (N).</p>
+                <div class="space-y-4">
+                    <div>
+                        <p>A. <span class="function-notation">f = (1 2 3 4 5)<br>    (3 3 3 3 3)</span></p>
+                        <select name="q2a"> <option value="">Select...</option> <option value="I">Injective only</option> <option value="S">Surjective only</option> <option value="B">Bijective</option> <option value="N">Neither</option> </select>
+                        <span class="feedback" data-feedback-for="q2a"></span>
+                    </div>
+                    <div>
+                        <p>B. <span class="function-notation">f = (1 2 3 4 5)<br>    (1 2 3 1 2)</span></p>
+                        <select name="q2b"> <option value="">Select...</option> <option value="I">Injective only</option> <option value="S">Surjective only</option> <option value="B">Bijective</option> <option value="N">Neither</option> </select>
+                        <span class="feedback" data-feedback-for="q2b"></span>
+                    </div>
+                </div>
+                <button class="check-button" data-question-id="q2" data-state="check">Check Question 2</button>
+            </div>
+
+             <div class="question-container" id="q3-container" data-question-id="q3">
+                <p class="question-title">3. Recursive Function Evaluation</p>
+                <div class="space-y-3">
+                    <div class="inline-input-group">
+                        <span class="input-label">A. Consider <span class="code-text">f(0) = 1</span> and <span class="code-text">f(n+1) = 4 * f(n)</span>. Find <span class="code-text">f(6)</span>.</span>
+                        <input type="number" name="q3a">
+                        <span class="feedback" data-feedback-for="q3a"></span>
+                    </div>
+                    <div class="inline-input-group">
+                        <span class="input-label">B. Consider <span class="code-text">f(0) = 1</span> and <span class="code-text">f(n+1) = 2 * f(n)</span>. Find <span class="code-text">f(5)</span>.</span>
+                        <input type="number" name="q3b">
+                        <span class="feedback" data-feedback-for="q3b"></span>
+                    </div>
+                </div>
+                <button class="check-button" data-question-id="q3" data-state="check">Check Question 3</button>
+            </div>
+
+            <div class="question-container" id="q4-container" data-question-id="q4">
+                <p class="question-title">4. Function Analysis</p>
+                 <p class="mb-2">Consider the function <span class="code-text">f: {1, 2, 3, 4, 5} → {1, 2, 3, 4, 5}</span> given by:</p>
+                 <p><span class="function-notation">f = (1 2 3 4 5)<br>    (1 3 5 4 4)</span></p>
+                 <div class="space-y-3">
+                    <div class="inline-input-group"> <span class="input-label">A. Find <span class="code-text">f(3)</span>.</span> <input type="number" name="q4a"> <span class="feedback" data-feedback-for="q4a"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label">B. Find <span class="code-text">n</span> such that <span class="code-text">f(n) = 3</span>.</span> <input type="number" name="q4b"> <span class="feedback" data-feedback-for="q4b"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label">C. Find an element <span class="code-text">n</span> such that <span class="code-text">f(n) = n</span>.</span> <input type="number" name="q4c"> <span class="feedback" data-feedback-for="q4c"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label">D. Find an element of the codomain that is not in the range.</span> <input type="number" name="q4d"> <span class="feedback" data-feedback-for="q4d"></span> </div>
+                 </div>
+                <button class="check-button" data-question-id="q4" data-state="check">Check Question 4</button>
+            </div>
+
+            <div class="question-container" id="q5-container" data-question-id="q5">
+                <p class="question-title">5. Counting Functions</p>
+                 <p class="mb-2">Consider functions <span class="code-text">f: {1, 2, 3, 4} → {a, b}</span>.</p>
+                 <div class="space-y-3">
+                    <div class="inline-input-group"> <span class="input-label">A. How many such functions are there?</span> <input type="number" name="q5a" min="0"> <span class="feedback" data-feedback-for="q5a"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label">B. How many are surjective?</span> <input type="number" name="q5b" min="0"> <span class="feedback" data-feedback-for="q5b"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label">C. How many are injective?</span> <input type="number" name="q5c" min="0"> <span class="feedback" data-feedback-for="q5c"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label">D. How many are bijective?</span> <input type="number" name="q5d" min="0"> <span class="feedback" data-feedback-for="q5d"></span> </div>
+                 </div>
+                <button class="check-button" data-question-id="q5" data-state="check">Check Question 5</button>
+            </div>
+
+            <div class="question-container" id="q6-container" data-question-id="q6">
+                 <p class="question-title">6. Famous Sequence</p>
+                 <p class="mb-4">What are the first 5 terms of a well known sequence relating to the mating of rabbits?</p>
+                 <div class="space-y-2">
+                    <label><input type="radio" name="q6" value="A"> 1, 4, 7, 10, 13</label>
+                    <label><input type="radio" name="q6" value="B"> 1, 1, 2, 3, 5</label>
+                    <label><input type="radio" name="q6" value="C"> 2, 4, 6, 8, 10</label>
+                    <label><input type="radio" name="q6" value="D"> 0, -1, 2, -3, 4</label>
+                    <span class="feedback" data-feedback-for="q6"></span>
+                 </div>
+                <button class="check-button" data-question-id="q6" data-state="check">Check Question 6</button>
+            </div>
+
+            <div class="question-container" id="q7-container" data-question-id="q7">
+                 <p class="question-title">7. Arithmetic Sequence Term</p>
+                 <div class="inline-input-group">
+                     <span class="input-label">Find <span class="code-text">a<span class="sub">10</span></span> when <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> - 3</span>, given that <span class="code-text">a<span class="sub">0</span> = 100</span>.</span>
+                     <input type="number" name="q7">
+                     <span class="feedback" data-feedback-for="q7"></span>
+                 </div>
+                 <button class="check-button" data-question-id="q7" data-state="check">Check Question 7</button>
+            </div>
+
+             <div class="question-container" id="q8-container" data-question-id="q8">
+                 <p class="question-title">8. Arithmetic Sequence Notation</p>
+                 <p class="mb-4">What variable is typically used to represent the common difference in an arithmetic sequence?</p>
+                 <div class="space-y-2">
+                    <label><input type="radio" name="q8" value="A"> r</label>
+                    <label><input type="radio" name="q8" value="B"> d</label>
+                    <label><input type="radio" name="q8" value="C"> n</label>
+                    <label><input type="radio" name="q8" value="D"> none of these</label>
+                    <span class="feedback" data-feedback-for="q8"></span>
+                 </div>
+                <button class="check-button" data-question-id="q8" data-state="check">Check Question 8</button>
+            </div>
+
+             <div class="question-container" id="q9-container" data-question-id="q9">
+                 <p class="question-title">9. Recursive Function Evaluation</p>
+                 <div class="inline-input-group">
+                     <span class="input-label">Consider the function <span class="code-text">f: ℕ → ℕ</span> given recursively by <span class="code-text">f(0) = 1</span> and <span class="code-text">f(n+1) = 2 * f(n)</span>. Find <span class="code-text">f(14)</span>.</span>
+                     <input type="number" name="q9">
+                     <span class="feedback" data-feedback-for="q9"></span>
+                 </div>
+                <button class="check-button" data-question-id="q9" data-state="check">Check Question 9</button>
+            </div>
+
+            <div class="question-container" id="q10-container" data-question-id="q10">
+                 <p class="question-title">10. Arithmetic Sequence - Finding Terms</p>
+                 <p class="mb-4">Find x and y such that 116, x, y, -94 is part of an arithmetic sequence.</p>
+                 <div class="space-y-3">
+                    <div class="inline-input-group"> <span class="input-label w-8">x =</span> <input type="number" name="q10a"> <span class="feedback" data-feedback-for="q10a"></span> </div>
+                    <div class="inline-input-group"> <span class="input-label w-8">y =</span> <input type="number" name="q10b"> <span class="feedback" data-feedback-for="q10b"></span> </div>
+                 </div>
+                <button class="check-button" data-question-id="q10" data-state="check">Check Question 10</button>
+            </div>
+
+             <div class="question-container" id="q11-container" data-question-id="q11">
+                 <p class="question-title">11. Explicit Formula for Sequence</p>
+                 <p class="mb-4">Find an explicit formula for <span class="code-text">a<span class="sub">n</span></span> given the sequence: <span class="code-text">1/4, 2/9, 3/16, 4/25, 5/36, ...</span></p>
+                 <div class="space-y-2">
+                    <label><input type="radio" name="q11" value="A"> <span class="code-text">a<span class="sub">n</span> = n / (n+1)² ; n ≥ 1</span></label>
+                    <label><input type="radio" name="q11" value="B"> <span class="code-text">a<span class="sub">n</span> = n / (n+2)² ; n ≥ 1</span></label>
+                    <label><input type="radio" name="q11" value="C"> <span class="code-text">a<span class="sub">n</span> = n / n² ; n ≥ 1</span></label>
+                    <label><input type="radio" name="q11" value="D"> <span class="code-text">a<span class="sub">n</span> = n / (n-1)² ; n ≥ 2</span></label> <span class="feedback" data-feedback-for="q11"></span>
+                 </div>
+                 <button class="check-button" data-question-id="q11" data-state="check">Check Question 11</button>
+            </div>
+
+             <div class="question-container" id="q12-container" data-question-id="q12">
+                 <p class="question-title">12. Induction Proof Steps</p>
+                 <p class="mb-2">Give a proof by induction of the statement: "For all <span class="code-text">n ≥ 1</span>, the number <span class="code-text">11<sup>n</sup> - 1</span> is a multiple of 10."</p>
+                 <p class="mb-2">Complete each logical step of the proof by writing the letter(s) of the corresponding statement(s) from the list below.</p>
+                 <ol class="proof-options-list">
+                     <li>Therefore, by the Principle of Mathematical Induction, P(n) is true for all n ≥ 1</li>
+                     <li>Thus <span class="code-text">11<sup>k</sup> = (10j + 1) / 11</span> which is a multiple of 10. (Incorrect statement)</li>
+                     <li>Then <span class="code-text">11<sup>k+1</sup> = 10j + 1</span> for some integer j (Incorrect statement)</li>
+                     <li>Let P(n) be the statement <span class="code-text">11<sup>n</sup> - 1</span> is a multiple of 10.</li>
+                     <li>We have <span class="code-text">11<sup>k+1</sup> - 1 = 11(11<sup>k</sup> - 1) + 11 - 1</span></li>
+                     <li>So <span class="code-text">11<sup>k+1</sup> - 1 = 11(10j) + 10</span> which is a multiple of 10</li>
+                     <li>Thus P(k) is true for all k (Incorrect statement)</li>
+                     <li>Now assume that P(k) is true for an arbitrary integer k ≥ 1 as our inductive hypothesis.</li>
+                     <li>Thus P(k+1) is true.</li>
+                     <li>Note that <span class="code-text">11² - 1 = (11-1)(11+1)</span> which is definitely a multiple of 10. (Irrelevant calculation for base case n=1)</li>
+                     <li>Then <span class="code-text">11<sup>k</sup> - 1 = 10j</span> for some integer j.</li>
+                     <li>Now, assume that P(k+1) is true for all k ≥ 1 as our inductive hypothesis. (Incorrect assumption step)</li>
+                     <li>Assume that P(n) is true for all n ≥ 1 as our inductive hypothesis. (Incorrect assumption step)</li>
+                     <li>Note that <span class="code-text">11¹ - 1 = 10</span>, which is a multiple of 10, hence the base case holds.</li>
+                     <li>Therefore, by the Principle of Mathematical Induction, P(k) is true for all k ≥ 1 (Incorrect conclusion variable)</li>
+                 </ol>
+                 <div class="space-y-2">
+                     <div class="proof-step-input"><span>Step 1 (Base Case):</span> <input type="text" name="q12_step1" placeholder="Letter(s)" size="5"> <span class="feedback" data-feedback-for="q12_step1"></span></div>
+                     <div class="proof-step-input"><span>Step 2 (Inductive Hypothesis):</span> <input type="text" name="q12_step2" placeholder="Letter(s)" size="5"> <span class="feedback" data-feedback-for="q12_step2"></span></div>
+                     <div class="proof-step-input"><span>Step 3 (Inductive Step):</span> <input type="text" name="q12_step3" placeholder="Letter(s)" size="5"> <span class="feedback" data-feedback-for="q12_step3"></span></div>
+                     <div class="proof-step-input"><span>Step 4 (Conclusion):</span> <input type="text" name="q12_step4" placeholder="Letter(s)" size="5"> <span class="feedback" data-feedback-for="q12_step4"></span></div>
+                 </div>
+                 <button class="check-button" data-question-id="q12" data-state="check">Check Question 12</button>
+            </div>
+
+             <div class="question-container" id="q13-container" data-question-id="q13">
+                <p class="question-title">13. Arithmetic Sequence Analysis</p>
+                <p class="mb-4">Consider the sequence 3, 8, 13, 18, 23, ... with <span class="code-text">a<span class="sub">1</span> = 3</span>.</p>
+                <div class="space-y-4">
+                    <div>
+                        <p class="mb-2">A. Which of the following is a recursive definition for the sequence?</p>
+                        <div class="space-y-1 pl-4">
+                             <label><input type="radio" name="q13a" value="A"> <span class="code-text">a<span class="sub">n</span> = 3 * 5<sup>n</sup></span></label>
+                             <label><input type="radio" name="q13a" value="B"> <span class="code-text">a<span class="sub">n</span> = 5 * a<span class="sub">n-1</span> ; a<span class="sub">1</span> = 3</span></label>
+                             <label><input type="radio" name="q13a" value="C"> <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> + 5 ; a<span class="sub">1</span> = 3</span></label>
+                             <label><input type="radio" name="q13a" value="D"> <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> - 2 ; a<span class="sub">1</span> = 3</span></label>
+                             <span class="feedback" data-feedback-for="q13a"></span>
+                        </div>
+                    </div>
+                     <div>
+                        <p class="mb-2">B. Which of the following is the closed form for the sequence?</p>
+                        <div class="space-y-1 pl-4">
+                            <label><input type="radio" name="q13b" value="A"> <span class="code-text">a<span class="sub">n</span> = a<span class="sub">1</span> + d(n-1)</span> (General formula, not specific)</label>
+                            <label><input type="radio" name="q13b" value="B"> <span class="code-text">a<span class="sub">n</span> = 3 + 5(n-1)</span></label>
+                            <label><input type="radio" name="q13b" value="C"> <span class="code-text">a<span class="sub">n</span> = 3 + 5n - 5</span></label>
+                            <label><input type="radio" name="q13b" value="D"> <span class="code-text">a<span class="sub">n</span> = -2 + 5n</span></label>
+                            <span class="feedback" data-feedback-for="q13b"></span>
+                        </div>
+                    </div>
+                     <div>
+                        <p class="mb-2">C. Is 2558 a term of the sequence?</p>
+                         <div class="space-y-1 pl-4">
+                             <label><input type="radio" name="q13c" value="A"> Yes, it is <span class="code-text">a<span class="sub">2558</span></span></label>
+                             <label><input type="radio" name="q13c" value="B"> No, it is between 2556 and 2561</label>
+                             <label><input type="radio" name="q13c" value="C"> Yes, it is <span class="code-text">a<span class="sub">512</span></span></label>
+                             <label><input type="radio" name="q13c" value="D"> No, it is larger than <span class="code-text">a<span class="sub">698</span></span></label>
+                             <label><input type="radio" name="q13c" value="E"> Yes, it is <span class="code-text">a<span class="sub">511</span></span></label>
+                             <span class="feedback" data-feedback-for="q13c"></span>
+                        </div>
+                    </div>
+                </div>
+                 <button class="check-button" data-question-id="q13" data-state="check">Check Question 13</button>
+            </div>
+
+             <div class="question-container" id="q14-container" data-question-id="q14">
+                 <p class="question-title">14. Proof Conclusion</p>
+                 <p class="mb-2">Suppose we have the following proof:</p>
+                 <div class="proof-display mb-4">
+                    <p>We want to show if <span class="code-text">f(x<span class="sub">1</span>) = f(x<span class="sub">2</span>)</span> then <span class="code-text">x<span class="sub">1</span> = x<span class="sub">2</span></span> for the function <span class="code-text">f(x) = 2x - 3</span>.</p>
+                    <p>Let <span class="code-text">f(x<span class="sub">1</span>) = f(x<span class="sub">2</span>)</span>. This gives <span class="code-text">2x<span class="sub">1</span> - 3 = 2x<span class="sub">2</span> - 3</span>.</p>
+                    <p>Adding 3 to both sides gives <span class="code-text">2x<span class="sub">1</span> = 2x<span class="sub">2</span></span>.</p>
+                    <p>Dividing both sides by 2 gives <span class="code-text">x<span class="sub">1</span> = x<span class="sub">2</span></span>.</p>
+                 </div>
+                 <p>What have we proved? Select all statements that could be properly included in the conclusion.</p>
+                  <div class="space-y-2 mt-3">
+                    <label><input type="checkbox" name="q14" value="A"> Therefore, <span class="code-text">f(x) = 2x - 3</span> is onto.</label>
+                    <label><input type="checkbox" name="q14" value="B"> Therefore, <span class="code-text">f(x) = 2x - 3</span> is a surjective function.</label>
+                    <label><input type="checkbox" name="q14" value="C"> Therefore, <span class="code-text">f(x) = 2x - 3</span> is a bijective function.</label>
+                    <label><input type="checkbox" name="q14" value="D"> Therefore, <span class="code-text">f(x) = 2x - 3</span> is one-to-one.</label>
+                    <label><input type="checkbox" name="q14" value="E"> Therefore, <span class="code-text">f(x) = 2x - 3</span> is an injective function.</label>
+                    <span class="feedback" data-feedback-for="q14"></span>
+                 </div>
+                 <button class="check-button" data-question-id="q14" data-state="check">Check Question 14</button>
+            </div>
+
+        </div> </div>
+
+    <script>
+        // --- Quiz Data ---
+        const correctAnswers = {
+            // Q1: No check
+            q2a: { answer: 'N' }, q2b: { answer: 'S' },
+            q3a: { answer: '4096' }, q3b: { answer: '32' },
+            q4a: { answer: '5' }, q4b: { answer: '2' }, q4c: { answer: ['1', '4'] }, q4d: { answer: '2' },
+            q5a: { answer: '16' }, q5b: { answer: '14' }, q5c: { answer: '0' }, q5d: { answer: '0' },
+            q6: { answer: 'B' },
+            q7: { answer: '70' },
+            q8: { answer: 'B' },
+            q9: { answer: '16384' },
+            q10a: { answer: '46' }, q10b: { answer: '-24' },
+            q11: { answer: 'A' },
+            q12_step1: { answer: 'DN' }, q12_step2: { answer: 'HK' }, q12_step3: { answer: 'EFI' }, q12_step4: { answer: 'A' },
+            q13a: { answer: 'C' }, q13b: { answer: 'D' }, q13c: { answer: 'C' },
+            q14: { answer: ['D', 'E'] },
+        };
+
+        // --- Event Listener Setup ---
+        document.querySelectorAll('.check-button').forEach(button => {
+            button.addEventListener('click', handleButtonClick);
+        });
+
+        // --- Main Button Click Handler ---
+        function handleButtonClick(event) {
+            const button = event.target;
+            const currentState = button.dataset.state;
+            const questionId = button.dataset.questionId;
+            const questionContainer = document.getElementById(`${questionId}-container`);
+
+            if (!questionContainer || questionId === 'q1') return; // Skip Q1
+
+            if (currentState === 'check') {
+                checkAnswer(questionContainer, questionId);
+                button.textContent = 'Try Again';
+                button.dataset.state = 'try-again';
+            } else if (currentState === 'try-again') {
+                resetQuestion(questionContainer);
+                const qNum = questionId.substring(1);
+                button.textContent = `Check Question ${qNum}`;
+                button.dataset.state = 'check';
+            }
+        }
+
+        // --- Answer Checking Logic ---
+         function checkAnswer(questionContainer, questionId) {
+            if (questionId === 'q2') {
+                 checkMultiSelect(questionContainer, ['a', 'b'], questionId);
+            } else if (questionId === 'q3' || questionId === 'q4' || questionId === 'q5' || questionId === 'q10') {
+                 checkMultiNumberText(questionContainer, questionId);
+            } else if (questionId === 'q6' || questionId === 'q8' || questionId === 'q11') {
+                 checkSingleRadio(questionContainer, questionId);
+            } else if (questionId === 'q7' || questionId === 'q9') {
+                 checkSingleNumberInput(questionContainer, questionId);
+            } else if (questionId === 'q12') {
+                 checkInductionSteps(questionContainer, questionId);
+            } else if (questionId === 'q13') {
+                 checkMultiSingleRadio(questionContainer, ['a', 'b', 'c'], questionId);
+            } else if (questionId === 'q14') {
+                 checkCheckbox(questionContainer, questionId);
+            }
+             else {
+                console.warn("Unhandled question ID for checking:", questionId);
+            }
+        }
+
+        // --- Reset Question Logic ---
+        function resetQuestion(questionContainer) {
+            const inputs = questionContainer.querySelectorAll('input[type="number"], input[type="text"], input[type="radio"], input[type="checkbox"], select, textarea');
+            const feedbackSpans = questionContainer.querySelectorAll('.feedback');
+
+            inputs.forEach(input => {
+                if (input.type === 'text' || input.type === 'number' || input.tagName === 'TEXTAREA') {
+                    input.value = '';
+                } else if (input.type === 'radio' || input.type === 'checkbox') {
+                    input.checked = false;
+                } else if (input.tagName === 'SELECT') {
+                    input.selectedIndex = 0;
+                }
+                input.classList.remove('correct-input', 'incorrect-input');
+                 input.removeAttribute('title');
+            });
+
+            feedbackSpans.forEach(span => {
+                span.textContent = '';
+                span.className = 'feedback';
+            });
+        }
+
+
+        // --- Helper Functions for Checking Different Input Types ---
+
+        function checkSingleNumberInput(container, baseName) {
+             const input = container.querySelector(`input[type="number"][name="${baseName}"]`);
+             const feedbackSpan = container.querySelector(`[data-feedback-for="${baseName}"]`);
+             if (!input || !feedbackSpan) return;
+             const userAnswer = input.value.trim();
+             const correctAnswerData = correctAnswers[baseName];
+             if (!correctAnswerData) { console.error(`Answer key missing for ${baseName}`); return; }
+             const correctAnswer = correctAnswerData.answer;
+             if (userAnswer === correctAnswer) {
+                 feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct';
+                 input.classList.add('correct-input'); input.classList.remove('incorrect-input');
+             } else {
+                 feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect';
+                 input.classList.add('incorrect-input'); input.classList.remove('correct-input');
+             }
+        }
+
+        function checkMultiNumberText(container, questionId) {
+            const inputs = container.querySelectorAll(`input[type="number"], input[type="text"]`);
+            inputs.forEach(input => {
+                const inputName = input.name;
+                const feedbackSpan = container.querySelector(`[data-feedback-for="${inputName}"]`);
+                const userAnswer = input.value.trim();
+                if (!feedbackSpan) return;
+                const correctAnswerData = correctAnswers[inputName];
+                 if (!correctAnswerData) { console.error(`Correct answer not found for ${inputName}`); feedbackSpan.textContent = 'Error: Answer key missing.'; feedbackSpan.className = 'feedback incorrect'; input.classList.add('incorrect-input'); input.classList.remove('correct-input'); return; }
+                 let isCorrect = false;
+                 if (inputName === 'q4c' && Array.isArray(correctAnswerData.answer)) { isCorrect = correctAnswerData.answer.includes(userAnswer); }
+                 else { isCorrect = (userAnswer === correctAnswerData.answer); }
+                 if (isCorrect) {
+                    feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct';
+                    input.classList.add('correct-input'); input.classList.remove('incorrect-input');
+                 } else {
+                    const displayAnswer = Array.isArray(correctAnswerData.answer) ? correctAnswerData.answer.join(' or ') : correctAnswerData.answer; // Show both options for q4c
+                    feedbackSpan.textContent = `✗ Incorrect (Correct: ${displayAnswer})`; feedbackSpan.className = 'feedback incorrect';
+                    input.classList.add('incorrect-input'); input.classList.remove('correct-input');
+                 }
+            });
+        }
+
+        function checkMultiSelect(container, parts, questionPrefix) {
+             parts.forEach(part => {
+                const name = `${questionPrefix}${part}`;
+                const selectElement = container.querySelector(`select[name="${name}"]`);
+                const feedbackSpan = container.querySelector(`[data-feedback-for="${name}"]`);
+                if (!selectElement || !feedbackSpan) return;
+                const userAnswer = selectElement.value;
+                 const correctAnswerData = correctAnswers[name];
+                 if (!correctAnswerData) { console.error(`Correct answer not found for ${name}`); return; }
+                 const correctAnswer = correctAnswerData.answer;
+                 if (userAnswer !== '') {
+                    if (userAnswer === correctAnswer) { feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct'; selectElement.classList.add('correct-input'); selectElement.classList.remove('incorrect-input'); }
+                    else { feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect'; selectElement.classList.add('incorrect-input'); selectElement.classList.remove('correct-input'); }
+                } else {
+                    feedbackSpan.textContent = `✗ Unanswered (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect';
+                    selectElement.classList.add('incorrect-input'); selectElement.classList.remove('correct-input');
+                }
+            });
+        }
+
+        function checkSingleRadio(container, baseName) {
+            const radios = container.querySelectorAll(`input[type="radio"][name="${baseName}"]`);
+            const feedbackSpan = container.querySelector(`[data-feedback-for="${baseName}"]`);
+            let userAnswer = null;
+            radios.forEach(radio => { if (radio.checked) { userAnswer = radio.value; } });
+            if (!feedbackSpan) { console.warn("Feedback span not found for", baseName); return; }
+             const correctAnswerData = correctAnswers[baseName];
+             if (!correctAnswerData) { console.error(`Correct answer not found for ${baseName}`); return; }
+             const correctAnswer = correctAnswerData.answer;
+            if (userAnswer !== null) {
+                if (userAnswer === correctAnswer) { feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct'; }
+                else { feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect'; }
+            } else { feedbackSpan.textContent = `✗ Unanswered (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect'; }
+        }
+
+        function checkMultiSingleRadio(container, parts, questionPrefix) {
+             parts.forEach(part => { const name = `${questionPrefix}${part}`; checkSingleRadio(container, name); });
+        }
+
+        function checkCheckbox(container, baseName) {
+            const checkboxes = container.querySelectorAll(`input[type="checkbox"][name="${baseName}"]`);
+            const feedbackSpan = container.querySelector(`[data-feedback-for="${baseName}"]`);
+            const userAnswers = [];
+            checkboxes.forEach(checkbox => { if (checkbox.checked) { userAnswers.push(checkbox.value); } });
+             if (!feedbackSpan) return;
+             const correctAnswerData = correctAnswers[baseName];
+              if (!correctAnswerData || !Array.isArray(correctAnswerData.answer)) { console.error(`Correct answer (array) not found for ${baseName}`); return; }
+             const correctAnswersArray = correctAnswerData.answer.sort();
+             userAnswers.sort();
+            let isCorrect = userAnswers.length === correctAnswersArray.length && userAnswers.every((val, index) => val === correctAnswersArray[index]);
+             if (isCorrect) { feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct'; }
+             else { feedbackSpan.textContent = `✗ Incorrect (Correct Options: ${correctAnswersArray.join(', ')})`; feedbackSpan.className = 'feedback incorrect'; }
+        }
+
+        function checkInductionSteps(container, questionId) {
+             const steps = ['step1', 'step2', 'step3', 'step4'];
+             steps.forEach(step => {
+                 const inputName = `${questionId}_${step}`;
+                 const input = container.querySelector(`input[name="${inputName}"]`);
+                 const feedbackSpan = container.querySelector(`[data-feedback-for="${inputName}"]`);
+                 if (!input || !feedbackSpan) return;
+                 // Normalize user input: Uppercase, remove spaces and commas
+                 const userAnswer = input.value.trim().toUpperCase().replace(/[\s,]/g, '');
+                 const correctAnswerData = correctAnswers[inputName];
+                 if (!correctAnswerData) { console.error(`Answer key missing for ${inputName}`); return; }
+                 const correctAnswer = correctAnswerData.answer; // Correct answer is already normalized
+                 if (userAnswer === correctAnswer) {
+                     feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct';
+                     input.classList.add('correct-input'); input.classList.remove('incorrect-input');
+                 } else {
+                     // Display correct answer with commas for readability if multiple letters
+                     const displayCorrect = correctAnswer.length > 1 ? correctAnswer.split('').join(', ') : correctAnswer;
+                     feedbackSpan.textContent = `✗ Incorrect (Correct: ${displayCorrect})`;
+                     feedbackSpan.className = 'feedback incorrect';
+                     input.classList.add('incorrect-input'); input.classList.remove('correct-input');
+                 }
+             });
+        }
+
+    </script>
+
+</body>
+</html>
