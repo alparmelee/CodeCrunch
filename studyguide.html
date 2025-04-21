@@ -111,7 +111,7 @@
              margin-bottom: 0.5rem;
              white-space: pre;
          }
-          /* Styling for induction proof list */
+          /* Styling for proof lists */
          .proof-options-list {
              list-style-type: upper-alpha;
              margin-left: 1.5rem;
@@ -121,36 +121,26 @@
          .proof-options-list li {
              margin-bottom: 0.3rem;
          }
-         .proof-step-input {
+         .proof-step-input { /* Used for ordering dropdowns */
              display: flex;
              align-items: center;
              margin-bottom: 0.5rem;
          }
-         .proof-step-input span {
+         .proof-step-input span.step-label { /* Label like "Step 1:" */
              margin-right: 0.5rem;
              min-width: 50px;
+             font-weight: 600;
          }
+         .proof-step-input select {
+             min-width: 80px; /* Ensure dropdown is wide enough */
+         }
+
          /* Fix for subscripts */
          .sub {
              vertical-align: sub;
              font-size: smaller;
          }
-         /* Styling for proof display */
-         .proof-display {
-             background-color: #f3f4f6;
-             border-left: 4px solid #9ca3af;
-             padding: 1rem;
-             border-radius: 0.5rem;
-             margin-top: 1rem;
-             font-size: 0.95em;
-             line-height: 1.6;
-         }
-         .proof-display p {
-             margin-bottom: 0.75rem;
-         }
-         .proof-display p:last-child {
-             margin-bottom: 0;
-         }
+         /* Styling for proof display (removed) */
          /* Truth Table Styling */
         .truth-table {
             font-size: 0.9em;
@@ -189,404 +179,128 @@
 
         <div id="quiz-content">
 
-            <div class="question-container" id="q1-container" data-question-id="q1">
-                <p class="question-title">1. Logical Equivalences</p>
-                <p class="mb-3">Select the correct Contrapositive for each statement:</p>
-                <div class="space-y-4 pl-4">
-                    <div>
-                        <p class="mb-1">A. Statement: <span class="code-text">A → B</span></p>
-                        <label><input type="radio" name="q1a" value="A"> <span class="code-text">B → A</span></label>
-                        <label><input type="radio" name="q1a" value="B"> <span class="code-text">~A → ~B</span></label>
-                        <label><input type="radio" name="q1a" value="C"> <span class="code-text">~B → ~A</span></label>
-                        <label><input type="radio" name="q1a" value="D"> <span class="code-text">A ∨ ~B</span></label>
-                        <span class="feedback" data-feedback-for="q1a"></span>
-                    </div>
-                     <div>
-                        <p class="mb-1">B. Statement: <span class="code-text">P ∨ R → N ∧ ~M</span></p>
-                        <label><input type="radio" name="q1b" value="A"> <span class="code-text">~(N ∧ ~M) → ~(P ∨ R)</span></label>
-                        <label><input type="radio" name="q1b" value="B"> <span class="code-text">~P ∧ ~R → ~N ∨ M</span></label>
-                        <label><input type="radio" name="q1b" value="C"> <span class="code-text">N ∧ ~M → P ∨ R</span></label>
-                        <label><input type="radio" name="q1b" value="D"> <span class="code-text">~N ∨ M → ~P ∧ ~R</span></label>
-                        <span class="feedback" data-feedback-for="q1b"></span>
-                    </div>
-                     <div>
-                        <p class="mb-1">C. Statement: If Jason is 18 and not a felon, then he can vote.</p>
-                        <label><input type="radio" name="q1c" value="A"> If Jason can vote, then he is 18 and not a felon.</label>
-                        <label><input type="radio" name="q1c" value="B"> If Jason is not 18 or is a felon, then he cannot vote.</label>
-                        <label><input type="radio" name="q1c" value="C"> If Jason cannot vote, then he is not 18 or he is a felon.</label>
-                        <label><input type="radio" name="q1c" value="D"> Jason cannot vote or (he is 18 and not a felon).</label>
-                        <span class="feedback" data-feedback-for="q1c"></span>
-                    </div>
-                </div>
-                <button class="check-button" data-question-id="q1" data-state="check">Check Question 1</button>
-            </div>
-
-            <div class="question-container" id="q2-container" data-question-id="q2">
-                 <p class="question-title">2. Truth Table: <span class="code-text">J → ~P</span></p>
-                 <p class="mb-4">Fill in the final column for the statement.</p>
-                 <div class="overflow-x-auto">
-                     <table class="min-w-full border border-gray-300 truth-table mb-4">
-                         <thead> <tr class="bg-gray-200"> <th>J</th><th>P</th><th>~P</th><th>J → ~P</th> </tr> </thead>
-                         <tbody>
-                             <tr> <td>T</td><td>T</td><td>F</td><td><input type="text" name="q2_r1" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>T</td><td>F</td><td>T</td><td><input type="text" name="q2_r2" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>T</td><td>F</td><td><input type="text" name="q2_r3" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>F</td><td>T</td><td><input type="text" name="q2_r4" maxlength="1" size="1"></td> </tr>
-                         </tbody>
-                     </table>
-                 </div>
-                 <span class="feedback" data-feedback-for="q2_table"></span>
-                 <button class="check-button" data-question-id="q2" data-state="check">Check Question 2</button>
-            </div>
-
-             <div class="question-container" id="q3-container" data-question-id="q3">
-                 <p class="question-title">3. Truth Table: <span class="code-text">N ∨ ~P → R</span></p>
-                 <p class="mb-4">Fill in the final column for the statement.</p>
-                 <div class="overflow-x-auto">
-                     <table class="min-w-full border border-gray-300 truth-table mb-4">
-                         <thead> <tr class="bg-gray-200"> <th>N</th><th>P</th><th>R</th><th>~P</th><th>N ∨ ~P</th><th>N ∨ ~P → R</th> </tr> </thead>
-                         <tbody>
-                             <tr> <td>T</td><td>T</td><td>T</td><td>F</td><td>T</td><td><input type="text" name="q3_r1" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>T</td><td>T</td><td>F</td><td>F</td><td>T</td><td><input type="text" name="q3_r2" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>T</td><td>F</td><td>T</td><td>T</td><td>T</td><td><input type="text" name="q3_r3" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>T</td><td>F</td><td>F</td><td>T</td><td>T</td><td><input type="text" name="q3_r4" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>T</td><td>T</td><td>F</td><td>F</td><td><input type="text" name="q3_r5" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>T</td><td>F</td><td>F</td><td>F</td><td><input type="text" name="q3_r6" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>F</td><td>T</td><td>T</td><td>T</td><td><input type="text" name="q3_r7" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>F</td><td>F</td><td>T</td><td>T</td><td><input type="text" name="q3_r8" maxlength="1" size="1"></td> </tr>
-                         </tbody>
-                     </table>
-                 </div>
-                 <span class="feedback" data-feedback-for="q3_table"></span>
-                 <button class="check-button" data-question-id="q3" data-state="check">Check Question 3</button>
-            </div>
-
-            <div class="question-container" id="q4-container" data-question-id="q4">
-                 <p class="question-title">4. Valid Deduction Rule?</p>
-                 <p class="mb-1">Premise 1: <span class="code-text">P → ~Q</span></p>
-                 <p class="mb-1">Premise 2: <span class="code-text">P → Q</span></p>
-                 <p class="mb-4">Conclusion: <span class="code-text">~P</span></p>
-                 <p class="mb-4">Fill in the truth table and determine if the rule is valid.</p>
-                 <div class="overflow-x-auto">
-                     <table class="min-w-full border border-gray-300 truth-table mb-4">
-                         <thead> <tr class="bg-gray-200"> <th>P</th><th>Q</th><th>~Q</th><th>P → ~Q</th><th>P → Q</th><th>~P</th><th>Both Premises True?</th> </tr> </thead>
-                         <tbody>
-                             <tr> <td>T</td><td>T</td><td>F</td><td><input type="text" name="q4_r1c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r1c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r1c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r1c7" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>T</td><td>F</td><td>T</td><td><input type="text" name="q4_r2c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r2c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r2c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r2c7" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>T</td><td>F</td><td><input type="text" name="q4_r3c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r3c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r3c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r3c7" maxlength="1" size="1"></td> </tr>
-                             <tr> <td>F</td><td>F</td><td>T</td><td><input type="text" name="q4_r4c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r4c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r4c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r4c7" maxlength="1" size="1"></td> </tr>
-                         </tbody>
-                     </table>
-                 </div>
-                 <span class="feedback" data-feedback-for="q4_table"></span>
-                 <p class="mt-4 mb-2">Is the deduction rule valid?</p>
-                 <div class="space-y-1">
-                     <label><input type="radio" name="q4_valid" value="Yes"> Yes (Conclusion is true whenever all premises are true)</label>
-                     <label><input type="radio" name="q4_valid" value="No"> No (There is a row where all premises are true, but the conclusion is false)</label>
-                     <span class="feedback" data-feedback-for="q4_valid"></span>
-                 </div>
-                 <button class="check-button" data-question-id="q4" data-state="check">Check Question 4</button>
-            </div>
-
-            <div class="question-container" id="q5-container" data-question-id="q5">
-                 <p class="question-title">5. Propositional Logic Translation</p>
-                 <p class="mb-2">Let G = "Gina goes to the store," B = "Gina wears a bow tie," C = "Gina wants Coca-Cola."</p>
-                 <p class="mb-4">Select the best translation of: "Gina does not go to the store if she wears a bow tie or does not want Coca-Cola."</p>
-                 <div class="space-y-2">
-                    <label><input type="radio" name="q5" value="A"> <span class="code-text">~G → (B ∨ ~C)</span></label>
-                    <label><input type="radio" name="q5" value="B"> <span class="code-text">(B ∨ ~C) → ~G</span></label>
-                    <label><input type="radio" name="q5" value="C"> <span class="code-text">~G ∧ (B ∨ ~C)</span></label>
-                    <label><input type="radio" name="q5" value="D"> <span class="code-text">~(B ∨ ~C) → G</span></label>
-                    <span class="feedback" data-feedback-for="q5"></span>
-                 </div>
-                 <button class="check-button" data-question-id="q5" data-state="check">Check Question 5</button>
-            </div>
+            <div class="question-container" id="q1-container" data-question-id="q1"> <p class="question-title">1. Logical Equivalences</p> <p class="mb-3">Select the correct Contrapositive for each statement:</p> <div class="space-y-4 pl-4"> <div> <p class="mb-1">A. Statement: <span class="code-text">A → B</span></p> <label><input type="radio" name="q1a" value="A"> <span class="code-text">B → A</span></label> <label><input type="radio" name="q1a" value="B"> <span class="code-text">~A → ~B</span></label> <label><input type="radio" name="q1a" value="C"> <span class="code-text">~B → ~A</span></label> <label><input type="radio" name="q1a" value="D"> <span class="code-text">A ∨ ~B</span></label> <span class="feedback" data-feedback-for="q1a"></span> </div> <div> <p class="mb-1">B. Statement: <span class="code-text">P ∨ R → N ∧ ~M</span></p> <label><input type="radio" name="q1b" value="A"> <span class="code-text">~(N ∧ ~M) → ~(P ∨ R)</span></label> <label><input type="radio" name="q1b" value="B"> <span class="code-text">~P ∧ ~R → ~N ∨ M</span></label> <label><input type="radio" name="q1b" value="C"> <span class="code-text">N ∧ ~M → P ∨ R</span></label> <label><input type="radio" name="q1b" value="D"> <span class="code-text">~N ∨ M → ~P ∧ ~R</span></label> <span class="feedback" data-feedback-for="q1b"></span> </div> <div> <p class="mb-1">C. Statement: If Jason is 18 and not a felon, then he can vote.</p> <label><input type="radio" name="q1c" value="A"> If Jason can vote, then he is 18 and not a felon.</label> <label><input type="radio" name="q1c" value="B"> If Jason is not 18 or is a felon, then he cannot vote.</label> <label><input type="radio" name="q1c" value="C"> If Jason cannot vote, then he is not 18 or he is a felon.</label> <label><input type="radio" name="q1c" value="D"> Jason cannot vote or (he is 18 and not a felon).</label> <span class="feedback" data-feedback-for="q1c"></span> </div> </div> <button class="check-button" data-question-id="q1" data-state="check">Check Question 1</button> </div>
+            <div class="question-container" id="q2-container" data-question-id="q2"> <p class="question-title">2. Truth Table: <span class="code-text">J → ~P</span></p> <p class="mb-4">Fill in the final column for the statement.</p> <div class="overflow-x-auto"> <table class="min-w-full border border-gray-300 truth-table mb-4"> <thead> <tr class="bg-gray-200"> <th>J</th><th>P</th><th>~P</th><th>J → ~P</th> </tr> </thead> <tbody> <tr> <td>T</td><td>T</td><td>F</td><td><input type="text" name="q2_r1" maxlength="1" size="1"></td> </tr> <tr> <td>T</td><td>F</td><td>T</td><td><input type="text" name="q2_r2" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>T</td><td>F</td><td><input type="text" name="q2_r3" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>F</td><td>T</td><td><input type="text" name="q2_r4" maxlength="1" size="1"></td> </tr> </tbody> </table> </div> <span class="feedback" data-feedback-for="q2_table"></span> <button class="check-button" data-question-id="q2" data-state="check">Check Question 2</button> </div>
+            <div class="question-container" id="q3-container" data-question-id="q3"> <p class="question-title">3. Truth Table: <span class="code-text">N ∨ ~P → R</span></p> <p class="mb-4">Fill in the final column for the statement.</p> <div class="overflow-x-auto"> <table class="min-w-full border border-gray-300 truth-table mb-4"> <thead> <tr class="bg-gray-200"> <th>N</th><th>P</th><th>R</th><th>~P</th><th>N ∨ ~P</th><th>N ∨ ~P → R</th> </tr> </thead> <tbody> <tr> <td>T</td><td>T</td><td>T</td><td>F</td><td>T</td><td><input type="text" name="q3_r1" maxlength="1" size="1"></td> </tr> <tr> <td>T</td><td>T</td><td>F</td><td>F</td><td>T</td><td><input type="text" name="q3_r2" maxlength="1" size="1"></td> </tr> <tr> <td>T</td><td>F</td><td>T</td><td>T</td><td>T</td><td><input type="text" name="q3_r3" maxlength="1" size="1"></td> </tr> <tr> <td>T</td><td>F</td><td>F</td><td>T</td><td>T</td><td><input type="text" name="q3_r4" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>T</td><td>T</td><td>F</td><td>F</td><td><input type="text" name="q3_r5" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>T</td><td>F</td><td>F</td><td>F</td><td><input type="text" name="q3_r6" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>F</td><td>T</td><td>T</td><td>T</td><td><input type="text" name="q3_r7" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>F</td><td>F</td><td>T</td><td>T</td><td><input type="text" name="q3_r8" maxlength="1" size="1"></td> </tr> </tbody> </table> </div> <span class="feedback" data-feedback-for="q3_table"></span> <button class="check-button" data-question-id="q3" data-state="check">Check Question 3</button> </div>
+            <div class="question-container" id="q4-container" data-question-id="q4"> <p class="question-title">4. Valid Deduction Rule?</p> <p class="mb-1">Premise 1: <span class="code-text">P → ~Q</span></p> <p class="mb-1">Premise 2: <span class="code-text">P → Q</span></p> <p class="mb-4">Conclusion: <span class="code-text">~P</span></p> <p class="mb-4">Fill in the truth table and determine if the rule is valid.</p> <div class="overflow-x-auto"> <table class="min-w-full border border-gray-300 truth-table mb-4"> <thead> <tr class="bg-gray-200"> <th>P</th><th>Q</th><th>~Q</th><th>P → ~Q</th><th>P → Q</th><th>~P</th><th>Both Premises True?</th> </tr> </thead> <tbody> <tr> <td>T</td><td>T</td><td>F</td><td><input type="text" name="q4_r1c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r1c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r1c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r1c7" maxlength="1" size="1"></td> </tr> <tr> <td>T</td><td>F</td><td>T</td><td><input type="text" name="q4_r2c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r2c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r2c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r2c7" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>T</td><td>F</td><td><input type="text" name="q4_r3c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r3c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r3c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r3c7" maxlength="1" size="1"></td> </tr> <tr> <td>F</td><td>F</td><td>T</td><td><input type="text" name="q4_r4c4" maxlength="1" size="1"></td><td><input type="text" name="q4_r4c5" maxlength="1" size="1"></td><td><input type="text" name="q4_r4c6" maxlength="1" size="1"></td><td><input type="text" name="q4_r4c7" maxlength="1" size="1"></td> </tr> </tbody> </table> </div> <span class="feedback" data-feedback-for="q4_table"></span> <p class="mt-4 mb-2">Is the deduction rule valid?</p> <div class="space-y-1"> <label><input type="radio" name="q4_valid" value="Yes"> Yes (Conclusion is true whenever all premises are true)</label> <label><input type="radio" name="q4_valid" value="No"> No (There is a row where all premises are true, but the conclusion is false)</label> <span class="feedback" data-feedback-for="q4_valid"></span> </div> <button class="check-button" data-question-id="q4" data-state="check">Check Question 4</button> </div>
+            <div class="question-container" id="q5-container" data-question-id="q5"> <p class="question-title">5. Propositional Logic Translation</p> <p class="mb-2">Let G = "Gina goes to the store," B = "Gina wears a bow tie," C = "Gina wants Coca-Cola."</p> <p class="mb-4">Select the best translation of: "Gina does not go to the store if she wears a bow tie or does not want Coca-Cola."</p> <div class="space-y-2"> <label><input type="radio" name="q5" value="A"> <span class="code-text">~G → (B ∨ ~C)</span></label> <label><input type="radio" name="q5" value="B"> <span class="code-text">(B ∨ ~C) → ~G</span></label> <label><input type="radio" name="q5" value="C"> <span class="code-text">~G ∧ (B ∨ ~C)</span></label> <label><input type="radio" name="q5" value="D"> <span class="code-text">~(B ∨ ~C) → G</span></label> <span class="feedback" data-feedback-for="q5"></span> </div> <button class="check-button" data-question-id="q5" data-state="check">Check Question 5</button> </div>
 
             <div class="question-container" id="q6-container" data-question-id="q6">
-                 <p class="question-title">6. Direct Proof Example</p>
+                 <p class="question-title">6. Direct Proof Order</p>
                  <p class="mb-2"><strong>Statement:</strong> If n is odd, then n² is odd.</p>
-                 <div class="proof-display">
-                    <p><strong>Introduction:</strong> We want to show that if n is odd then n² is odd.</p>
-                    <p><strong>Step 1 (Definition):</strong> Assume n is odd. By definition, n = 2j + 1 for some integer j.</p>
-                    <p><strong>Step 2 (Algebra):</strong> Consider n². <br><span class="code-text">n² = (2j+1)² = 4j² + 4j + 1</span>.</p>
-                    <p><strong>Step 3 (Factor):</strong> We can factor a 2 from the first two terms: <br><span class="code-text">n² = 2(2j² + 2j) + 1</span>.</p>
-                    <p><strong>Step 4 (Conclusion):</strong> Let <span class="code-text">w = 2j² + 2j</span>. Since j is an integer, w is also an integer. Thus, <span class="code-text">n² = 2w + 1</span>, which matches the definition of an odd number.</p>
-                    <p><strong>Conclusion:</strong> We have shown that if n is odd, then its square n² is odd.</p>
+                 <p class="mb-2">The following are steps for a direct proof, presented out of order:</p>
+                 <ol class="proof-options-list">
+                     <li>Assume n is odd. By definition, n = 2j + 1 for some integer j.</li>
+                     <li>Consider n². n² = (2j+1)² = 4j² + 4j + 1.</li>
+                     <li>Factor: n² = 2(2j² + 2j) + 1. Let w = 2j² + 2j. Since j is an integer, w is an integer. Thus, n² = 2w + 1, which is odd.</li>
+                 </ol>
+                 <p class="mb-2">Select the correct order for the proof steps listed above:</p>
+                 <div class="space-y-2">
+                     <div class="proof-step-input"> <span class="step-label">Step 1:</span> <select name="q6_step1"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> </select> <span class="feedback" data-feedback-for="q6_step1"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 2:</span> <select name="q6_step2"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> </select> <span class="feedback" data-feedback-for="q6_step2"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 3:</span> <select name="q6_step3"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> </select> <span class="feedback" data-feedback-for="q6_step3"></span> </div>
                  </div>
+                 <button class="check-button" data-question-id="q6" data-state="check">Check Question 6</button>
             </div>
 
             <div class="question-container" id="q7-container" data-question-id="q7">
-                 <p class="question-title">7. Contrapositive Proof Example</p>
+                 <p class="question-title">7. Contrapositive Proof Order</p>
                  <p class="mb-2"><strong>Statement:</strong> If n² is odd, then n is odd.</p>
-                 <div class="proof-display">
-                    <p><strong>Introduction:</strong> We want to show that if n² is odd, then n is odd. We will prove the contrapositive statement: "If n is even, then n² is even."</p>
-                    <p><strong>Step 1 (Definition):</strong> Assume n is even. By definition, n = 2k for some integer k.</p>
-                    <p><strong>Step 2 (Algebra):</strong> Consider n². <br><span class="code-text">n² = (2k)² = 4k²</span>.</p>
-                    <p><strong>Step 3 (Factor):</strong> We can factor a 2: <br><span class="code-text">n² = 2(2k²)</span>.</p>
-                    <p><strong>Step 4 (Conclusion):</strong> Let <span class="code-text">z = 2k²</span>. Since k is an integer, z is also an integer. Thus, <span class="code-text">n² = 2z</span>, which matches the definition of an even number.</p>
-                    <p><strong>Conclusion:</strong> We have shown that if n is even, then n² is even. Therefore, by contrapositive, if n² is odd, then n must be odd.</p>
+                 <p class="mb-2">The following are steps for a proof by contrapositive (proving "If n is even, then n² is even"), presented out of order:</p>
+                 <ol class="proof-options-list">
+                     <li>Assume n is even. By definition, n = 2k for some integer k.</li>
+                     <li>Consider n². n² = (2k)² = 4k².</li>
+                     <li>Factor: n² = 2(2k²). Let z = 2k². Since k is an integer, z is an integer. Thus, n² = 2z, which is even.</li>
+                     <li>Since "n even → n² even" is true, the contrapositive "n² odd → n odd" is also true.</li>
+                 </ol>
+                  <p class="mb-2">Select the correct order for the proof steps listed above:</p>
+                 <div class="space-y-2">
+                     <div class="proof-step-input"> <span class="step-label">Step 1:</span> <select name="q7_step1"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q7_step1"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 2:</span> <select name="q7_step2"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q7_step2"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 3:</span> <select name="q7_step3"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q7_step3"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 4:</span> <select name="q7_step4"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q7_step4"></span> </div>
                  </div>
+                 <button class="check-button" data-question-id="q7" data-state="check">Check Question 7</button>
             </div>
 
             <div class="question-container" id="q8-container" data-question-id="q8">
-                 <p class="question-title">8. Contradiction Proof Example</p>
+                 <p class="question-title">8. Contradiction Proof Order</p>
                  <p class="mb-2"><strong>Statement:</strong> If the product of two integers ab is odd, then both a and b are odd.</p>
-                  <div class="proof-display">
-                    <p><strong>Introduction:</strong> We want to show that if ab is odd, then both a and b are odd. We will use proof by contradiction.</p>
-                    <p><strong>Step 1 (Assumption):</strong> Assume the statement is false. That is, assume ab is odd AND it is NOT the case that both a and b are odd. The negation of "both a and b are odd" is "at least one of a or b is even".</p>
-                    <p><strong>Step 2 (Case: a is even):</strong> Without loss of generality, assume a is even. By definition, a = 2k for some integer k.</p>
-                    <p><strong>Step 3 (Algebra):</strong> Consider the product ab. <br><span class="code-text">ab = (2k)b = 2(kb)</span>.</p>
-                    <p><strong>Step 4 (Conclusion):</strong> Let <span class="code-text">x = kb</span>. Since k and b are integers, x is also an integer. Thus, <span class="code-text">ab = 2x</span>, which matches the definition of an even number.</p>
-                    <p><strong>Step 5 (Contradiction):</strong> This result (ab is even) contradicts our initial premise that ab was odd.</p>
-                    <p><strong>Conclusion:</strong> Since our assumption (ab is odd and at least one of a or b is even) leads to a contradiction, the assumption must be false. Therefore, the original statement must be true: if ab is odd, then both a and b must be odd.</p>
-                 </div>
-            </div>
-
-            <div class="question-container" id="q9-container" data-question-id="q9">
-                <p class="question-title">9. Graph Properties (Handshaking Lemma)</p>
-                <div class="space-y-3">
-                    <div class="inline-input-group"> <span class="input-label">A. The graph G<span class="sub">1</span> has 9 vertices, all of degree 6. How many edges does G<span class="sub">1</span> have?</span> <input type="number" name="q9a" min="0"> <span class="feedback" data-feedback-for="q9a"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">B. The graph G<span class="sub">2</span> has 12 vertices, all of degree k. Also, G<span class="sub">2</span> has 18 edges. What is k?</span> <input type="number" name="q9b" min="0"> <span class="feedback" data-feedback-for="q9b"></span> </div>
-                </div>
-                 <button class="check-button" data-question-id="q9" data-state="check">Check Question 9</button>
-            </div>
-
-            <div class="question-container" id="q10-container" data-question-id="q10">
-                <p class="question-title">10. Tree Properties</p>
-                 <div class="space-y-3">
-                    <div class="inline-input-group"> <span class="input-label">A. A connected graph with 4 vertices contains 7 edges. How many edges must be removed to get a spanning tree?</span> <input type="number" name="q10a" min="0"> <span class="feedback" data-feedback-for="q10a"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">B. If a tree has 890 vertices, how many edges does it have?</span> <input type="number" name="q10b" min="0"> <span class="feedback" data-feedback-for="q10b"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">C. If a tree has 4 edges, how many vertices does it have?</span> <input type="number" name="q10c" min="0"> <span class="feedback" data-feedback-for="q10c"></span> </div>
-                 </div>
-                 <button class="check-button" data-question-id="q10" data-state="check">Check Question 10</button>
-            </div>
-
-             <div class="question-container" id="q11-container" data-question-id="q11">
-                 <p class="question-title">11. Euler Paths and Circuits</p>
-                 <div class="mb-4">
-                    <p class="mb-2">A. For each degree sequence, determine if it allows an Euler Circuit (C), only an Euler Trail (T), or Neither (N).</p>
-                    <div class="space-y-2 pl-4">
-                        <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{6, 6, 6, 6, 6, 6, 6}</span>:</span> <select name="q11a"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11a"></span> </div>
-                        <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{5, 4, 3, 2, 1}</span>:</span> <select name="q11b"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11b"></span> </div>
-                        <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{3, 2, 2, 1}</span>:</span> <select name="q11c"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11c"></span> </div>
-                        <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{1, 1}</span>:</span> <select name="q11d"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11d"></span> </div>
-                        <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{2, 2, 2}</span>:</span> <select name="q11e"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11e"></span> </div>
-                    </div>
-                 </div>
-                 <div>
-                     <p class="mb-2">B. Consider the graph with V:{a, b, c, d, e, f} and E: {ab, bc, ca, cd, de, cf}. Which single edge must be added to create an Euler circuit?</p>
-                     <div class="space-y-1 pl-4">
-                        <label><input type="radio" name="q11f" value="A"> <span class="code-text">ad</span></label>
-                        <label><input type="radio" name="q11f" value="B"> <span class="code-text">be</span></label>
-                        <label><input type="radio" name="q11f" value="C"> <span class="code-text">ef</span></label>
-                        <label><input type="radio" name="q11f" value="D"> <span class="code-text">df</span></label>
-                        <span class="feedback" data-feedback-for="q11f"></span>
-                     </div>
-                 </div>
-                 <button class="check-button" data-question-id="q11" data-state="check">Check Question 11</button>
-            </div>
-
-            <div class="question-container" id="q12-container" data-question-id="q12">
-                 <p class="question-title">12. Counting Principles</p>
-                 <div class="space-y-4">
-                    <div>
-                        <p class="mb-2">A. Your wardrobe consists of 4 shirts, 6 pairs of pants, and 9 bow ties. How many different outfits (shirt, pants, bow tie) can you make?</p>
-                        <input type="number" name="q12a" min="0"> <span class="feedback" data-feedback-for="q12a"></span>
-                    </div>
-                    <div>
-                         <p class="mb-2">B. A restaurant offers 3 appetizers and 9 entrées.</p>
-                         <div class="inline-input-group pl-4"> <span class="input-label">How many choices if you eat one dish (appetizer OR entrée)?</span> <input type="number" name="q12b" min="0"> <span class="feedback" data-feedback-for="q12b"></span> </div>
-                         <div class="inline-input-group pl-4"> <span class="input-label">How many choices if you eat both an appetizer AND an entrée?</span> <input type="number" name="q12c" min="0"> <span class="feedback" data-feedback-for="q12c"></span> </div>
-                    </div>
-                 </div>
-                 <button class="check-button" data-question-id="q12" data-state="check">Check Question 12</button>
-            </div>
-
-            <div class="question-container" id="q13-container" data-question-id="q13">
-                <p class="question-title">13. Set Operations</p>
-                 <p class="mb-2">Let <span class="code-text">A = {1, 2, 3, 4, 5, 6, 7}</span>, <span class="code-text">B = {3, 6, 9, 12}</span>, <span class="code-text">C = {2, 3, 4, 7}</span>.</p>
-                 <p class="text-sm text-gray-600 mb-3">List elements in ascending order, separated by commas, no spaces (e.g., 1,2,3).</p>
+                 <p class="mb-2">The following are steps for a proof by contradiction, presented out of order:</p>
+                  <ol class="proof-options-list">
+                     <li>Assume the statement is false: Assume ab is odd AND (at least one of a or b is even). WLOG, assume a is even.</li>
+                     <li>By definition, a = 2k for some integer k.</li>
+                     <li>Consider the product ab = (2k)b = 2(kb).</li>
+                     <li>Let x = kb. Since k and b are integers, x is an integer. Thus, ab = 2x, which is even.</li>
+                     <li>This (ab is even) contradicts the premise that ab was odd.</li>
+                     <li>Therefore, the initial assumption must be false, and the original statement is true.</li>
+                 </ol>
+                 <p class="mb-2">Select the correct order for the proof steps listed above:</p>
                  <div class="space-y-2">
-                    <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∪ B = {</span></span> <input type="text" name="q13a" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13a"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∩ B = {</span></span> <input type="text" name="q13b" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13b"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A \ B = {</span></span> <input type="text" name="q13c" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13c"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">B \ A = {</span></span> <input type="text" name="q13d" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13d"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∪ B ∪ C = {</span></span> <input type="text" name="q13e" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13e"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∩ (B ∩ C) = {</span></span> <input type="text" name="q13f" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13f"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 1:</span> <select name="q8_step1"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> <option value="E">E</option><option value="F">F</option> </select> <span class="feedback" data-feedback-for="q8_step1"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 2:</span> <select name="q8_step2"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> <option value="E">E</option><option value="F">F</option> </select> <span class="feedback" data-feedback-for="q8_step2"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 3:</span> <select name="q8_step3"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> <option value="E">E</option><option value="F">F</option> </select> <span class="feedback" data-feedback-for="q8_step3"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 4:</span> <select name="q8_step4"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> <option value="E">E</option><option value="F">F</option> </select> <span class="feedback" data-feedback-for="q8_step4"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 5:</span> <select name="q8_step5"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> <option value="E">E</option><option value="F">F</option> </select> <span class="feedback" data-feedback-for="q8_step5"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 6:</span> <select name="q8_step6"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> <option value="E">E</option><option value="F">F</option> </select> <span class="feedback" data-feedback-for="q8_step6"></span> </div>
                  </div>
-                 <button class="check-button" data-question-id="q13" data-state="check">Check Question 13</button>
+                 <button class="check-button" data-question-id="q8" data-state="check">Check Question 8</button>
             </div>
 
-            <div class="question-container" id="q14-container" data-question-id="q14">
-                 <p class="question-title">14. Inclusion-Exclusion Principle</p>
-                 <p class="mb-2">In a survey, 103 students reported whether they liked potatoes: Mashed (M), French-fried (F), or Twice-baked (T). Results: |M|=47, |F|=42, |T|=35, |M∩F|=20, |F∩T|=19, |M∩T|=18, |M∩F∩T|=13.</p>
-                 <div class="inline-input-group">
-                     <span class="input-label">How many students hate potatoes (liked none of these styles)?</span>
-                     <input type="number" name="q14" min="0">
-                     <span class="feedback" data-feedback-for="q14"></span>
-                 </div>
-                 <button class="check-button" data-question-id="q14" data-state="check">Check Question 14</button>
-            </div>
+            <div class="question-container" id="q9-container" data-question-id="q9"> <p class="question-title">9. Graph Properties (Handshaking Lemma)</p> <div class="space-y-3"> <div class="inline-input-group"> <span class="input-label">A. The graph G<span class="sub">1</span> has 9 vertices, all of degree 6. How many edges does G<span class="sub">1</span> have?</span> <input type="number" name="q9a" min="0"> <span class="feedback" data-feedback-for="q9a"></span> </div> <div class="inline-input-group"> <span class="input-label">B. The graph G<span class="sub">2</span> has 12 vertices, all of degree k. Also, G<span class="sub">2</span> has 18 edges. What is k?</span> <input type="number" name="q9b" min="0"> <span class="feedback" data-feedback-for="q9b"></span> </div> </div> <button class="check-button" data-question-id="q9" data-state="check">Check Question 9</button> </div>
+            <div class="question-container" id="q10-container" data-question-id="q10"> <p class="question-title">10. Tree Properties</p> <div class="space-y-3"> <div class="inline-input-group"> <span class="input-label">A. A connected graph with 4 vertices contains 7 edges. How many edges must be removed to get a spanning tree?</span> <input type="number" name="q10a" min="0"> <span class="feedback" data-feedback-for="q10a"></span> </div> <div class="inline-input-group"> <span class="input-label">B. If a tree has 890 vertices, how many edges does it have?</span> <input type="number" name="q10b" min="0"> <span class="feedback" data-feedback-for="q10b"></span> </div> <div class="inline-input-group"> <span class="input-label">C. If a tree has 4 edges, how many vertices does it have?</span> <input type="number" name="q10c" min="0"> <span class="feedback" data-feedback-for="q10c"></span> </div> </div> <button class="check-button" data-question-id="q10" data-state="check">Check Question 10</button> </div>
+            <div class="question-container" id="q11-container" data-question-id="q11"> <p class="question-title">11. Euler Paths and Circuits</p> <div class="mb-4"> <p class="mb-2">A. For each degree sequence, determine if it allows an Euler Circuit (C), only an Euler Trail (T), or Neither (N).</p> <div class="space-y-2 pl-4"> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{6, 6, 6, 6, 6, 6, 6}</span>:</span> <select name="q11a"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11a"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{5, 4, 3, 2, 1}</span>:</span> <select name="q11b"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11b"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{3, 2, 2, 1}</span>:</span> <select name="q11c"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11c"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{1, 1}</span>:</span> <select name="q11d"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11d"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">{2, 2, 2}</span>:</span> <select name="q11e"> <option value="">Select...</option> <option value="C">Circuit</option> <option value="T">Trail Only</option> <option value="N">Neither</option> </select> <span class="feedback" data-feedback-for="q11e"></span> </div> </div> </div> <div> <p class="mb-2">B. Consider the graph with V:{a, b, c, d, e, f} and E: {ab, bc, ca, cd, de, cf}. Which single edge must be added to create an Euler circuit?</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q11f" value="A"> <span class="code-text">ad</span></label> <label><input type="radio" name="q11f" value="B"> <span class="code-text">be</span></label> <label><input type="radio" name="q11f" value="C"> <span class="code-text">ef</span></label> <label><input type="radio" name="q11f" value="D"> <span class="code-text">df</span></label> <span class="feedback" data-feedback-for="q11f"></span> </div> </div> <button class="check-button" data-question-id="q11" data-state="check">Check Question 11</button> </div>
+            <div class="question-container" id="q12-container" data-question-id="q12"> <p class="question-title">12. Counting Principles</p> <div class="space-y-4"> <div> <p class="mb-2">A. Your wardrobe consists of 4 shirts, 6 pairs of pants, and 9 bow ties. How many different outfits (shirt, pants, bow tie) can you make?</p> <input type="number" name="q12a" min="0"> <span class="feedback" data-feedback-for="q12a"></span> </div> <div> <p class="mb-2">B. A restaurant offers 3 appetizers and 9 entrées.</p> <div class="inline-input-group pl-4"> <span class="input-label">How many choices if you eat one dish (appetizer OR entrée)?</span> <input type="number" name="q12b" min="0"> <span class="feedback" data-feedback-for="q12b"></span> </div> <div class="inline-input-group pl-4"> <span class="input-label">How many choices if you eat both an appetizer AND an entrée?</span> <input type="number" name="q12c" min="0"> <span class="feedback" data-feedback-for="q12c"></span> </div> </div> </div> <button class="check-button" data-question-id="q12" data-state="check">Check Question 12</button> </div>
+            <div class="question-container" id="q13-container" data-question-id="q13"> <p class="question-title">13. Set Operations</p> <p class="mb-2">Let <span class="code-text">A = {1, 2, 3, 4, 5, 6, 7}</span>, <span class="code-text">B = {3, 6, 9, 12}</span>, <span class="code-text">C = {2, 3, 4, 7}</span>.</p> <p class="text-sm text-gray-600 mb-3">List elements in ascending order, separated by commas, no spaces (e.g., 1,2,3).</p> <div class="space-y-2"> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∪ B = {</span></span> <input type="text" name="q13a" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13a"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∩ B = {</span></span> <input type="text" name="q13b" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13b"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A \ B = {</span></span> <input type="text" name="q13c" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13c"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">B \ A = {</span></span> <input type="text" name="q13d" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13d"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∪ B ∪ C = {</span></span> <input type="text" name="q13e" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13e"></span> </div> <div class="inline-input-group"> <span class="input-label w-32"><span class="code-text">A ∩ (B ∩ C) = {</span></span> <input type="text" name="q13f" class="flex-grow" placeholder="1,2,3..."> <span class="input-label">}</span> <span class="feedback" data-feedback-for="q13f"></span> </div> </div> <button class="check-button" data-question-id="q13" data-state="check">Check Question 13</button> </div>
+            <div class="question-container" id="q14-container" data-question-id="q14"> <p class="question-title">14. Inclusion-Exclusion Principle</p> <p class="mb-2">In a survey, 103 students reported whether they liked potatoes: Mashed (M), French-fried (F), or Twice-baked (T). Results: |M|=47, |F|=42, |T|=35, |M∩F|=20, |F∩T|=19, |M∩T|=18, |M∩F∩T|=13.</p> <div class="inline-input-group"> <span class="input-label">How many students hate potatoes (liked none of these styles)?</span> <input type="number" name="q14" min="0"> <span class="feedback" data-feedback-for="q14"></span> </div> <button class="check-button" data-question-id="q14" data-state="check">Check Question 14</button> </div>
+            <div class="question-container" id="q15-container" data-question-id="q15"> <p class="question-title">15. Counting Words</p> <p class="mb-2">We want to build 7-letter “words” using only the first 9 letters of the alphabet (A-I).</p> <div class="space-y-3"> <div class="inline-input-group"> <span class="input-label">A. How many words are there in total (repeats allowed)?</span> <input type="number" name="q15a" min="0"> <span class="feedback" data-feedback-for="q15a"></span> </div> <div class="inline-input-group"> <span class="input-label">B. How many words have no repeated letters?</span> <input type="number" name="q15b" min="0"> <span class="feedback" data-feedback-for="q15b"></span> </div> <div class="inline-input-group"> <span class="input-label">C. How many words have no repeats AND are in alphabetical order?</span> <input type="number" name="q15c" min="0"> <span class="feedback" data-feedback-for="q15c"></span> </div> </div> <button class="check-button" data-question-id="q15" data-state="check">Check Question 15</button> </div>
+            <div class="question-container" id="q16-container" data-question-id="q16"> <p class="question-title">16. Probability (Coin Flips)</p> <p class="mb-2">You flip a fair coin four times and record the sequence of Heads (H) or Tails (T).</p> <p class="text-sm text-gray-600 mb-3">Enter probabilities as fractions (e.g., 1/2) or decimals (e.g., 0.5).</p> <div class="space-y-3"> <div class="inline-input-group"> <span class="input-label">A. What is the probability of getting more heads than tails?</span> <input type="text" name="q16a"> <span class="feedback" data-feedback-for="q16a"></span> </div> <div class="inline-input-group"> <span class="input-label">B. What is the probability of getting exactly two heads?</span> <input type="text" name="q16b"> <span class="feedback" data-feedback-for="q16b"></span> </div> <div class="inline-input-group"> <span class="input-label">C. What is the probability of getting exactly three heads?</span> <input type="text" name="q16c"> <span class="feedback" data-feedback-for="q16c"></span> </div> </div> <button class="check-button" data-question-id="q16" data-state="check">Check Question 16</button> </div>
+            <div class="question-container" id="q17-container" data-question-id="q17"> <p class="question-title">17. Sequence Term Evaluation</p> <div class="space-y-3"> <div class="inline-input-group"> <span class="input-label">A. Given <span class="code-text">a<span class="sub">n</span> = (n+1)! - n²</span>, what is <span class="code-text">a<span class="sub">4</span></span>?</span> <input type="number" name="q17a"> <span class="feedback" data-feedback-for="q17a"></span> </div> <div class="inline-input-group"> <span class="input-label">B. Given <span class="code-text">a<span class="sub">n</span> = 2n + 8</span>, what is <span class="code-text">a<span class="sub">27</span></span>?</span> <input type="number" name="q17b"> <span class="feedback" data-feedback-for="q17b"></span> </div> <div class="inline-input-group"> <span class="input-label">C. Given <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> + a<span class="sub">n-2</span></span> with <span class="code-text">a<span class="sub">0</span> = 1</span>, <span class="code-text">a<span class="sub">1</span> = 4</span>, what is <span class="code-text">a<span class="sub">7</span></span>?</span> <input type="number" name="q17c"> <span class="feedback" data-feedback-for="q17c"></span> </div> </div> <button class="check-button" data-question-id="q17" data-state="check">Check Question 17</button> </div>
+            <div class="question-container" id="q18-container" data-question-id="q18"> <p class="question-title">18. Sequence Closed Formulas</p> <div class="space-y-4"> <div> <p class="mb-2">A. Find the closed formula for <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> * 4</span> with <span class="code-text">a<span class="sub">1</span> = 20</span>.</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q18a" value="A"> <span class="code-text">a<span class="sub">n</span> = 20 * 4<sup>n</sup></span></label> <label><input type="radio" name="q18a" value="B"> <span class="code-text">a<span class="sub">n</span> = 5 * 4<sup>n</sup></span></label> <label><input type="radio" name="q18a" value="C"> <span class="code-text">a<span class="sub">n</span> = 20 * 4<sup>n-1</sup></span></label> <label><input type="radio" name="q18a" value="D"> <span class="code-text">a<span class="sub">n</span> = 5 * 4<sup>n-1</sup></span></label> <span class="feedback" data-feedback-for="q18a"></span> </div> </div> <div> <p class="mb-2">B. Find the closed formula for <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> + 6</span> with <span class="code-text">a<span class="sub">0</span> = 11</span>.</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q18b" value="A"> <span class="code-text">a<span class="sub">n</span> = 11 + 6(n-1)</span></label> <label><input type="radio" name="q18b" value="B"> <span class="code-text">a<span class="sub">n</span> = 11 * 6<sup>n</sup></span></label> <label><input type="radio" name="q18b" value="C"> <span class="code-text">a<span class="sub">n</span> = 11 + 6n</span></label> <label><input type="radio" name="q18b" value="D"> <span class="code-text">a<span class="sub">n</span> = 6 + 11n</span></label> <span class="feedback" data-feedback-for="q18b"></span> </div> </div> <div> <p class="mb-2">C. Find the general formula for: 1, 2, 4, 8, 16, 32, ... (assume starts n=0)</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q18c" value="A"> <span class="code-text">a<span class="sub">n</span> = n+1</span></label> <label><input type="radio" name="q18c" value="B"> <span class="code-text">a<span class="sub">n</span> = 2n</span></label> <label><input type="radio" name="q18c" value="C"> <span class="code-text">a<span class="sub">n</span> = 2<sup>n</sup></span></label> <label><input type="radio" name="q18c" value="D"> <span class="code-text">a<span class="sub">n</span> = n²</span></label> <span class="feedback" data-feedback-for="q18c"></span> </div> </div> <div> <p class="mb-2">D. Find the general formula for: 1, 2, 3, 4, 5, 6, ... (assume starts n=1)</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q18d" value="A"> <span class="code-text">a<span class="sub">n</span> = n</span></label> <label><input type="radio" name="q18d" value="B"> <span class="code-text">a<span class="sub">n</span> = n+1</span></label> <label><input type="radio" name="q18d" value="C"> <span class="code-text">a<span class="sub">n</span> = n-1</span></label> <label><input type="radio" name="q18d" value="D"> <span class="code-text">a<span class="sub">n</span> = 2n-1</span></label> <span class="feedback" data-feedback-for="q18d"></span> </div> </div> <div> <p class="mb-2">E. Find the general formula for: 1, 4, 9, 16, 25, ... (assume starts n=1)</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q18e" value="A"> <span class="code-text">a<span class="sub">n</span> = 2<sup>n+1</sup></span></label> <label><input type="radio" name="q18e" value="B"> <span class="code-text">a<span class="sub">n</span> = n²</span></label> <label><input type="radio" name="q18e" value="C"> <span class="code-text">a<span class="sub">n</span> = (n+1)²</span></label> <label><input type="radio" name="q18e" value="D"> <span class="code-text">a<span class="sub">n</span> = 3n-2</span></label> <span class="feedback" data-feedback-for="q18e"></span> </div> </div> <div> <p class="mb-2">F. Find the general formula for: 1, 3, 6, 10, 15, ... (assume starts n=1)</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q18f" value="A"> <span class="code-text">a<span class="sub">n</span> = n² - n + 1</span></label> <label><input type="radio" name="q18f" value="B"> <span class="code-text">a<span class="sub">n</span> = 2n + 1</span></label> <label><input type="radio" name="q18f" value="C"> <span class="code-text">a<span class="sub">n</span> = n(n+1)/2</span></label> <label><input type="radio" name="q18f" value="D"> <span class="code-text">a<span class="sub">n</span> = n + (n-1)</span></label> <span class="feedback" data-feedback-for="q18f"></span> </div> </div> </div> <button class="check-button" data-question-id="q18" data-state="check">Check Question 18</button> </div>
 
-            <div class="question-container" id="q15-container" data-question-id="q15">
-                 <p class="question-title">15. Counting Words</p>
-                 <p class="mb-2">We want to build 7-letter “words” using only the first 9 letters of the alphabet (A-I).</p>
-                 <div class="space-y-3">
-                    <div class="inline-input-group"> <span class="input-label">A. How many words are there in total (repeats allowed)?</span> <input type="number" name="q15a" min="0"> <span class="feedback" data-feedback-for="q15a"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">B. How many words have no repeated letters?</span> <input type="number" name="q15b" min="0"> <span class="feedback" data-feedback-for="q15b"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">C. How many words have no repeats AND are in alphabetical order?</span> <input type="number" name="q15c" min="0"> <span class="feedback" data-feedback-for="q15c"></span> </div>
-                 </div>
-                 <button class="check-button" data-question-id="q15" data-state="check">Check Question 15</button>
-            </div>
-
-             <div class="question-container" id="q16-container" data-question-id="q16">
-                 <p class="question-title">16. Probability (Coin Flips)</p>
-                 <p class="mb-2">You flip a fair coin four times and record the sequence of Heads (H) or Tails (T).</p>
-                 <p class="text-sm text-gray-600 mb-3">Enter probabilities as fractions (e.g., 1/2) or decimals (e.g., 0.5).</p>
-                 <div class="space-y-3">
-                    <div class="inline-input-group"> <span class="input-label">A. What is the probability of getting more heads than tails?</span> <input type="text" name="q16a"> <span class="feedback" data-feedback-for="q16a"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">B. What is the probability of getting exactly two heads?</span> <input type="text" name="q16b"> <span class="feedback" data-feedback-for="q16b"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">C. What is the probability of getting exactly three heads?</span> <input type="text" name="q16c"> <span class="feedback" data-feedback-for="q16c"></span> </div>
-                 </div>
-                 <button class="check-button" data-question-id="q16" data-state="check">Check Question 16</button>
-            </div>
-
-             <div class="question-container" id="q17-container" data-question-id="q17">
-                 <p class="question-title">17. Sequence Term Evaluation</p>
-                 <div class="space-y-3">
-                    <div class="inline-input-group"> <span class="input-label">A. Given <span class="code-text">a<span class="sub">n</span> = (n+1)! - n²</span>, what is <span class="code-text">a<span class="sub">4</span></span>?</span> <input type="number" name="q17a"> <span class="feedback" data-feedback-for="q17a"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">B. Given <span class="code-text">a<span class="sub">n</span> = 2n + 8</span>, what is <span class="code-text">a<span class="sub">27</span></span>?</span> <input type="number" name="q17b"> <span class="feedback" data-feedback-for="q17b"></span> </div>
-                    <div class="inline-input-group"> <span class="input-label">C. Given <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> + a<span class="sub">n-2</span></span> with <span class="code-text">a<span class="sub">0</span> = 1</span>, <span class="code-text">a<span class="sub">1</span> = 4</span>, what is <span class="code-text">a<span class="sub">7</span></span>?</span> <input type="number" name="q17c"> <span class="feedback" data-feedback-for="q17c"></span> </div>
-                 </div>
-                 <button class="check-button" data-question-id="q17" data-state="check">Check Question 17</button>
-            </div>
-
-             <div class="question-container" id="q18-container" data-question-id="q18">
-                 <p class="question-title">18. Sequence Closed Formulas</p>
-                 <div class="space-y-4">
-                    <div>
-                        <p class="mb-2">A. Find the closed formula for <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> * 4</span> with <span class="code-text">a<span class="sub">1</span> = 20</span>.</p>
-                        <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q18a" value="A"> <span class="code-text">a<span class="sub">n</span> = 20 * 4<sup>n</sup></span></label>
-                             <label><input type="radio" name="q18a" value="B"> <span class="code-text">a<span class="sub">n</span> = 5 * 4<sup>n</sup></span></label>
-                             <label><input type="radio" name="q18a" value="C"> <span class="code-text">a<span class="sub">n</span> = 20 * 4<sup>n-1</sup></span></label>
-                             <label><input type="radio" name="q18a" value="D"> <span class="code-text">a<span class="sub">n</span> = 5 * 4<sup>n-1</sup></span></label>
-                             <span class="feedback" data-feedback-for="q18a"></span>
-                        </div>
-                    </div>
-                     <div>
-                        <p class="mb-2">B. Find the closed formula for <span class="code-text">a<span class="sub">n</span> = a<span class="sub">n-1</span> + 6</span> with <span class="code-text">a<span class="sub">0</span> = 11</span>.</p>
-                        <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q18b" value="A"> <span class="code-text">a<span class="sub">n</span> = 11 + 6(n-1)</span></label>
-                             <label><input type="radio" name="q18b" value="B"> <span class="code-text">a<span class="sub">n</span> = 11 * 6<sup>n</sup></span></label>
-                             <label><input type="radio" name="q18b" value="C"> <span class="code-text">a<span class="sub">n</span> = 11 + 6n</span></label>
-                             <label><input type="radio" name="q18b" value="D"> <span class="code-text">a<span class="sub">n</span> = 6 + 11n</span></label>
-                             <span class="feedback" data-feedback-for="q18b"></span>
-                        </div>
-                    </div>
-                     <div>
-                        <p class="mb-2">C. Find the general formula for: 1, 2, 4, 8, 16, 32, ... (assume starts n=0)</p>
-                        <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q18c" value="A"> <span class="code-text">a<span class="sub">n</span> = n+1</span></label>
-                             <label><input type="radio" name="q18c" value="B"> <span class="code-text">a<span class="sub">n</span> = 2n</span></label>
-                             <label><input type="radio" name="q18c" value="C"> <span class="code-text">a<span class="sub">n</span> = 2<sup>n</sup></span></label>
-                             <label><input type="radio" name="q18c" value="D"> <span class="code-text">a<span class="sub">n</span> = n²</span></label>
-                             <span class="feedback" data-feedback-for="q18c"></span>
-                        </div>
-                    </div>
-                     <div>
-                        <p class="mb-2">D. Find the general formula for: 1, 2, 3, 4, 5, 6, ... (assume starts n=1)</p>
-                         <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q18d" value="A"> <span class="code-text">a<span class="sub">n</span> = n</span></label>
-                             <label><input type="radio" name="q18d" value="B"> <span class="code-text">a<span class="sub">n</span> = n+1</span></label>
-                             <label><input type="radio" name="q18d" value="C"> <span class="code-text">a<span class="sub">n</span> = n-1</span></label>
-                             <label><input type="radio" name="q18d" value="D"> <span class="code-text">a<span class="sub">n</span> = 2n-1</span></label>
-                             <span class="feedback" data-feedback-for="q18d"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="mb-2">E. Find the general formula for: 1, 4, 9, 16, 25, ... (assume starts n=1)</p>
-                         <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q18e" value="A"> <span class="code-text">a<span class="sub">n</span> = 2<sup>n+1</sup></span></label>
-                             <label><input type="radio" name="q18e" value="B"> <span class="code-text">a<span class="sub">n</span> = n²</span></label>
-                             <label><input type="radio" name="q18e" value="C"> <span class="code-text">a<span class="sub">n</span> = (n+1)²</span></label>
-                             <label><input type="radio" name="q18e" value="D"> <span class="code-text">a<span class="sub">n</span> = 3n-2</span></label>
-                             <span class="feedback" data-feedback-for="q18e"></span>
-                        </div>
-                    </div>
-                     <div>
-                        <p class="mb-2">F. Find the general formula for: 1, 3, 6, 10, 15, ... (assume starts n=1)</p>
-                         <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q18f" value="A"> <span class="code-text">a<span class="sub">n</span> = n² - n + 1</span></label>
-                             <label><input type="radio" name="q18f" value="B"> <span class="code-text">a<span class="sub">n</span> = 2n + 1</span></label>
-                             <label><input type="radio" name="q18f" value="C"> <span class="code-text">a<span class="sub">n</span> = n(n+1)/2</span></label>
-                             <label><input type="radio" name="q18f" value="D"> <span class="code-text">a<span class="sub">n</span> = n + (n-1)</span></label>
-                             <span class="feedback" data-feedback-for="q18f"></span>
-                        </div>
-                    </div>
-                 </div>
-                 <button class="check-button" data-question-id="q18" data-state="check">Check Question 18</button>
-            </div>
-
-             <div class="question-container" id="q19-container" data-question-id="q19">
-                 <p class="question-title">19. Induction Proof Example: Sum of Cubes</p>
+            <div class="question-container" id="q19-container" data-question-id="q19">
+                 <p class="question-title">19. Induction Proof Order: Sum of Cubes</p>
                  <p class="mb-2"><strong>Statement:</strong> For all <span class="code-text">n ≥ 1</span>, <span class="code-text">1³ + 2³ + ... + n³ = (n(n+1)/2)²</span>.</p>
-                 <div class="proof-display">
-                     <p><strong>Base Case (n=1):</strong><br> LHS = 1³ = 1.<br> RHS = (1(1+1)/2)² = (1(2)/2)² = 1² = 1.<br> Since LHS = RHS, the base case holds.</p>
-                     <p><strong>Inductive Hypothesis:</strong> Assume for some arbitrary integer <span class="code-text">k ≥ 1</span> that <span class="code-text">1³ + 2³ + ... + k³ = (k(k+1)/2)²</span> is true.</p>
-                     <p><strong>Inductive Step:</strong> We want to show that the statement holds for <span class="code-text">k+1</span>, i.e., <span class="code-text">1³ + 2³ + ... + k³ + (k+1)³ = ((k+1)(k+2)/2)²</span>.</p>
-                     <p>Start with the LHS for P(k+1):<br> <span class="code-text">1³ + 2³ + ... + k³ + (k+1)³</span></p>
-                     <p>By the Inductive Hypothesis, we can substitute the sum up to k³:<br> <span class="code-text">= (k(k+1)/2)² + (k+1)³</span></p>
-                     <p>Factor out <span class="code-text">(k+1)²</span>:<br> <span class="code-text">= (k+1)² [ (k/2)² + (k+1) ]</span><br> <span class="code-text">= (k+1)² [ k²/4 + (k+1) ]</span></p>
-                     <p>Find a common denominator inside the brackets:<br> <span class="code-text">= (k+1)² [ (k² + 4(k+1)) / 4 ]</span><br> <span class="code-text">= (k+1)² [ (k² + 4k + 4) / 4 ]</span></p>
-                     <p>Factor the quadratic inside the brackets:<br> <span class="code-text">= (k+1)² [ (k+2)² / 4 ]</span></p>
-                     <p>Combine the terms:<br> <span class="code-text">= ( (k+1)(k+2) / 2 )²</span></p>
-                     <p>This is exactly the RHS for P(k+1).</p>
-                     <p><strong>Conclusion:</strong> Since the base case holds and assuming P(k) implies P(k+1), by the Principle of Mathematical Induction, the statement is true for all <span class="code-text">n ≥ 1</span>.</p>
+                 <p class="mb-2">The following are steps for a proof by induction, presented out of order:</p>
+                 <ol class="proof-options-list">
+                     <li>Base Case (n=1): Show 1³ = (1(1+1)/2)². (LHS=1, RHS=1, so it holds).</li>
+                     <li>Inductive Hypothesis: Assume 1³+...+k³ = (k(k+1)/2)² for some k ≥ 1.</li>
+                     <li>Inductive Step: Show 1³+...+k³+(k+1)³ = ((k+1)(k+2)/2)². Start with LHS, substitute IH, factor out (k+1)², combine terms to reach the target RHS.</li>
+                     <li>Conclusion: By PMI, the statement is true for all n ≥ 1.</li>
+                 </ol>
+                 <p class="mb-2">Select the correct order for the proof steps listed above:</p>
+                 <div class="space-y-2">
+                     <div class="proof-step-input"> <span class="step-label">Step 1:</span> <select name="q19_step1"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q19_step1"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 2:</span> <select name="q19_step2"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q19_step2"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 3:</span> <select name="q19_step3"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q19_step3"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 4:</span> <select name="q19_step4"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q19_step4"></span> </div>
                  </div>
+                 <button class="check-button" data-question-id="q19" data-state="check">Check Question 19</button>
             </div>
 
              <div class="question-container" id="q20-container" data-question-id="q20">
-                 <p class="question-title">20. Induction Proof Example: Divisibility</p>
+                 <p class="question-title">20. Induction Proof Order: Divisibility</p>
                  <p class="mb-2"><strong>Statement:</strong> <span class="code-text">7ⁿ - 1</span> is divisible by 6 for all <span class="code-text">n ≥ 1</span>.</p>
-                 <div class="proof-display">
-                     <p><strong>Base Case (n=1):</strong><br> <span class="code-text">7¹ - 1 = 6</span>. Since 6 = 6 * 1, 6 is divisible by 6. The base case holds.</p>
-                     <p><strong>Inductive Hypothesis:</strong> Assume for some arbitrary integer <span class="code-text">k ≥ 1</span> that <span class="code-text">7ᵏ - 1</span> is divisible by 6. This means <span class="code-text">7ᵏ - 1 = 6m</span> for some integer m. So, <span class="code-text">7ᵏ = 6m + 1</span>.</p>
-                     <p><strong>Inductive Step:</strong> We want to show that <span class="code-text">7ᵏ⁺¹ - 1</span> is divisible by 6.</p>
-                     <p>Start with the expression for P(k+1):<br> <span class="code-text">7ᵏ⁺¹ - 1</span></p>
-                     <p>Rewrite using exponent rules:<br> <span class="code-text">= 7 * 7ᵏ - 1</span></p>
-                     <p>Substitute using the Inductive Hypothesis (<span class="code-text">7ᵏ = 6m + 1</span>):<br> <span class="code-text">= 7(6m + 1) - 1</span></p>
-                     <p>Distribute and simplify:<br> <span class="code-text">= 42m + 7 - 1</span><br> <span class="code-text">= 42m + 6</span></p>
-                     <p>Factor out 6:<br> <span class="code-text">= 6(7m + 1)</span></p>
-                     <p>Since m is an integer, <span class="code-text">7m + 1</span> is also an integer. Let <span class="code-text">p = 7m + 1</span>. Then <span class="code-text">7ᵏ⁺¹ - 1 = 6p</span>, where p is an integer. By definition, this means <span class="code-text">7ᵏ⁺¹ - 1</span> is divisible by 6.</p>
-                     <p><strong>Conclusion:</strong> Since the base case holds and assuming P(k) implies P(k+1), by the Principle of Mathematical Induction, the statement <span class="code-text">7ⁿ - 1</span> is divisible by 6 for all <span class="code-text">n ≥ 1</span>.</p>
+                 <p class="mb-2">The following are steps for a proof by induction, presented out of order:</p>
+                 <ol class="proof-options-list">
+                     <li>Base Case (n=1): Show 7¹-1 is divisible by 6. (7-1=6, which is 6*1).</li>
+                     <li>Inductive Hypothesis: Assume 7ᵏ-1 is divisible by 6 for some k ≥ 1 (i.e., 7ᵏ-1 = 6m, so 7ᵏ = 6m+1).</li>
+                     <li>Inductive Step: Show 7ᵏ⁺¹-1 is divisible by 6. Start with 7ᵏ⁺¹-1 = 7*7ᵏ-1, substitute IH: = 7(6m+1)-1, simplify: = 42m+7-1 = 42m+6 = 6(7m+1). Since 7m+1 is an integer, 7ᵏ⁺¹-1 is divisible by 6.</li>
+                     <li>Conclusion: By PMI, the statement is true for all n ≥ 1.</li>
+                 </ol>
+                  <p class="mb-2">Select the correct order for the proof steps listed above:</p>
+                 <div class="space-y-2">
+                     <div class="proof-step-input"> <span class="step-label">Step 1:</span> <select name="q20_step1"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q20_step1"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 2:</span> <select name="q20_step2"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q20_step2"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 3:</span> <select name="q20_step3"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q20_step3"></span> </div>
+                     <div class="proof-step-input"> <span class="step-label">Step 4:</span> <select name="q20_step4"> <option value="">Select Label...</option> <option value="A">A</option> <option value="B">B</option> <option value="C">C</option> <option value="D">D</option> </select> <span class="feedback" data-feedback-for="q20_step4"></span> </div>
                  </div>
+                 <button class="check-button" data-question-id="q20" data-state="check">Check Question 20</button>
             </div>
 
             <div class="question-container" id="q21-container" data-question-id="q21">
                  <p class="question-title">21. Function Properties (Injective/Surjective)</p>
-                 <div class="space-y-4">
-                    <div>
-                        <p class="mb-2">A. Consider <span class="code-text">f(x) = x³</span> where <span class="code-text">f: ℝ → ℝ</span>. Is this function injective, surjective, bijective, or neither?</p>
-                        <div class="space-y-1 pl-4">
-                             <label><input type="radio" name="q21a" value="I"> Injective only</label>
-                             <label><input type="radio" name="q21a" value="S"> Surjective only</label>
-                             <label><input type="radio" name="q21a" value="B"> Bijective</label>
-                             <label><input type="radio" name="q21a" value="N"> Neither</label>
-                             <span class="feedback" data-feedback-for="q21a"></span>
-                        </div>
-                    </div>
-                     <div>
-                        <p class="mb-2">B. Consider functions <span class="code-text">f: {1, 2, 3, 4} → {a, b, c}</span>.</p>
-                         <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be injective?</span> <select name="q21b"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21b"></span> </div>
-                         <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be surjective?</span> <select name="q21c"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21c"></span> </div>
-                    </div>
-                     <div>
-                        <p class="mb-2">C. Consider functions <span class="code-text">f: {a, b, c} → {x, y, z, d}</span>.</p>
-                         <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be injective?</span> <select name="q21d"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21d"></span> </div>
-                         <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be surjective?</span> <select name="q21e"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21e"></span> </div>
-                    </div>
-                 </div>
+                 <div class="space-y-4"> <div> <p class="mb-2">A. Consider <span class="code-text">f(x) = x³</span> where <span class="code-text">f: ℝ → ℝ</span>. Is this function injective, surjective, bijective, or neither?</p> <div class="space-y-1 pl-4"> <label><input type="radio" name="q21a" value="I"> Injective only</label> <label><input type="radio" name="q21a" value="S"> Surjective only</label> <label><input type="radio" name="q21a" value="B"> Bijective</label> <label><input type="radio" name="q21a" value="N"> Neither</label> <span class="feedback" data-feedback-for="q21a"></span> </div> </div> <div> <p class="mb-2">B. Consider functions <span class="code-text">f: {1, 2, 3, 4} → {a, b, c}</span>.</p> <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be injective?</span> <select name="q21b"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21b"></span> </div> <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be surjective?</span> <select name="q21c"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21c"></span> </div> </div> <div> <p class="mb-2">C. Consider functions <span class="code-text">f: {a, b, c} → {x, y, z, d}</span>.</p> <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be injective?</span> <select name="q21d"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21d"></span> </div> <div class="inline-input-group pl-4"> <span class="input-label">Is it possible for such a function to be surjective?</span> <select name="q21e"> <option value="">Select...</option> <option value="Yes">Yes</option> <option value="No">No</option> </select> <span class="feedback" data-feedback-for="q21e"></span> </div> </div> </div>
                  <button class="check-button" data-question-id="q21" data-state="check">Check Question 21</button>
             </div>
 
@@ -597,85 +311,51 @@
         // --- Quiz Data ---
         const correctAnswers = {
             // Q1
-            q1a: { answer: 'C' }, // Contrapositive of A->B is ~B->~A
-            q1b: { answer: 'D' }, // Contrapositive of P ∨ R → N ∧ ~M is ~(N ∧ ~M) → ~(P ∨ R) => (~N ∨ M) → (~P ∧ ~R)
-            q1c: { answer: 'C' }, // Contrapositive of (is18 ∧ ~felon) → vote is ~vote → ~(is18 ∧ ~felon) => ~vote → (~is18 ∨ felon)
+            q1a: { answer: 'C' }, q1b: { answer: 'D' }, q1c: { answer: 'C' },
             // Q2
-            q2_r1: { answer: 'F' }, // T -> ~T => T -> F => F
-            q2_r2: { answer: 'T' }, // T -> ~F => T -> T => T
-            q2_r3: { answer: 'T' }, // F -> ~T => F -> F => T
-            q2_r4: { answer: 'T' }, // F -> ~F => F -> T => T
+            q2_r1: { answer: 'F' }, q2_r2: { answer: 'T' }, q2_r3: { answer: 'T' }, q2_r4: { answer: 'T' },
             // Q3
-            q3_r1: { answer: 'T' }, // T v F -> T => T -> T => T
-            q3_r2: { answer: 'F' }, // T v F -> F => T -> F => F
-            q3_r3: { answer: 'T' }, // T v T -> T => T -> T => T
-            q3_r4: { answer: 'F' }, // T v T -> F => T -> F => F
-            q3_r5: { answer: 'T' }, // F v F -> T => F -> T => T
-            q3_r6: { answer: 'T' }, // F v F -> F => F -> F => T
-            q3_r7: { answer: 'T' }, // F v T -> T => T -> T => T
-            q3_r8: { answer: 'F' }, // F v T -> F => T -> F => F
+            q3_r1: { answer: 'T' }, q3_r2: { answer: 'F' }, q3_r3: { answer: 'T' }, q3_r4: { answer: 'F' }, q3_r5: { answer: 'T' }, q3_r6: { answer: 'T' }, q3_r7: { answer: 'T' }, q3_r8: { answer: 'F' },
             // Q4
-            q4_r1c4: { answer: 'F'}, q4_r1c5: { answer: 'T'}, q4_r1c6: { answer: 'F'}, q4_r1c7: { answer: 'F'}, // P->~Q=F, P->Q=T, ~P=F. Both Premises True? F
-            q4_r2c4: { answer: 'T'}, q4_r2c5: { answer: 'F'}, q4_r2c6: { answer: 'F'}, q4_r2c7: { answer: 'F'}, // P->~Q=T, P->Q=F, ~P=F. Both Premises True? F
-            q4_r3c4: { answer: 'T'}, q4_r3c5: { answer: 'T'}, q4_r3c6: { answer: 'T'}, q4_r3c7: { answer: 'T'}, // P->~Q=T, P->Q=T, ~P=T. Both Premises True? T
-            q4_r4c4: { answer: 'T'}, q4_r4c5: { answer: 'T'}, q4_r4c6: { answer: 'T'}, q4_r4c7: { answer: 'T'}, // P->~Q=T, P->Q=T, ~P=T. Both Premises True? T
-            q4_valid: { answer: 'Yes'}, // Rows 3&4: Premises are T, Conclusion ~P is T. No rows where Premises T, Conclusion F.
+            q4_r1c4: { answer: 'F'}, q4_r1c5: { answer: 'T'}, q4_r1c6: { answer: 'F'}, q4_r1c7: { answer: 'F'},
+            q4_r2c4: { answer: 'T'}, q4_r2c5: { answer: 'F'}, q4_r2c6: { answer: 'F'}, q4_r2c7: { answer: 'F'},
+            q4_r3c4: { answer: 'T'}, q4_r3c5: { answer: 'T'}, q4_r3c6: { answer: 'T'}, q4_r3c7: { answer: 'T'},
+            q4_r4c4: { answer: 'T'}, q4_r4c5: { answer: 'T'}, q4_r4c6: { answer: 'T'}, q4_r4c7: { answer: 'T'},
+            q4_valid: { answer: 'Yes'},
             // Q5
-            q5: { answer: 'B' }, // B v ~C -> ~G
-            // Q6, Q7, Q8 are static text
+            q5: { answer: 'B' },
+            // Q6: Proof Order (Steps A, B, C from analysis)
+            q6_step1: { answer: 'A' }, q6_step2: { answer: 'B' }, q6_step3: { answer: 'C' },
+            // Q7: Proof Order (Steps A, B, C, D from analysis)
+            q7_step1: { answer: 'A' }, q7_step2: { answer: 'B' }, q7_step3: { answer: 'C' }, q7_step4: { answer: 'D' },
+            // Q8: Proof Order (Steps A, B, C, D, E, F from analysis)
+            q8_step1: { answer: 'A' }, q8_step2: { answer: 'B' }, q8_step3: { answer: 'C' }, q8_step4: { answer: 'D' }, q8_step5: { answer: 'E' }, q8_step6: { answer: 'F' },
             // Q9
-            q9a: { answer: '27' }, // (9 * 6) / 2 = 27
-            q9b: { answer: '3' }, // (12 * k) / 2 = 18 => 6k = 18 => k = 3
+            q9a: { answer: '27' }, q9b: { answer: '3' },
             // Q10
-            q10a: { answer: '4' }, // Tree needs V-1 edges = 4-1 = 3. Remove 7-3=4 edges.
-            q10b: { answer: '889' }, // E = V-1 = 890-1
-            q10c: { answer: '5' }, // V = E+1 = 4+1
+            q10a: { answer: '4' }, q10b: { answer: '889' }, q10c: { answer: '5' },
             // Q11
-            q11a: { answer: 'C' }, // All even degrees -> Circuit
-            q11b: { answer: 'N' }, // > 2 odd degrees (5, 3, 1) -> Neither
-            q11c: { answer: 'T' }, // Exactly 2 odd degrees (3, 1) -> Trail Only
-            q11d: { answer: 'T' }, // Exactly 2 odd degrees (1, 1) -> Trail Only
-            q11e: { answer: 'C' }, // All even degrees -> Circuit
-            q11f: { answer: 'C' }, // Degs: a:2, b:2, c:4, d:2, e:1, f:1. Odd are e,f. Add edge ef.
+            q11a: { answer: 'C' }, q11b: { answer: 'N' }, q11c: { answer: 'T' }, q11d: { answer: 'T' }, q11e: { answer: 'C' }, q11f: { answer: 'C' },
             // Q12
-            q12a: { answer: '216' }, // 4 * 6 * 9
-            q12b: { answer: '12' }, // 3 + 9 (Sum Rule)
-            q12c: { answer: '27' }, // 3 * 9 (Product Rule)
+            q12a: { answer: '216' }, q12b: { answer: '12' }, q12c: { answer: '27' },
             // Q13
-            q13a: { answer: '1,2,3,4,5,6,7,9,12' }, // A U B
-            q13b: { answer: '3,6' }, // A n B
-            q13c: { answer: '1,2,4,5,7' }, // A \ B
-            q13d: { answer: '9,12' }, // B \ A
-            q13e: { answer: '1,2,3,4,5,6,7,9,12' }, // A U B U C
-            q13f: { answer: '3' }, // B n C = {3}. A n {3} = {3}
+            q13a: { answer: '1,2,3,4,5,6,7,9,12' }, q13b: { answer: '3,6' }, q13c: { answer: '1,2,4,5,7' }, q13d: { answer: '9,12' }, q13e: { answer: '1,2,3,4,5,6,7,9,12' }, q13f: { answer: '3' },
             // Q14
-            q14: { answer: '23' }, // |Total| - |M U F U T| = 103 - (|M|+|F|+|T| - |M∩F| - |M∩T| - |F∩T| + |M∩F∩T|) = 103 - (47+42+35 - 20-18-19 + 13) = 103 - (124 - 57 + 13) = 103 - (67 + 13) = 103 - 80 = 23
+            q14: { answer: '23' },
             // Q15
-            q15a: { answer: '4782969' }, // 9^7
-            q15b: { answer: '181440' }, // P(9, 7) = 9*8*7*6*5*4*3
-            q15c: { answer: '36' }, // C(9, 7) = 9! / (7! * 2!) = (9*8)/2
+            q15a: { answer: '4782969' }, q15b: { answer: '181440' }, q15c: { answer: '36' },
             // Q16
-            q16a: { answer: ['5/16', '0.3125'] }, // HHHH (1), HHHT,HHTH,HTHH,THHH (4) -> 1+4=5. Total=2^4=16.
-            q16b: { answer: ['6/16', '3/8', '0.375'] }, // C(4,2) = 6 ways (HHTT, HTHT, HTTH, THHT, THTH, TTHH)
-            q16c: { answer: ['4/16', '1/4', '0.25'] }, // C(4,3) = 4 ways (HHHT, HHTH, HTHH, THHH)
+            q16a: { answer: ['5/16', '0.3125'] }, q16b: { answer: ['6/16', '3/8', '0.375'] }, q16c: { answer: ['4/16', '1/4', '0.25'] },
             // Q17
-            q17a: { answer: '104' }, // a4 = (4+1)! - 4^2 = 5! - 16 = 120 - 16 = 104
-            q17b: { answer: '62' }, // a27 = 2(27) + 8 = 54 + 8 = 62
-            q17c: { answer: '60' }, // a0=1, a1=4, a2=5, a3=9, a4=14, a5=23, a6=37, a7=60
+            q17a: { answer: '104' }, q17b: { answer: '62' }, q17c: { answer: '60' },
             // Q18
-            q18a: { answer: 'B' }, // a_n = a0 * r^n. a1=20, r=4 => a0=a1/r=20/4=5. Formula: a_n = 5 * 4^n
-            q18b: { answer: 'C' }, // a_n = a0 + n*d = 11 + n*6 = 6n + 11
-            q18c: { answer: 'C' }, // 1,2,4,8... => 2^n (for n=0,1,2...)
-            q18d: { answer: 'A' }, // 1,2,3,4... => n (for n=1,2,3...)
-            q18e: { answer: 'B' }, // 1,4,9,16... => n^2 (for n=1,2,3...)
-            q18f: { answer: 'C' }, // 1,3,6,10... => n(n+1)/2 (Triangular numbers)
-            // Q19, Q20 are static text
+            q18a: { answer: 'B' }, q18b: { answer: 'C' }, q18c: { answer: 'C' }, q18d: { answer: 'A' }, q18e: { answer: 'B' }, q18f: { answer: 'C' },
+            // Q19: Proof Order (Steps A, B, C, D from analysis)
+            q19_step1: { answer: 'A' }, q19_step2: { answer: 'B' }, q19_step3: { answer: 'C' }, q19_step4: { answer: 'D' },
+            // Q20: Proof Order (Steps A, B, C, D from analysis)
+            q20_step1: { answer: 'A' }, q20_step2: { answer: 'B' }, q20_step3: { answer: 'C' }, q20_step4: { answer: 'D' },
             // Q21
-            q21a: { answer: 'B' }, // x^3 is injective and surjective over Reals -> Bijective
-            q21b: { answer: 'No' }, // Cannot be injective |Domain| > |Codomain|
-            q21c: { answer: 'Yes' }, // Can be surjective e.g. f(1)=a, f(2)=b, f(3)=c, f(4)=a
-            q21d: { answer: 'Yes' }, // Can be injective e.g. f(a)=x, f(b)=y, f(c)=z
-            q21e: { answer: 'No' }, // Cannot be surjective |Domain| < |Codomain|
+            q21a: { answer: 'B' }, q21b: { answer: 'No' }, q21c: { answer: 'Yes' }, q21d: { answer: 'Yes' }, q21e: { answer: 'No' },
         };
 
         // --- Event Listener Setup ---
@@ -690,7 +370,7 @@
             const questionId = button.dataset.questionId;
             const questionContainer = document.getElementById(`${questionId}-container`);
 
-            if (!questionContainer || ['q6','q7','q8','q19','q20'].includes(questionId)) return; // Skip static questions
+            if (!questionContainer || questionId === 'q1') return; // Skip Q1
 
             if (currentState === 'check') {
                 checkAnswer(questionContainer, questionId);
@@ -716,10 +396,13 @@
              } else if (questionId === 'q4') {
                  checkTruthTableComplex(container, 'q4', ['r1c4','r1c5','r1c6','r1c7', 'r2c4','r2c5','r2c6','r2c7', 'r3c4','r3c5','r3c6','r3c7', 'r4c4','r4c5','r4c6','r4c7']);
                  checkSingleRadio(questionContainer, 'q4_valid');
-             } else if (questionId === 'q5' || questionId === 'q11f') { // Q11f is single radio
+             } else if (questionId === 'q5' || questionId === 'q11f') {
                  checkSingleRadio(questionContainer, questionId === 'q11f' ? 'q11f' : 'q5');
+             } else if (['q6', 'q7', 'q8', 'q19', 'q20'].includes(questionId)) { // Proof Ordering Questions
+                 const stepCounts = { q6: 3, q7: 4, q8: 6, q19: 4, q20: 4 };
+                 checkProofOrder(questionContainer, questionId, stepCounts[questionId]);
              } else if (questionId === 'q9' || questionId === 'q10' || questionId === 'q12' || questionId === 'q15' || questionId === 'q17') {
-                 checkMultiNumberText(questionContainer, questionId); // Handles groups of number/text inputs
+                 checkMultiNumberText(questionContainer, questionId);
              } else if (questionId === 'q11') { // Q11a-e are selects
                  checkMultiSelect(questionContainer, ['a', 'b', 'c', 'd', 'e'], questionId);
                  checkSingleRadio(questionContainer, 'q11f'); // Also check the radio part
@@ -733,7 +416,7 @@
                  checkMultiSingleRadio(questionContainer, ['a', 'b', 'c', 'd', 'e', 'f'], questionId);
              } else if (questionId === 'q21') {
                  checkSingleRadio(questionContainer, 'q21a');
-                 checkMultiSelect(questionContainer, ['b', 'c', 'd', 'e'], questionId); // Check yes/no selects
+                 checkMultiSelect(questionContainer, ['b', 'c', 'd', 'e'], questionId);
              }
              else {
                  console.warn("Unhandled question ID for checking:", questionId);
@@ -788,7 +471,7 @@
         function checkMultiNumberText(container, questionId) {
             const inputs = container.querySelectorAll(`input[type="number"], input[type="text"]`);
             inputs.forEach(input => {
-                const inputName = input.name; // e.g., q9a, q10b, q12_step1
+                const inputName = input.name; // e.g., q9a, q10b, q12a
                 const feedbackSpan = container.querySelector(`[data-feedback-for="${inputName}"]`);
                 const userAnswer = input.value.trim();
                 if (!feedbackSpan) return;
@@ -797,22 +480,13 @@
 
                  let isCorrect = false;
                  const correctAnswer = correctAnswerData.answer;
-
-                 // Special handling for Q12 induction steps (normalize)
-                 if (inputName.startsWith('q12_')) {
-                     const normalizedUserAnswer = userAnswer.toUpperCase().replace(/[\s,]/g, '');
-                     isCorrect = (normalizedUserAnswer === correctAnswer); // Correct answer is already normalized
-                 } else {
-                     isCorrect = (userAnswer === correctAnswer);
-                 }
+                 isCorrect = (userAnswer === correctAnswer); // Standard check
 
                  if (isCorrect) {
                     feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct';
                     input.classList.add('correct-input'); input.classList.remove('incorrect-input');
                  } else {
-                    // Display Q12 answers with commas
-                    const displayAnswer = inputName.startsWith('q12_') && correctAnswer.length > 1 ? correctAnswer.split('').join(', ') : correctAnswer;
-                    feedbackSpan.textContent = `✗ Incorrect (Correct: ${displayAnswer})`; feedbackSpan.className = 'feedback incorrect';
+                    feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect';
                     input.classList.add('incorrect-input'); input.classList.remove('correct-input');
                  }
             });
@@ -874,11 +548,6 @@
             let isCorrect = userAnswers.length === correctAnswersArray.length && userAnswers.every((val, index) => val === correctAnswersArray[index]);
              if (isCorrect) { feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct'; }
              else { feedbackSpan.textContent = `✗ Incorrect (Correct Options: ${correctAnswersArray.join(', ')})`; feedbackSpan.className = 'feedback incorrect'; }
-        }
-
-        // Specific checker for Q12 Induction Steps (already handled in checkMultiNumberText)
-        function checkInductionSteps(container, questionId) {
-            checkMultiNumberText(container, questionId); // Uses the text input checker
         }
 
         // Checks set operation inputs (comma-separated numbers) for Q13
@@ -1009,7 +678,35 @@
              }
          }
 
+         // Checks proof ordering dropdowns
+         function checkProofOrder(container, questionId, numSteps) {
+             for (let i = 1; i <= numSteps; i++) {
+                 const stepName = `${questionId}_step${i}`;
+                 const selectElement = container.querySelector(`select[name="${stepName}"]`);
+                 const feedbackSpan = container.querySelector(`[data-feedback-for="${stepName}"]`);
+                 if (!selectElement || !feedbackSpan) continue;
+
+                 const userAnswer = selectElement.value;
+                 const correctAnswerData = correctAnswers[stepName];
+                 if (!correctAnswerData) { console.error(`Answer key missing for ${stepName}`); feedbackSpan.textContent = 'Error'; feedbackSpan.className = 'feedback incorrect'; selectElement.classList.add('incorrect-input'); selectElement.classList.remove('correct-input'); continue; }
+                 const correctAnswer = correctAnswerData.answer;
+
+                 if (userAnswer === correctAnswer) {
+                     feedbackSpan.textContent = '✓ Correct'; feedbackSpan.className = 'feedback correct';
+                     selectElement.classList.add('correct-input'); selectElement.classList.remove('incorrect-input');
+                 } else if (userAnswer === "") {
+                    feedbackSpan.textContent = `✗ Unanswered (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect';
+                    selectElement.classList.add('incorrect-input'); selectElement.classList.remove('correct-input');
+                 }
+                 else {
+                     feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`; feedbackSpan.className = 'feedback incorrect';
+                     selectElement.classList.add('incorrect-input'); selectElement.classList.remove('correct-input');
+                 }
+             }
+         }
+
     </script>
 
 </body>
 </html>
+
