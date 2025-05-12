@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>CodeCrunch - Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -19,55 +19,63 @@
         }
 
         h1 {
-            font-size: 36px;
+            font-size: 48px;
             color: #2C3E50;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            font-size: 24px;
+            color: #34495e;
             margin-bottom: 50px;
         }
 
-        .button-container {
+        .category-container {
             display: grid;
-            grid-template-columns: repeat(4, 250px);
-            gap: 30px;
+            grid-template-columns: repeat(2, 350px);
+            gap: 40px;
             justify-content: center;
             width: 100%;
-            max-width: 1200px;
+            max-width: 800px;
         }
 
-        .button {
+        .category {
             display: block;
             text-align: center;
             background-color: #3498db;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            text-decoration: none;
         }
 
-        .button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .category:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .button img {
+        .category img {
             width: 100%;
-            height: 200px;
+            height: 250px;
             object-fit: cover;
             transition: opacity 0.3s ease;
         }
 
-        .button img:hover {
-            opacity: 0.8;
+        .category img:hover {
+            opacity: 0.9;
         }
 
-        .button p {
-            font-size: 18px;
+        .category p {
+            font-size: 24px;
+            font-weight: 500;
             color: white;
             background-color: #34495e;
-            padding: 10px;
+            padding: 15px;
             margin: 0;
         }
 
         .discord-button {
-            margin-top: 50px;
+            margin-top: 60px;
             text-decoration: none;
             display: flex;
             flex-direction: column;
@@ -89,127 +97,41 @@
         }
 
         @media (max-width: 768px) {
-            .button-container {
+            .category-container {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to CodeCrunch</h1>
-    <div class="button-container">
-        <a href="CS1.html" class="button">
-            <img src="https://media.licdn.com/dms/image/v2/C5112AQGUKpZviShFeA/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1565704813458?e=2147483647&v=beta&t=ZWRdpPEZmHIwvg70Y-2Uq6mrb0qUcxh6SdoowPeklcw" alt="Computer Science 1">
-            <p>Computer Science 1</p>
+    <h1>CodeCrunch</h1>
+    <h2>Choose a category to explore</h2>
+    
+    <div class="category-container">
+        <a href="technology.html" class="category">
+            <img src="/api/placeholder/400/320" alt="Technology">
+            <p>Technology</p>
         </a>
-        <a href="comparch.html" class="button">
-            <img src="https://www.sigarch.org/wp-content/uploads/2017/03/Welcome.jpg" alt="Computer Architecture">
-            <p>Computer Architecture</p>
+        <a href="math.html" class="category">
+            <img src="/api/placeholder/400/320" alt="Mathematics">
+            <p>Mathematics</p>
         </a>
-        <a href="security.html" class="button">
-            <img src="https://ontech.com/wp-content/uploads/2022/11/ComputerSecurity.png" alt="Security">
-            <p>Security in Computing</p>
+        <a href="science.html" class="category">
+            <img src="/api/placeholder/400/320" alt="Science">
+            <p>Science</p>
         </a>
-        <a href="calculators.html" class="button">
-            <img src="https://www.jamesgmartin.center/wp-content/uploads/2020/07/AdobeStock_328366715-1200x800.jpeg" alt="Calculators">
-            <p>Calculate Grade</p>
+        <a href="history.html" class="category">
+            <img src="/api/placeholder/400/320" alt="History & Social Studies">
+            <p>History & Social Studies</p>
         </a>
-        <a href="Networking.html" class="button">
-            <img src="https://cdn.prod.website-files.com/61b21a152ca3e478ff782964/627e650f22a9a52cd54085be_Computer%20networking.jpg" alt="Networking">
-            <p>Networking</p>
-        </a>
-        <a href="discretemath.html" class="button">
-            <img src="https://media.proprofs.com/images/QM/user_images/2503852/New%20Project%20(2)(277).jpg" alt="Discrete Math">
-            <p>Discrete Math</p>
-        </a>
-        <a href="OS.html" class="button">
-            <img src="https://media.licdn.com/dms/image/v2/D5612AQExcra78IJOvw/article-inline_image-shrink_1000_1488/article-inline_image-shrink_1000_1488/0/1708845254160?e=1747872000&v=beta&t=w_iPyo085MLt-WGI-NWPJ1_rZ0VdxpY9iHKSTE24yNM" alt="Operating Sytems">
-            <p>Operating Systems</p>
-        </a>
-        <a href="physics-calculator-hub.html" class="button">
-            <img src="https://em6sqi3i3t5.exactdn.com/wp-content/uploads/2024/04/physics_27c5571306.webp?strip=all&lossy=1&ssl=1" alt="Physics Calculators">
-            <p>Physics 1 and 2</p>
-        </a>
-        <!-- New Link for Managing IT Integration -->
-        <a href="project-management-directory.html" class="button">
-            <img src="https://zibtek-ghost-blog.sfo3.cdn.digitaloceanspaces.com/2020/06/image-33.png" alt="Managing IT Integration">
-            <p>Managing IT Integration</p>
-        </a>
-        <a href="database-management-home.html" class="button">
-            <img src="https://assets.datamation.com/uploads/2023/08/dm-data-management-types-696x455.png" alt="Database Management">
-            <p>Database Management</p>
-        </a>
-        <!-- New Link for Programming -->
-        <a href="Programming.html" class="button">
-            <img src="https://www.zdnet.com/a/img/resize/0a6b0be2f543ddbf313fc83a706b807b77c3c202/2021/07/19/8a337c80-5ed6-43a1-98fb-b981d420890f/programming-languages-shutterstock-1680857539.jpg?auto=webp&fit=crop&height=900&width=1200" alt="Programming Languages">
-            <p>Programming</p>
-        </a>
-        <a href="statistics.html" class="button">
-            <img src="https://www.copypress.com/wp-content/uploads/2022/04/sources-to-find-statistics-768x591.png" alt="Statistics">
-            <p>Statistics</p>
-        </a>
-        <a href="Geoemtry.html" class="button">
-            <img src="https://akgrad.com/wp-content/uploads/2021/07/Geometry-Semesters-1-2.jpg" alt="Geometry">
-            <p>Geometry</p>
-        </a>
-        <a href="Algebra.html" class="button">
-    <img src="https://www.shutterstock.com/image-photo/mathematical-operations-algebra-mathematic-formulas-600nw-2507234703.jpg" alt="Algebra">
-    <p>Algebra</p>
-    </a>
-        <a href="Trigonometry.html" class="button">
-            <img src="https://cdn.prod.website-files.com/600f0ea5652fe43f9947466f/60f73400f40656e3266fe9f0_AASfVvdtJImkG2-Ff66StCAYxGwF9FJ9ydNJei6RvV_PtVrFvLVn_DCbuC1UlyURObnzalvLFhkP-Qpjp9A0vjZ_DVqWwGkZ5VZvBOV5K4vznwXGt3FNdzlzGbY-PZyAek8qjgTW.jpeg" alt="Trigonometry">
-            <p>Trigonometry</p>
-        </a>
-        <a href="Math Grades 1-8.html" class="button">
-            <img src="https://www.sciencecalculators.org/math/basic_math/mathChalk.png" alt="Math Grades 1-8">
-            <p>Math Grades 1-8</p>
-        </a>
-        <a href="chemistry-navigation-simple.html" class="button">
-            <img src="https://council.science/wp-content/uploads/2017/04/IUPAC-feature-image.jpg" alt="Chemistry">
-            <p>Chemistry</p>
-        </a>
-                </a>
-        <a href="Biology.html" class="button">
-            <img src="https://www.bolton.ac.uk/assets/What-is-Medical-Biology-Bolton-Uni__ResizedImageWzYwMCwzMzhd.jpg" alt="Biology">
-            <p>Biology</p>
-        </a>
-        <a href="economics.html" class="button">
-            <img src="https://www.cato.org/sites/cato.org/files/styles/optimized/public/2021-01/GettyImages-1127256104%20%281%29.jpg?itok=fJ2uAJCi" alt="Economics">
-            <p>Economics</p>
-        </a>
-            <a href="us-history-navigation.html" class="button">
-            <img src="https://epe.brightspotcdn.com/55/45/8d9a496640c7aa753e8ebe1ed4e1/american-democracy-roadmap-092023-1310021544.jpg" alt="US History">
-            <p>US History</p>
-        </a>
-        <a href="world-history.html" class="button">
-            <img src="https://www.pennhighlandslibrary.org/wp-content/uploads/2022/04/History.jpg" alt="World History">
-            <p>World History</p>
-        </a>
-        <a href="science.html" class="button">
-            <img src="https://t3.ftcdn.net/jpg/01/26/03/60/360_F_126036009_E95hfNJWTouo4l7oJZQekeWTNMoCZGTe.jpg" alt="Science">
-            <p>Science Grades 6-8</p>
-        </a>
-        <a href="geography.html" class="button">
-            <img src="https://www.govloop.com/wp-content/uploads/2014/12/geography-e1501769793160.jpg" alt="Geography">
-            <p>Geography</p>
-        </a>
-        <a href="government.html" class="button">
-            <img src="https://www.brookings.edu/wp-content/uploads/2024/01/2023-09-22T185535Z_265422792_MT1EYEIM259134_RTRMADP_3_US-CONGRESS.jpg?quality=75" alt="Government">
-            <p>Government</p>
-        </a>
-        <a href="savn-glossary.html" class="button">
-            <img src="https://cdn.seeklearning.com.au/media/images/career-guide/module/systems-administrator-module.jpg" alt="Admin">
-            <p>System Admin</p>
-        </a>
-
     </div>
+    
     <a href="https://discord.gg/r7UHWcxY5X" class="discord-button">
         <img src="https://pngimg.com/d/discord_PNG16.png" alt="Discord Logo">
         Join the Discord Server
     </a>
 </body>
 </html>
-
 
 
 
