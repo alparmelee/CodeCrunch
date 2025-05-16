@@ -101,7 +101,7 @@
         }
         
         .hidden {
-            display: none;
+            display: none !important; /* Added !important to override other display styles */
         }
         
         /* Tabs for mobile */
@@ -155,12 +155,99 @@
             color: #666;
             font-size: 14px;
         }
+
+        /* Quiz Styles */
+        .quiz-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+        .quiz-options label:hover {
+            background-color: #dde2e6;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .quiz-feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .quiz-feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .quiz-results {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .quiz-results button {
+            margin-left: 10px;
+        }
+
+        .quiz-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .quiz-button:hover {
+            background-color: #0056b3;
+        }
+        .start-quiz-btn {
+             background-color: #28a745;
+             color: white;
+             border: none;
+             padding: 8px 12px;
+             border-radius: 5px;
+             cursor: pointer;
+             font-size: 0.9em;
+             margin-top: 10px;
+             display: block; /* Make button take its own line */
+        }
+        .start-quiz-btn:hover {
+            background-color: #1e7e34;
+        }
+
     </style>
 </head>
 <body>
     <header>
         <h1>🖥️ Computer Terminology Explorer</h1>
-        <p>Explore computer terms organized by category</p>
+        <p>Explore computer terms organized by category or test your knowledge with a quiz!</p>
     </header>
     
     <div class="search-container">
@@ -195,6 +282,16 @@
                 <div class="definition">Your operating system and your computer hardware combine to form a complete system that determines what your computer can do.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="general">Start General Concepts Quiz</button>
+        <div class="quiz-section hidden" id="quiz-general">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
     
     <div class="category" id="hardware">
@@ -203,7 +300,7 @@
             <h2>Hardware</h2>
         </div>
         <div class="term-list">
-            <div class="term-card">
+             <div class="term-card">
                 <div class="term"><span class="term-emoji">🧠</span>CPU</div>
                 <div class="definition">The primary data processing component of a computer.</div>
             </div>
@@ -228,6 +325,16 @@
                 <div class="definition">Starting and loading programs quickly is most impacted by the hard drive speed and capacity.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="hardware">Start Hardware Quiz</button>
+        <div class="quiz-section hidden" id="quiz-hardware">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
     
     <div class="category" id="software">
@@ -236,7 +343,7 @@
             <h2>Software</h2>
         </div>
         <div class="term-list">
-            <div class="term-card">
+             <div class="term-card">
                 <div class="term"><span class="term-emoji">📄</span>Computer Software</div>
                 <div class="definition">A set of instructions executed by a computer. (Also: anything that tells hardware what to do and how to do it).</div>
             </div>
@@ -297,6 +404,16 @@
                 <div class="definition">Web applications operate in the internet medium.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="software">Start Software Quiz</button>
+        <div class="quiz-section hidden" id="quiz-software">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
 
     <div class="category" id="os">
@@ -346,6 +463,16 @@
                 <div class="definition">Enabling airplane mode on your device disables all wireless transmission functions.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="os">Start OS Quiz</button>
+        <div class="quiz-section hidden" id="quiz-os">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
 
     <div class="category" id="networking">
@@ -354,7 +481,7 @@
             <h2>Networking & Internet</h2>
         </div>
         <div class="term-list">
-            <div class="term-card">
+             <div class="term-card">
                 <div class="term"><span class="term-emoji">📡</span>Internet Service Provider (ISP)</div>
                 <div class="definition">A company that provides internet service for a monthly fee.</div>
             </div>
@@ -447,6 +574,16 @@
                 <div class="definition">A two-way communication and collaboration tool that gives users the feeling of being in the same room.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="networking">Start Networking Quiz</button>
+        <div class="quiz-section hidden" id="quiz-networking">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
 
     <div class="category" id="security">
@@ -524,6 +661,16 @@
                 <div class="definition">Designed to infect a user's system and encrypt their data, locking up the device until a ransom is paid.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="security">Start Security Quiz</button>
+        <div class="quiz-section hidden" id="quiz-security">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
 
     <div class="category" id="storage">
@@ -561,6 +708,16 @@
                 <div class="definition">Files copied to a secondary location for preservation purposes.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="storage">Start Storage Quiz</button>
+        <div class="quiz-section hidden" id="quiz-storage">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
     
     <div class="category" id="io">
@@ -597,6 +754,16 @@
                 <div class="term"><span class="term-emoji">👋⌨️</span>Gesture-Based Interaction</div>
                 <div class="definition">Typically used for input commands and uses a mathematical interpretation of human motion.</div>
             </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="io">Start I/O Devices Quiz</button>
+        <div class="quiz-section hidden" id="quiz-io">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
         </div>
     </div>
 
@@ -643,6 +810,16 @@
                 <div class="definition">The first step in the troubleshooting process is to identify the problem.</div>
             </div>
         </div>
+        <button class="start-quiz-btn" data-category-id="troubleshooting">Start Troubleshooting Quiz</button>
+        <div class="quiz-section hidden" id="quiz-troubleshooting">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
     </div>
     
     <footer>
@@ -651,17 +828,73 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Search functionality
             const searchInput = document.getElementById('searchInput');
             const termCards = document.querySelectorAll('.term-card');
-            
+            const categories = document.querySelectorAll('.category');
+            const tabs = document.querySelectorAll('.tab');
+
+            // Quiz Data
+            const quizzes = {
+                general: [
+                    { question: "What is the fundamental language of computers, represented by ones and zeros?", options: ["Java", "Python", "Binary", "C++"], answer: "Binary" },
+                    { question: "What do your operating system and computer hardware combine to form?", options: ["A software package", "A complete system", "A peripheral device", "A network"], answer: "A complete system" }
+                ],
+                hardware: [
+                    { question: "What does CPU stand for?", options: ["Central Power Unit", "Computer Processing Unit", "Central Processing Unit", "Core Processing Unit"], answer: "Central Processing Unit" },
+                    { question: "Which connection type can handle both video and sound?", options: ["USB", "VGA", "Ethernet", "HDMI"], answer: "HDMI" },
+                    { question: "What is the main circuit board in a computer?", options: ["RAM", "CPU", "Motherboard", "Hard Drive"], answer: "Motherboard" }
+                ],
+                software: [
+                    { question: "What is a set of instructions executed by a computer called?", options: ["Hardware", "Software", "Firmware", "Middleware"], answer: "Software" },
+                    { question: "Which of these is a free, cloud-based word processor?", options: ["Microsoft Word", "Notepad++", "Google Docs", "Adobe Photoshop"], answer: "Google Docs" },
+                    { question: "What is running more than one application at a time called?", options: ["Singletasking", "Booting", "Multi-tasking", "Debugging"], answer: "Multi-tasking" }
+                ],
+                os: [
+                    { question: "What is the most widely used OS for personal computers (PC)?", options: ["Linux", "macOS", "Microsoft Windows", "Android"], answer: "Microsoft Windows" },
+                    { question: "What does GUI stand for?", options: ["Graphical User Interaction", "General Utility Interface", "Graphical User Interface", "Gaming User Input"], answer: "Graphical User Interface" },
+                    { question: "Which of these is an example of an open-source operating system?", options: ["Windows 10", "macOS Catalina", "Linux", "iOS"], answer: "Linux"}
+                ],
+                networking: [
+                    { question: "What does ISP stand for?", options: ["Internet Service Protocol", "Internal System Provider", "Internet Service Provider", "International Speed Pipe"], answer: "Internet Service Provider" },
+                    { question: "Which symbol is always included in an email address?", options: ["#", "$", "@", "&"], answer: "@" },
+                    { question: "What does FTP stand for?", options: ["File Transfer Process", "Fast Text Protocol", "File Transfer Protocol", "Folder Transaction Program"], answer: "File Transfer Protocol" }
+                ],
+                security: [
+                    { question: "What is a program that secretly attaches to a document or program and executes when opened?", options: ["Firewall", "Antivirus", "Computer Virus", "Spyware"], answer: "Computer Virus" },
+                    { question: "What type of malware encrypts data and demands payment for its release?", options: ["Spyware", "Adware", "Worm", "Ransomware"], answer: "Ransomware" },
+                    { question: "What does HTTPS ensure when Browse the web?", options: ["Faster loading speed", "More advertisements", "Secure data transport", "Better video quality"], answer: "Secure data transport" }
+                ],
+                storage: [
+                    { question: "Which hardware stores all software and files on your computer?", options: ["RAM", "CPU", "Motherboard", "Hard Drive"], answer: "Hard Drive" },
+                    { question: "What does RAM stand for?", options: ["Read Access Memory", "Random Access Memory", "Run All Memory", "Realtime Application Memory"], answer: "Random Access Memory" },
+                    { question: "What is a three or four-letter identifier at the end of a file name called?", options: ["File Prefix", "File Code", "File Extension", "File Marker"], answer: "File Extension" }
+                ],
+                io: [
+                    { question: "Which of these is an output device that produces audio?", options: ["Mouse", "Keyboard", "Speakers", "Scanner"], answer: "Speakers" },
+                    { question: "Which device is used to manipulate the cursor on your computer screen?", options: ["Printer", "Monitor", "Webcam", "Mouse"], answer: "Mouse" },
+                    { question: "A printer is primarily what type of device?", options: ["Input", "Output", "Storage", "Processing"], answer: "Output"}
+                ],
+                troubleshooting: [
+                    { question: "If your keyboard isn't working, what should you check first?", options: ["The monitor connection", "The mouse battery", "If the keyboard cord is securely in place", "The internet connection"], answer: "If the keyboard cord is securely in place" },
+                    { question: "What key combination is used to access Task Manager on a PC when an application freezes?", options: ["Ctrl + Shift + Esc", "Ctrl + Alt + Delete", "Alt + F4", "Windows Key + L"], answer: "Ctrl + Alt + Delete" },
+                    { question: "What is the first step in the troubleshooting process?", options: ["Establish a theory of probable cause", "Test the theory", "Identify the problem", "Document findings"], answer: "Identify the problem"}
+                ]
+            };
+
+            let currentQuizCategory = null;
+            let currentQuestionIndex = 0;
+            let score = 0;
+
+            // Search functionality
             searchInput.addEventListener('input', function() {
                 const searchTerm = searchInput.value.toLowerCase();
+                // Hide any active quiz when searching
+                hideAllQuizSections();
+                showAllTermLists();
                 
                 termCards.forEach(card => {
                     const term = card.querySelector('.term').textContent.toLowerCase();
                     const definition = card.querySelector('.definition').textContent.toLowerCase();
-                    
                     if (term.includes(searchTerm) || definition.includes(searchTerm)) {
                         card.classList.remove('hidden');
                     } else {
@@ -669,34 +902,37 @@
                     }
                 });
                 
-                // Show/hide categories based on visible cards
-                document.querySelectorAll('.category').forEach(category => {
+                categories.forEach(category => {
                     const visibleCards = category.querySelectorAll('.term-card:not(.hidden)');
-                    if (visibleCards.length === 0 && category.id !== 'all') { // Ensure 'all' tab doesn't hide everything if no results
+                    if (visibleCards.length === 0) {
                         category.classList.add('hidden');
                     } else {
                         category.classList.remove('hidden');
                     }
                 });
+                 // Ensure "All" tab logic correctly shows categories if any card is visible
+                if (document.querySelector('.tab.active').getAttribute('data-category') === 'all') {
+                    let hasVisibleCardOverall = false;
+                    categories.forEach(cat => {
+                        if (!cat.classList.contains('hidden')) hasVisibleCardOverall = true;
+                    });
+                }
             });
             
             // Tab functionality for mobile
-            const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const categoryFilter = this.getAttribute('data-category');
                     
-                    // Mark this tab as active
                     tabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Reset search input when changing tabs for clarity
-                    searchInput.value = ''; 
-                    
-                    document.querySelectorAll('.category').forEach(cat => {
-                        // First, make all term cards within categories visible before applying tab filter
-                        cat.querySelectorAll('.term-card').forEach(card => card.classList.remove('hidden'));
+                    searchInput.value = ''; // Reset search input
+                    hideAllQuizSections(); // Hide any active quiz
+                    showAllTermLists(); // Show term lists
 
+                    categories.forEach(cat => {
+                        cat.querySelectorAll('.term-card').forEach(card => card.classList.remove('hidden')); // Make all cards visible first
                         if (categoryFilter === 'all') {
                             cat.classList.remove('hidden');
                         } else {
@@ -709,14 +945,186 @@
                     });
                 });
             });
+
+            // Quiz Logic
+            document.querySelectorAll('.start-quiz-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentQuizCategory = this.getAttribute('data-category-id');
+                    startQuiz(currentQuizCategory);
+                });
+            });
+
+            function startQuiz(categoryKey) {
+                const categoryDiv = document.getElementById(categoryKey);
+                const termList = categoryDiv.querySelector('.term-list');
+                const quizSection = categoryDiv.querySelector('.quiz-section');
+
+                termList.classList.add('hidden'); // Hide term cards
+                quizSection.classList.remove('hidden'); // Show quiz
+
+                currentQuestionIndex = 0;
+                score = 0;
+                displayQuestion(categoryKey);
+
+                // Reset buttons and feedback for the specific quiz
+                const submitBtn = quizSection.querySelector('.quiz-submit-btn');
+                const nextBtn = quizSection.querySelector('.quiz-next-btn');
+                const resultsArea = quizSection.querySelector('.quiz-results-area');
+                const feedbackArea = quizSection.querySelector('.quiz-feedback-area');
+                const closeBtn = quizSection.querySelector('.quiz-close-btn');
+
+                submitBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+                resultsArea.classList.add('hidden');
+                resultsArea.innerHTML = '';
+                feedbackArea.innerHTML = '';
+                feedbackArea.className = 'quiz-feedback-area'; // Reset feedback classes
+                closeBtn.classList.add('hidden');
+            }
+
+            function displayQuestion(categoryKey) {
+                const quizData = quizzes[categoryKey];
+                if (!quizData || currentQuestionIndex >= quizData.length) {
+                    showResults(categoryKey);
+                    return;
+                }
+
+                const questionObj = quizData[currentQuestionIndex];
+                const quizSection = document.getElementById(`quiz-${categoryKey}`);
+                const questionArea = quizSection.querySelector('.quiz-question-area');
+                const optionsArea = quizSection.querySelector('.quiz-options-area');
+                
+                questionArea.innerHTML = `<div class="quiz-question">${questionObj.question}</div>`;
+                optionsArea.innerHTML = ''; // Clear previous options
+
+                questionObj.options.forEach((option, index) => {
+                    optionsArea.innerHTML += `
+                        <label>
+                            <input type="radio" name="quizOption-${categoryKey}" value="${option}">
+                            ${option}
+                        </label>
+                    `;
+                });
+
+                quizSection.querySelector('.quiz-submit-btn').classList.remove('hidden');
+                quizSection.querySelector('.quiz-next-btn').classList.add('hidden');
+                quizSection.querySelector('.quiz-feedback-area').innerHTML = '';
+                quizSection.querySelector('.quiz-feedback-area').className = 'quiz-feedback-area'; // Reset classes
+            }
+
+            document.querySelectorAll('.quiz-submit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const quizSection = this.closest('.quiz-section');
+                    const categoryKey = quizSection.id.replace('quiz-', '');
+                    const selectedOption = quizSection.querySelector(`input[name="quizOption-${categoryKey}"]:checked`);
+                    const feedbackArea = quizSection.querySelector('.quiz-feedback-area');
+
+                    if (!selectedOption) {
+                        feedbackArea.textContent = "Please select an answer.";
+                        feedbackArea.className = 'quiz-feedback-area incorrect';
+                        return;
+                    }
+
+                    const correctAnswer = quizzes[categoryKey][currentQuestionIndex].answer;
+                    if (selectedOption.value === correctAnswer) {
+                        score++;
+                        feedbackArea.textContent = "Correct!";
+                        feedbackArea.className = 'quiz-feedback-area correct';
+                    } else {
+                        feedbackArea.textContent = `Incorrect. The correct answer was: ${correctAnswer}`;
+                        feedbackArea.className = 'quiz-feedback-area incorrect';
+                    }
+
+                    this.classList.add('hidden'); // Hide submit button
+                    quizSection.querySelector('.quiz-next-btn').classList.remove('hidden');
+                     // Disable radio buttons after submission
+                    quizSection.querySelectorAll(`input[name="quizOption-${categoryKey}"]`).forEach(radio => {
+                        radio.disabled = true;
+                    });
+                });
+            });
+
+            document.querySelectorAll('.quiz-next-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const quizSection = this.closest('.quiz-section');
+                    const categoryKey = quizSection.id.replace('quiz-', '');
+                    currentQuestionIndex++;
+                    displayQuestion(categoryKey);
+                     // Re-enable radio buttons for the new question (if displayQuestion clears and re-adds them, this is implicitly handled)
+                });
+            });
             
-            // Click effect on term cards (example: toggling a class for definition visibility or highlight)
+            document.querySelectorAll('.quiz-close-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const quizSection = this.closest('.quiz-section');
+                    const categoryKey = quizSection.id.replace('quiz-', '');
+                    const categoryDiv = document.getElementById(categoryKey);
+                    
+                    quizSection.classList.add('hidden');
+                    categoryDiv.querySelector('.term-list').classList.remove('hidden');
+                    
+                    // Reset quiz state for this category
+                    quizSection.querySelector('.quiz-question-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-options-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-feedback-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-feedback-area').className = 'quiz-feedback-area';
+                    quizSection.querySelector('.quiz-results-area').classList.add('hidden');
+                    quizSection.querySelector('.quiz-results-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-submit-btn').classList.remove('hidden');
+                    quizSection.querySelector('.quiz-next-btn').classList.add('hidden');
+                    this.classList.add('hidden'); // Hide the close button itself
+                });
+            });
+
+
+            function showResults(categoryKey) {
+                const quizSection = document.getElementById(`quiz-${categoryKey}`);
+                const resultsArea = quizSection.querySelector('.quiz-results-area');
+                const quizData = quizzes[categoryKey];
+
+                resultsArea.innerHTML = `Quiz Finished! Your score: ${score} out of ${quizData.length}.
+                    <button class="quiz-button retake-quiz-btn" data-category-id="${categoryKey}">Retake Quiz</button>`;
+                resultsArea.classList.remove('hidden');
+                
+                quizSection.querySelector('.quiz-question-area').innerHTML = '';
+                quizSection.querySelector('.quiz-options-area').innerHTML = '';
+                quizSection.querySelector('.quiz-submit-btn').classList.add('hidden');
+                quizSection.querySelector('.quiz-next-btn').classList.add('hidden');
+                quizSection.querySelector('.quiz-feedback-area').innerHTML = '';
+                quizSection.querySelector('.quiz-close-btn').classList.remove('hidden');
+
+                // Add event listener for the new "Retake Quiz" button
+                resultsArea.querySelector('.retake-quiz-btn').addEventListener('click', function() {
+                    startQuiz(this.getAttribute('data-category-id'));
+                });
+            }
+
+            function hideAllQuizSections() {
+                document.querySelectorAll('.quiz-section').forEach(qs => {
+                    qs.classList.add('hidden');
+                     // Also reset internal elements like feedback, results for a clean slate if quiz is re-opened
+                    qs.querySelector('.quiz-question-area').innerHTML = '';
+                    qs.querySelector('.quiz-options-area').innerHTML = '';
+                    qs.querySelector('.quiz-feedback-area').innerHTML = '';
+                    qs.querySelector('.quiz-feedback-area').className = 'quiz-feedback-area';
+                    qs.querySelector('.quiz-results-area').classList.add('hidden');
+                    qs.querySelector('.quiz-results-area').innerHTML = '';
+                    qs.querySelector('.quiz-submit-btn').classList.remove('hidden');
+                    qs.querySelector('.quiz-next-btn').classList.add('hidden');
+                    qs.querySelector('.quiz-close-btn').classList.add('hidden');
+                });
+            }
+
+            function showAllTermLists() {
+                document.querySelectorAll('.term-list').forEach(tl => tl.classList.remove('hidden'));
+            }
+
+            // Click effect on term cards (example)
             termCards.forEach(card => {
                 card.addEventListener('click', function() {
-                    // Example: Toggle a 'clicked' class or expand definition.
-                    // For this example, we'll just log to console.
+                    // Example: Toggle a 'flipped' class or expand definition.
+                    // For now, just a console log.
                     // console.log('Card clicked:', this.querySelector('.term').textContent);
-                    // this.classList.toggle('flipped'); // If you add CSS for .flipped
                 });
             });
         });
