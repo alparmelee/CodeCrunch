@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Terminology Categorizer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        
+        header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #searchInput {
+            padding: 10px;
+            width: 70%;
+            font-size: 16px;
+            border: 2px solid #4a6fa5;
+            border-radius: 5px;
+        }
+        
+        .category {
+            background-color: white;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .category-header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 10px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .term-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .term-card {
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            margin: 8px;
+            padding: 12px;
+            width: calc(33.333% - 16px); /* Adjusted for 3 columns */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            box-sizing: border-box; /* Added for better width calculation */
+        }
+        
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .term {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .term-emoji {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .definition {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .hidden {
+            display: none !important; /* Added !important to override other display styles */
+        }
+        
+        /* Tabs for mobile */
+        .tab-container {
+            display: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) { /* Adjusted breakpoint */
+            .term-card {
+                width: calc(50% - 16px); /* 2 columns */
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .term-card {
+                width: calc(100% - 16px); /* 1 column */
+            }
+            
+            .tab-container {
+                display: flex;
+                overflow-x: auto;
+                margin-bottom: 15px;
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+            }
+            .tab-container::-webkit-scrollbar { /* Chrome, Safari, Opera */
+                display: none;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                background-color: #ddd;
+                border-radius: 5px 5px 0 0;
+                margin-right: 5px;
+                cursor: pointer;
+                white-space: nowrap;
+                flex-shrink: 0; /* Prevent tabs from shrinking */
+            }
+            
+            .tab.active {
+                background-color: #4a6fa5;
+                color: white;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Quiz Styles */
+        .quiz-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+        .quiz-options label:hover {
+            background-color: #dde2e6;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .quiz-feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .quiz-feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .quiz-results {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .quiz-results button {
+            margin-left: 10px;
+        }
+
+        .quiz-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .quiz-button:hover {
+            background-color: #0056b3;
+        }
+        .start-quiz-btn {
+             background-color: #28a745;
+             color: white;
+             border: none;
+             padding: 8px 12px;
+             border-radius: 5px;
+             cursor: pointer;
+             font-size: 0.9em;
+             margin-top: 10px;
+             display: block; /* Make button take its own line */
+        }
+        .start-quiz-btn:hover {
+            background-color: #1e7e34;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🖥️ Computer Terminology Explorer</h1>
+        <p>Explore computer terms organized by category or test your knowledge with a quiz!</p>
+    </header>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for terms or definitions...">
+    </div>
+    
+    <div class="tab-container">
+        <div class="tab active" data-category="all">All</div>
+        <div class="tab" data-category="general">General Concepts</div>
+        <div class="tab" data-category="hardware">Hardware</div>
+        <div class="tab" data-category="software">Software</div>
+        <div class="tab" data-category="os">OS</div>
+        <div class="tab" data-category="networking">Networking</div>
+        <div class="tab" data-category="security">Security</div>
+        <div class="tab" data-category="storage">Storage</div>
+        <div class="tab" data-category="io">I/O Devices</div>
+        <div class="tab" data-category="troubleshooting">Troubleshooting</div>
+    </div>
+
+    <div class="category" id="general">
+        <div class="category-header">
+            <div class="category-icon">💡</div>
+            <h2>General Computer Concepts</h2>
+        </div>
+        <div class="term-list">
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔢</span>Computer Language (Binary)</div>
+                <div class="definition">The fundamental language of computers, represented by ones and zeros.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💻</span>Computer System Components</div>
+                <div class="definition">Your operating system and your computer hardware combine to form a complete system that determines what your computer can do.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="general">Start General Concepts Quiz</button>
+        <div class="quiz-section hidden" id="quiz-general">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+    
+    <div class="category" id="hardware">
+        <div class="category-header">
+            <div class="category-icon">🔧</div>
+            <h2>Hardware</h2>
+        </div>
+        <div class="term-list">
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🧠</span>CPU</div>
+                <div class="definition">The primary data processing component of a computer.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔌</span>Peripheral Devices</div>
+                <div class="definition">Input or output devices that are used to communicate with a computer. (Also: an external device that your computer can run without).</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">📺🔊</span>HDMI Connection</div>
+                <div class="definition">A connection that grew in popularity because it can handle both video and sound.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔄</span>Motherboard</div>
+                <div class="definition">The main circuit board that connects essentially every part of the computer in some capacity.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🌬️</span>Cooling Fan</div>
+                <div class="definition">Built into computers to help keep internal components cool.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">⏱️💾</span>Program Loading Speed Factors</div>
+                <div class="definition">Starting and loading programs quickly is most impacted by the hard drive speed and capacity.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="hardware">Start Hardware Quiz</button>
+        <div class="quiz-section hidden" id="quiz-hardware">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+    
+    <div class="category" id="software">
+        <div class="category-header">
+            <div class="category-icon">📊</div>
+            <h2>Software</h2>
+        </div>
+        <div class="term-list">
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">📄</span>Computer Software</div>
+                <div class="definition">A set of instructions executed by a computer. (Also: anything that tells hardware what to do and how to do it).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📝</span>Word Processor</div>
+                <div class="definition">A software program that allows you to create, edit, and print text documents. (Also: application software that is used to create text documents such as letters, memos, and reports).</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">📊</span>Database</div>
+                <div class="definition">A type of software that stores an organized collection of data on a computer. (Also: a collection of organized data that allows access, retrieval, and use of data).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📝☁️</span>Google Docs</div>
+                <div class="definition">A free, cloud-based word processor that allows you to create, edit, and collaborate in real-time with other users.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📱</span>Application</div>
+                <div class="definition">Software that allows you to perform specific tasks.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💻📱</span>Desktop Application</div>
+                <div class="definition">The official name of an application on a desktop or laptop.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔄</span>Multi-tasking</div>
+                <div class="definition">Running more than one application at a time.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🌐📥</span>Acquiring Software</div>
+                <div class="definition">The most common way to obtain new software is through internet download.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🤝📝</span>Google Docs Collaboration</div>
+                <div class="definition">To collaborate on a Google Doc, you need the person's email address to share the document.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">✏️🔒</span>Google Docs Permissions</div>
+                <div class="definition">If you need a partner to edit a Google Doc you created, give them "person can edit" permission.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🖥️➡️📦</span>Virtualization</div>
+                <div class="definition">The process that simulates what a regular hardware computer can do through a software package.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">✅🌐📱</span>Web Applications (Installation)</div>
+                <div class="definition">True: Web applications do not have to be installed on your computer.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🌐📱</span>Web Application</div>
+                <div class="definition">A software program that runs on a web server.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">☁️</span>Cloud Computing</div>
+                <div class="definition">The delivery of shared resources through the internet. (Also: the use of web applications that allow you to create, save, and play games online).</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🌐➡️📱</span>Web Application Medium</div>
+                <div class="definition">Web applications operate in the internet medium.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="software">Start Software Quiz</button>
+        <div class="quiz-section hidden" id="quiz-software">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+
+    <div class="category" id="os">
+        <div class="category-header">
+            <div class="category-icon">💻</div>
+            <h2>Operating Systems</h2>
+        </div>
+        <div class="term-list">
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">⚙️</span>Operating System</div>
+                <div class="definition">The software that communicates with your computer's hardware and executes all software programs on your computer. (Also: known as the most important software that runs on a computer; without it, the computer would not be able to do anything).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🪟</span>Microsoft Windows</div>
+                <div class="definition">The most widely used operating system for personal computers (PC).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🍎</span>OSX</div>
+                <div class="definition">The latest Mac operating system.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🖼️</span>GUI (Graphical User Interface)</div>
+                <div class="definition">A feature that lets you use the mouse to click icons, buttons, menus, and much more. (Stands for Graphical User Interface).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">⚙️✔️</span>OS Functions</div>
+                <div class="definition">Correction: The operating system *does* manage computer memory, processes, hardware, and software.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔓</span>Open Source Operating System</div>
+                <div class="definition">A free source, open to the public, that can be accessed and modified to suit an individual's needs.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔒</span>Closed Source Operating System</div>
+                <div class="definition">A closed source, not open to the public that cannot be accessed or modified to suit an individual's needs.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🛡️🩹</span>Security Patches</div>
+                <div class="definition">Covers security holes so that hackers cannot access your data.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🐧🍎🪟</span>Common Operating Systems</div>
+                <div class="definition">The three most common operating systems are Linux, Mac OSX, and Microsoft Windows.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">✈️📵</span>Airplane Mode</div>
+                <div class="definition">Enabling airplane mode on your device disables all wireless transmission functions.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="os">Start OS Quiz</button>
+        <div class="quiz-section hidden" id="quiz-os">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+
+    <div class="category" id="networking">
+        <div class="category-header">
+            <div class="category-icon">🌐</div>
+            <h2>Networking & Internet</h2>
+        </div>
+        <div class="term-list">
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">📡</span>Internet Service Provider (ISP)</div>
+                <div class="definition">A company that provides internet service for a monthly fee.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔌</span>Ethernet Cable</div>
+                <div class="definition">A network cable that allows information to travel between wired devices.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📱</span>Bluetooth Capabilities</div>
+                <div class="definition">A device with Bluetooth capabilities can use radio technology to wirelessly connect to other devices.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📡</span>Modem</div>
+                <div class="definition">Connects directly to the internet source and is usually set up by the service provider.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📡</span>Router</div>
+                <div class="definition">A device that allows you to set up your home Wi-Fi connections.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">@</span>Email Address Format</div>
+                <div class="definition">Email addresses always include the "@" symbol.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📨🌐</span>Email Delivery</div>
+                <div class="definition">Email is delivered electronically across the internet.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">⏱️📨</span>Email Delivery Speed</div>
+                <div class="definition">On average, email is delivered within minutes.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🌐📧👍</span>Webmail Popularity</div>
+                <div class="definition">Free web-based email providers are popular because you can access your account from anywhere with an internet connection.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">➕📧</span>Creating Email (Step 1)</div>
+                <div class="definition">The first step in creating an email address is choosing a webmail provider.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📥</span>Inbox</div>
+                <div class="definition">The place where you view and manage emails.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💻🔗💻</span>Peer to Peer (P2P) Network</div>
+                <div class="definition">Two or more PCs that are connected and share resources.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🔒🔄</span>FTPS (Meaning of "S")</div>
+                <div class="definition">The "S" at the end of FTPS indicates "secure."</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🏠🏢📡</span>SOHO Router</div>
+                <div class="definition">SOHO stands for Small Office Home Office router.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">📶</span>Bandwidth</div>
+                <div class="definition">The amount of data that can be sent from one point to another in a certain period of time.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔄📄</span>FTP (File Transfer Protocol)</div>
+                <div class="definition">File Transfer Protocol. (Also: Before cloud storage, FTP was used to transfer large files).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🐌📞</span>Dial-up Internet</div>
+                <div class="definition">The slowest type of internet connection.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🌐</span>HTTP (Hypertext Transfer Protocol)</div>
+                <div class="definition">Hypertext Transfer Protocol.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💬🖼️🎵</span>MMS (Multimedia Messaging Service)</div>
+                <div class="definition">A service that allows people to send text messages with pictures and sounds from their device to other devices. (Often referred to as MMS, distinct from email).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🗣️💬</span>VoIP (Voice Over IP)</div>
+                <div class="definition">Voice Over Internet Protocol.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🎧🎶</span>Streaming Audio</div>
+                <div class="definition">Allows you to listen to specific songs without downloading, by utilizing streaming audio services.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🎬▶️</span>Streaming Video</div>
+                <div class="definition">Allows you to watch shows in real time instead of downloading an entire file, using streaming video services.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🧑‍🤝‍🧑💻</span>Telepresence</div>
+                <div class="definition">A two-way communication and collaboration tool that gives users the feeling of being in the same room.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="networking">Start Networking Quiz</button>
+        <div class="quiz-section hidden" id="quiz-networking">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+
+    <div class="category" id="security">
+        <div class="category-header">
+            <div class="category-icon">🔐</div>
+            <h2>Security & Privacy</h2>
+        </div>
+        <div class="term-list">
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🦠</span>Computer Virus</div>
+                <div class="definition">A program that secretly attaches to a document or program and then executes when the document or program is opened. (Also: programs that secretly attach themselves to other programs (called hosts) and change them or destroy data).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">⚠️</span>Malware</div>
+                <div class="definition">A malicious computer virus designed to damage a computer.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🔒🔑</span>SSL Authentication</div>
+                <div class="definition">With a Secure Socket Layer (SSL) in place, you'll need a password in addition to a user ID to access shared files.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🔑🔒</span>SFTP Authentication</div>
+                <div class="definition">SFTP uses SSH keys as an additional authentication method to ensure data security.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔒🌐</span>HTTPS & SSL</div>
+                <div class="definition">HTTPS works in conjunction with a Secure Sockets Layer (SSL) to ensure that data is transported safely. (To ensure secure Browse, make sure web address begins with HTTPS).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">⚠️📄</span>Malicious Page Warning</div>
+                <div class="definition">Browsers may display a warning page before allowing access to a site known for malicious activity or phishing.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💨📜</span>Browser Cache</div>
+                <div class="definition">Allows browsers to retain information from previously visited pages to make web Browse faster. (Security implication: can store sensitive info if not managed).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🚫🖱️📢</span>Ad Safety</div>
+                <div class="definition">Correction: Clicking on ads that appear on your screen is *not* always a safe option.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🕵️‍♂️🍪</span>Incognito Mode</div>
+                <div class="definition">A search option that does not track cookies or history.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🪱</span>Worm (Malware)</div>
+                <div class="definition">Can self-replicate without a host program and will spread without human interaction or directives from malware authors.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔒</span>Secure Site Indicator (Padlock)</div>
+                <div class="definition">A padlock symbol typically appears to the left of a secure site's address.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🗑️📧</span>Email Junk Filter</div>
+                <div class="definition">Set up a junk folder to help prevent potentially malicious emails from reaching your inbox.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">👁️</span>Spyware</div>
+                <div class="definition">Made to collect information and data and observe a user's activity without their knowledge.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">❌🔒</span>Insecure Site Indicators</div>
+                <div class="definition">A red X through a padlock and a red line through the HTTPS symbol are usually present if a site is not secure.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🎣</span>Phishing</div>
+                <div class="definition">Designed to look like a legitimate email but contains malicious links that will deliver malware to your computer.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📢🍪</span>Adware</div>
+                <div class="definition">Software you may download unknowingly through free software that then uses cookies to track what you are searching for, for ad purposes.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💰🔒</span>Ransomware</div>
+                <div class="definition">Designed to infect a user's system and encrypt their data, locking up the device until a ransom is paid.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="security">Start Security Quiz</button>
+        <div class="quiz-section hidden" id="quiz-security">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+
+    <div class="category" id="storage">
+        <div class="category-header">
+            <div class="category-icon">💾</div>
+            <h2>Storage & Memory</h2>
+        </div>
+        <div class="term-list">
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💾</span>Hard Drive</div>
+                <div class="definition">Hardware that stores all software and files on your computer and reads and writes data onto a spinning magnetic or optical disk.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💾🔌</span>USB Drive / Flash Drive / Thumb Drive</div>
+                <div class="definition">A small, portable plug-n-play device used for storing files that plugs into a USB port. (Terms often used interchangeably).</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📦💾</span>External Hard Drive</div>
+                <div class="definition">A portable plug-n-play device used as a backup storage device.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔌</span>USB (Universal Serial Bus)</div>
+                <div class="definition">Universal Serial Bus.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔄</span>RAM (Random Access Memory)</div>
+                <div class="definition">Random Access Memory.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">.📄</span>File Extension</div>
+                <div class="definition">The three or four-letter identifier found at the end of a file name that follows a period. (Also: tells you about the file's characteristics and its use).</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🔄💾</span>Backup</div>
+                <div class="definition">Files copied to a secondary location for preservation purposes.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="storage">Start Storage Quiz</button>
+        <div class="quiz-section hidden" id="quiz-storage">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+    
+    <div class="category" id="io">
+        <div class="category-header">
+            <div class="category-icon">🎮</div>
+            <h2>Input/Output Devices</h2>
+        </div>
+        <div class="term-list">
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔊</span>Speakers</div>
+                <div class="definition">Output devices that produce audio from your computer.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔌</span>USB Cable</div>
+                <div class="definition">A type of cable that connects peripheral devices to a computer through a universal serial bus port.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🖥️</span>Monitor</div>
+                <div class="definition">A hardware device that receives signals from a computer and displays them onto a screen.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📷</span>Scanner</div>
+                <div class="definition">An input device that produces a digital image file to be saved onto a computer.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">🖱️</span>Mouse</div>
+                <div class="definition">A hand-controlled electronic device used to manipulate the cursor on your computer screen.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🖨️</span>Printer</div>
+                <div class="definition">An output device that usually produces text and graphics onto paper.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">👋⌨️</span>Gesture-Based Interaction</div>
+                <div class="definition">Typically used for input commands and uses a mathematical interpretation of human motion.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="io">Start I/O Devices Quiz</button>
+        <div class="quiz-section hidden" id="quiz-io">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+
+    <div class="category" id="troubleshooting">
+        <div class="category-header">
+            <div class="category-icon">🛠️</div>
+            <h2>Troubleshooting</h2>
+        </div>
+        <div class="term-list">
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">⌨️❓</span>Keyboard Troubleshooting</div>
+                <div class="definition">If your keyboard isn't working, first check if the keyboard cord is securely in place.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🚀💾</span>Improving Performance with RAM</div>
+                <div class="definition">If programs are sluggish when running several at once, consider adding extra RAM memory to your device to make it run faster.</div>
+            </div>
+             <div class="term-card">
+                <div class="term"><span class="term-emoji">⚙️📱</span>Pairing Bluetooth Device (Step 1)</div>
+                <div class="definition">The first step in pairing a new Bluetooth device is to turn on Bluetooth capabilities using your device's settings.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">💻🛠️</span>Task Manager (PC)</div>
+                <div class="definition">To access the Task Manager on a PC when an application freezes, use Ctrl + Alt + Delete.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🍎🛠️</span>Task Manager (Mac)</div>
+                <div class="definition">To access the Task Manager on a Mac when an application freezes, use Command + Option + Esc.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🐢⬆️</span>Slow Application Check</div>
+                <div class="definition">When an application is running slowly, first check if it has been updated recently.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🐌🦠</span>Slow Computer Diagnosis</div>
+                <div class="definition">If your entire computer system is running extremely slow, first run a virus scanner as malware might be slowing things down.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">📝🛠️</span>Documenting Troubleshooting Steps</div>
+                <div class="definition">It's important to document troubleshooting steps so you will be able to remember what you have done and can avoid repeating mistakes.</div>
+            </div>
+            <div class="term-card">
+                <div class="term"><span class="term-emoji">🔍🛠️</span>Troubleshooting Process (Step 1)</div>
+                <div class="definition">The first step in the troubleshooting process is to identify the problem.</div>
+            </div>
+        </div>
+        <button class="start-quiz-btn" data-category-id="troubleshooting">Start Troubleshooting Quiz</button>
+        <div class="quiz-section hidden" id="quiz-troubleshooting">
+            <div class="quiz-question-area"></div>
+            <div class="quiz-options-area"></div>
+            <button class="quiz-button quiz-submit-btn">Submit Answer</button>
+            <div class="quiz-feedback-area"></div>
+            <button class="quiz-button quiz-next-btn hidden">Next Question</button>
+            <div class="quiz-results-area hidden"></div>
+            <button class="quiz-button quiz-close-btn hidden">Close Quiz</button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Computer Terminology Categorizer &copy; 2025</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const termCards = document.querySelectorAll('.term-card');
+            const categories = document.querySelectorAll('.category');
+            const tabs = document.querySelectorAll('.tab');
+
+            // Quiz Data
+            const quizzes = {
+                general: [
+                    { question: "What is the fundamental language of computers, represented by ones and zeros?", options: ["Java", "Python", "Binary", "C++"], answer: "Binary" },
+                    { question: "What do your operating system and computer hardware combine to form?", options: ["A software package", "A complete system", "A peripheral device", "A network"], answer: "A complete system" }
+                ],
+                hardware: [
+                    { question: "What does CPU stand for?", options: ["Central Power Unit", "Computer Processing Unit", "Central Processing Unit", "Core Processing Unit"], answer: "Central Processing Unit" },
+                    { question: "Which connection type can handle both video and sound?", options: ["USB", "VGA", "Ethernet", "HDMI"], answer: "HDMI" },
+                    { question: "What is the main circuit board in a computer?", options: ["RAM", "CPU", "Motherboard", "Hard Drive"], answer: "Motherboard" }
+                ],
+                software: [
+                    { question: "What is a set of instructions executed by a computer called?", options: ["Hardware", "Software", "Firmware", "Middleware"], answer: "Software" },
+                    { question: "Which of these is a free, cloud-based word processor?", options: ["Microsoft Word", "Notepad++", "Google Docs", "Adobe Photoshop"], answer: "Google Docs" },
+                    { question: "What is running more than one application at a time called?", options: ["Singletasking", "Booting", "Multi-tasking", "Debugging"], answer: "Multi-tasking" }
+                ],
+                os: [
+                    { question: "What is the most widely used OS for personal computers (PC)?", options: ["Linux", "macOS", "Microsoft Windows", "Android"], answer: "Microsoft Windows" },
+                    { question: "What does GUI stand for?", options: ["Graphical User Interaction", "General Utility Interface", "Graphical User Interface", "Gaming User Input"], answer: "Graphical User Interface" },
+                    { question: "Which of these is an example of an open-source operating system?", options: ["Windows 10", "macOS Catalina", "Linux", "iOS"], answer: "Linux"}
+                ],
+                networking: [
+                    { question: "What does ISP stand for?", options: ["Internet Service Protocol", "Internal System Provider", "Internet Service Provider", "International Speed Pipe"], answer: "Internet Service Provider" },
+                    { question: "Which symbol is always included in an email address?", options: ["#", "$", "@", "&"], answer: "@" },
+                    { question: "What does FTP stand for?", options: ["File Transfer Process", "Fast Text Protocol", "File Transfer Protocol", "Folder Transaction Program"], answer: "File Transfer Protocol" }
+                ],
+                security: [
+                    { question: "What is a program that secretly attaches to a document or program and executes when opened?", options: ["Firewall", "Antivirus", "Computer Virus", "Spyware"], answer: "Computer Virus" },
+                    { question: "What type of malware encrypts data and demands payment for its release?", options: ["Spyware", "Adware", "Worm", "Ransomware"], answer: "Ransomware" },
+                    { question: "What does HTTPS ensure when Browse the web?", options: ["Faster loading speed", "More advertisements", "Secure data transport", "Better video quality"], answer: "Secure data transport" }
+                ],
+                storage: [
+                    { question: "Which hardware stores all software and files on your computer?", options: ["RAM", "CPU", "Motherboard", "Hard Drive"], answer: "Hard Drive" },
+                    { question: "What does RAM stand for?", options: ["Read Access Memory", "Random Access Memory", "Run All Memory", "Realtime Application Memory"], answer: "Random Access Memory" },
+                    { question: "What is a three or four-letter identifier at the end of a file name called?", options: ["File Prefix", "File Code", "File Extension", "File Marker"], answer: "File Extension" }
+                ],
+                io: [
+                    { question: "Which of these is an output device that produces audio?", options: ["Mouse", "Keyboard", "Speakers", "Scanner"], answer: "Speakers" },
+                    { question: "Which device is used to manipulate the cursor on your computer screen?", options: ["Printer", "Monitor", "Webcam", "Mouse"], answer: "Mouse" },
+                    { question: "A printer is primarily what type of device?", options: ["Input", "Output", "Storage", "Processing"], answer: "Output"}
+                ],
+                troubleshooting: [
+                    { question: "If your keyboard isn't working, what should you check first?", options: ["The monitor connection", "The mouse battery", "If the keyboard cord is securely in place", "The internet connection"], answer: "If the keyboard cord is securely in place" },
+                    { question: "What key combination is used to access Task Manager on a PC when an application freezes?", options: ["Ctrl + Shift + Esc", "Ctrl + Alt + Delete", "Alt + F4", "Windows Key + L"], answer: "Ctrl + Alt + Delete" },
+                    { question: "What is the first step in the troubleshooting process?", options: ["Establish a theory of probable cause", "Test the theory", "Identify the problem", "Document findings"], answer: "Identify the problem"}
+                ]
+            };
+
+            let currentQuizCategory = null;
+            let currentQuestionIndex = 0;
+            let score = 0;
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                // Hide any active quiz when searching
+                hideAllQuizSections();
+                showAllTermLists();
+                
+                termCards.forEach(card => {
+                    const term = card.querySelector('.term').textContent.toLowerCase();
+                    const definition = card.querySelector('.definition').textContent.toLowerCase();
+                    if (term.includes(searchTerm) || definition.includes(searchTerm)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                
+                categories.forEach(category => {
+                    const visibleCards = category.querySelectorAll('.term-card:not(.hidden)');
+                    if (visibleCards.length === 0) {
+                        category.classList.add('hidden');
+                    } else {
+                        category.classList.remove('hidden');
+                    }
+                });
+                 // Ensure "All" tab logic correctly shows categories if any card is visible
+                if (document.querySelector('.tab.active').getAttribute('data-category') === 'all') {
+                    let hasVisibleCardOverall = false;
+                    categories.forEach(cat => {
+                        if (!cat.classList.contains('hidden')) hasVisibleCardOverall = true;
+                    });
+                }
+            });
+            
+            // Tab functionality for mobile
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const categoryFilter = this.getAttribute('data-category');
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    searchInput.value = ''; // Reset search input
+                    hideAllQuizSections(); // Hide any active quiz
+                    showAllTermLists(); // Show term lists
+
+                    categories.forEach(cat => {
+                        cat.querySelectorAll('.term-card').forEach(card => card.classList.remove('hidden')); // Make all cards visible first
+                        if (categoryFilter === 'all') {
+                            cat.classList.remove('hidden');
+                        } else {
+                            if (cat.id === categoryFilter) {
+                                cat.classList.remove('hidden');
+                            } else {
+                                cat.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Quiz Logic
+            document.querySelectorAll('.start-quiz-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentQuizCategory = this.getAttribute('data-category-id');
+                    startQuiz(currentQuizCategory);
+                });
+            });
+
+            function startQuiz(categoryKey) {
+                const categoryDiv = document.getElementById(categoryKey);
+                const termList = categoryDiv.querySelector('.term-list');
+                const quizSection = categoryDiv.querySelector('.quiz-section');
+
+                termList.classList.add('hidden'); // Hide term cards
+                quizSection.classList.remove('hidden'); // Show quiz
+
+                currentQuestionIndex = 0;
+                score = 0;
+                displayQuestion(categoryKey);
+
+                // Reset buttons and feedback for the specific quiz
+                const submitBtn = quizSection.querySelector('.quiz-submit-btn');
+                const nextBtn = quizSection.querySelector('.quiz-next-btn');
+                const resultsArea = quizSection.querySelector('.quiz-results-area');
+                const feedbackArea = quizSection.querySelector('.quiz-feedback-area');
+                const closeBtn = quizSection.querySelector('.quiz-close-btn');
+
+                submitBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+                resultsArea.classList.add('hidden');
+                resultsArea.innerHTML = '';
+                feedbackArea.innerHTML = '';
+                feedbackArea.className = 'quiz-feedback-area'; // Reset feedback classes
+                closeBtn.classList.add('hidden');
+            }
+
+            function displayQuestion(categoryKey) {
+                const quizData = quizzes[categoryKey];
+                if (!quizData || currentQuestionIndex >= quizData.length) {
+                    showResults(categoryKey);
+                    return;
+                }
+
+                const questionObj = quizData[currentQuestionIndex];
+                const quizSection = document.getElementById(`quiz-${categoryKey}`);
+                const questionArea = quizSection.querySelector('.quiz-question-area');
+                const optionsArea = quizSection.querySelector('.quiz-options-area');
+                
+                questionArea.innerHTML = `<div class="quiz-question">${questionObj.question}</div>`;
+                optionsArea.innerHTML = ''; // Clear previous options
+
+                questionObj.options.forEach((option, index) => {
+                    optionsArea.innerHTML += `
+                        <label>
+                            <input type="radio" name="quizOption-${categoryKey}" value="${option}">
+                            ${option}
+                        </label>
+                    `;
+                });
+
+                quizSection.querySelector('.quiz-submit-btn').classList.remove('hidden');
+                quizSection.querySelector('.quiz-next-btn').classList.add('hidden');
+                quizSection.querySelector('.quiz-feedback-area').innerHTML = '';
+                quizSection.querySelector('.quiz-feedback-area').className = 'quiz-feedback-area'; // Reset classes
+            }
+
+            document.querySelectorAll('.quiz-submit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const quizSection = this.closest('.quiz-section');
+                    const categoryKey = quizSection.id.replace('quiz-', '');
+                    const selectedOption = quizSection.querySelector(`input[name="quizOption-${categoryKey}"]:checked`);
+                    const feedbackArea = quizSection.querySelector('.quiz-feedback-area');
+
+                    if (!selectedOption) {
+                        feedbackArea.textContent = "Please select an answer.";
+                        feedbackArea.className = 'quiz-feedback-area incorrect';
+                        return;
+                    }
+
+                    const correctAnswer = quizzes[categoryKey][currentQuestionIndex].answer;
+                    if (selectedOption.value === correctAnswer) {
+                        score++;
+                        feedbackArea.textContent = "Correct!";
+                        feedbackArea.className = 'quiz-feedback-area correct';
+                    } else {
+                        feedbackArea.textContent = `Incorrect. The correct answer was: ${correctAnswer}`;
+                        feedbackArea.className = 'quiz-feedback-area incorrect';
+                    }
+
+                    this.classList.add('hidden'); // Hide submit button
+                    quizSection.querySelector('.quiz-next-btn').classList.remove('hidden');
+                     // Disable radio buttons after submission
+                    quizSection.querySelectorAll(`input[name="quizOption-${categoryKey}"]`).forEach(radio => {
+                        radio.disabled = true;
+                    });
+                });
+            });
+
+            document.querySelectorAll('.quiz-next-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const quizSection = this.closest('.quiz-section');
+                    const categoryKey = quizSection.id.replace('quiz-', '');
+                    currentQuestionIndex++;
+                    displayQuestion(categoryKey);
+                     // Re-enable radio buttons for the new question (if displayQuestion clears and re-adds them, this is implicitly handled)
+                });
+            });
+            
+            document.querySelectorAll('.quiz-close-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const quizSection = this.closest('.quiz-section');
+                    const categoryKey = quizSection.id.replace('quiz-', '');
+                    const categoryDiv = document.getElementById(categoryKey);
+                    
+                    quizSection.classList.add('hidden');
+                    categoryDiv.querySelector('.term-list').classList.remove('hidden');
+                    
+                    // Reset quiz state for this category
+                    quizSection.querySelector('.quiz-question-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-options-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-feedback-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-feedback-area').className = 'quiz-feedback-area';
+                    quizSection.querySelector('.quiz-results-area').classList.add('hidden');
+                    quizSection.querySelector('.quiz-results-area').innerHTML = '';
+                    quizSection.querySelector('.quiz-submit-btn').classList.remove('hidden');
+                    quizSection.querySelector('.quiz-next-btn').classList.add('hidden');
+                    this.classList.add('hidden'); // Hide the close button itself
+                });
+            });
+
+
+            function showResults(categoryKey) {
+                const quizSection = document.getElementById(`quiz-${categoryKey}`);
+                const resultsArea = quizSection.querySelector('.quiz-results-area');
+                const quizData = quizzes[categoryKey];
+
+                resultsArea.innerHTML = `Quiz Finished! Your score: ${score} out of ${quizData.length}.
+                    <button class="quiz-button retake-quiz-btn" data-category-id="${categoryKey}">Retake Quiz</button>`;
+                resultsArea.classList.remove('hidden');
+                
+                quizSection.querySelector('.quiz-question-area').innerHTML = '';
+                quizSection.querySelector('.quiz-options-area').innerHTML = '';
+                quizSection.querySelector('.quiz-submit-btn').classList.add('hidden');
+                quizSection.querySelector('.quiz-next-btn').classList.add('hidden');
+                quizSection.querySelector('.quiz-feedback-area').innerHTML = '';
+                quizSection.querySelector('.quiz-close-btn').classList.remove('hidden');
+
+                // Add event listener for the new "Retake Quiz" button
+                resultsArea.querySelector('.retake-quiz-btn').addEventListener('click', function() {
+                    startQuiz(this.getAttribute('data-category-id'));
+                });
+            }
+
+            function hideAllQuizSections() {
+                document.querySelectorAll('.quiz-section').forEach(qs => {
+                    qs.classList.add('hidden');
+                     // Also reset internal elements like feedback, results for a clean slate if quiz is re-opened
+                    qs.querySelector('.quiz-question-area').innerHTML = '';
+                    qs.querySelector('.quiz-options-area').innerHTML = '';
+                    qs.querySelector('.quiz-feedback-area').innerHTML = '';
+                    qs.querySelector('.quiz-feedback-area').className = 'quiz-feedback-area';
+                    qs.querySelector('.quiz-results-area').classList.add('hidden');
+                    qs.querySelector('.quiz-results-area').innerHTML = '';
+                    qs.querySelector('.quiz-submit-btn').classList.remove('hidden');
+                    qs.querySelector('.quiz-next-btn').classList.add('hidden');
+                    qs.querySelector('.quiz-close-btn').classList.add('hidden');
+                });
+            }
+
+            function showAllTermLists() {
+                document.querySelectorAll('.term-list').forEach(tl => tl.classList.remove('hidden'));
+            }
+
+            // Click effect on term cards (example)
+            termCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Example: Toggle a 'flipped' class or expand definition.
+                    // For now, just a console log.
+                    // console.log('Card clicked:', this.querySelector('.term').textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

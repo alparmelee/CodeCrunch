@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Mathematics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f4f7fb 0%, #e9f0f7 100%);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #2C3E50;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-top: 60px;
+            color: #34495e;
+            font-weight: 500;
+            letter-spacing: -1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .module {
+            margin-bottom: 30px;
+        }
+
+        .module h2 {
+            font-size: 28px;
+            color: #8e44ad;
+        }
+
+        .module-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .module-links a {
+            display: block;
+            padding: 15px 20px;
+            background-color: #9b59b6;
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transform: perspective(500px) translateZ(0);
+        }
+
+        .module-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .module-links a:hover {
+            background-color: #8e44ad;
+            transform: scale(1.05) perspective(500px) translateZ(20px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        .module-links a:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .module-links {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .module-links a {
+                font-size: 16px;
+                padding: 12px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .module-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Discrete Mathematics</h1>
+    
+    <div class="module">
+        <h2>Module 1: Proofs and Logic</h2>
+        <div class="module-links">
+            <a href="discrete-math-proof-demonstrator.html">Proof Demonstrator</a>
+            <a href="truth-table-generator.html">Truth Table Generator</a>
+        </div>
+    </div>
+
+    <div class="module">
+        <h2>Module 2: Graphs, Sets and Permutations/Combinations</h2>
+        <div class="module-links">
+            <a href="graph-analyzer.html">Graph Analyzer</a>
+            <a href="permutation-combination-calculator.html">Permutation & Combination Calculator</a>
+            <a href="set-operations-calculator.html">Set Operations</a>
+        </div>
+    </div>
+
+    <div class="module">
+        <h2>Module 3: Sequences, Induction and Functions</h2>
+        <div class="module-links">
+            <a href="recursive-sequence-calculator.html">Sequences</a>
+            <a href="sequence-solver-simplified.html">Arithmetic and Geometric Sequence</a>
+            <a href="induction-calculator.html">Inductions</a>
+            <a href="discrete-math-functions.html">Functions</a>
+        </div>
+    </div>
+
+        <div class="module">
+        <h2>Final Review</h2>
+        <div class="module-links">
+            <a href="updated-discrete-math-guide.html">Final Review</a>
+            <a href="Test1.html">Test 1</a>
+            <a href="test2.html">Test 2</a>
+            <a href="test3.html">Test 3</a>
+            <a href="studyguide.html">Final Practice</a>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
+

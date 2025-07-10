@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modulus, Inverse Mod, and Exponentiation Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #0066cc;
+            text-align: center;
+        }
+
+        .calculator {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #333;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Modulus, Inverse Mod, and Exponentiation Calculator</h1>
+
+        <div class="calculator">
+            <h2>Modulus Calculator</h2>
+            <label for="num1">Enter Number (a):</label>
+            <input type="number" id="num1" placeholder="Enter number a" required>
+            
+            <label for="mod1">Enter Modulus (n):</label>
+            <input type="number" id="mod1" placeholder="Enter modulus n" required>
+            
+            <button onclick="calculateMod()">Calculate Modulus</button>
+            <p id="modResult"></p>
+        </div>
+
+        <div class="calculator">
+            <h2>Inverse Mod Calculator</h2>
+            <label for="num2">Enter Number (a):</label>
+            <input type="number" id="num2" placeholder="Enter number a" required>
+            
+            <label for="mod2">Enter Modulus (n):</label>
+            <input type="number" id="mod2" placeholder="Enter modulus n" required>
+            
+            <button onclick="calculateInverseMod()">Calculate Inverse Mod</button>
+            <p id="inverseModResult"></p>
+        </div>
+
+        <div class="calculator">
+            <h2>Exponentiation by Squaring</h2>
+            <label for="base">Enter Base (a):</label>
+            <input type="number" id="base" placeholder="Enter base a" required>
+            
+            <label for="exp">Enter Exponent (e):</label>
+            <input type="number" id="exp" placeholder="Enter exponent e" required>
+            
+            <label for="modExp">Enter Modulus (n):</label>
+            <input type="number" id="modExp" placeholder="Enter modulus n" required>
+            
+            <button onclick="modExponentiation()">Calculate a^e mod n</button>
+            <p id="expResult"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Modulus, Inverse Mod, and Exponentiation Calculators</p>
+    </footer>
+
+    <script>
+        // Function to calculate a mod n
+        function calculateMod() {
+            let a = parseInt(document.getElementById("num1").value);
+            let n = parseInt(document.getElementById("mod1").value);
+            
+            if (!isNaN(a) && !isNaN(n) && n > 0) {
+                let result = a % n;
+                if (result < 0) {
+                    result += n; // Ensure non-negative result
+                }
+                document.getElementById("modResult").textContent = `Result: ${a} mod ${n} = ${result}`;
+            } else {
+                document.getElementById("modResult").textContent = "Please enter valid numbers for a and n.";
+            }
+        }
+
+        // Extended Euclidean Algorithm to find the inverse mod
+        function calculateInverseMod() {
+            let a = parseInt(document.getElementById("num2").value);
+            let n = parseInt(document.getElementById("mod2").value);
+
+            if (!isNaN(a) && !isNaN(n) && n > 0) {
+                let result = modInverse(a, n);
+                if (result !== -1) {
+                    document.getElementById("inverseModResult").textContent = `Inverse of ${a} mod ${n} = ${result}`;
+                } else {
+                    document.getElementById("inverseModResult").textContent = `No inverse exists for ${a} mod ${n}`;
+                }
+            } else {
+                document.getElementById("inverseModResult").textContent = "Please enter valid numbers for a and n.";
+            }
+        }
+
+        // Helper function to calculate mod inverse using the Extended Euclidean Algorithm
+        function modInverse(a, n) {
+            let t = 0, newT = 1;
+            let r = n, newR = a;
+
+            while (newR !== 0) {
+                let quotient = Math.floor(r / newR);
+                [t, newT] = [newT, t - quotient * newT];
+                [r, newR] = [newR, r - quotient * newR];
+            }
+
+            if (r > 1) {
+                return -1; // No inverse exists
+            }
+            if (t < 0) {
+                t += n;
+            }
+
+            return t;
+        }
+
+        // Function for exponentiation by squaring (modular exponentiation)
+        function modExponentiation() {
+            let a = parseInt(document.getElementById("base").value);
+            let e = parseInt(document.getElementById("exp").value);
+            let n = parseInt(document.getElementById("modExp").value);
+
+            if (!isNaN(a) && !isNaN(e) && !isNaN(n) && n > 0) {
+                let result = expBySquaring(a, e, n);
+                document.getElementById("expResult").textContent = `Result: ${a}^${e} mod ${n} = ${result}`;
+            } else {
+                document.getElementById("expResult").textContent = "Please enter valid numbers for a, e, and n.";
+            }
+        }
+
+        // Helper function for exponentiation by squaring
+        function expBySquaring(base, exponent, mod) {
+            let result = 1;
+            base = base % mod;
+
+            while (exponent > 0) {
+                if (exponent % 2 === 1) {
+                    result = (result * base) % mod;  // If exponent is odd, multiply base with result
+                }
+                exponent = Math.floor(exponent / 2);
+                base = (base * base) % mod;  // Square the base
+            }
+
+            return result;
+        }
+    </script>
+</body>
+</html>

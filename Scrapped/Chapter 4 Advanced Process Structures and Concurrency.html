@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🖥️ Advanced OS Concepts Glossary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        #search-container {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .term-card:hover {
+            transform: scale(1.02);
+        }
+        .term-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .term-definition {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .emoji {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search advanced OS concepts...">
+        </div>
+        <div id="terms-container"></div>
+    </div>
+
+    <script>
+        const terms = [
+            {
+                term: "Process Image",
+                definition: "A process image is the complete state of a process at a given point in time. It includes the process control block (PCB), program code, data, stack, and memory allocation. The process image is used by the operating system to manage processes and perform context switching.",
+                emoji: "📸"
+            },
+            {
+                term: "Multiprocessing",
+                definition: "Multiprocessing is a system's ability to support more than one processor at the same time. These processors can execute multiple processes simultaneously, increasing the system's performance and efficiency.",
+                emoji: "🖥️"
+            },
+            {
+                term: "Ready",
+                definition: "The ready state is one of the states in which a process can be found. A process in the ready state is prepared to execute when given CPU time but is currently not running because another process is using the CPU. Processes in the ready state are typically kept in a ready queue.",
+                emoji: "🟢"
+            },
+            {
+                term: "Spawn",
+                definition: "Spawning a process refers to the creation of a new process by an existing process. The new process is called the child process, and the existing process is the parent process. This is commonly used in multitasking operating systems to handle multiple tasks concurrently.",
+                emoji: "🐣"
+            },
+            {
+                term: "Kernel Level",
+                definition: "Kernel level refers to operations or functions that are executed with full access to the hardware and system resources. Kernel-level operations are performed by the operating system kernel, which has higher privileges than user-level applications.",
+                emoji: "🔧"
+            },
+            {
+                term: "Ejecting",
+                definition: "In the context of operating systems, ejecting usually refers to the process of safely removing a removable storage device, such as a USB drive or optical disc, ensuring that all data has been written and no data corruption occurs.",
+                emoji: "💽"
+            },
+            {
+                term: "Domain",
+                definition: "A domain can refer to a variety of concepts in computing, including a range of control or a sphere of influence. In the context of operating systems, it often refers to a group of resources and users that share common security and administrative policies.",
+                emoji: "🌐"
+            },
+            {
+                term: "Threads",
+                definition: "Threads are the smallest unit of processing that can be scheduled by an operating system. Threads exist within a process, sharing the same memory space and resources, but they execute independently. This allows for parallelism and more efficient execution of tasks within a single process.",
+                emoji: "🧵"
+            },
+            {
+                term: "Security Descriptor",
+                definition: "A security descriptor is a data structure used in Windows operating systems to store security information about an object, such as a file, folder, or process. It contains the owner information, permissions (Access Control List or ACL), and audit settings.",
+                emoji: "🔒"
+            },
+            {
+                term: "Termination",
+                definition: "Termination refers to the process of ending a process or thread. This can occur when the process completes its execution, or it can be forced by the operating system or user intervention. Terminated processes release their resources back to the system.",
+                emoji: "❌"
+            },
+            {
+                term: "Interrupt",
+                definition: "An interrupt is a signal sent to the processor that temporarily halts the current operations, allowing the system to handle an event, such as an I/O request or a timer signal. After the interrupt is processed, the processor resumes its previous activities.",
+                emoji: "⚠️"
+            },
+            {
+                term: "Task",
+                definition: "In computing, a task typically refers to a unit of work or a set of instructions that a computer performs. In the context of operating systems, a task can refer to a process or a thread. Tasks can be scheduled and managed by the OS.",
+                emoji: "📋"
+            },
+            {
+                term: "One-to-Many",
+                definition: "One-to-Many can refer to a threading model where one user-level thread maps to many kernel-level threads. However, this model is less common compared to one-to-one (one user-level thread to one kernel-level thread) or many-to-one (many user-level threads to one kernel-level thread).",
+                emoji: "🔗"
+            },
+            {
+                term: "Synchronize",
+                definition: "Synchronization in operating systems refers to coordinating the execution of processes or threads to ensure that shared resources are accessed in a controlled manner. This prevents race conditions and ensures data integrity. Common synchronization mechanisms include mutexes, semaphores, and monitors.",
+                emoji: "🔀"
+            },
+            {
+                term: "Message",
+                definition: "In the context of operating systems, a message refers to a communication method used by processes or threads to exchange information. Message passing is a technique used in inter-process communication (IPC) where processes send and receive messages to coordinate their actions.",
+                emoji: "💬"
+            }
+        ];
+
+        const termsContainer = document.getElementById('terms-container');
+        const searchInput = document.getElementById('search-input');
+
+        function createTermCard(term) {
+            const card = document.createElement('div');
+            card.classList.add('term-card');
+            card.innerHTML = `
+                <div class="term-title">
+                    <span class="emoji">${term.emoji}</span>
+                    ${term.term}
+                </div>
+                <div class="term-definition">${term.definition}</div>
+            `;
+            return card;
+        }
+
+        function renderTerms(filteredTerms) {
+            termsContainer.innerHTML = '';
+            filteredTerms.forEach(term => {
+                termsContainer.appendChild(createTermCard(term));
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredTerms = terms.filter(term => 
+                term.term.toLowerCase().includes(searchTerm) || 
+                term.definition.toLowerCase().includes(searchTerm)
+            );
+            renderTerms(filteredTerms);
+        });
+
+        // Initial render
+        renderTerms(terms);
+    </script>
+</body>
+</html>

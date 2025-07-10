@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caribbean Countries Guesser</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    #map {
+      height: 70vh;
+      width: 100%;
+      border: 2px solid #444;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    #regionKey {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .region {
+      margin: 0 10px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      opacity: 0.5;
+    }
+
+    .region.active {
+      opacity: 1;
+    }
+
+    .greater-antilles { background-color: #ff5733; }
+    .lesser-antilles { background-color: #33c1ff; }
+  </style>
+</head>
+<body>
+  <h1>Caribbean Countries Guesser</h1>
+  <div id="regionKey">
+    <div class="region greater-antilles">Greater Antilles</div>
+    <div class="region lesser-antilles">Lesser Antilles</div>
+  </div>
+  <button id="startQuizButton">New Country</button>
+  <input type="text" id="stateInput" placeholder="Type the country name" disabled />
+  <button id="submitAnswerButton" disabled>Submit Answer</button>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const map = L.map('map').setView([18.2208, -66.5901], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const caribbeanCountries = [
+      { name: "Cuba", coords: [21.5218, -77.7812], region: "greater-antilles" },
+      { name: "Jamaica", coords: [18.1096, -77.2975], region: "greater-antilles" },
+      { name: "Haiti", coords: [18.9712, -72.2852], region: "greater-antilles" },
+      { name: "Dominican Republic", coords: [18.7357, -70.1627], region: "greater-antilles" },
+      { name: "Puerto Rico", coords: [18.2208, -66.5901], region: "greater-antilles" },
+      { name: "Barbados", coords: [13.1939, -59.5432], region: "lesser-antilles" },
+      { name: "Trinidad and Tobago", coords: [10.6918, -61.2225], region: "lesser-antilles" },
+      { name: "Saint Lucia", coords: [13.9094, -60.9789], region: "lesser-antilles" },
+      { name: "Grenada", coords: [12.1165, -61.679], region: "lesser-antilles" },
+      { name: "Antigua and Barbuda", coords: [17.0608, -61.7964], region: "lesser-antilles" },
+      { name: "Saint Kitts and Nevis", coords: [17.3578, -62.783], region: "lesser-antilles" },
+      { name: "Dominica", coords: [15.415, -61.371], region: "lesser-antilles" },
+      { name: "Saint Vincent and the Grenadines", coords: [13.2528, -61.1971], region: "lesser-antilles" }
+    ];
+
+    let remainingCountries = [...caribbeanCountries];
+    let currentCountry = null;
+
+    const regionElements = document.querySelectorAll('.region');
+
+    function highlightRegion(region) {
+      regionElements.forEach(el => {
+        el.classList.remove('active');
+        if (el.classList.contains(region)) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    document.getElementById('startQuizButton').addEventListener('click', () => {
+      if (remainingCountries.length === 0) {
+        alert("Quiz completed! You've gone through all the countries.");
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+      currentCountry = remainingCountries.splice(randomIndex, 1)[0];
+
+      map.setView(currentCountry.coords, 6);
+      L.marker(currentCountry.coords).addTo(map);
+
+      highlightRegion(currentCountry.region);
+
+      document.getElementById('stateInput').disabled = false;
+      document.getElementById('submitAnswerButton').disabled = false;
+    });
+
+    document.getElementById('submitAnswerButton').addEventListener('click', () => {
+      const userAnswer = document.getElementById('stateInput').value.trim();
+      if (userAnswer.toLowerCase() === currentCountry.name.toLowerCase()) {
+        alert("Correct!");
+      } else {
+        alert(`Wrong! The correct answer was ${currentCountry.name}.`);
+      }
+
+      document.getElementById('stateInput').value = '';
+      document.getElementById('stateInput').disabled = true;
+      document.getElementById('submitAnswerButton').disabled = true;
+
+      if (remainingCountries.length === 0) {
+        alert("Quiz completed! You've gone through all the countries.");
+      }
+    });
+  </script>
+</body>
+</html>

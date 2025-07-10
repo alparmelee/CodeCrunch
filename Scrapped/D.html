@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D Flip-Flop Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 300px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; text-align: center; }
+        input { margin: 5px; padding: 10px; font-size: 16px; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        .image-container { text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>D Flip-Flop Calculator</h2>
+    <label for="d">D (Data):</label>
+    <input type="number" id="d" min="0" max="1" value="0"><br>
+
+    <button onclick="calculate()">Calculate Q(t+1)</button>
+
+    <p>Q(t+1): <span id="qT1">0</span></p>
+    <p>State: <span id="state">Reset</span></p>
+</div>
+
+<div class="image-container">
+    <img src="https://cdn1.byjus.com/wp-content/uploads/2022/04/d-flip-flop.png" alt="D Flip-Flop Diagram" width="500">
+</div>
+
+<script>
+    function calculate() {
+        let D = parseInt(document.getElementById("d").value);
+        let qT1 = D;  // Q(t+1) is equal to D in a D flip-flop
+        let state;
+
+        // Determine state based on D input
+        if (D === 0) {
+            state = "Reset";
+        } else if (D === 1) {
+            state = "Set";
+        }
+
+        // Display results
+        document.getElementById("qT1").innerText = qT1;
+        document.getElementById("state").innerText = state;
+    }
+</script>
+
+</body>
+</html>
+

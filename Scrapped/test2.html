@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Test 2 (Chapters 2 & 3)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Styles (same as previous quiz) */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .question-container {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        label, .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+        select, input[type="text"], input[type="number"] {
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            margin-top: 0.25rem;
+            margin-bottom: 0.5rem;
+            margin-right: 0.5rem;
+            width: auto;
+            min-width: 80px;
+        }
+        /* Styling for the check/try again buttons */
+        .check-button {
+            background-color: #10b981; /* Emerald green background */
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+        .check-button:hover {
+            background-color: #059669; /* Darker green on hover */
+        }
+        /* Style for button when in 'Try Again' state */
+        .check-button[data-state='try-again'] {
+             background-color: #6b7280; /* Gray background for Try Again */
+        }
+         .check-button[data-state='try-again']:hover {
+             background-color: #4b5563; /* Darker gray on hover */
+        }
+
+        .feedback {
+            margin-left: 1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 0.25rem;
+            vertical-align: middle;
+        }
+        .correct {
+            color: #16a34a; /* Green */
+        }
+        .incorrect {
+            color: #dc2626; /* Red */
+        }
+        /* Specific styling for inline inputs/labels */
+        .inline-input-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        .inline-input-group .input-label {
+             margin-right: 0.5rem;
+             margin-bottom: 0;
+             cursor: default;
+        }
+        .inline-input-group input {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        /* Style for description text */
+        .description-text {
+            font-style: italic;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+         /* Style for tables */
+        .data-table {
+            width: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            display: block;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #d1d5db;
+            padding: 0.5rem;
+            text-align: center;
+        }
+         .data-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+         }
+         /* Input feedback borders */
+         input.correct-input, select.correct-input {
+             border-color: #16a34a !important; /* Use !important to override default */
+             background-color: #f0fdf4;
+         }
+         input.incorrect-input, select.incorrect-input {
+             border-color: #dc2626 !important; /* Use !important to override default */
+             background-color: #fef2f2;
+         }
+         /* Style for embedded image */
+         .question-image {
+            display: block;
+            margin: 1rem auto;
+            max-width: 80%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+         }
+
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-lg">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Discrete Math: Test 2 - Graphs and Permuations/Combinations</h1>
+
+        <div id="quiz-content">
+
+            <div class="question-container" id="q1-container" data-question-id="q1">
+                <p class="question-title">1. Graph Properties</p>
+                <div class="space-y-3">
+                    <div class="inline-input-group">
+                        <span class="input-label">a) The graph G₁ has 8 vertices, all of degree 4. How many edges does G₁ have?</span>
+                        <input type="number" name="q1a" min="0">
+                        <span class="feedback" data-feedback-for="q1a"></span>
+                    </div>
+                    <div class="inline-input-group">
+                        <span class="input-label">b) The graph G₂ has 6 vertices, all of degree k. Also, G₂ has 12 edges. What is k?</span>
+                        <input type="number" name="q1b" min="0">
+                         <span class="feedback" data-feedback-for="q1b"></span>
+                    </div>
+                    <div class="inline-input-group">
+                        <span class="input-label">c) The graph G₃ has v vertices, all of degree 8. Also, G₃ has 44 edges. What is v?</span>
+                        <input type="number" name="q1c" min="0">
+                        <span class="feedback" data-feedback-for="q1c"></span>
+                    </div>
+                </div>
+                <button class="check-button" data-question-id="q1" data-state="check">Check Question 1</button>
+            </div>
+
+            <div class="question-container" id="q2-container" data-question-id="q2">
+                <p class="question-title">2. Facebook Friends Graph</p>
+                <p class="description-text">Consider the table below, which shows whether or not eight people are friends on Facebook. Represent this situation as a graph where each vertex is the first letter of the name (A, B, C, D, E, F, G, H).</p>
+                <div class="overflow-x-auto mb-4">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th></th><th>Alan</th><th>Betty</th><th>Charles</th><th>Denise</th><th>Eric</th><th>Fiona</th><th>Gary</th><th>Helen</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><b>Alan</b></td><td></td><td></td><td>Y</td><td>Y</td><td></td><td>Y</td><td>Y</td><td></td></tr>
+                            <tr><td><b>Betty</b></td><td></td><td></td><td>Y</td><td>Y</td><td></td><td></td><td>Y</td><td></td></tr>
+                            <tr><td><b>Charles</b></td><td>Y</td><td>Y</td><td></td><td>Y</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td><b>Denise</b></td><td>Y</td><td>Y</td><td>Y</td><td></td><td>Y</td><td>Y</td><td>Y</td><td>Y</td></tr>
+                            <tr><td><b>Eric</b></td><td></td><td></td><td></td><td>Y</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td><b>Fiona</b></td><td>Y</td><td></td><td></td><td>Y</td><td></td><td></td><td></td><td>Y</td></tr>
+                            <tr><td><b>Gary</b></td><td>Y</td><td>Y</td><td></td><td>Y</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td><b>Helen</b></td><td></td><td></td><td></td><td>Y</td><td></td><td>Y</td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="space-y-3">
+                   <div class="inline-input-group">
+                        <span class="input-label">a) How many edges are in this graph?</span>
+                        <input type="number" name="q2a" min="0">
+                        <span class="feedback" data-feedback-for="q2a"></span>
+                    </div>
+                    <div class="inline-input-group">
+                        <span class="input-label">b) What is the degree of vertex D (Denise)?</span>
+                        <input type="number" name="q2b" min="0">
+                         <span class="feedback" data-feedback-for="q2b"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">c) How many vertices are adjacent to vertex B (Betty)?</span>
+                        <input type="number" name="q2c" min="0">
+                         <span class="feedback" data-feedback-for="q2c"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">d) How many vertices are in our graph?</span>
+                        <input type="number" name="q2d" min="0">
+                         <span class="feedback" data-feedback-for="q2d"></span>
+                    </div>
+                </div>
+                 <button class="check-button" data-question-id="q2" data-state="check">Check Question 2</button>
+            </div>
+
+             <div class="question-container" id="q3-container" data-question-id="q3">
+                <p class="question-title">3. Tree and Graph Properties</p>
+                <div class="space-y-3">
+                    <div class="inline-input-group">
+                        <span class="input-label">a) Every tree is bipartite.</span>
+                        <select name="q3a"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q3a"></span>
+                    </div>
+                    <div class="inline-input-group">
+                        <span class="input-label">b) Every graph contains a spanning tree as a subgraph.</span>
+                         <select name="q3b"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q3b"></span>
+                    </div>
+                    <div class="inline-input-group">
+                        <span class="input-label">c) If a graph has exactly one more vertex than it has edges, then the graph is a tree.</span>
+                        <select name="q3c"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q3c"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">d) Every forest is a tree.</span>
+                        <select name="q3d"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q3d"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">e) Every connected graph contains a spanning tree as a subgraph.</span>
+                         <select name="q3e"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q3e"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">f) If a graph has two more vertices than edges, then it is not connected.</span>
+                         <select name="q3f"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q3f"></span>
+                    </div>
+                </div>
+                 <button class="check-button" data-question-id="q3" data-state="check">Check Question 3</button>
+            </div>
+
+            <div class="question-container" id="q4-container" data-question-id="q4">
+                <p class="question-title">4. Which of the following degree sequences could be the degree sequence of a tree?</p>
+                <div class="space-y-2">
+                    <label><input type="radio" name="q4" value="A"> (6,5,4,4,2,2,2)</label>
+                    <label><input type="radio" name="q4" value="B"> (2,2,2,2,1,1,1,1)</label>
+                    <label><input type="radio" name="q4" value="C"> (6,5,4,4,4,3,2,2,2)</label>
+                    <label><input type="radio" name="q4" value="D"> (5,2,2,2,1,1,1,1,1)</label>
+                    <label><input type="radio" name="q4" value="E"> (6,4,2,2,2,2,1,1,1,1)</label>
+                    <span class="feedback" data-feedback-for="q4"></span>
+                </div>
+                 <button class="check-button" data-question-id="q4" data-state="check">Check Question 4</button>
+            </div>
+
+            <div class="question-container" id="q5-container" data-question-id="q5">
+                 <p class="question-title">5. Suppose you have a graph with an Euler trail written as a list of edges. What can you conclude about a vertex that appears exactly 3 times in the list? (Select all that could be true)</p>
+                 <div class="space-y-2">
+                    <label><input type="checkbox" name="q5" value="A"> The vertex could appear at the start and end of the Euler trail.</label>
+                    <label><input type="checkbox" name="q5" value="B"> The vertex could appear only in the middle of the Euler trail.</label>
+                    <label><input type="checkbox" name="q5" value="C"> The vertex cannot appear in the Euler trail at all.</label>
+                    <label><input type="checkbox" name="q5" value="D"> There must be another vertex with odd degree that also appears at the start or end of the Euler trail.</label>
+                    <label><input type="checkbox" name="q5" value="E"> The vertex could appear at the start or end of the Euler trail, but not both.</label>
+                    <span class="feedback" data-feedback-for="q5"></span>
+                 </div>
+                  <button class="check-button" data-question-id="q5" data-state="check">Check Question 5</button>
+            </div>
+
+             <div class="question-container" id="q6-container" data-question-id="q6">
+                <p class="question-title">6. Euler Trail Properties</p>
+                 <img src="https://i.ibb.co/qMjsRfz8/question-6-image.png" alt="Graph with vertices a,b,c,d,e,f. Edges: (a,b), (b,c), (b,d), (b,e), (c,e), (d,e), (e,f)" class="question-image">
+                 <p class="mb-4 mt-4">For the graph shown above, provide its degree and the number of times it appears in *any* valid Euler trail.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+                     <div class="inline-input-group"><span class="input-label w-20">Degree a:</span> <input type="number" name="q6_deg_a" min="0"> <span class="feedback" data-feedback-for="q6_deg_a"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Times listed a:</span> <input type="number" name="q6_times_a" min="0"> <span class="feedback" data-feedback-for="q6_times_a"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Degree b:</span> <input type="number" name="q6_deg_b" min="0"> <span class="feedback" data-feedback-for="q6_deg_b"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Times listed b:</span> <input type="number" name="q6_times_b" min="0"> <span class="feedback" data-feedback-for="q6_times_b"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Degree c:</span> <input type="number" name="q6_deg_c" min="0"> <span class="feedback" data-feedback-for="q6_deg_c"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Times listed c:</span> <input type="number" name="q6_times_c" min="0"> <span class="feedback" data-feedback-for="q6_times_c"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Degree d:</span> <input type="number" name="q6_deg_d" min="0"> <span class="feedback" data-feedback-for="q6_deg_d"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Times listed d:</span> <input type="number" name="q6_times_d" min="0"> <span class="feedback" data-feedback-for="q6_times_d"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Degree e:</span> <input type="number" name="q6_deg_e" min="0"> <span class="feedback" data-feedback-for="q6_deg_e"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Times listed e:</span> <input type="number" name="q6_times_e" min="0"> <span class="feedback" data-feedback-for="q6_times_e"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Degree f:</span> <input type="number" name="q6_deg_f" min="0"> <span class="feedback" data-feedback-for="q6_deg_f"></span></div>
+                     <div class="inline-input-group"><span class="input-label w-20">Times listed f:</span> <input type="number" name="q6_times_f" min="0"> <span class="feedback" data-feedback-for="q6_times_f"></span></div>
+                 </div>
+                  <button class="check-button" data-question-id="q6" data-state="check">Check Question 6</button>
+            </div>
+
+             <div class="question-container" id="q7-container" data-question-id="q7">
+                <p class="question-title">7. Hamilton and Euler Circuits/Paths</p>
+                 <div class="space-y-3">
+                    <div class="inline-input-group">
+                        <span class="input-label">a) A complete graph has an Euler circuit.</span>
+                        <select name="q7a"> <option value="">Select...</option> <option value="Always true">Always true</option> <option value="Sometimes true">Sometimes true</option> <option value="Never true">Never true</option> </select>
+                        <span class="feedback" data-feedback-for="q7a"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">b) Every graph with a Hamilton circuit has an Euler circuit.</span>
+                        <select name="q7b"> <option value="">Select...</option> <option value="True">True</option> <option value="False">False</option> </select>
+                        <span class="feedback" data-feedback-for="q7b"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">c) There is a graph in which every vertex has odd degree that has a Hamilton circuit.</span>
+                         <select name="q7c"> <option value="">Select...</option> <option value="Always true">Always true</option> <option value="Sometimes true">Sometimes true</option> <option value="Never true">Never true</option> </select>
+                        <span class="feedback" data-feedback-for="q7c"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">d) A graph with a Hamilton circuit has a Hamilton path.</span>
+                         <select name="q7d"> <option value="">Select...</option> <option value="Always true">Always true</option> <option value="Sometimes true">Sometimes true</option> <option value="Never true">Never true</option> </select>
+                        <span class="feedback" data-feedback-for="q7d"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">e) If a graph has an Euler path but not an Euler circuit, then every Euler path must start at a vertex of ____ degree.</span>
+                        <select name="q7e"> <option value="">Select...</option> <option value="odd">odd</option> <option value="even">even</option> <option value="any">any</option> </select>
+                        <span class="feedback" data-feedback-for="q7e"></span>
+                    </div>
+                 </div>
+                  <button class="check-button" data-question-id="q7" data-state="check">Check Question 7</button>
+            </div>
+
+             <div class="question-container" id="q8-container" data-question-id="q8">
+                <p class="question-title">8. Sports Activities Survey</p>
+                <p class="description-text">A group of 100 college students were asked about their sports activities. Of those surveyed, 29 students jog (J), 23 swim (S), and 30 gym workout (W). Additionally, 13 jog and swim, 11 jog and work out, and 14 swim and workout. There are 8 students who do all three.</p>
+                <div class="space-y-3">
+                     <div class="inline-input-group">
+                        <span class="input-label">a) How many students surveyed participated in at least one sports activity? (|J ∪ S ∪ W|)</span>
+                        <input type="number" name="q8a" min="0">
+                        <span class="feedback" data-feedback-for="q8a"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">b) How many students indicated that they did not participate in any sports activity?</span>
+                        <input type="number" name="q8b" min="0">
+                        <span class="feedback" data-feedback-for="q8b"></span>
+                    </div>
+                </div>
+                 <button class="check-button" data-question-id="q8" data-state="check">Check Question 8</button>
+            </div>
+
+            <div class="question-container" id="q9-container" data-question-id="q9">
+                <p class="question-title">9. Set Cardinality</p>
+                 <p class="description-text">Suppose you have sets A and B, integers m and p, and |A| = m and |B| = p where p < m.</p>
+                 <p class="mb-4">What is the largest possible value of |A ∩ B|?</p>
+                <div class="space-y-2">
+                    <label><input type="radio" name="q9" value="A"> 0</label>
+                    <label><input type="radio" name="q9" value="B"> m</label>
+                    <label><input type="radio" name="q9" value="C"> m + p</label>
+                    <label><input type="radio" name="q9" value="D"> p</label>
+                    <label><input type="radio" name="q9" value="E"> cannot be determined</label>
+                    <span class="feedback" data-feedback-for="q9"></span>
+                </div>
+                 <button class="check-button" data-question-id="q9" data-state="check">Check Question 9</button>
+            </div>
+
+            <div class="question-container" id="q10-container" data-question-id="q10">
+                <p class="question-title">10. Set Operations</p>
+                 <p class="description-text">Let A = {1, 2, 3, 4, 5}, B = {3, 6, 9, 12}, C = {2, 4, 7}.<br>List elements in ascending order separated by commas with no spaces (e.g., 1,2,3).</p>
+                 <div class="space-y-3">
+                    <div class="inline-input-group">
+                        <span class="input-label w-24">A ∪ B = {</span>
+                        <input type="text" name="q10a" class="flex-grow" placeholder="e.g., 1,2,3">
+                        <span class="input-label">}</span>
+                        <span class="feedback" data-feedback-for="q10a"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label w-24">A ∩ B = {</span>
+                        <input type="text" name="q10b" class="flex-grow" placeholder="e.g., 1,2,3">
+                         <span class="input-label">}</span>
+                        <span class="feedback" data-feedback-for="q10b"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label w-24">A \ B = {</span>
+                        <input type="text" name="q10c" class="flex-grow" placeholder="e.g., 1,2,3">
+                         <span class="input-label">}</span>
+                        <span class="feedback" data-feedback-for="q10c"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label w-24">(A ∩ B) ∪ C = {</span>
+                        <input type="text" name="q10d" class="flex-grow" placeholder="e.g., 1,2,3">
+                         <span class="input-label">}</span>
+                        <span class="feedback" data-feedback-for="q10d"></span>
+                    </div>
+                 </div>
+                  <button class="check-button" data-question-id="q10" data-state="check">Check Question 10</button>
+            </div>
+
+             <div class="question-container" id="q11-container" data-question-id="q11">
+                <p class="question-title">11. Counting "Words"</p>
+                 <p class="mb-4">In how many ways can you form a 4 letter "word" from the first 9 letters of the alphabet if repeated letters are allowed?</p>
+                 <div class="space-y-2">
+                    <label><input type="radio" name="q11" value="A"> 126</label>
+                    <label><input type="radio" name="q11" value="B"> 262,144</label>
+                    <label><input type="radio" name="q11" value="C"> 6,561</label>
+                    <label><input type="radio" name="q11" value="D"> 3,024</label>
+                    <span class="feedback" data-feedback-for="q11"></span>
+                </div>
+                 <button class="check-button" data-question-id="q11" data-state="check">Check Question 11</button>
+            </div>
+
+            <div class="question-container" id="q12-container" data-question-id="q12">
+                 <p class="question-title">12. Bit Strings</p>
+                 <div class="inline-input-group">
+                     <span class="input-label">How many 10-bit strings of weight 6 start with either 11 or 00?</span>
+                     <input type="number" name="q12" min="0">
+                     <span class="feedback" data-feedback-for="q12"></span>
+                 </div>
+                  <button class="check-button" data-question-id="q12" data-state="check">Check Question 12</button>
+            </div>
+
+             <div class="question-container" id="q13-container" data-question-id="q13">
+                <p class="question-title">13. Meal Combinations</p>
+                <p class="description-text">Your menu consists of 11 appetizers, 5 entrées, and 8 desserts.</p>
+                <p class="mb-4">How many different meals can you make if you must have an appetizer, entrée, and dessert?</p>
+                 <div class="space-y-2">
+                    <label><input type="radio" name="q13" value="A"> C(11,1) + C(5,1) + C(8,1)</label>
+                    <label><input type="radio" name="q13" value="B"> P(24,3)</label>
+                    <label><input type="radio" name="q13" value="C"> 11 * 5 * 8</label>
+                    <label><input type="radio" name="q13" value="D"> C(24,3)</label>
+                    <span class="feedback" data-feedback-for="q13"></span>
+                </div>
+                 <button class="check-button" data-question-id="q13" data-state="check">Check Question 13</button>
+            </div>
+
+             <div class="question-container" id="q14-container" data-question-id="q14">
+                <p class="question-title">14. Arranging Books</p>
+                 <p class="description-text">You have 28 unique books and a shelf that holds 16.</p>
+                 <p class="mb-4">How many ways can you arrange 16 of the 28 books on the shelf if you insist they must be arranged alphabetically by author?</p>
+                 <div class="space-y-2">
+                    <label><input type="radio" name="q14" value="A"> C(28, 16)</label>
+                    <label><input type="radio" name="q14" value="B"> 16!</label>
+                    <label><input type="radio" name="q14" value="C"> 28! / 12!</label>
+                    <label><input type="radio" name="q14" value="D"> P(28, 16)</label>
+                    <span class="feedback" data-feedback-for="q14"></span>
+                </div>
+                 <button class="check-button" data-question-id="q14" data-state="check">Check Question 14</button>
+            </div>
+
+             <div class="question-container" id="q15-container" data-question-id="q15">
+                <p class="question-title">15. Probability (Dice and Coin)</p>
+                 <div class="inline-input-group">
+                    <span class="input-label">What is the probability of getting an even number when rolling a 6-sided die AND a heads when flipping a coin? (Enter as fraction e.g., 1/4 or decimal e.g., 0.25)</span>
+                    <input type="text" name="q15">
+                    <span class="feedback" data-feedback-for="q15"></span>
+                 </div>
+                  <button class="check-button" data-question-id="q15" data-state="check">Check Question 15</button>
+            </div>
+
+             <div class="question-container" id="q16-container" data-question-id="q16">
+                <p class="question-title">16. Probability (Two Dice)</p>
+                 <p class="description-text">Suppose you roll two dice (one red and one green).</p>
+                 <div class="space-y-3">
+                     <div class="inline-input-group">
+                        <span class="input-label">a) How many total outcomes are there?</span>
+                        <input type="number" name="q16a" min="0">
+                        <span class="feedback" data-feedback-for="q16a"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">b) Of those outcomes, how many have different numbers on the two dice?</span>
+                        <input type="number" name="q16b" min="0">
+                        <span class="feedback" data-feedback-for="q16b"></span>
+                    </div>
+                     <div class="inline-input-group">
+                        <span class="input-label">c) What is the probability that the two dice will show the same numbers? (Enter as fraction or decimal)</span>
+                        <input type="text" name="q16c">
+                        <span class="feedback" data-feedback-for="q16c"></span>
+                    </div>
+                </div>
+                 <button class="check-button" data-question-id="q16" data-state="check">Check Question 16</button>
+            </div>
+
+             <div class="question-container" id="q17-container" data-question-id="q17">
+                <p class="question-title">17. Factorial Calculation</p>
+                 <div class="inline-input-group">
+                    <span class="input-label">What is 3025! / 3024! ?</span>
+                    <input type="number" name="q17" min="0">
+                    <span class="feedback" data-feedback-for="q17"></span>
+                 </div>
+                  <button class="check-button" data-question-id="q17" data-state="check">Check Question 17</button>
+            </div>
+
+        </div> </div>
+
+    <script>
+        // --- Quiz Data ---
+        const correctAnswers = {
+            // Q1
+            q1a: { answer: '16' }, q1b: { answer: '4' }, q1c: { answer: '11' },
+            // Q2
+            q2a: { answer: '13' }, q2b: { answer: '7' }, q2c: { answer: '3' }, q2d: { answer: '8' },
+            // Q3
+            q3a: { answer: 'True' }, q3b: { answer: 'False' }, q3c: { answer: 'False' }, q3d: { answer: 'False' }, q3e: { answer: 'True' }, q3f: { answer: 'True' },
+            // Q4
+            q4: { answer: 'D' },
+            // Q5
+            q5: { answer: ['D', 'E'] },
+            // Q6
+            q6_deg_a: { answer: '1' }, q6_times_a: { answer: '1' }, q6_deg_b: { answer: '4' }, q6_times_b: { answer: '4' }, q6_deg_c: { answer: '2' }, q6_times_c: { answer: '2' }, q6_deg_d: { answer: '2' }, q6_times_d: { answer: '2' }, q6_deg_e: { answer: '4' }, q6_times_e: { answer: '4' }, q6_deg_f: { answer: '1' }, q6_times_f: { answer: '1' },
+            // Q7
+            q7a: { answer: 'Sometimes true' }, q7b: { answer: 'False' }, q7c: { answer: 'Always true' }, q7d: { answer: 'Always true' }, q7e: { answer: 'odd' },
+            // Q8
+            q8a: { answer: '52' }, q8b: { answer: '48' },
+            // Q9
+            q9: { answer: 'D' },
+            // Q10
+            q10a: { answer: '1,2,3,4,5,6,9,12' }, q10b: { answer: '3' }, q10c: { answer: '1,2,4,5' }, q10d: { answer: '2,3,4,7' },
+            // Q11
+            q11: { answer: 'C' },
+            // Q12
+            q12: { answer: '98' },
+            // Q13
+            q13: { answer: 'C' },
+            // Q14
+            q14: { answer: 'A' },
+            // Q15
+            q15: { answer: ['1/4', '0.25', '.25'] },
+            // Q16
+            q16a: { answer: '36' }, q16b: { answer: '30' }, q16c: { answer: ['1/6', '0.167', '.167', '0.17', '.17'] },
+            // Q17
+            q17: { answer: '3025' },
+        };
+
+        // --- Event Listener Setup ---
+        document.querySelectorAll('.check-button').forEach(button => {
+            button.addEventListener('click', handleButtonClick); // Changed handler name
+        });
+
+        // --- Main Button Click Handler ---
+        function handleButtonClick(event) {
+            const button = event.target;
+            const currentState = button.dataset.state; // 'check' or 'try-again'
+            const questionId = button.dataset.questionId;
+            const questionContainer = document.getElementById(`${questionId}-container`);
+
+            if (!questionContainer) return;
+
+            if (currentState === 'check') {
+                // --- Check the Answer ---
+                checkAnswer(questionContainer, questionId); // Call the checking logic
+                // --- Update Button State ---
+                button.textContent = 'Try Again';
+                button.dataset.state = 'try-again';
+            } else if (currentState === 'try-again') {
+                // --- Reset the Question ---
+                resetQuestion(questionContainer); // Call the reset logic
+                // --- Update Button State ---
+                button.textContent = `Check Question ${questionId.substring(1)}`; // e.g., Check Question 1
+                button.dataset.state = 'check';
+            }
+        }
+
+        // --- Answer Checking Logic (Separated Function) ---
+         function checkAnswer(questionContainer, questionId) {
+             // Find all input/select elements within the container for this question
+            const inputs = questionContainer.querySelectorAll('input[type="number"], input[type="text"], input[type="radio"], input[type="checkbox"], select');
+
+            // Determine the type of question and call appropriate checker
+            // (This part remains mostly the same as before)
+            if (questionId === 'q1' || questionId === 'q2' || questionId === 'q8' || questionId === 'q16' || questionId === 'q17' || questionId === 'q12') {
+                 checkMultiNumberText(questionContainer, questionId);
+            } else if (questionId === 'q6') {
+                 checkMultiNumberText(questionContainer, questionId);
+            } else if (questionId === 'q3' || questionId === 'q7') {
+                 checkMultiSelect(questionContainer, questionId);
+            } else if (questionId === 'q4' || questionId === 'q9' || questionId === 'q11' || questionId === 'q13' || questionId === 'q14') {
+                 checkSingleRadio(questionContainer, questionId);
+            } else if (questionId === 'q5') {
+                 checkCheckbox(questionContainer, questionId); // Pass container
+            } else if (questionId === 'q10') {
+                 checkSetInputs(questionContainer, questionId); // Pass container
+            } else if (questionId === 'q15') {
+                 checkFractionDecimalInput(questionContainer, 'q15');
+            }
+             else {
+                console.warn("Unhandled question ID:", questionId);
+            }
+             // DO NOT disable inputs here anymore
+        }
+
+        // --- Reset Question Logic ---
+        function resetQuestion(questionContainer) {
+            const inputs = questionContainer.querySelectorAll('input[type="number"], input[type="text"], input[type="radio"], input[type="checkbox"], select');
+            const feedbackSpans = questionContainer.querySelectorAll('.feedback');
+
+            // Clear input values and styling
+            inputs.forEach(input => {
+                // Reset value based on type
+                if (input.type === 'text' || input.type === 'number') {
+                    input.value = '';
+                } else if (input.type === 'radio' || input.type === 'checkbox') {
+                    input.checked = false;
+                } else if (input.tagName === 'SELECT') {
+                    input.selectedIndex = 0; // Reset to the first option (usually the placeholder)
+                }
+                // Remove styling classes
+                input.classList.remove('correct-input', 'incorrect-input');
+                input.removeAttribute('title'); // Remove tooltip title if any
+            });
+
+            // Clear feedback spans
+            feedbackSpans.forEach(span => {
+                span.textContent = '';
+                span.className = 'feedback'; // Reset class
+            });
+        }
+
+
+        // --- Helper Functions for Checking Different Input Types ---
+        // (These functions now primarily focus on checking and applying feedback/styling)
+        // (They no longer disable inputs)
+
+        function checkMultiNumberText(container, questionId) {
+            const inputs = container.querySelectorAll(`input[type="number"], input[type="text"]`);
+            inputs.forEach(input => {
+                const inputName = input.name;
+                const feedbackSpan = container.querySelector(`[data-feedback-for="${inputName}"]`);
+                const userAnswer = input.value.trim();
+                if (!feedbackSpan) return;
+                const correctAnswerData = correctAnswers[inputName];
+                 if (!correctAnswerData) {
+                     console.error(`Correct answer not found for ${inputName}`);
+                     feedbackSpan.textContent = 'Error: Answer key missing.';
+                     feedbackSpan.className = 'feedback incorrect';
+                     input.classList.remove('correct-input'); // Ensure correct class is removed
+                     input.classList.add('incorrect-input');
+                     return;
+                 }
+                 if (inputName === 'q16c') {
+                     checkFractionDecimalInput(container, 'q16c', input, feedbackSpan);
+                     return;
+                 }
+                 const correctAnswer = correctAnswerData.answer;
+                 if (userAnswer === correctAnswer) {
+                    feedbackSpan.textContent = '✓ Correct';
+                    feedbackSpan.className = 'feedback correct';
+                    input.classList.remove('incorrect-input'); // Ensure incorrect class is removed
+                    input.classList.add('correct-input');
+                 } else {
+                    feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`;
+                    feedbackSpan.className = 'feedback incorrect';
+                    input.classList.remove('correct-input'); // Ensure correct class is removed
+                    input.classList.add('incorrect-input');
+                 }
+            });
+        }
+
+        function checkMultiSelect(container, questionId) {
+             const selects = container.querySelectorAll('select');
+             selects.forEach(selectElement => {
+                const selectName = selectElement.name;
+                const feedbackSpan = container.querySelector(`[data-feedback-for="${selectName}"]`);
+                if (!selectElement || !feedbackSpan) return;
+                const userAnswer = selectElement.value;
+                 const correctAnswerData = correctAnswers[selectName];
+                 if (!correctAnswerData) {
+                     console.error(`Correct answer not found for ${selectName}`);
+                     feedbackSpan.textContent = 'Error: Answer key missing.';
+                     feedbackSpan.className = 'feedback incorrect';
+                     selectElement.classList.remove('correct-input');
+                     selectElement.classList.add('incorrect-input');
+                     return;
+                 }
+                 const correctAnswer = correctAnswerData.answer;
+                 if (userAnswer !== '') {
+                    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                        feedbackSpan.textContent = '✓ Correct';
+                        feedbackSpan.className = 'feedback correct';
+                        selectElement.classList.remove('incorrect-input');
+                        selectElement.classList.add('correct-input');
+                    } else {
+                        feedbackSpan.textContent = `✗ Incorrect (Correct: ${correctAnswer})`;
+                        feedbackSpan.className = 'feedback incorrect';
+                        selectElement.classList.remove('correct-input');
+                        selectElement.classList.add('incorrect-input');
+                    }
+                } else {
+                    feedbackSpan.textContent = `✗ Unanswered (Correct: ${correctAnswer})`;
+                    feedbackSpan.className = 'feedback incorrect';
+                    selectElement.classList.remove('correct-input');
+                    selectElement.classList.add('incorrect-input');
+                }
+            });
+        }
+
+        function checkSingleRadio(container, baseName) {
+            const radios = container.querySelectorAll(`input[type="radio"][name="${baseName}"]`);
+            const feedbackSpan = container.querySelector(`[data-feedback-for="${baseName}"]`);
+            let userAnswer = null;
+            radios.forEach(radio => { if (radio.checked) { userAnswer = radio.value; } });
+            if (!feedbackSpan) return;
+             const correctAnswerData = correctAnswers[baseName];
+             if (!correctAnswerData) {
+                 console.error(`Correct answer not found for ${baseName}`);
+                 feedbackSpan.textContent = 'Error: Answer key missing.';
+                 feedbackSpan.className = 'feedback incorrect';
+                 return;
+             }
+             const correctAnswer = correctAnswerData.answer;
+            if (userAnswer !== null) {
+                if (userAnswer === correctAnswer) {
+                    feedbackSpan.textContent = '✓ Correct';
+                    feedbackSpan.className = 'feedback correct';
+                } else {
+                    feedbackSpan.textContent = `✗ Incorrect (Correct Option: ${correctAnswer})`;
+                    feedbackSpan.className = 'feedback incorrect';
+                }
+            } else {
+                feedbackSpan.textContent = `✗ Unanswered (Correct Option: ${correctAnswer})`;
+                feedbackSpan.className = 'feedback incorrect';
+            }
+             // No styling on radio buttons themselves
+        }
+
+        function checkCheckbox(container, baseName) {
+            const checkboxes = container.querySelectorAll(`input[type="checkbox"][name="${baseName}"]`);
+            const feedbackSpan = container.querySelector(`[data-feedback-for="${baseName}"]`);
+            const userAnswers = [];
+            checkboxes.forEach(checkbox => { if (checkbox.checked) { userAnswers.push(checkbox.value); } });
+             if (!feedbackSpan) return;
+             const correctAnswerData = correctAnswers[baseName];
+             if (!correctAnswerData || !Array.isArray(correctAnswerData.answer)) {
+                 console.error(`Correct answer (array) not found for ${baseName}`);
+                 feedbackSpan.textContent = 'Error: Answer key missing.';
+                 feedbackSpan.className = 'feedback incorrect';
+                 return;
+             }
+             const correctAnswersArray = correctAnswerData.answer.sort();
+             userAnswers.sort();
+            let isCorrect = userAnswers.length === correctAnswersArray.length && userAnswers.every((val, index) => val === correctAnswersArray[index]);
+             if (isCorrect) {
+                feedbackSpan.textContent = '✓ Correct';
+                feedbackSpan.className = 'feedback correct';
+            } else {
+                 feedbackSpan.textContent = `✗ Incorrect (Correct Options: ${correctAnswersArray.join(', ')})`;
+                 feedbackSpan.className = 'feedback incorrect';
+            }
+             // No styling on checkboxes themselves
+        }
+
+        function checkSetInputs(container, questionId) {
+            const inputs = container.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                const inputName = input.name;
+                const feedbackSpan = container.querySelector(`[data-feedback-for="${inputName}"]`);
+                const userAnswerRaw = input.value.trim();
+                const userAnswerSet = userAnswerRaw.split(',')
+                                               .map(s => s.trim())
+                                               .filter(s => s !== '')
+                                               .map(Number)
+                                               .sort((a, b) => a - b);
+                if (!feedbackSpan) return;
+                const correctAnswerData = correctAnswers[inputName];
+                 if (!correctAnswerData) {
+                     console.error(`Correct answer not found for ${inputName}`);
+                     feedbackSpan.textContent = 'Error: Answer key missing.';
+                     feedbackSpan.className = 'feedback incorrect';
+                     input.classList.remove('correct-input');
+                     input.classList.add('incorrect-input');
+                     return;
+                 }
+                 const correctAnswerArray = correctAnswerData.answer.split(',').map(Number).sort((a, b) => a - b);
+                 const isCorrect = userAnswerSet.length === correctAnswerArray.length && userAnswerSet.every((val, index) => val === correctAnswerArray[index]);
+                 if (isCorrect) {
+                    feedbackSpan.textContent = '✓ Correct';
+                    feedbackSpan.className = 'feedback correct';
+                    input.classList.remove('incorrect-input');
+                    input.classList.add('correct-input');
+                 } else {
+                    feedbackSpan.textContent = `✗ Incorrect (Correct: {${correctAnswerData.answer}})`;
+                    feedbackSpan.className = 'feedback incorrect';
+                    input.classList.remove('correct-input');
+                    input.classList.add('incorrect-input');
+                 }
+            });
+        }
+
+        function checkFractionDecimalInput(container, inputName, inputElement = null, feedbackSpanElement = null) {
+            const input = inputElement || container.querySelector(`input[name="${inputName}"]`);
+            const feedbackSpan = feedbackSpanElement || container.querySelector(`[data-feedback-for="${inputName}"]`);
+            const userAnswer = input.value.trim();
+            if (!input || !feedbackSpan) return;
+            const correctAnswerData = correctAnswers[inputName];
+            if (!correctAnswerData || !Array.isArray(correctAnswerData.answer)) {
+                console.error(`Correct answer (array) not found for ${inputName}`);
+                feedbackSpan.textContent = 'Error: Answer key missing.';
+                feedbackSpan.className = 'feedback incorrect';
+                input.classList.remove('correct-input');
+                input.classList.add('incorrect-input');
+                return;
+            }
+            const validAnswers = correctAnswerData.answer;
+            let isCorrect = false;
+            if (validAnswers.includes(userAnswer)) { isCorrect = true; }
+            else {
+                try {
+                    if (userAnswer.includes('/')) {
+                        const parts = userAnswer.split('/');
+                        if (parts.length === 2) {
+                            const num = parseFloat(parts[0]); const den = parseFloat(parts[1]);
+                            if (!isNaN(num) && !isNaN(den) && den !== 0) {
+                                const userDecimal = num / den;
+                                if (validAnswers.some(ans => !isNaN(parseFloat(ans)) && Math.abs(parseFloat(ans) - userDecimal) < 0.001)) { isCorrect = true; }
+                            }
+                        }
+                    } else if (!isNaN(parseFloat(userAnswer))) {
+                         const userDecimal = parseFloat(userAnswer);
+                          if (validAnswers.some(ans => {
+                                if (ans.includes('/')) {
+                                     const parts = ans.split('/');
+                                     if (parts.length === 2) {
+                                         const num = parseFloat(parts[0]); const den = parseFloat(parts[1]);
+                                         return !isNaN(num) && !isNaN(den) && den !== 0 && Math.abs((num / den) - userDecimal) < 0.001;
+                                     }
+                                } return false;
+                          })) { isCorrect = true; }
+                    }
+                } catch (e) { /* Ignore conversion errors */ }
+            }
+            if (isCorrect) {
+                feedbackSpan.textContent = '✓ Correct';
+                feedbackSpan.className = 'feedback correct';
+                input.classList.remove('incorrect-input');
+                input.classList.add('correct-input');
+            } else {
+                feedbackSpan.textContent = `✗ Incorrect (Correct: ${validAnswers[0]})`;
+                feedbackSpan.className = 'feedback incorrect';
+                input.classList.remove('correct-input');
+                input.classList.add('incorrect-input');
+            }
+        }
+
+    </script>
+
+</body>
+</html>

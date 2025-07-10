@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decimal to Tiny IEEE Floating-Point 8-bit Mantissa Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            width: 400px;
+            margin: 0 auto;
+        }
+        input, button {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .result {
+            background-color: #f4f4f4;
+            padding: 10px;
+        }
+        .label {
+            font-weight: bold;
+        }
+        .steps {
+            margin-top: 10px;
+            background-color: #e0f7fa;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Decimal to Tiny IEEE Floating-Point 8-bit Mantissa Calculator</h1>
+        <input type="number" id="decimalInput" placeholder="Enter a decimal number" />
+        <button onclick="calculateMantissa()">Calculate Mantissa</button>
+        
+        <div class="result">
+            <h3>Results:</h3>
+            <p><span class="label">Tiny IEEE Mantissa (8 bits):</span> <span id="mantissaOutput"></span></p>
+        </div>
+
+        <div class="steps">
+            <h3>Step-by-Step Calculation:</h3>
+            <pre id="stepsOutput"></pre>
+        </div>
+    </div>
+
+    <script>
+        function calculateMantissa() {
+            // Get the decimal input
+            const decimalInput = parseFloat(document.getElementById('decimalInput').value);
+            if (isNaN(decimalInput)) {
+                alert("Please enter a valid decimal number.");
+                return;
+            }
+
+            // Step-by-step breakdown
+            let steps = [];
+
+            // Normalize the value
+            const sign = decimalInput >= 0 ? 0 : 1;
+            const absValue = Math.abs(decimalInput);
+            steps.push(`1. Absolute value: ${absValue}`);
+
+            // Calculate the exponent
+            let exponent = Math.floor(Math.log2(absValue));
+            steps.push(`2. Exponent: ${exponent} (calculated as floor(log2(${absValue})))`);
+
+            // Calculate the mantissa value
+            let mantissaValue = absValue / Math.pow(2, exponent);
+            steps.push(`3. Mantissa value after normalization: ${mantissaValue}`);
+
+            // Subtract the leading 1 (implicit in normalized form)
+            mantissaValue -= 1;
+            steps.push(`4. Mantissa value after subtracting 1: ${mantissaValue}`);
+
+            // Calculate the 8-bit mantissa
+            let mantissa = '';
+            for (let i = 0; i < 8; i++) { // Limiting to 8 bits for mantissa
+                mantissaValue *= 2;
+                if (mantissaValue >= 1) {
+                    mantissa += '1';
+                    mantissaValue -= 1;
+                } else {
+                    mantissa += '0';
+                }
+            }
+            steps.push(`5. 8-bit mantissa: ${mantissa}`);
+
+            // Display the 8-bit mantissa and the steps
+            document.getElementById('mantissaOutput').textContent = mantissa;
+            document.getElementById('stepsOutput').textContent = steps.join('\n');
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter1 Intro-to Networking</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .search-container {
+            margin: 20px auto;
+            max-width: 600px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+            color: #777;
+            font-size: 1.2rem;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        .box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .box-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        .box h3 {
+            margin: 0 0 10px 0;
+            color: #2980b9;
+        }
+        #output {
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            display: none;
+            background-color: white;
+            text-align: left;
+        }
+        .visualization {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .mac-byte, .ip-octet {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin: 0 3px;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            font-family: monospace;
+        }
+        .definition {
+            background-color: #f5f9fc;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .definition.highlight {
+            background-color: #fffde7;
+            border-left-color: #fbc02d;
+        }
+        .definition-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            min-width: 28px;
+            text-align: center;
+        }
+        .definition-content {
+            flex: 1;
+        }
+        .term {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .category-title {
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e1e8ed;
+            color: #2c3e50;
+        }
+        .category-container {
+            margin-bottom: 30px;
+        }
+        #no-results {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        .emoji {
+            margin-right: 8px;
+        }
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tab {
+            padding: 8px 16px;
+            background-color: #e1e8ed;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background-color: #d0dde7;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Chapter 1</h1>
+        <p>Core concepts and definitions from computer networking</p>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for networking terms...">
+        <div class="search-icon">🔍</div>
+    </div>
+    
+    <div class="tab-container">
+        <div class="tab active" onclick="filterByCategory('all')">All</div>
+        <div class="tab" onclick="filterByCategory('architecture')">Architecture</div>
+        <div class="tab" onclick="filterByCategory('addressing')">Addressing</div>
+        <div class="tab" onclick="filterByCategory('hardware')">Hardware</div>
+        <div class="tab" onclick="filterByCategory('protocols')">Protocols</div>
+        <div class="tab" onclick="filterByCategory('osi')">OSI Model</div>
+    </div>
+    
+    <div id="output">
+        <div id="no-results">
+            <h3>No matching results found</h3>
+            <p>Try adjusting your search term or browse by category</p>
+        </div>
+        
+        <div id="all-definitions">
+            <div class="category-container" data-category="architecture">
+                <h2 class="category-title">🏗️ Network Architecture</h2>
+                
+                <div class="definition" data-terms="topology physical logical">
+                    <div class="definition-icon">📐</div>
+                    <div class="definition-content">
+                        <span class="term">Topology:</span> How parts of a whole work together. Physical topology describes hardware arrangement, while logical topology describes how access to the network is controlled.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="peer-to-peer p2p model">
+                    <div class="definition-icon">👥</div>
+                    <div class="definition-content">
+                        <span class="term">Peer-to-Peer (P2P):</span> Network model where each computer's OS controls access to its own resources. No centralized control - computers form a logical group that may share resources or restrict access.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="client-server model">
+                    <div class="definition-icon">💻</div>
+                    <div class="definition-content">
+                        <span class="term">Client-Server:</span> Network model where resources are managed by a network operating system (NOS) through a centralized directory database. Users can sign on from any computer to access permitted resources.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="windows domain">
+                    <div class="definition-icon">🪟</div>
+                    <div class="definition-content">
+                        <span class="term">Windows Domain:</span> A logical group of computers that Windows Server can control via Active Directory.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="active directory ad">
+                    <div class="definition-icon">📂</div>
+                    <div class="definition-content">
+                        <span class="term">Active Directory (AD):</span> The centralized directory database containing user account information and security policies.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="network operating system nos">
+                    <div class="definition-icon">🖥️</div>
+                    <div class="definition-content">
+                        <span class="term">Network Operating System (NOS):</span> Controls access to the entire network, required by client-server models.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="network services">
+                    <div class="definition-icon">🛎️</div>
+                    <div class="definition-content">
+                        <span class="term">Network Services:</span> Resources a network makes available to its users, including applications and data.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="client">
+                    <div class="definition-icon">📱</div>
+                    <div class="definition-content">
+                        <span class="term">Client:</span> A computer making a request from another computer.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="node host computer device">
+                    <div class="definition-icon">💻</div>
+                    <div class="definition-content">
+                        <span class="term">Node/Host:</span> A computer or device on a network.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="soho small office home office network">
+                    <div class="definition-icon">🏠</div>
+                    <div class="definition-content">
+                        <span class="term">SOHO Network:</span> A small office-home office network.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-container" data-category="addressing">
+                <h2 class="category-title">🔢 Network Addressing</h2>
+                
+                <div class="definition" data-terms="mac address media access control hardware physical">
+                    <div class="definition-icon">🔑</div>
+                    <div class="definition-content">
+                        <span class="term">MAC Address:</span> A hardware address unique to each network interface card (NIC). Consists of 48 bits displayed in hexadecimal notation. The first half identifies the manufacturer, while the second half is a unique device identifier.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="ip address ipv4 internet protocol">
+                    <div class="definition-icon">🌐</div>
+                    <div class="definition-content">
+                        <span class="term">IP Address:</span> A 32-bit (IPv4) numeric address that identifies a device on a network. Consists of four octets (numbers 0-255) separated by dots, divided into network and host portions determined by the subnet mask.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="port number application service">
+                    <div class="definition-icon">🚪</div>
+                    <div class="definition-content">
+                        <span class="term">Port Number:</span> A number that addresses the receiving application in the Transport layer header. Well-known ports (0-1023), registered ports (1024-49151), and dynamic ports (49152-65535).
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-container" data-category="hardware">
+                <h2 class="category-title">🖧 Network Hardware & Topologies</h2>
+                
+                <div class="definition" data-terms="local area network lan">
+                    <div class="definition-icon">🏢</div>
+                    <div class="definition-content">
+                        <span class="term">Local Area Network (LAN):</span> A network usually contained in a small space such as an office or building.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="network interface card nic port">
+                    <div class="definition-icon">🔌</div>
+                    <div class="definition-content">
+                        <span class="term">Network Interface Card (NIC):</span> A network port used to attach a device to a network.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="switch">
+                    <div class="definition-icon">🔄</div>
+                    <div class="definition-content">
+                        <span class="term">Switch:</span> A device that receives incoming data from one of its ports and redirects it to another port or multiple ports to reach its intended destination.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="router gateway">
+                    <div class="definition-icon">🌉</div>
+                    <div class="definition-content">
+                        <span class="term">Router:</span> A device that manages traffic between two or more networks and helps find the best path for traffic to travel.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="star topology">
+                    <div class="definition-icon">⭐</div>
+                    <div class="definition-content">
+                        <span class="term">Star Topology:</span> All devices connect to one central device (usually a switch).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="bus topology">
+                    <div class="definition-icon">➖</div>
+                    <div class="definition-content">
+                        <span class="term">Bus Topology:</span> Devices connect to a single central cable or backbone.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="hybrid topology">
+                    <div class="definition-icon">🔄</div>
+                    <div class="definition-content">
+                        <span class="term">Hybrid Topology:</span> A topology that combines multiple topologies, such as a star-bus topology.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="backbone">
+                    <div class="definition-icon">🧶</div>
+                    <div class="definition-content">
+                        <span class="term">Backbone:</span> A central conduit that connects segments of a network.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="personal area network pan">
+                    <div class="definition-icon">📱</div>
+                    <div class="definition-content">
+                        <span class="term">PAN (Personal Area Network):</span> The smallest network consisting of personal devices like smartphones and computers.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="metropolitan area network man campus can">
+                    <div class="definition-icon">🏙️</div>
+                    <div class="definition-content">
+                        <span class="term">MAN (Metropolitan Area Network):</span> A group of connected LANs in the same geographical area, also known as a campus area network (CAN).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="wide area network wan internet">
+                    <div class="definition-icon">🌍</div>
+                    <div class="definition-content">
+                        <span class="term">WAN (Wide Area Network):</span> A group of LANs that spread over a wide geographical area, with the Internet being the largest WAN.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-container" data-category="protocols">
+                <h2 class="category-title">📋 Protocols & Communications</h2>
+                
+                <div class="definition" data-terms="protocol communication rules">
+                    <div class="definition-icon">📜</div>
+                    <div class="definition-content">
+                        <span class="term">Protocol:</span> Methods and rules for communication between networked devices.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="tcp transmission control protocol">
+                    <div class="definition-icon">🔒</div>
+                    <div class="definition-content">
+                        <span class="term">TCP (Transmission Control Protocol):</span> A connection-oriented protocol that establishes a connection with the end host and verifies data receipt.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="udp user datagram protocol">
+                    <div class="definition-icon">🚀</div>
+                    <div class="definition-content">
+                        <span class="term">UDP (User Datagram Protocol):</span> A connectionless protocol that does not guarantee delivery by checking if data is received.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="http https hypertext transfer protocol web">
+                    <div class="definition-icon">🌐</div>
+                    <div class="definition-content">
+                        <span class="term">HTTP/HTTPS:</span> Web protocols used for transferring web pages (ports 80/443).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="ftp file transfer protocol">
+                    <div class="definition-icon">📁</div>
+                    <div class="definition-content">
+                        <span class="term">FTP:</span> File Transfer Protocol for uploading and downloading files (ports 20/21).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="smtp simple mail transfer protocol email">
+                    <div class="definition-icon">📧</div>
+                    <div class="definition-content">
+                        <span class="term">SMTP:</span> Simple Mail Transfer Protocol for sending email (port 25).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="dns domain name system">
+                    <div class="definition-icon">📖</div>
+                    <div class="definition-content">
+                        <span class="term">DNS:</span> Domain Name System for resolving domain names to IP addresses (port 53).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="dhcp dynamic host configuration protocol">
+                    <div class="definition-icon">🔄</div>
+                    <div class="definition-content">
+                        <span class="term">DHCP:</span> Dynamic Host Configuration Protocol for automatic IP address assignment (ports 67/68).
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="api call application programming interface">
+                    <div class="definition-icon">🔌</div>
+                    <div class="definition-content">
+                        <span class="term">API Call:</span> The method an application uses to make a request of the operating system.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-container" data-category="osi">
+                <h2 class="category-title">🧩 OSI Model & Data Processes</h2>
+                
+                <div class="definition" data-terms="osi open systems interconnection model seven layers">
+                    <div class="definition-icon">🏗️</div>
+                    <div class="definition-content">
+                        <span class="term">OSI Model:</span> A seven-layer conceptual framework that standardizes the functions of a telecommunication or computing system.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="application layer osi 7">
+                    <div class="definition-icon">📱</div>
+                    <div class="definition-content">
+                        <span class="term">7. Application Layer:</span> Interfaces directly with applications, providing services such as file transfers, email, and web browsing.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="presentation layer osi 6">
+                    <div class="definition-icon">🎭</div>
+                    <div class="definition-content">
+                        <span class="term">6. Presentation Layer:</span> Handles data formatting, encryption, and compression to ensure the receiving application can read the data properly.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="session layer osi 5">
+                    <div class="definition-icon">🤝</div>
+                    <div class="definition-content">
+                        <span class="term">5. Session Layer:</span> Manages sessions between applications, controlling dialog control and synchronization.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="transport layer osi 4">
+                    <div class="definition-icon">🚚</div>
+                    <div class="definition-content">
+                        <span class="term">4. Transport Layer:</span> Responsible for end-to-end communication, segmenting data, and ensuring reliable delivery. Uses TCP or UDP protocols.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="network layer osi 3">
+                    <div class="definition-icon">🧭</div>
+                    <div class="definition-content">
+                        <span class="term">3. Network Layer:</span> Handles logical addressing and routing of packets between networks using IP addressing.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="data link layer osi 2">
+                    <div class="definition-icon">🔗</div>
+                    <div class="definition-content">
+                        <span class="term">2. Data Link Layer:</span> Provides node-to-node data transfer using MAC addresses for physical addressing.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="physical layer osi 1">
+                    <div class="definition-icon">📡</div>
+                    <div class="definition-content">
+                        <span class="term">1. Physical Layer:</span> Transmits raw bit streams over physical medium, defining electrical, mechanical, and procedural specifications.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="protocol data unit pdu">
+                    <div class="definition-icon">📦</div>
+                    <div class="definition-content">
+                        <span class="term">Protocol Data Unit (PDU):</span> The technical name for a group of bits as it moves from one layer to the next. Called data, segment/datagram, packet, frame, and bits at different layers.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="encapsulation">
+                    <div class="definition-icon">📩</div>
+                    <div class="definition-content">
+                        <span class="term">Encapsulation:</span> The process of adding headers and sometimes trailers to data as it moves down the OSI layers.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="payload data">
+                    <div class="definition-icon">📋</div>
+                    <div class="definition-content">
+                        <span class="term">Payload:</span> Data passed between applications or utility programs and the OS.
+                    </div>
+                </div>
+                
+                <div class="definition" data-terms="fragmentation">
+                    <div class="definition-icon">✂️</div>
+                    <div class="definition-content">
+                        <span class="term">Fragmentation:</span> The process of dividing large packets into smaller packets.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show all definitions initially
+        document.getElementById("output").style.display = "block";
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', filterDefinitions);
+        
+        function filterDefinitions() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const definitions = document.querySelectorAll('.definition');
+            const noResults = document.getElementById('no-results');
+            let matchFound = false;
+            
+            definitions.forEach(definition => {
+                const terms = definition.getAttribute('data-terms').toLowerCase();
+                const content = definition.textContent.toLowerCase();
+                
+                if (terms.includes(searchTerm) || content.includes(searchTerm) || searchTerm === '') {
+                    definition.style.display = 'flex';
+                    matchFound = true;
+                    
+                    // Optional: highlight the matching term
+                    if (searchTerm !== '') {
+                        definition.classList.add('highlight');
+                    } else {
+                        definition.classList.remove('highlight');
+                    }
+                } else {
+                    definition.style.display = 'none';
+                    definition.classList.remove('highlight');
+                }
+            });
+            
+            // Check if any category is now empty
+            document.querySelectorAll('.category-container').forEach(category => {
+                const visibleDefs = category.querySelectorAll('.definition[style="display: flex;"]');
+                if (visibleDefs.length === 0) {
+                    category.style.display = 'none';
+                } else {
+                    category.style.display = 'block';
+                }
+            });
+            
+            // Show/hide no results message
+            if (matchFound) {
+                noResults.style.display = 'none';
+            } else {
+                noResults.style.display = 'block';
+            }
+        }
+        
+        // Category filter functionality
+        function filterByCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Clear search input
+            document.getElementById('searchInput').value = '';
+            
+            const categories = document.querySelectorAll('.category-container');
+            
+            if (category === 'all') {
+                categories.forEach(cat => {
+                    cat.style.display = 'block';
+                });
+                
+                // Show all definitions
+                document.querySelectorAll('.definition').forEach(def => {
+                    def.style.display = 'flex';
+                    def.classList.remove('highlight');
+                });
+                
+                document.getElementById('no-results').style.display = 'none';
+            } else {
+                categories.forEach(cat => {
+                    if (cat.getAttribute('data-category') === category) {
+                        cat.style.display = 'block';
+                        
+                        // Show all definitions in this category
+                        cat.querySelectorAll('.definition').forEach(def => {
+                            def.style.display = 'flex';
+                            def.classList.remove('highlight');
+                        });
+                    } else {
+                        cat.style.display = 'none';
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

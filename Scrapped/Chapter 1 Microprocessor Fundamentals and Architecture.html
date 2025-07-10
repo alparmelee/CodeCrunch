@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🖥️ Computer Architecture Glossary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+        #search-container {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        #search-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .term-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .term-card:hover {
+            transform: scale(1.02);
+        }
+        .term-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .term-definition {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .emoji {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search computer architecture terms...">
+        </div>
+        <div id="terms-container"></div>
+    </div>
+
+    <script>
+        const terms = [
+            {
+                term: "Microprocessor",
+                definition: "A microprocessor is an integrated circuit that contains the functions of a central processing unit (CPU) of a computer. It performs arithmetic and logic operations, and controls the execution of instructions in a computer by interpreting and executing program instructions.",
+                emoji: "🧠"
+            },
+            {
+                term: "Instruction Cycle",
+                definition: "The instruction cycle is the process by which a computer retrieves a program instruction from its memory, determines what actions the instruction requires, and carries out those actions. It typically includes the steps of fetching, decoding, executing, and, if necessary, storing the result.",
+                emoji: "🔄"
+            },
+            {
+                term: "Instruction Register",
+                definition: "The instruction register (IR) is a part of the CPU's control unit that holds the current instruction being executed or decoded. It ensures that the instruction is available to the processor while it is being decoded and executed.",
+                emoji: "📋"
+            },
+            {
+                term: "Interrupts",
+                definition: "Interrupts are signals emitted by hardware or software when they need immediate attention from the CPU. They temporarily halt the current operations of the CPU, save the current state, and transfer control to a predefined interrupt service routine (ISR) to address the event.",
+                emoji: "⚠️"
+            },
+            {
+                term: "Cache Memory",
+                definition: "Cache memory is a small, high-speed storage area located between the CPU and the main memory that temporarily stores frequently accessed data and instructions. It speeds up data retrieval by reducing the time needed to access data from the main memory.",
+                emoji: "💾"
+            },
+            {
+                term: "Secondary Memory",
+                definition: "Secondary memory refers to storage devices that provide non-volatile storage for data and programs. It includes hard drives, solid-state drives, optical disks, and other long-term storage devices. Secondary memory is slower and larger in capacity compared to primary memory (RAM).",
+                emoji: "💽"
+            },
+            {
+                term: "Mapping Function",
+                definition: "A mapping function in computer architecture is used to determine the correspondence between two sets of data. For instance, in cache memory, a mapping function is used to map addresses from main memory to cache locations.",
+                emoji: "🗺️"
+            },
+            {
+                term: "Symmetric (in the context of SMP)",
+                definition: "In the context of symmetric multiprocessing (SMP), symmetric refers to a computer architecture where two or more identical processors share a common memory and have equal access to I/O devices. This configuration allows for efficient parallel processing.",
+                emoji: "⚖️"
+            },
+            {
+                term: "Multi-Core",
+                definition: "A multi-core processor is a single computing component with two or more independent processing units called cores. Each core can execute instructions independently, allowing for parallel processing and improved performance.",
+                emoji: "🔢"
+            },
+            {
+                term: "Program Counter",
+                definition: "The program counter (PC) is a register in the CPU that holds the address of the next instruction to be executed. It automatically increments to point to the next instruction in the sequence, ensuring the continuous execution of the program.",
+                emoji: "➡️"
+            },
+            {
+                term: "Binary Number",
+                definition: "A binary number is a number expressed in the base-2 numeral system, which uses only two symbols: typically 0 and 1. Each digit in a binary number is called a bit.",
+                emoji: "01"
+            },
+            {
+                term: "Stack Pointer",
+                definition: "The stack pointer is a special-purpose register that tracks the top of the stack in memory. The stack is a data structure used for managing function calls, local variables, and control flow information. The stack pointer adjusts as items are pushed onto or popped from the stack.",
+                emoji: "📚"
+            },
+            {
+                term: "User Visible Registers",
+                definition: "User-visible registers are CPU registers that are directly accessible by the programmer. These registers can be used to hold data, addresses, and control information. They include general-purpose registers, address registers, and data registers.",
+                emoji: "🖥️"
+            },
+            {
+                term: "Multiprogramming",
+                definition: "Multiprogramming is a method of running multiple programs on a single processor by rapidly switching between them. This technique maximizes CPU utilization by ensuring that the CPU always has a job to execute, thus reducing idle time and improving system efficiency.",
+                emoji: "🔀"
+            }
+        ];
+
+        const termsContainer = document.getElementById('terms-container');
+        const searchInput = document.getElementById('search-input');
+
+        function createTermCard(term) {
+            const card = document.createElement('div');
+            card.classList.add('term-card');
+            card.innerHTML = `
+                <div class="term-title">
+                    <span class="emoji">${term.emoji}</span>
+                    ${term.term}
+                </div>
+                <div class="term-definition">${term.definition}</div>
+            `;
+            return card;
+        }
+
+        function renderTerms(filteredTerms) {
+            termsContainer.innerHTML = '';
+            filteredTerms.forEach(term => {
+                termsContainer.appendChild(createTermCard(term));
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredTerms = terms.filter(term => 
+                term.term.toLowerCase().includes(searchTerm) || 
+                term.definition.toLowerCase().includes(searchTerm)
+            );
+            renderTerms(filteredTerms);
+        });
+
+        // Initial render
+        renderTerms(terms);
+    </script>
+</body>
+</html>

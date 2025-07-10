@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRC Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+
+        #results h2 {
+            margin-bottom: 10px;
+        }
+
+        #results p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cyclic Redundancy Check (CRC) Calculator</h1>
+        <form id="crcForm">
+            <label for="messageData">G(x) - Message Data (Binary):</label>
+            <input type="text" id="messageData" name="messageData" placeholder="e.g., 1001100" required>
+
+            <label for="generatorPoly">P(x) - Generator Polynomial (Binary):</label>
+            <input type="text" id="generatorPoly" name="generatorPoly" placeholder="e.g., 1101" required>
+
+            <button type="button" id="calculateBtn">Calculate CRC</button>
+        </form>
+
+        <div id="results">
+            <h2>Results</h2>
+            <p><strong>Remainder:</strong> <span id="remainder"></span></p>
+            <p><strong>Transmitted Message:</strong> <span id="transmittedMessage"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to calculate CRC using binary division
+        function calculateCRC(message, generator) {
+            let messagePadded = message + '0'.repeat(generator.length - 1);
+            let messageArr = messagePadded.split('').map(Number);
+            let generatorArr = generator.split('').map(Number);
+            let genLen = generatorArr.length;
+
+            for (let i = 0; i <= messageArr.length - genLen; i++) {
+                if (messageArr[i] === 1) {
+                    for (let j = 0; j < genLen; j++) {
+                        messageArr[i + j] ^= generatorArr[j];
+                    }
+                }
+            }
+
+            const remainder = messageArr.slice(-genLen + 1).join('');
+            const transmittedMessage = message + remainder;
+            return { remainder, transmittedMessage };
+        }
+
+        // Event listener for the Calculate button
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+            const messageData = document.getElementById('messageData').value;
+            const generatorPoly = document.getElementById('generatorPoly').value;
+
+            if (messageData && generatorPoly) {
+                const { remainder, transmittedMessage } = calculateCRC(messageData, generatorPoly);
+
+                // Display results
+                document.getElementById('remainder').innerText = remainder;
+                document.getElementById('transmittedMessage').innerText = transmittedMessage;
+            } else {
+                alert('Please enter both message data and generator polynomial.');
+            }
+        });
+    </script>
+</body>
+</html>

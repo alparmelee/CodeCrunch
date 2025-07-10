@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyword Cipher Encrypt/Decrypt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            background-color: #e8e8e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Keyword Cipher</h1>
+
+        <label for="plaintext">Enter Text:</label>
+        <textarea id="plaintext" rows="4" placeholder="Type your text here..."></textarea>
+
+        <label for="keyword">Keyword:</label>
+        <input type="text" id="keyword" placeholder="Enter a keyword (e.g., SECRET)" />
+
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+
+        <div class="output">
+            <label>Output:</label>
+            <p id="outputText"></p>
+        </div>
+    </div>
+
+    <script>
+        function generateKeyAlphabet(keyword) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let keyAlphabet = '';
+            keyword = keyword.toUpperCase();
+            
+            // Add keyword letters to the key alphabet, ignoring duplicates
+            for (let i = 0; i < keyword.length; i++) {
+                if (!keyAlphabet.includes(keyword[i])) {
+                    keyAlphabet += keyword[i];
+                }
+            }
+            
+            // Add remaining letters of the alphabet
+            for (let i = 0; i < alphabet.length; i++) {
+                if (!keyAlphabet.includes(alphabet[i])) {
+                    keyAlphabet += alphabet[i];
+                }
+            }
+            return keyAlphabet;
+        }
+
+        function keywordCipher(str, keyword, mode) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const keyAlphabet = generateKeyAlphabet(keyword);
+            let result = '';
+
+            str = str.toUpperCase();
+            for (let i = 0; i < str.length; i++) {
+                let char = str[i];
+
+                if (alphabet.includes(char)) {
+                    const alphabetIndex = mode === 'encrypt' 
+                        ? alphabet.indexOf(char) 
+                        : keyAlphabet.indexOf(char);
+                    result += mode === 'encrypt' 
+                        ? keyAlphabet[alphabetIndex] 
+                        : alphabet[alphabetIndex];
+                } else {
+                    result += char; // Non-alphabetic characters are unchanged
+                }
+            }
+            return result;
+        }
+
+        function encrypt() {
+            const plaintext = document.getElementById("plaintext").value;
+            const keyword = document.getElementById("keyword").value;
+            const encrypted = keywordCipher(plaintext, keyword, 'encrypt');
+            document.getElementById("outputText").innerText = encrypted;
+        }
+
+        function decrypt() {
+            const ciphertext = document.getElementById("plaintext").value;
+            const keyword = document.getElementById("keyword").value;
+            const decrypted = keywordCipher(ciphertext, keyword, 'decrypt');
+            document.getElementById("outputText").innerText = decrypted;
+        }
+    </script>
+
+</body>
+</html>
