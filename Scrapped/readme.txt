@@ -1,0 +1,1 @@
+I realized I added way too much. Here all the files that I scrapped.
