@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physics 2 Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            background-image: url('physics2.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+        .circuit-diagram { /* Specific to circuits */
+            text-align: center;
+            margin: 10px 0;
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>⚛️ Physics 2 Calculator</h1>
+        
+        <div class="section">
+            <label>Select Topic</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="electrostatics">Electrostatics & Electric Fields</option>
+                <option value="electrical-circuits">Electrical Circuits</option>
+                <option value="magnetism-induction">Magnetism & Electromagnetic Induction</option>
+                <option value="waves-optics">Waves & Optics</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // --- Constants ---
+        const COULOMB_CONSTANT = 8.99e9; // N·m²/C²
+        const EPSILON_0 = 8.854e-12; // F/m (Permittivity of free space)
+        const SPEED_OF_SOUND = 343; // m/s (in air at 20°C)
+        const SPEED_OF_LIGHT = 3e8; // m/s
+        const PERMEABILITY_0 = 4 * Math.PI * 1e-7; // H/m (Magnetic permeability of free space)
+
+
+        // --- Utility Functions ---
+        function getFloatValue(id) {
+            const val = parseFloat(document.getElementById(id).value);
+            if (isNaN(val)) {
+                throw new Error(`Please enter a valid number for the input.`);
+            }
+            return val;
+        }
+        
+        // --- Core Calculator Logic ---
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'electrostatics': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="esType">Select Calculation Type</label>
+                                <select id="esType" onchange="updateElectrostaticsInputs()">
+                                    <option value="coulombs-law">Coulomb's Law</option>
+                                    <option value="electric-field">Electric Field Calculation</option>
+                                    <option value="gauss-law">Gauss's Law</option>
+                                    <option value="charge-density">Charge Density</option>
+                                    <option value="capacitance">Capacitance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="esInputs">
+                            </div>
+                        <div class="formula-display" id="esFormula">
+                            </div>
+                        <div class="info-box" id="esInfo">
+                            </div>
+                    `
+                },
+                'electrical-circuits': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="circType">Select Calculation Type</label>
+                                <select id="circType" onchange="updateCircuitsInputs()">
+                                    <option value="ohms-law">Ohm's Law</option>
+                                    <option value="power">Power Calculation</option>
+                                    <option value="series-resistance">Series Resistance</option>
+                                    <option value="parallel-resistance">Parallel Resistance</option>
+                                    <option value="capacitive-reactance">Capacitive Reactance</option>
+                                    <option value="inductive-reactance">Inductive Reactance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="circInputs">
+                            </div>
+                        <div class="formula-display" id="circFormula">
+                            </div>
+                        <div class="info-box" id="circInfo">
+                            </div>
+                         <div class="circuit-diagram" id="circDiagram">
+                            </div>
+                    `
+                },
+                'magnetism-induction': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="magType">Select Calculation Type</label>
+                                <select id="magType" onchange="updateMagnetismInputs()">
+                                    <option value="magnetic-field">Magnetic Field Strength</option>
+                                    <option value="lorentz-force">Lorentz Force</option>
+                                    <option value="magnetic-flux">Magnetic Flux</option>
+                                    <option value="faradays-law">Faraday's Law of Induction</option>
+                                    <option value="amperes-law">Ampère's Law</option>
+                                    <option value="magnetic-moment">Magnetic Moment</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="magInputs">
+                            </div>
+                        <div class="formula-display" id="magFormula">
+                            </div>
+                        <div class="info-box" id="magInfo">
+                            </div>
+                    `
+                },
+                'waves-optics': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="woType">Select Calculation Type</label>
+                                <select id="woType" onchange="updateWavesOpticsInputs()">
+                                    <option value="wave-properties">Wave Properties</option>
+                                    <option value="sound-wave">Sound Wave Characteristics</option>
+                                    <option value="light-wave">Light Wave Characteristics</option>
+                                    <option value="refraction">Refraction</option>
+                                    <option value="interference">Wave Interference</option>
+                                    <option value="diffraction">Diffraction</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="woInputs">
+                            </div>
+                        <div class="formula-display" id="woFormula">
+                            </div>
+                        <div class="info-box" id="woInfo">
+                            </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            // Specific updates for sub-calculators
+            if (type === 'electrostatics') {
+                updateElectrostaticsInputs();
+            } else if (type === 'electrical-circuits') {
+                updateCircuitsInputs();
+            } else if (type === 'magnetism-induction') {
+                updateMagnetismInputs();
+            } else if (type === 'waves-optics') {
+                updateWavesOpticsInputs();
+            }
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Sub-Calculator Input Updaters ---
+
+        function updateElectrostaticsInputs() {
+            const esType = document.getElementById('esType').value;
+            const inputsDiv = document.getElementById('esInputs');
+            const formulaDiv = document.getElementById('esFormula');
+            const infoDiv = document.getElementById('esInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(esType) {
+                case 'coulombs-law':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="charge1_es">Charge 1 (q1) [C]</label><input type="number" id="charge1_es" placeholder="Enter first charge"></div>
+                            <div><label for="charge2_es">Charge 2 (q2) [C]</label><input type="number" id="charge2_es" placeholder="Enter second charge"></div>
+                            <div><label for="distance_es">Distance (r) [m]</label><input type="number" id="distance_es" placeholder="Enter distance"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ F = k \\frac{|q_1 q_2|}{r^2} $$`;
+                    infoHtml = `Coulomb's Law calculates the electrostatic force between two point charges. $k = 8.99 \\times 10^9 N\\cdot m^2/C^2$.`;
+                    break;
+                case 'electric-field':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="charge_ef">Point Charge (Q) [C]</label><input type="number" id="charge_ef" placeholder="Enter charge"></div>
+                            <div><label for="distance_ef">Distance from Charge (r) [m]</label><input type="number" id="distance_ef" placeholder="Enter distance"></div>
+                            <div>
+                                <label for="fieldType_ef">Field Calculation Type</label>
+                                <select id="fieldType_ef">
+                                    <option value="point">Point Charge</option>
+                                    <option value="line">Infinite Line Charge</option>
+                                    <option value="plane">Infinite Charged Plane</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ E_{\\text{point}} = k \\frac{|Q|}{r^2} $$ $$ E_{\\text{line}} = \\frac{2k\\lambda}{r} $$ $$ E_{\\text{plane}} = \\frac{\\sigma}{2\\epsilon_0} $$`;
+                    infoHtml = `Calculates electric field strength at a given distance from a charge distribution. $k = 8.99 \\times 10^9 N\\cdot m^2/C^2$, $\\epsilon_0 = 8.854 \\times 10^{-12} F/m$.`;
+                    break;
+                case 'gauss-law':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="charge_gl">Total Enclosed Charge (Q) [C]</label><input type="number" id="charge_gl" placeholder="Enter total charge"></div>
+                            <div>
+                                <label for="surfaceType_gl">Gaussian Surface Type</label>
+                                <select id="surfaceType_gl">
+                                    <option value="sphere">Spherical Surface</option>
+                                    <option value="cylinder">Cylindrical Surface</option>
+                                    <option value="cube">Cubic Surface</option>
+                                </select>
+                            </div>
+                            <div><label for="radius_gl">Surface Radius/Side Length [m]</label><input type="number" id="radius_gl" placeholder="Enter radius/side length (not directly used for flux calculation, but for context)"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\Phi_E = \\oint E \\cdot dA = \\frac{Q_{\\text{enclosed}}}{\\epsilon_0} $$`;
+                    infoHtml = `Gauss's Law relates enclosed charge to electric flux through a closed surface. $\\epsilon_0 = 8.854 \\times 10^{-12} F/m$.`;
+                    break;
+                case 'charge-density':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="charge_cd">Total Charge (Q) [C]</label><input type="number" id="charge_cd" placeholder="Enter total charge"></div>
+                            <div><label for="dimension_cd">Volume/Length/Area</label><input type="number" id="dimension_cd" placeholder="Enter volume/length/area"></div>
+                            <div>
+                                <label for="densityType_cd">Density Type</label>
+                                <select id="densityType_cd">
+                                    <option value="volume">Volume Charge Density (ρ)</option>
+                                    <option value="surface">Surface Charge Density (σ)</option>
+                                    <option value="linear">Linear Charge Density (λ)</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\rho = \\frac{Q}{V} \\quad \\sigma = \\frac{Q}{A} \\quad \\lambda = \\frac{Q}{L} $$`;
+                    infoHtml = `Calculates charge distribution per unit volume, area, or length.`;
+                    break;
+                case 'capacitance':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="separation_cap">Plate Separation (d) [m]</label><input type="number" id="separation_cap" placeholder="Enter plate separation"></div>
+                            <div><label for="area_cap">Plate Area (A) [m²]</label><input type="number" id="area_cap" placeholder="Enter plate area"></div>
+                            <div>
+                                <label for="dielectric_cap">Dielectric Material</label>
+                                <select id="dielectric_cap">
+                                    <option value="vacuum">Vacuum (κ = 1)</option>
+                                    <option value="air">Air (κ ≈ 1.0006)</option>
+                                    <option value="glass">Glass (κ ≈ 7.0)</option>
+                                    <option value="mica">Mica (κ ≈ 5.0)</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ C = \\frac{\\kappa \\epsilon_0 A}{d} $$`;
+                    infoHtml = `Calculates capacitance of a parallel plate capacitor. Dielectric constant (κ) modifies permittivity. $\\epsilon_0 = 8.854 \\times 10^{-12} F/m$.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function updateCircuitsInputs() {
+            const circType = document.getElementById('circType').value;
+            const inputsDiv = document.getElementById('circInputs');
+            const formulaDiv = document.getElementById('circFormula');
+            const infoDiv = document.getElementById('circInfo');
+            const diagramDiv = document.getElementById('circDiagram');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+            let diagramHtml = '';
+
+            switch(circType) {
+                case 'ohms-law':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="voltage_ol">Voltage (V) [V]</label><input type="number" id="voltage_ol" placeholder="Enter voltage"></div>
+                            <div><label for="current_ol">Current (I) [A]</label><input type="number" id="current_ol" placeholder="Enter current"></div>
+                            <div><label for="resistance_ol">Resistance (R) [Ω]</label><input type="number" id="resistance_ol" placeholder="Enter resistance"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = IR \\quad I = \\frac{V}{R} \\quad R = \\frac{V}{I} $$`;
+                    infoHtml = `Ohm's Law describes the relationship between voltage, current, and resistance. Enter any two values to find the third.`;
+                    diagramHtml = ''; // No specific diagram needed for abstract Ohm's Law
+                    break;
+                case 'power':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="voltage_p">Voltage (V) [V]</label><input type="number" id="voltage_p" placeholder="Enter voltage"></div>
+                            <div><label for="current_p">Current (I) [A]</label><input type="number" id="current_p" placeholder="Enter current"></div>
+                            <div><label for="resistance_p">Resistance (R) [Ω]</label><input type="number" id="resistance_p" placeholder="Enter resistance"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ P = VI = I^2 R = \\frac{V^2}{R} $$`;
+                    infoHtml = `Calculates electrical power. Enter any two relevant values (V and I, I and R, or V and R).`;
+                    diagramHtml = '';
+                    break;
+                case 'series-resistance':
+                    inputsHtml = `
+                        <div class="additional-inputs single-column">
+                            <div><label for="resistor1_s">Resistor 1 (R1) [Ω]</label><input type="number" id="resistor1_s" placeholder="Enter R1"></div>
+                            <div><label for="resistor2_s">Resistor 2 (R2) [Ω]</label><input type="number" id="resistor2_s" placeholder="Enter R2"></div>
+                            <div><label for="resistor3_s">Resistor 3 (R3) [Ω] (Optional)</label><input type="number" id="resistor3_s" placeholder="Enter R3"></div>
+                            <div><label for="resistor4_s">Resistor 4 (R4) [Ω] (Optional)</label><input type="number" id="resistor4_s" placeholder="Enter R4"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ R_{\\text{total}} = R_1 + R_2 + R_3 + \\dots $$`;
+                    infoHtml = `In a series circuit, the total resistance is the sum of all individual resistances.`;
+                    diagramHtml = `Example: R1 -- R2 -- R3`;
+                    break;
+                case 'parallel-resistance':
+                    inputsHtml = `
+                        <div class="additional-inputs single-column">
+                            <div><label for="resistor1_p">Resistor 1 (R1) [Ω]</label><input type="number" id="resistor1_p" placeholder="Enter R1"></div>
+                            <div><label for="resistor2_p">Resistor 2 (R2) [Ω]</label><input type="number" id="resistor2_p" placeholder="Enter R2"></div>
+                            <div><label for="resistor3_p">Resistor 3 (R3) [Ω] (Optional)</label><input type="number" id="resistor3_p" placeholder="Enter R3"></div>
+                            <div><label for="resistor4_p">Resistor 4 (R4) [Ω] (Optional)</label><input type="number" id="resistor4_p" placeholder="Enter R4"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\frac{1}{R_{\\text{total}}} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\frac{1}{R_3} + \\dots $$`;
+                    infoHtml = `In a parallel circuit, the total resistance is calculated by the reciprocal of the sum of the reciprocals of individual resistances.`;
+                    diagramHtml = `Example: |---R1---| \n           |---R2---| \n           |---R3---|`;
+                    break;
+                case 'capacitive-reactance':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="frequency_xc">Frequency (f) [Hz]</label><input type="number" id="frequency_xc" placeholder="Enter frequency"></div>
+                            <div><label for="capacitance_xc">Capacitance (C) [F]</label><input type="number" id="capacitance_xc" placeholder="Enter capacitance"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ X_C = \\frac{1}{2 \\pi f C} $$`;
+                    infoHtml = `Calculates the capacitive reactance, which is the opposition to alternating current flow in a capacitor.`;
+                    diagramHtml = '';
+                    break;
+                case 'inductive-reactance':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="frequency_xl">Frequency (f) [Hz]</label><input type="number" id="frequency_xl" placeholder="Enter frequency"></div>
+                            <div><label for="inductance_xl">Inductance (L) [H]</label><input type="number" id="inductance_xl" placeholder="Enter inductance"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ X_L = 2 \\pi f L $$`;
+                    infoHtml = `Calculates the inductive reactance, which is the opposition to alternating current flow in an inductor.`;
+                    diagramHtml = '';
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            diagramDiv.innerHTML = diagramHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function updateMagnetismInputs() {
+            const magType = document.getElementById('magType').value;
+            const inputsDiv = document.getElementById('magInputs');
+            const formulaDiv = document.getElementById('magFormula');
+            const infoDiv = document.getElementById('magInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(magType) {
+                case 'magnetic-field':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="magneticFieldMethod_mf">Calculation Method</label>
+                                <select id="magneticFieldMethod_mf">
+                                    <option value="straight-wire">Straight Wire</option>
+                                    <option value="current-loop">Center of Current Loop</option>
+                                    <option value="solenoid">Solenoid (Center)</option>
+                                </select>
+                            </div>
+                            <div><label for="current_mf">Current (I) [A]</label><input type="number" id="current_mf" placeholder="Enter current"></div>
+                            <div><label for="distance_mf">Distance/Radius (r/R) [m]</label><input type="number" id="distance_mf" placeholder="Enter distance or radius"></div>
+                            <div><label for="turns_mf">Number of Turns (N/n) (for Loop/Solenoid)</label><input type="number" id="turns_mf" placeholder="Enter number of turns or turns/length"></div>
+                        </div>
+                    `;
+                    formulaHtml = `
+                        $$ B_{\\text{wire}} = \\frac{\\mu_0 I}{2\\pi r} $$
+                        $$ B_{\\text{loop}} = \\frac{\\mu_0 N I}{2R} $$
+                        $$ B_{\\text{solenoid}} = \\mu_0 n I $$
+                    `;
+                    infoHtml = `Calculates magnetic field strength for different current-carrying geometries. $\\mu_0 = 4\\pi \\times 10^{-7} H/m$. For solenoid, 'N' means turns per unit length (n).`;
+                    break;
+                case 'lorentz-force':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="charge_lf">Charge (q) [C]</label><input type="number" id="charge_lf" placeholder="Enter charge"></div>
+                            <div><label for="velocity_lf">Velocity (v) [m/s]</label><input type="number" id="velocity_lf" placeholder="Enter velocity"></div>
+                            <div><label for="magneticField_lf">Magnetic Field (B) [T]</label><input type="number" id="magneticField_lf" placeholder="Enter magnetic field strength"></div>
+                            <div><label for="angle_lf">Angle (θ) [degrees]</label><input type="number" id="angle_lf" placeholder="Angle between v and B"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ F = q v B \\sin(\\theta) $$`;
+                    infoHtml = `Calculates the force on a moving charged particle in a magnetic field.`;
+                    break;
+                case 'magnetic-flux':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="magneticField_mf">Magnetic Field (B) [T]</label><input type="number" id="magneticField_mf" placeholder="Enter magnetic field"></div>
+                            <div><label for="area_mf">Surface Area (A) [m²]</label><input type="number" id="area_mf" placeholder="Enter surface area"></div>
+                            <div><label for="angle_mf">Angle (θ) [degrees]</label><input type="number" id="angle_mf" placeholder="Angle between B and normal to A"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\Phi_B = B A \\cos(\\theta) $$`;
+                    infoHtml = `Calculates magnetic flux through a surface. The angle $\\theta$ is between the magnetic field vector and the normal vector to the surface.`;
+                    break;
+                case 'faradays-law':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="fluxChange_fl">Change in Magnetic Flux (ΔΦ) [Wb]</label><input type="number" id="fluxChange_fl" placeholder="Enter flux change"></div>
+                            <div><label for="timeInterval_fl">Time Interval (Δt) [s]</label><input type="number" id="timeInterval_fl" placeholder="Enter time interval"></div>
+                            <div><label for="turns_fl">Number of Turns (N)</label><input type="number" id="turns_fl" placeholder="Enter number of turns"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\varepsilon = -N \\frac{\\Delta \\Phi_B}{\\Delta t} $$`;
+                    infoHtml = `Calculates induced electromotive force (EMF) in a coil due to a change in magnetic flux.`;
+                    break;
+                case 'amperes-law':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="current_al">Total Enclosed Current (I_enc) [A]</label><input type="number" id="current_al" placeholder="Enter total enclosed current"></div>
+                            <div><label for="pathLength_al">Amperian Path Length (L) [m]</label><input type="number" id="pathLength_al" placeholder="Enter path length"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\oint B \\cdot dl = \\mu_0 I_{\\text{enclosed}} \\implies B \\approx \\frac{\\mu_0 I_{\\text{enclosed}}}{L} $$`;
+                    infoHtml = `Ampère's Law relates the magnetic field around a closed loop to the electric current passing through the loop. This simplified form calculates B for simple geometries like a long wire. $\\mu_0 = 4\\pi \\times 10^{-7} H/m$.`;
+                    break;
+                case 'magnetic-moment':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="current_mm">Current (I) [A]</label><input type="number" id="current_mm" placeholder="Enter current"></div>
+                            <div><label for="area_mm">Area (A) [m²]</label><input type="number" id="area_mm" placeholder="Enter loop area"></div>
+                            <div><label for="turns_mm">Number of Turns (N)</label><input type="number" id="turns_mm" placeholder="Enter number of turns"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\mu = I A N $$`;
+                    infoHtml = `Calculates the magnetic moment of a current loop.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function updateWavesOpticsInputs() {
+            const woType = document.getElementById('woType').value;
+            const inputsDiv = document.getElementById('woInputs');
+            const formulaDiv = document.getElementById('woFormula');
+            const infoDiv = document.getElementById('woInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(woType) {
+                case 'wave-properties':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="frequency_wp">Frequency (f) [Hz]</label><input type="number" id="frequency_wp" placeholder="Enter frequency"></div>
+                            <div><label for="wavelength_wp">Wavelength (λ) [m]</label><input type="number" id="wavelength_wp" placeholder="Enter wavelength"></div>
+                            <div><label for="waveSpeed_wp">Wave Speed (v) [m/s]</label><input type="number" id="waveSpeed_wp" placeholder="Enter speed"></div>
+                            <div>
+                                <label for="waveMedium_wp">Known Wave Speed (Optional)</label>
+                                <select id="waveMedium_wp">
+                                    <option value="none">Custom/Calculated</option>
+                                    <option value="sound_air">Sound in Air (${SPEED_OF_SOUND} m/s)</option>
+                                    <option value="light_vacuum">Light in Vacuum (${SPEED_OF_LIGHT} m/s)</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ v = f \\lambda $$`;
+                    infoHtml = `Calculate wave speed, frequency, or wavelength. Enter any two values, or one value and select a known medium speed.`;
+                    break;
+                case 'sound-wave':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="temperature_sw">Medium Temperature [°C]</label><input type="number" id="temperature_sw" placeholder="e.g., 20"></div>
+                            <div><label for="frequency_sw">Frequency (f) [Hz]</label><input type="number" id="frequency_sw" placeholder="Enter frequency"></div>
+                            <div><label for="wavelength_sw">Wavelength (λ) [m]</label><input type="number" id="wavelength_sw" placeholder="Enter wavelength"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ v_{\\text{sound}} = 331.3 + 0.606 \\cdot T_{\\text{°C}} \\quad v = f \\lambda $$`;
+                    infoHtml = `Calculates the speed of sound in air based on temperature, and then relates it to frequency and wavelength. Enter temperature and one of frequency or wavelength.`;
+                    break;
+                case 'light-wave':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="wavelength_lw">Wavelength (λ) [nm]</label><input type="number" id="wavelength_lw" placeholder="Enter wavelength in nanometers"></div>
+                            <div><label for="frequency_lw">Frequency (f) [Hz]</label><input type="number" id="frequency_lw" placeholder="Enter frequency"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ c = f \\lambda \\quad (c = 3 \\times 10^8 \\text{ m/s}) $$`;
+                    infoHtml = `Calculates light wave properties (frequency or wavelength) given one of them. Assumes speed of light in vacuum. Provides approximate visible light color range for reference.`;
+                    break;
+                case 'refraction':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="incidenceAngle_r">Angle of Incidence (θ₁) [degrees]</label><input type="number" id="incidenceAngle_r" placeholder="Enter incidence angle"></div>
+                            <div><label for="refractiveIndex1_r">Refractive Index 1 (n₁)</label><input type="number" id="refractiveIndex1_r" placeholder="First medium's index"></div>
+                            <div><label for="refractiveIndex2_r">Refractive Index 2 (n₂)</label><input type="number" id="refractiveIndex2_r" placeholder="Second medium's index"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ n_1 \\sin(\\theta_1) = n_2 \\sin(\\theta_2) $$`;
+                    infoHtml = `Calculate light refraction using Snell's Law. Solves for the angle of refraction (θ₂) given incidence angle and refractive indices.`;
+                    break;
+                case 'interference':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="wavelength_i">Wavelength (λ) [m]</label><input type="number" id="wavelength_i" placeholder="Enter wavelength"></div>
+                            <div><label for="pathDifference_i">Path Difference (Δr) [m]</label><input type="number" id="pathDifference_i" placeholder="Enter path difference"></div>
+                        </div>
+                    `;
+                    formulaHtml = `
+                        $$ \\text{Constructive: } \\Delta r = m \\lambda $$
+                        $$ \\text{Destructive: } \\Delta r = (m + \\frac{1}{2}) \\lambda $$
+                    `;
+                    infoHtml = `Analyze wave interference patterns based on path difference and wavelength. Determines if interference is constructive or destructive.`;
+                    break;
+                case 'diffraction':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="wavelength_d">Wavelength (λ) [m]</label><input type="number" id="wavelength_d" placeholder="Enter wavelength"></div>
+                            <div><label for="slitWidth_d">Slit Width (a) [m]</label><input type="number" id="slitWidth_d" placeholder="Enter slit width"></div>
+                            <div><label for="order_d">Order (m) (e.g., 1 for first minimum)</label><input type="number" id="order_d" placeholder="Enter order"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ a \\sin(\\theta) = m \\lambda \\quad (\\text{for single slit minimums}) $$`;
+                    infoHtml = `Calculates the diffraction angle (θ) for a single-slit minimum, given wavelength, slit width, and order.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+
+        // --- Physics 2 Calculation Functions ---
+
+        // Electrostatics & Electric Fields
+        function calculateElectrostatics() {
+            const esType = document.getElementById('esType').value;
+            let result = '';
+
+            try {
+                switch(esType) {
+                    case 'coulombs-law':
+                        const q1 = getFloatValue('charge1_es');
+                        const q2 = getFloatValue('charge2_es');
+                        const r = getFloatValue('distance_es');
+                        if (r <= 0) throw new Error("Distance must be positive.");
+                        
+                        const force = COULOMB_CONSTANT * (Math.abs(q1 * q2) / (r * r));
+                        const forceDirection = q1 * q2 > 0 ? 'Repulsive' : 'Attractive';
+                        
+                        result = `⚡ Coulomb's Law Calculation
+Charge 1 (q1): ${q1.toExponential(2)} C
+Charge 2 (q2): ${q2.toExponential(2)} C
+Distance (r): ${r.toExponential(2)} m
+
+Electrostatic Force: ${force.toExponential(2)} N
+Force Type: ${forceDirection}
+
+🧮 Calculation: F = k * |q1 * q2| / r²
+   (${COULOMB_CONSTANT.toExponential(2)}) * (${q1.toExponential(2)} * ${q2.toExponential(2)}) / (${r.toExponential(2)})² = ${force.toExponential(2)} N`;
+                        break;
+
+                    case 'electric-field':
+                        const charge_ef = getFloatValue('charge_ef');
+                        const distance_ef = getFloatValue('distance_ef');
+                        const fieldType_ef = document.getElementById('fieldType_ef').value;
+                        if (distance_ef <= 0) throw new Error("Distance must be positive.");
+                        
+                        let electricField, explanation, formulaText;
+                        switch(fieldType_ef) {
+                            case 'point':
+                                electricField = COULOMB_CONSTANT * charge_ef / (distance_ef * distance_ef);
+                                explanation = 'Point Charge Electric Field';
+                                formulaText = `E = k * Q / r²`;
+                                break;
+                            case 'line': // Charge here would be linear charge density (lambda)
+                                // Assuming input "charge_ef" is linear charge density (lambda)
+                                electricField = (2 * COULOMB_CONSTANT * charge_ef) / (distance_ef);
+                                explanation = 'Infinite Line Charge Electric Field (Q assumed as λ)';
+                                formulaText = `E = 2 * k * λ / r`;
+                                break;
+                            case 'plane': // Charge here would be surface charge density (sigma)
+                                // Assuming input "charge_ef" is surface charge density (sigma)
+                                electricField = charge_ef / (2 * EPSILON_0);
+                                explanation = 'Infinite Charged Plane Electric Field (Q assumed as σ)';
+                                formulaText = `E = σ / (2 * ε₀)`;
+                                break;
+                            default:
+                                throw new Error("Invalid field type selected.");
+                        }
+                        
+                        result = `🔋 Electric Field Calculation
+Charge (Q / λ / σ): ${charge_ef.toExponential(2)} ${fieldType_ef === 'point' ? 'C' : fieldType_ef === 'line' ? 'C/m' : 'C/m²'}
+Distance (r): ${distance_ef.toExponential(2)} m
+Field Type: ${explanation}
+
+Electric Field Strength: ${electricField.toExponential(2)} N/C
+
+🧮 Calculation: ${formulaText}
+   ${electricField.toExponential(2)} N/C`;
+                        break;
+
+                    case 'gauss-law':
+                        const gaussCharge = getFloatValue('charge_gl');
+                        const electricFlux = gaussCharge / EPSILON_0;
+                        
+                        result = `🌐 Gauss's Law Calculation
+Total Enclosed Charge (Q): ${gaussCharge.toExponential(2)} C
+
+Electric Flux (Φ_E): ${electricFlux.toExponential(2)} N·m²/C
+
+🧮 Calculation: Φ_E = Q / ε₀
+   ${gaussCharge.toExponential(2)} / ${EPSILON_0.toExponential(2)} = ${electricFlux.toExponential(2)} N·m²/C`;
+                        break;
+
+                    case 'charge-density':
+                        const densityCharge = getFloatValue('charge_cd');
+                        const dimension = getFloatValue('dimension_cd');
+                        const densityType = document.getElementById('densityType_cd').value;
+                        if (dimension <= 0) throw new Error("Dimension (volume/length/area) must be positive.");
+                        
+                        let density, unit;
+                        switch(densityType) {
+                            case 'volume':
+                                density = densityCharge / dimension;
+                                unit = 'C/m³';
+                                break;
+                            case 'surface':
+                                density = densityCharge / dimension;
+                                unit = 'C/m²';
+                                break;
+                            case 'linear':
+                                density = densityCharge / dimension;
+                                unit = 'C/m';
+                                break;
+                            default:
+                                throw new Error("Invalid density type selected.");
+                        }
+                        
+                        result = `⚛️ Charge Density Calculation
+Total Charge (Q): ${densityCharge.toExponential(2)} C
+${densityType.charAt(0).toUpperCase() + densityType.slice(1)} Dimension: ${dimension.toExponential(2)} ${
+                            densityType === 'volume' ? 'm³' : 
+                            densityType === 'surface' ? 'm²' : 'm'
+                        }
+
+Charge Density: ${density.toExponential(4)} ${unit}`;
+                        break;
+
+                    case 'capacitance':
+                        const separation = getFloatValue('separation_cap');
+                        const area = getFloatValue('area_cap');
+                        const dielectric = document.getElementById('dielectric_cap').value;
+                        if (separation <= 0 || area <= 0) throw new Error("Plate separation and area must be positive.");
+                        
+                        let dielectricConstant;
+                        switch(dielectric) {
+                            case 'vacuum': dielectricConstant = 1; break;
+                            case 'air': dielectricConstant = 1.0006; break;
+                            case 'glass': dielectricConstant = 7.0; break;
+                            case 'mica': dielectricConstant = 5.0; break;
+                            default: throw new Error("Invalid dielectric material selected.");
+                        }
+                        
+                        const capacitance = (dielectricConstant * EPSILON_0 * area) / separation;
+                        
+                        result = `🔋 Capacitance Calculation
+Plate Separation (d): ${separation.toExponential(2)} m
+Plate Area (A): ${area.toExponential(2)} m²
+Dielectric: ${dielectric.charAt(0).toUpperCase() + dielectric.slice(1)}
+Dielectric Constant (κ): ${dielectricConstant}
+
+Capacitance (C): ${capacitance.toExponential(4)} F
+
+🧮 Calculation: C = (κ * ε₀ * A) / d
+   (${dielectricConstant} * ${EPSILON_0.toExponential(2)} * ${area.toExponential(2)}) / ${separation.toExponential(2)} = ${capacitance.toExponential(4)} F`;
+                        break;
+                    default:
+                        throw new Error("Invalid electrostatics calculation type.");
+                }
+            } catch (error) {
+                throw new Error(`Electrostatics Error: ${error.message}`);
+            }
+            return result;
+        }
+
+        // Electrical Circuits
+        function calculateElectricalCircuits() {
+            const circType = document.getElementById('circType').value;
+            let result = '';
+
+            try {
+                switch(circType) {
+                    case 'ohms-law':
+                        let voltage_ol = getFloatValue('voltage_ol');
+                        let current_ol = getFloatValue('current_ol');
+                        let resistance_ol = getFloatValue('resistance_ol');
+
+                        let knownCountOL = [voltage_ol, current_ol, resistance_ol].filter(val => val !== null).length;
+                        if (knownCountOL !== 2) throw new Error("Enter exactly two values for Ohm's Law calculation.");
+                        if (resistance_ol !== null && resistance_ol < 0) throw new Error("Resistance cannot be negative.");
+                        if (voltage_ol !== null && current_ol !== null && voltage_ol !== 0 && current_ol === 0) throw new Error("Current cannot be zero if voltage is non-zero (implies infinite resistance).");
+
+                        // Solve for the missing variable
+                        if (voltage_ol === null) {
+                            voltage_ol = current_ol * resistance_ol;
+                        } else if (current_ol === null) {
+                            if (resistance_ol === 0) throw new Error("Resistance cannot be zero if current is unknown (implies infinite current for non-zero voltage).");
+                            current_ol = voltage_ol / resistance_ol;
+                        } else if (resistance_ol === null) {
+                            if (current_ol === 0) throw new Error("Current cannot be zero if resistance is unknown (implies infinite resistance for non-zero voltage).");
+                            resistance_ol = voltage_ol / current_ol;
+                        }
+                        
+                        result = `⚡ Ohm's Law Calculation
+Voltage (V): ${voltage_ol.toFixed(4)} V
+Current (I): ${current_ol.toFixed(4)} A
+Resistance (R): ${resistance_ol.toFixed(4)} Ω
+
+🔌 Ohm's Law: V = I * R
+   ${voltage_ol.toFixed(4)} V = ${current_ol.toFixed(4)} A * ${resistance_ol.toFixed(4)} Ω`;
+                        break;
+
+                    case 'power':
+                        let voltage_p = getFloatValue('voltage_p');
+                        let current_p = getFloatValue('current_p');
+                        let resistance_p = getFloatValue('resistance_p');
+
+                        let knownCountPower = [voltage_p, current_p, resistance_p].filter(val => val !== null).length;
+                        if (knownCountPower !== 2) throw new Error("Enter exactly two values (V, I, or R) for Power calculation.");
+                        if (resistance_p !== null && resistance_p < 0) throw new Error("Resistance cannot be negative.");
+                        if ((voltage_p !== null && voltage_p !== 0 && resistance_p === 0) || (current_p !== null && current_p !== 0 && resistance_p === 0 && voltage_p === null)) throw new Error("Resistance cannot be zero for V^2/R or I^2*R calculations if R is involved and is the missing value or causes division by zero.");
+                        
+                        let power_val;
+                        let formulaUsed = '';
+
+                        if (voltage_p !== null && current_p !== null) {
+                            power_val = voltage_p * current_p;
+                            formulaUsed = `P = V * I`;
+                        } else if (current_p !== null && resistance_p !== null) {
+                            power_val = current_p * current_p * resistance_p;
+                            formulaUsed = `P = I² * R`;
+                        } else if (voltage_p !== null && resistance_p !== null) {
+                            power_val = (voltage_p * voltage_p) / resistance_p;
+                            formulaUsed = `P = V² / R`;
+                        } else {
+                            throw new Error("Could not derive power. Ensure two relevant values are provided.");
+                        }
+
+                        result = `💡 Power Calculation
+Power (P): ${power_val.toFixed(4)} W
+Input Values: V=${voltage_p !== null ? voltage_p.toFixed(4) : 'N/A'}V, I=${current_p !== null ? current_p.toFixed(4) : 'N/A'}A, R=${resistance_p !== null ? resistance_p.toFixed(4) : 'N/A'}Ω
+
+🔋 Power Formula: ${formulaUsed}
+   ${power_val.toFixed(4)} W`;
+                        break;
+
+                    case 'series-resistance':
+                        const r_s_values = [
+                            getFloatValue('resistor1_s'),
+                            getFloatValue('resistor2_s'),
+                            parseFloat(document.getElementById('resistor3_s').value || 0),
+                            parseFloat(document.getElementById('resistor4_s').value || 0)
+                        ].filter(val => val !== null && val > 0);
+
+                        if (r_s_values.length < 2) throw new Error("Enter at least two resistors for series calculation.");
+                        
+                        const totalSeriesResistance = r_s_values.reduce((sum, r) => sum + r, 0);
+
+                        result = `🔗 Series Resistance Calculation
+Resistors: ${r_s_values.map(r => r.toFixed(2) + ' Ω').join(', ')}
+
+Total Series Resistance (R_total): ${totalSeriesResistance.toFixed(4)} Ω
+
+🧮 Calculation: R_total = R1 + R2 + ...
+   ${totalSeriesResistance.toFixed(4)} Ω`;
+                        break;
+
+                    case 'parallel-resistance':
+                        const r_p_values = [
+                            getFloatValue('resistor1_p'),
+                            getFloatValue('resistor2_p'),
+                            parseFloat(document.getElementById('resistor3_p').value || 0),
+                            parseFloat(document.getElementById('resistor4_p').value || 0)
+                        ].filter(val => val !== null && val > 0);
+
+                        if (r_p_values.length < 2) throw new Error("Enter at least two resistors for parallel calculation.");
+                        if (r_p_values.some(r => r === 0)) throw new Error("Resistor values cannot be zero in parallel circuits (causes division by zero).");
+
+                        const sumOfReciprocals = r_p_values.reduce((sum, r) => sum + (1 / r), 0);
+                        const totalParallelResistance = 1 / sumOfReciprocals;
+
+                        result = `🔀 Parallel Resistance Calculation
+Resistors: ${r_p_values.map(r => r.toFixed(2) + ' Ω').join(', ')}
+
+Total Parallel Resistance (R_total): ${totalParallelResistance.toFixed(4)} Ω
+
+🧮 Calculation: 1/R_total = 1/R1 + 1/R2 + ...
+   1/${totalParallelResistance.toFixed(4)} = ${r_p_values.map(r => `1/${r.toFixed(2)}`).join(' + ')}`;
+                        break;
+
+                    case 'capacitive-reactance':
+                        const frequency_xc = getFloatValue('frequency_xc');
+                        const capacitance_xc = getFloatValue('capacitance_xc');
+                        if (frequency_xc <= 0 || capacitance_xc <= 0) throw new Error("Frequency and Capacitance must be positive.");
+
+                        const capacitiveReactance = 1 / (2 * Math.PI * frequency_xc * capacitance_xc);
+
+                        result = `⚡ Capacitive Reactance Calculation
+Frequency (f): ${frequency_xc.toFixed(4)} Hz
+Capacitance (C): ${capacitance_xc.toExponential(4)} F
+
+Capacitive Reactance (X_c): ${capacitiveReactance.toFixed(4)} Ω
+
+🧮 Calculation: X_C = 1 / (2πfC)
+   ${capacitiveReactance.toFixed(4)} Ω = 1 / (2π * ${frequency_xc.toFixed(4)} Hz * ${capacitance_xc.toExponential(4)} F)`;
+                        break;
+
+                    case 'inductive-reactance':
+                        const frequency_xl = getFloatValue('frequency_xl');
+                        const inductance_xl = getFloatValue('inductance_xl');
+                        if (frequency_xl <= 0 || inductance_xl <= 0) throw new Error("Frequency and Inductance must be positive.");
+
+                        const inductiveReactance = 2 * Math.PI * frequency_xl * inductance_xl;
+
+                        result = `🌀 Inductive Reactance Calculation
+Frequency (f): ${frequency_xl.toFixed(4)} Hz
+Inductance (L): ${inductance_xl.toExponential(4)} H
+
+Inductive Reactance (X_L): ${inductiveReactance.toFixed(4)} Ω
+
+🧮 Calculation: X_L = 2πfL
+   ${inductiveReactance.toFixed(4)} Ω = 2π * ${frequency_xl.toFixed(4)} Hz * ${inductance_xl.toExponential(4)} H`;
+                        break;
+                    default:
+                        throw new Error("Invalid electrical circuits calculation type.");
+                }
+            } catch (error) {
+                throw new Error(`Electrical Circuits Error: ${error.message}`);
+            }
+            return result;
+        }
+
+        // Magnetism & Electromagnetic Induction
+        function calculateMagnetismInduction() {
+            const magType = document.getElementById('magType').value;
+            let result = '';
+
+            try {
+                switch(magType) {
+                    case 'magnetic-field':
+                        const magneticFieldMethod_mf = document.getElementById('magneticFieldMethod_mf').value;
+                        const current_mf = getFloatValue('current_mf');
+                        const distance_mf = getFloatValue('distance_mf'); // Can be radius or length for solenoid
+                        const turns_mf = getFloatValue('turns_mf'); // N for loop, n for solenoid
+
+                        if (current_mf < 0) throw new Error("Current cannot be negative."); // Magnitude
+                        if (distance_mf <= 0) throw new Error("Distance/Radius must be positive.");
+                        if (turns_mf < 0) throw new Error("Number of turns cannot be negative.");
+
+                        let magneticField;
+                        let formulaText;
+                        switch(magneticFieldMethod_mf) {
+                            case 'straight-wire':
+                                magneticField = (PERMEABILITY_0 * current_mf) / (2 * Math.PI * distance_mf);
+                                formulaText = `B = (μ₀ * I) / (2π * r)`;
+                                break;
+                            case 'current-loop':
+                                magneticField = (PERMEABILITY_0 * turns_mf * current_mf) / (2 * distance_mf); // distance_mf is R (radius) here
+                                formulaText = `B = (μ₀ * N * I) / (2 * R)`;
+                                break;
+                            case 'solenoid':
+                                magneticField = PERMEABILITY_0 * turns_mf * current_mf; // turns_mf is n (turns per unit length) here
+                                formulaText = `B = μ₀ * n * I`;
+                                break;
+                            default:
+                                throw new Error("Invalid magnetic field method selected.");
+                        }
+
+                        result = `🧲 Magnetic Field Calculation
+Method: ${magneticFieldMethod_mf.replace('-', ' ').toUpperCase()}
+Current (I): ${current_mf.toFixed(4)} A
+Distance/Radius/Length: ${distance_mf.toFixed(4)} m
+Turns (N/n): ${turns_mf}
+
+Magnetic Field Strength (B): ${magneticField.toExponential(4)} T
+
+🔬 Calculation: ${formulaText}
+   B = (${PERMEABILITY_0.toExponential(2)} * ${current_mf.toFixed(4)} * ${turns_mf}) / ... = ${magneticField.toExponential(4)} T`;
+                        break;
+
+                    case 'lorentz-force':
+                        const charge_lf = getFloatValue('charge_lf');
+                        const velocity_lf = getFloatValue('velocity_lf');
+                        const magneticField_lf = getFloatValue('magneticField_lf');
+                        const angle_lf = getFloatValue('angle_lf'); // in degrees
+
+                        if (velocity_lf < 0) throw new Error("Velocity magnitude cannot be negative.");
+                        if (magneticField_lf < 0) throw new Error("Magnetic field strength cannot be negative.");
+
+                        const lorentzForce = charge_lf * velocity_lf * magneticField_lf * Math.sin(angle_lf * Math.PI / 180);
+
+                        result = `⚡ Lorentz Force Calculation
+Charge (q): ${charge_lf.toExponential(2)} C
+Velocity (v): ${velocity_lf.toFixed(4)} m/s
+Magnetic Field (B): ${magneticField_lf.toFixed(4)} T
+Angle (θ): ${angle_lf.toFixed(2)}°
+
+Lorentz Force (F): ${lorentzForce.toExponential(4)} N
+
+🔬 Calculation: F = q v B sin(θ)
+   ${charge_lf.toExponential(2)} * ${velocity_lf.toFixed(4)} * ${magneticField_lf.toFixed(4)} * sin(${angle_lf.toFixed(2)}°) = ${lorentzForce.toExponential(4)} N`;
+                        break;
+
+                    case 'magnetic-flux':
+                        const bField_mf = getFloatValue('magneticField_mf');
+                        const area_mf = getFloatValue('area_mf');
+                        const fluxAngle_mf = getFloatValue('angle_mf'); // in degrees
+
+                        if (bField_mf < 0) throw new Error("Magnetic field strength cannot be negative.");
+                        if (area_mf < 0) throw new Error("Area cannot be negative.");
+
+                        const magneticFlux = bField_mf * area_mf * Math.cos(fluxAngle_mf * Math.PI / 180);
+
+                        result = `🌊 Magnetic Flux Calculation
+Magnetic Field (B): ${bField_mf.toFixed(4)} T
+Surface Area (A): ${area_mf.toFixed(4)} m²
+Angle (θ): ${fluxAngle_mf.toFixed(2)}°
+
+Magnetic Flux (Φ_B): ${magneticFlux.toExponential(4)} Wb (Weber)
+
+🔬 Calculation: Φ_B = B A cos(θ)
+   ${bField_mf.toFixed(4)} * ${area_mf.toFixed(4)} * cos(${fluxAngle_mf.toFixed(2)}°) = ${magneticFlux.toExponential(4)} Wb`;
+                        break;
+
+                    case 'faradays-law':
+                        const fluxChange_fl = getFloatValue('fluxChange_fl');
+                        const timeInterval_fl = getFloatValue('timeInterval_fl');
+                        const coilTurns_fl = getFloatValue('turns_fl');
+
+                        if (timeInterval_fl <= 0) throw new Error("Time interval must be positive.");
+                        if (coilTurns_fl < 0) throw new Error("Number of turns cannot be negative.");
+
+                        const inducedEMF = -coilTurns_fl * (fluxChange_fl / timeInterval_fl);
+
+                        result = `⚡ Faraday's Law of Induction
+Flux Change (ΔΦ_B): ${fluxChange_fl.toExponential(4)} Wb
+Time Interval (Δt): ${timeInterval_fl.toExponential(4)} s
+Number of Turns (N): ${coilTurns_fl}
+
+Induced EMF (ε): ${inducedEMF.toExponential(4)} V
+
+🔬 Calculation: ε = -N * (ΔΦ_B / Δt)
+   -${coilTurns_fl} * (${fluxChange_fl.toExponential(4)} / ${timeInterval_fl.toExponential(4)}) = ${inducedEMF.toExponential(4)} V`;
+                        break;
+
+                    case 'amperes-law':
+                        const totalCurrent_al = getFloatValue('current_al');
+                        const pathLength_al = getFloatValue('pathLength_al');
+
+                        if (pathLength_al <= 0) throw new Error("Path length must be positive.");
+
+                        const circularMagneticField_al = (PERMEABILITY_0 * totalCurrent_al) / pathLength_al;
+
+                        result = `🌀 Ampère's Law Calculation
+Total Enclosed Current (I_enclosed): ${totalCurrent_al.toFixed(4)} A
+Amperian Path Length (L): ${pathLength_al.toFixed(4)} m
+
+Magnetic Field (B): ${circularMagneticField_al.toExponential(4)} T
+
+🔬 Calculation: B = (μ₀ * I_enclosed) / L
+   (${PERMEABILITY_0.toExponential(2)} * ${totalCurrent_al.toFixed(4)}) / ${pathLength_al.toFixed(4)} = ${circularMagneticField_al.toExponential(4)} T`;
+                        break;
+
+                    case 'magnetic-moment':
+                        const currentMoment_mm = getFloatValue('current_mm');
+                        const momentArea_mm = getFloatValue('area_mm');
+                        const momentTurns_mm = getFloatValue('turns_mm');
+
+                        if (currentMoment_mm < 0) throw new Error("Current cannot be negative.");
+                        if (momentArea_mm < 0) throw new Error("Area cannot be negative.");
+                        if (momentTurns_mm < 0) throw new Error("Number of turns cannot be negative.");
+
+                        const magneticMoment = currentMoment_mm * momentArea_mm * momentTurns_mm;
+
+                        result = `🌟 Magnetic Moment Calculation
+Current (I): ${currentMoment_mm.toFixed(4)} A
+Area (A): ${momentArea_mm.toFixed(4)} m²
+Number of Turns (N): ${momentTurns_mm}
+
+Magnetic Moment (μ): ${magneticMoment.toExponential(4)} A·m²
+
+🔬 Calculation: μ = I A N
+   ${currentMoment_mm.toFixed(4)} * ${momentArea_mm.toFixed(4)} * ${momentTurns_mm} = ${magneticMoment.toExponential(4)} A·m²`;
+                        break;
+                    default:
+                        throw new Error("Invalid magnetism calculation type.");
+                }
+            } catch (error) {
+                throw new Error(`Magnetism Error: ${error.message}`);
+            }
+            return result;
+        }
+
+        // Waves & Optics
+        function calculateWavesOptics() {
+            const woType = document.getElementById('woType').value;
+            let result = '';
+
+            try {
+                switch(woType) {
+                    case 'wave-properties':
+                        let frequency_wp = getFloatValue('frequency_wp');
+                        let wavelength_wp = getFloatValue('wavelength_wp');
+                        let waveSpeed_wp = getFloatValue('waveSpeed_wp');
+                        const waveMedium_wp = document.getElementById('waveMedium_wp').value;
+
+                        let knownCountWP = [frequency_wp, wavelength_wp, waveSpeed_wp].filter(val => val !== null).length;
+
+                        if (waveMedium_wp !== 'none' && knownCountWP > 1) {
+                            throw new Error("If selecting a known wave speed, provide only one other value (frequency or wavelength).");
+                        }
+                        if (waveMedium_wp === 'none' && knownCountWP < 2) {
+                            throw new Error("For custom wave properties, provide at least two values (frequency, wavelength, or speed).");
+                        }
+                        
+                        // Override waveSpeed_wp if a medium is selected
+                        if (waveMedium_wp === 'sound_air') {
+                            waveSpeed_wp = SPEED_OF_SOUND;
+                        } else if (waveMedium_wp === 'light_vacuum') {
+                            waveSpeed_wp = SPEED_OF_LIGHT;
+                        }
+
+                        if (frequency_wp === null && wavelength_wp !== null && waveSpeed_wp !== null) {
+                            if (wavelength_wp === 0) throw new Error("Wavelength cannot be zero.");
+                            frequency_wp = waveSpeed_wp / wavelength_wp;
+                        } else if (wavelength_wp === null && frequency_wp !== null && waveSpeed_wp !== null) {
+                            if (frequency_wp === 0) throw new Error("Frequency cannot be zero.");
+                            wavelength_wp = waveSpeed_wp / frequency_wp;
+                        } else if (waveSpeed_wp === null && frequency_wp !== null && wavelength_wp !== null) {
+                            waveSpeed_wp = frequency_wp * wavelength_wp;
+                        } else {
+                            // If user provided 2, and one was calculated by medium select
+                            // or if they provided more than two and they are inconsistent, this catches
+                            if (frequency_wp * wavelength_wp !== waveSpeed_wp) { // simple consistency check
+                                //throw new Error("Provided values are inconsistent (v != f * lambda).");
+                            }
+                        }
+
+                        if (frequency_wp <= 0 || wavelength_wp <= 0 || waveSpeed_wp <= 0) {
+                            throw new Error("Frequency, wavelength, and speed must be positive values.");
+                        }
+                        
+                        result = `🌊 Wave Properties Calculation
+Frequency (f): ${frequency_wp.toFixed(4)} Hz
+Wavelength (λ): ${wavelength_wp.toFixed(4)} m
+Wave Speed (v): ${waveSpeed_wp.toFixed(4)} m/s
+Wave Medium: ${waveMedium_wp === 'sound_air' ? 'Sound in Air' : waveMedium_wp === 'light_vacuum' ? 'Light in Vacuum' : 'Custom/Calculated'}
+
+🔬 Calculation: v = fλ
+   ${waveSpeed_wp.toFixed(4)} m/s = ${frequency_wp.toFixed(4)} Hz * ${wavelength_wp.toFixed(4)} m`;
+                        break;
+
+                    case 'sound-wave':
+                        const temperature_sw = getFloatValue('temperature_sw');
+                        let frequency_sw = getFloatValue('frequency_sw');
+                        let wavelength_sw = getFloatValue('wavelength_sw');
+
+                        const soundSpeed = 331.3 + (0.606 * temperature_sw);
+                        let knownCountSW = [frequency_sw, wavelength_sw].filter(val => val !== null).length;
+
+                        if (knownCountSW === 0) throw new Error("Provide either frequency or wavelength for sound wave calculation.");
+
+                        if (frequency_sw === null && wavelength_sw !== null) {
+                            if (wavelength_sw === 0) throw new Error("Wavelength cannot be zero.");
+                            frequency_sw = soundSpeed / wavelength_sw;
+                        } else if (wavelength_sw === null && frequency_sw !== null) {
+                            if (frequency_sw === 0) throw new Error("Frequency cannot be zero.");
+                            wavelength_sw = soundSpeed / frequency_sw;
+                        } else if (frequency_sw !== null && wavelength_sw !== null) {
+                            // Consistency check if both provided
+                            if (Math.abs(soundSpeed - (frequency_sw * wavelength_sw)) > 1e-4) {
+                                throw new Error("Provided frequency and wavelength are inconsistent with calculated speed of sound at this temperature.");
+                            }
+                        }
+                        if (frequency_sw <= 0 || wavelength_sw <= 0) throw new Error("Frequency and wavelength must be positive.");
+                        
+                        result = `🔊 Sound Wave Characteristics
+Medium Temperature: ${temperature_sw.toFixed(2)}°C
+Speed of Sound (v): ${soundSpeed.toFixed(4)} m/s
+Frequency (f): ${frequency_sw.toFixed(4)} Hz
+Wavelength (λ): ${wavelength_sw.toFixed(4)} m
+
+🧮 Calculation: v = 331.3 + 0.606 * T; v = fλ
+   ${soundSpeed.toFixed(4)} m/s = ${frequency_sw.toFixed(4)} Hz * ${wavelength_sw.toFixed(4)} m`;
+                        break;
+
+                    case 'light-wave':
+                        let wavelength_lw = getFloatValue('wavelength_lw'); // in nm
+                        let frequency_lw = getFloatValue('frequency_lw'); // in Hz
+
+                        if (wavelength_lw === null && frequency_lw === null) {
+                            throw new Error("Provide either wavelength or frequency.");
+                        }
+
+                        if (wavelength_lw !== null && wavelength_lw <= 0) throw new Error("Wavelength must be positive.");
+                        if (frequency_lw !== null && frequency_lw <= 0) throw new Error("Frequency must be positive.");
+
+                        const lightSpeed = SPEED_OF_LIGHT; // m/s
+                        
+                        if (wavelength_lw === null) {
+                            wavelength_lw = (lightSpeed / frequency_lw) * 1e9; // Calculate in nm
+                        } else if (frequency_lw === null) {
+                            frequency_lw = lightSpeed / (wavelength_lw / 1e9); // Wavelength from nm to m
+                        }
+
+                        // Determine color for visible light
+                        let colorDescription = 'Not in Visible Spectrum';
+                        if (wavelength_lw >= 380 && wavelength_lw <= 750) { // Visible light range in nm
+                            if (wavelength_lw >= 380 && wavelength_lw < 450) colorDescription = 'Violet';
+                            else if (wavelength_lw >= 450 && wavelength_lw < 495) colorDescription = 'Blue';
+                            else if (wavelength_lw >= 495 && wavelength_lw < 570) colorDescription = 'Green';
+                            else if (wavelength_lw >= 570 && wavelength_lw < 590) colorDescription = 'Yellow';
+                            else if (wavelength_lw >= 590 && wavelength_lw < 620) colorDescription = 'Orange';
+                            else if (wavelength_lw >= 620 && wavelength_lw <= 750) colorDescription = 'Red';
+                        }
+                        
+                        result = `🌈 Light Wave Characteristics
+Wavelength (λ): ${wavelength_lw.toFixed(4)} nm
+Frequency (f): ${frequency_lw.toExponential(4)} Hz
+Speed of Light (c): ${lightSpeed.toExponential(2)} m/s
+
+Approximate Color: ${colorDescription}
+
+🔬 Calculation: c = fλ
+   ${lightSpeed.toExponential(2)} m/s = ${frequency_lw.toExponential(4)} Hz * ${(wavelength_lw / 1e9).toExponential(4)} m`;
+                        break;
+
+                    case 'refraction':
+                        const incidenceAngle_r = getFloatValue('incidenceAngle_r');
+                        const refractiveIndex1_r = getFloatValue('refractiveIndex1_r');
+                        const refractiveIndex2_r = getFloatValue('refractiveIndex2_r');
+
+                        if (refractiveIndex1_r <= 0 || refractiveIndex2_r <= 0) throw new Error("Refractive indices must be positive.");
+                        if (incidenceAngle_r < 0 || incidenceAngle_r > 90) throw new Error("Incidence angle must be between 0 and 90 degrees.");
+
+                        const sin_theta1 = Math.sin(incidenceAngle_r * Math.PI / 180);
+                        const sin_theta2_val = (refractiveIndex1_r / refractiveIndex2_r) * sin_theta1;
+
+                        if (sin_theta2_val > 1 || sin_theta2_val < -1) {
+                            throw new Error("Total Internal Reflection occurs (sin(theta2) is out of range). No refracted angle.");
+                        }
+                        
+                        const refractionAngle_r = Math.asin(sin_theta2_val) * (180 / Math.PI);
+
+                        result = `🔬 Refraction Calculation
+Angle of Incidence (θ₁): ${incidenceAngle_r.toFixed(2)}°
+Refractive Index 1 (n₁): ${refractiveIndex1_r.toFixed(3)}
+Refractive Index 2 (n₂): ${refractiveIndex2_r.toFixed(3)}
+
+Angle of Refraction (θ₂): ${refractionAngle_r.toFixed(2)}°
+
+🧮 Calculation (Snell's Law): n₁ sin(θ₁) = n₂ sin(θ₂)
+   ${refractiveIndex1_r.toFixed(3)} * sin(${incidenceAngle_r.toFixed(2)}°) = ${refractiveIndex2_r.toFixed(3)} * sin(${refractionAngle_r.toFixed(2)}°)`;
+                        break;
+
+                    case 'interference':
+                        const wavelength_i = getFloatValue('wavelength_i');
+                        const pathDifference_i = getFloatValue('pathDifference_i');
+
+                        if (wavelength_i <= 0) throw new Error("Wavelength must be positive.");
+
+                        let condition;
+                        let orderM;
+                        let typeOfInterference;
+
+                        // Check for constructive interference (Δr = mλ)
+                        orderM = pathDifference_i / wavelength_i;
+                        if (Math.abs(orderM - Math.round(orderM)) < 1e-6) { // Check if m is close to an integer
+                            typeOfInterference = 'Constructive';
+                            condition = `Δr = ${Math.round(orderM)}λ`;
+                        } else {
+                            // Check for destructive interference (Δr = (m + 0.5)λ)
+                            orderM = (pathDifference_i / wavelength_i) - 0.5;
+                            if (Math.abs(orderM - Math.round(orderM)) < 1e-6) { // Check if m+0.5 is close to an integer
+                                typeOfInterference = 'Destructive';
+                                condition = `Δr = (${Math.round(orderM)} + 1/2)λ`;
+                            } else {
+                                typeOfInterference = 'Neither purely Constructive nor Destructive';
+                                condition = `Δr / λ = ${(pathDifference_i / wavelength_i).toFixed(4)}`;
+                            }
+                        }
+                        
+                        result = `🌊 Wave Interference Calculation
+Wavelength (λ): ${wavelength_i.toExponential(4)} m
+Path Difference (Δr): ${pathDifference_i.toExponential(4)} m
+
+Type of Interference: ${typeOfInterference}
+Condition: ${condition}
+`;
+                        break;
+
+                    case 'diffraction':
+                        const diffractionWavelength_d = getFloatValue('wavelength_d');
+                        const slitWidth_d = getFloatValue('slitWidth_d');
+                        const order_d = getFloatValue('order_d');
+
+                        if (diffractionWavelength_d <= 0) throw new Error("Wavelength must be positive.");
+                        if (slitWidth_d <= 0) throw new Error("Slit width must be positive.");
+                        if (order_d <= 0) throw new Error("Order 'm' must be a positive integer (1 for first minimum, etc.).");
+                        if (order_d % 1 !== 0) throw new Error("Order 'm' must be an integer.");
+
+                        const sinTheta = (order_d * diffractionWavelength_d) / slitWidth_d;
+
+                        if (sinTheta > 1 || sinTheta < -1) {
+                            throw new Error("No diffraction minimum exists for this order/wavelength/slit width combination (sin(theta) > 1).");
+                        }
+                        
+                        const diffractionAngle_d = Math.asin(sinTheta) * (180 / Math.PI);
+
+                        result = `🌈 Diffraction Calculation (Single Slit Minimum)
+Wavelength (λ): ${diffractionWavelength_d.toExponential(4)} m
+Slit Width (a): ${slitWidth_d.toExponential(4)} m
+Order (m): ${order_d}
+
+Diffraction Angle (θ): ${diffractionAngle_d.toFixed(2)}°
+
+🔬 Calculation: a sin(θ) = mλ
+   ${slitWidth_d.toExponential(4)} * sin(${diffractionAngle_d.toFixed(2)}°) = ${order_d} * ${diffractionWavelength_d.toExponential(4)} m`;
+                        break;
+                    default:
+                        throw new Error("Invalid waves and optics calculation type.");
+                }
+            } catch (error) {
+                throw new Error(`Waves & Optics Error: ${error.message}`);
+            }
+            return result;
+        }
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'electrostatics':
+                        output = calculateElectrostatics();
+                        break;
+                    case 'electrical-circuits':
+                        output = calculateElectricalCircuits();
+                        break;
+                    case 'magnetism-induction':
+                        output = calculateMagnetismInduction();
+                        break;
+                    case 'waves-optics':
+                        output = calculateWavesOptics();
+                        break;
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

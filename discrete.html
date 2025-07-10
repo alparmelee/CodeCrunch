@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discrete Mathematics Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            /* Add background image */
+            background-image: url('discrete.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            /* Add a slight backdrop blur and opacity for readability */
+            backdrop-filter: blur(4px);
+            background: rgba(255,255,255,0.92);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .array-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .array-input input {
+            width: 60px;
+            text-align: center;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🔢 Discrete Mathematics Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="logic-truth-table">Logic: Truth Table (P, Q)</option>
+                <option value="set-operations">Set Operations (Union, Intersection, etc.)</option>
+                <option value="combinatorics-permutations">Combinatorics: Permutations</option>
+                <option value="combinatorics-combinations">Combinatorics: Combinations</option>
+                <option value="number-theory-gcd-lcm">Number Theory: GCD & LCM</option>
+                <option value="number-theory-modular-inverse">Number Theory: Modular Inverse</option>
+                <option value="recurrence-linear-homogeneous">Recurrence Relation: Linear Homogeneous (2nd Order)</option>
+                <option value="graph-degrees-handshake">Graph Theory: Sum of Degrees & Handshaking Lemma</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // --- Utility Functions ---
+        function getNumericalArray(inputString, separator = ',', allowFloat = false) {
+            const values = inputString.split(separator).map(s => {
+                const trimmed = s.trim();
+                return allowFloat ? parseFloat(trimmed) : parseInt(trimmed);
+            });
+            if (values.some(isNaN) || values.length === 0 || (values.length === 1 && values[0] === '')) {
+                throw new Error("Please enter valid numbers (comma-separated).");
+            }
+            return values;
+        }
+
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        function combinations(n, k) {
+            if (k < 0 || k > n) return 0;
+            if (k === 0 || k === n) return 1;
+            if (k > n / 2) k = n - k;
+            let res = 1;
+            for (let i = 1; i <= k; i++) {
+                res = res * (n - i + 1) / i;
+            }
+            return res;
+        }
+
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        }
+
+        function lcm(a, b) {
+            if (a === 0 || b === 0) return 0;
+            return Math.abs(a * b) / gcd(a, b);
+        }
+
+        function modInverse(a, m) {
+            for (let x = 1; x < m; x++) {
+                if (((a % m) * (x % m)) % m === 1) {
+                    return x;
+                }
+            }
+            return -1; // No inverse
+        }
+
+        // --- Core Calculation Logic ---
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'logic-truth-table': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="propP">Proposition P (true/false):</label>
+                                <select id="propP">
+                                    <option value="true">True</option>
+                                    <option value="false">False</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="propQ">Proposition Q (true/false):</label>
+                                <select id="propQ">
+                                    <option value="true">True</option>
+                                    <option value="false">False</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="logicOp">Logical Operation:</label>
+                                <select id="logicOp">
+                                    <option value="and">P AND Q (P ∧ Q)</option>
+                                    <option value="or">P OR Q (P ∨ Q)</option>
+                                    <option value="xor">P XOR Q (P ⊕ Q)</option>
+                                    <option value="implication">P IMPLIES Q (P → Q)</option>
+                                    <option value="biconditional">P IFF Q (P ↔ Q)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ P \\land Q \\quad P \\lor Q \\quad P \\oplus Q \\quad P \\to Q \\quad P \\leftrightarrow Q $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the result of a logical operation between two propositions P and Q.
+                        </div>
+                    `
+                },
+                'set-operations': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="setA">Set A (comma-separated elements):</label>
+                                <input type="text" id="setA" placeholder="e.g., 1,2,3">
+                            </div>
+                            <div>
+                                <label for="setB">Set B (comma-separated elements):</label>
+                                <input type="text" id="setB" placeholder="e.g., 3,4,5">
+                            </div>
+                            <div>
+                                <label for="setOp">Set Operation:</label>
+                                <select id="setOp">
+                                    <option value="union">Union (A ∪ B)</option>
+                                    <option value="intersection">Intersection (A ∩ B)</option>
+                                    <option value="difference_ab">Difference (A - B)</option>
+                                    <option value="difference_ba">Difference (B - A)</option>
+                                    <option value="cartesian_product">Cartesian Product (A × B)</option>
+                                    <option value="power_setA">Power Set (P(A))</option>
+                                    <option value="power_setB">Power Set (P(B))</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ A \\cup B \\quad A \\cap B \\quad A - B \\quad A \\times B \\quad \\mathcal{P}(A) $$
+                        </div>
+                        <div class="info-box">
+                            Performs standard set operations. Elements can be numbers or text. For Power Set, only one set is needed.
+                        </div>
+                    `
+                },
+                'combinatorics-permutations': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="nPerm">Total number of items (n):</label>
+                                <input type="number" id="nPerm" placeholder="e.g., 10">
+                            </div>
+                            <div>
+                                <label for="rPerm">Number of items to choose (r):</label>
+                                <input type="number" id="rPerm" placeholder="e.g., 3">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ P(n, r) = \\frac{n!}{(n-r)!} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the number of permutations: arrangements where order matters.
+                        </div>
+                    `
+                },
+                'combinatorics-combinations': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="nComb">Total number of items (n):</label>
+                                <input type="number" id="nComb" placeholder="e.g., 10">
+                            </div>
+                            <div>
+                                <label for="rComb">Number of items to choose (r):</label>
+                                <input type="number" id="rComb" placeholder="e.g., 3">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ C(n, r) = \\frac{n!}{r!(n-r)!} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the number of combinations: selections where order does not matter.
+                        </div>
+                    `
+                },
+                'number-theory-gcd-lcm': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="num1_nt">Number 1:</label>
+                                <input type="number" id="num1_nt" placeholder="e.g., 12">
+                            </div>
+                            <div>
+                                <label for="num2_nt">Number 2:</label>
+                                <input type="number" id="num2_nt" placeholder="e.g., 18">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\text{gcd}(a, b) \\quad \\text{lcm}(a, b) $$
+                            $$ \\text{lcm}(a, b) = \\frac{|a \\cdot b|}{\\text{gcd}(a, b)} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the Greatest Common Divisor (GCD) and Least Common Multiple (LCM) of two integers.
+                        </div>
+                    `
+                },
+                'number-theory-modular-inverse': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="a_modinv">Number (a):</label>
+                                <input type="number" id="a_modinv" placeholder="e.g., 7">
+                            </div>
+                            <div>
+                                <label for="m_modinv">Modulus (m):</label>
+                                <input type="number" id="m_modinv" placeholder="e.g., 26">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            Find $x$ such that $(a \\cdot x) \\pmod m = 1$
+                        </div>
+                        <div class="info-box">
+                            Calculates the modular multiplicative inverse of 'a' modulo 'm'. An inverse exists if and only if 'a' and 'm' are coprime (i.e., their GCD is 1).
+                        </div>
+                    `
+                },
+                'recurrence-linear-homogeneous': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="c1_rr">Coefficient c1 (for a_{n-1}):</label>
+                                <input type="number" id="c1_rr" placeholder="e.g., 1">
+                            </div>
+                            <div>
+                                <label for="c2_rr">Coefficient c2 (for a_{n-2}):</label>
+                                <input type="number" id="c2_rr" placeholder="e.g., 1">
+                            </div>
+                            <div>
+                                <label for="a0_rr">a0 (Initial term):</label>
+                                <input type="number" id="a0_rr" placeholder="e.g., 0">
+                            </div>
+                            <div>
+                                <label for="a1_rr">a1 (Second initial term):</label>
+                                <input type="number" id="a1_rr" placeholder="e.g., 1">
+                            </div>
+                            <div>
+                                <label for="n_rr">Find term a_n for n=:</label>
+                                <input type="number" id="n_rr" min="0" placeholder="e.g., 5">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ a_n = c_1 a_{n-1} + c_2 a_{n-2} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates terms of a second-order linear homogeneous recurrence relation with constant coefficients.
+                            (e.g., Fibonacci sequence: c1=1, c2=1, a0=0, a1=1)
+                        </div>
+                    `
+                },
+                'graph-degrees-handshake': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="degreesInput">Degrees of each vertex (comma-separated):</label>
+                                <input type="text" id="degreesInput" placeholder="e.g., 2,2,3,3">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\sum_{v \\in V} \\text{deg}(v) = 2 |E| $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the sum of degrees of all vertices in a graph and verifies the Handshaking Lemma. The Handshaking Lemma states that the sum of the degrees of all vertices in any undirected graph is equal to twice the number of edges. This implies that the sum of degrees must always be an even number.
+                        </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Discrete Math Calculation Functions ---
+
+        // Logic: Truth Table
+        function calculateLogicTruthTable() {
+            const p = document.getElementById('propP').value === 'true';
+            const q = document.getElementById('propQ').value === 'true';
+            const op = document.getElementById('logicOp').value;
+
+            let result;
+            let opSymbol;
+
+            switch(op) {
+                case 'and':
+                    result = p && q;
+                    opSymbol = '∧';
+                    break;
+                case 'or':
+                    result = p || q;
+                    opSymbol = '∨';
+                    break;
+                case 'xor':
+                    result = p !== q;
+                    opSymbol = '⊕';
+                    break;
+                case 'implication':
+                    result = !p || q; // P -> Q is equivalent to NOT P OR Q
+                    opSymbol = '→';
+                    break;
+                case 'biconditional':
+                    result = p === q;
+                    opSymbol = '↔';
+                    break;
+                default:
+                    throw new Error("Invalid logical operation selected.");
+            }
+
+            return `
+                P: ${p}
+                Q: ${q}
+                Operation: P ${opSymbol} Q
+                Result: ${result}
+            `;
+        }
+
+        // Set Operations
+        function calculateSetOperations() {
+            const setAStr = document.getElementById('setA').value;
+            const setBStr = document.getElementById('setB').value;
+            const setOp = document.getElementById('setOp').value;
+
+            const setA = new Set(setAStr.split(',').map(s => s.trim()).filter(s => s !== ''));
+            const setB = new Set(setBStr.split(',').map(s => s.trim()).filter(s => s !== ''));
+
+            let result = '';
+
+            switch(setOp) {
+                case 'union':
+                    const unionSet = new Set([...setA, ...setB]);
+                    result = `A ∪ B = {${Array.from(unionSet).join(', ')}}`;
+                    break;
+                case 'intersection':
+                    const intersectionSet = new Set([...setA].filter(x => setB.has(x)));
+                    result = `A ∩ B = {${Array.from(intersectionSet).join(', ')}}`;
+                    break;
+                case 'difference_ab':
+                    const diffAB = new Set([...setA].filter(x => !setB.has(x)));
+                    result = `A - B = {${Array.from(diffAB).join(', ')}}`;
+                    break;
+                case 'difference_ba':
+                    const diffBA = new Set([...setB].filter(x => !setA.has(x)));
+                    result = `B - A = {${Array.from(diffBA).join(', ')}}`;
+                    break;
+                case 'cartesian_product':
+                    if (setA.size === 0 || setB.size === 0) {
+                        result = 'A × B = {} (One or both sets are empty)';
+                    } else {
+                        const cartesianProduct = [];
+                        for (let a of setA) {
+                            for (let b of setB) {
+                                cartesianProduct.push(`(${a},${b})`);
+                            }
+                        }
+                        result = `A × B = {${cartesianProduct.join(', ')}}`;
+                    }
+                    break;
+                case 'power_setA':
+                    if (setA.size > 5) throw new Error("Power set of A is too large to display for more than 5 elements.");
+                    const powerSetA = [[]];
+                    for (let elem of setA) {
+                        const len = powerSetA.length;
+                        for (let i = 0; i < len; i++) {
+                            powerSetA.push([...powerSetA[i], elem]);
+                        }
+                    }
+                    result = `P(A) = { {${powerSetA.map(subset => subset.join(', ')).join('}, {')}} }`;
+                    break;
+                case 'power_setB':
+                     if (setB.size > 5) throw new Error("Power set of B is too large to display for more than 5 elements.");
+                    const powerSetB = [[]];
+                    for (let elem of setB) {
+                        const len = powerSetB.length;
+                        for (let i = 0; i < len; i++) {
+                            powerSetB.push([...powerSetB[i], elem]);
+                        }
+                    }
+                    result = `P(B) = { {${powerSetB.map(subset => subset.join(', ')).join('}, {')}} }`;
+                    break;
+                default:
+                    throw new Error("Invalid set operation selected.");
+            }
+
+            return `
+                Set A: {${Array.from(setA).join(', ')}}
+                Set B: {${Array.from(setB).join(', ')}}
+                ${result}
+            `;
+        }
+
+        // Combinatorics: Permutations
+        function calculatePermutations() {
+            const n = parseInt(document.getElementById('nPerm').value);
+            const r = parseInt(document.getElementById('rPerm').value);
+
+            if (isNaN(n) || isNaN(r)) throw new Error("Please enter valid numbers for n and r.");
+            if (n < 0 || r < 0) throw new Error("n and r must be non-negative.");
+            if (r > n) throw new Error("r cannot be greater than n for permutations.");
+
+            const result = factorial(n) / factorial(n - r);
+            return `
+                P(n=${n}, r=${r}) = ${result}
+            `;
+        }
+
+        // Combinatorics: Combinations
+        function calculateCombinations() {
+            const n = parseInt(document.getElementById('nComb').value);
+            const r = parseInt(document.getElementById('rComb').value);
+
+            if (isNaN(n) || isNaN(r)) throw new Error("Please enter valid numbers for n and r.");
+            if (n < 0 || r < 0) throw new Error("n and r must be non-negative.");
+            if (r > n) throw new Error("r cannot be greater than n for combinations.");
+
+            const result = combinations(n, r);
+            return `
+                C(n=${n}, r=${r}) = ${result}
+            `;
+        }
+
+        // Number Theory: GCD & LCM
+        function calculateGCDLCM() {
+            const num1 = parseInt(document.getElementById('num1_nt').value);
+            const num2 = parseInt(document.getElementById('num2_nt').value);
+
+            if (isNaN(num1) || isNaN(num2)) throw new Error("Please enter valid numbers for both inputs.");
+            
+            const commonDivisor = gcd(num1, num2);
+            const commonMultiple = lcm(num1, num2);
+
+            return `
+                Number 1: ${num1}
+                Number 2: ${num2}
+                GCD(${num1}, ${num2}) = ${commonDivisor}
+                LCM(${num1}, ${num2}) = ${commonMultiple}
+            `;
+        }
+
+        // Number Theory: Modular Inverse
+        function calculateModularInverse() {
+            const a = parseInt(document.getElementById('a_modinv').value);
+            const m = parseInt(document.getElementById('m_modinv').value);
+
+            if (isNaN(a) || isNaN(m)) throw new Error("Please enter valid numbers for 'a' and 'm'.");
+            if (m <= 1) throw new Error("Modulus 'm' must be greater than 1.");
+
+            const inverse = modInverse(a, m);
+
+            if (inverse === -1) {
+                return `
+                    Number (a): ${a}
+                    Modulus (m): ${m}
+                    Result: No modular inverse exists for ${a} mod ${m} (gcd(${a}, ${m}) ≠ 1).
+                `;
+            } else {
+                return `
+                    Number (a): ${a}
+                    Modulus (m): ${m}
+                    Modular Inverse: ${inverse} (since (${a} * ${inverse}) mod ${m} = 1)
+                `;
+            }
+        }
+
+        // Recurrence Relation: Linear Homogeneous (2nd Order)
+        function calculateRecurrenceRelation() {
+            const c1 = parseFloat(document.getElementById('c1_rr').value);
+            const c2 = parseFloat(document.getElementById('c2_rr').value);
+            const a0 = parseFloat(document.getElementById('a0_rr').value);
+            const a1 = parseFloat(document.getElementById('a1_rr').value);
+            const n = parseInt(document.getElementById('n_rr').value);
+
+            if (isNaN(c1) || isNaN(c2) || isNaN(a0) || isNaN(a1) || isNaN(n)) {
+                throw new Error("Please enter valid numbers for all coefficients and initial terms.");
+            }
+            if (n < 0) throw new Error("Term 'n' must be non-negative.");
+
+            let terms = [];
+            if (n === 0) {
+                terms.push(a0);
+            } else if (n === 1) {
+                terms.push(a0, a1);
+            } else {
+                terms.push(a0, a1);
+                for (let i = 2; i <= n; i++) {
+                    let nextTerm = c1 * terms[i-1] + c2 * terms[i-2];
+                    terms.push(nextTerm);
+                }
+            }
+
+            return `
+                Recurrence Relation: a_n = ${c1}a_{n-1} + ${c2}a_{n-2}
+                Initial terms: a_0 = ${a0}, a_1 = ${a1}
+                
+                Calculated terms up to a_${n}: [${terms.join(', ')}]
+                a_${n} = ${terms[n]}
+            `;
+        }
+
+        // Graph Theory: Sum of Degrees & Handshaking Lemma
+        function calculateGraphDegrees() {
+            const degreesInput = document.getElementById('degreesInput').value;
+            const degrees = getNumericalArray(degreesInput);
+
+            if (degrees.some(d => d < 0)) throw new Error("Degrees of vertices cannot be negative.");
+
+            const sumOfDegrees = degrees.reduce((sum, d) => sum + d, 0);
+            const isEven = sumOfDegrees % 2 === 0;
+            const numEdges = sumOfDegrees / 2;
+
+            return `
+                Degrees of Vertices: [${degrees.join(', ')}]
+                Sum of Degrees: ${sumOfDegrees}
+                
+                Handshaking Lemma Check:
+                Is sum of degrees even? ${isEven ? 'Yes' : 'No'}
+                If even, estimated number of edges (|E|): ${isEven ? numEdges : 'N/A (Sum is odd)'}
+                
+                ${isEven ? 'The Handshaking Lemma holds.' : 'The Handshaking Lemma does NOT hold (sum of degrees is odd).'}
+            `;
+        }
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'logic-truth-table':
+                        output = calculateLogicTruthTable();
+                        break;
+                    case 'set-operations':
+                        output = calculateSetOperations();
+                        break;
+                    case 'combinatorics-permutations':
+                        output = calculatePermutations();
+                        break;
+                    case 'combinatorics-combinations':
+                        output = calculateCombinations();
+                        break;
+                    case 'number-theory-gcd-lcm':
+                        output = calculateGCDLCM();
+                        break;
+                    case 'number-theory-modular-inverse':
+                        output = calculateModularInverse();
+                        break;
+                    case 'recurrence-linear-homogeneous':
+                        output = calculateRecurrenceRelation();
+                        break;
+                    case 'graph-degrees-handshake':
+                        output = calculateGraphDegrees();
+                        break;
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trigonometry Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            background-image: url('trig.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't increase total width */
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+         .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>📐 Trigonometry Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="basic-trig">Basic Trig (sin, cos, tan)</option>
+                <option value="inverse-trig">Inverse Trig (arcsin, arccos, arctan)</option>
+                <option value="law-of-sines">Law of Sines</option>
+                <option value="law-of-cosines">Law of Cosines</option>
+                <option value="area-triangle">Area of Triangle (Trig)</option>
+                <option value="pythagorean-identity">Pythagorean Identities</option>
+                <option value="angle-sum-difference">Angle Sum/Difference Identities</option>
+                <option value="double-angle">Double Angle Identities</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const DEG_TO_RAD = Math.PI / 180;
+        const RAD_TO_DEG = 180 / Math.PI;
+
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'basic-trig': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="angle">Angle (degrees):</label>
+                                <input type="number" id="angle" placeholder="Enter angle in degrees">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \sin(\theta) = \\text{Opposite / Hypotenuse} $$
+                            $$ \cos(\theta) = \\text{Adjacent / Hypotenuse} $$
+                            $$ \tan(\theta) = \\text{Opposite / Adjacent} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the sine, cosine, and tangent of a given angle. Make sure your angle is in degrees.
+                        </div>
+                    `
+                },
+                'inverse-trig': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="value">Value (-1 to 1 for sin/cos, any for tan):</label>
+                                <input type="number" id="value" step="any" placeholder="Enter value">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\theta = \\arcsin(x) $$
+                            $$ \\theta = \\arccos(x) $$
+                            $$ \\theta = \\arctan(x) $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the angle (in degrees) for a given sine, cosine, or tangent value. For arcsin and arccos, the input value must be between -1 and 1.
+                        </div>
+                    `
+                },
+                'law-of-sines': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="sideA">Side a:</label>
+                                <input type="number" id="sideA" placeholder="Enter side a">
+                            </div>
+                            <div>
+                                <label for="angleA">Angle A (degrees):</label>
+                                <input type="number" id="angleA" placeholder="Enter angle A">
+                            </div>
+                            <div>
+                                <label for="sideB">Side b:</label>
+                                <input type="number" id="sideB" placeholder="Enter side b">
+                            </div>
+                            <div>
+                                <label for="angleB">Angle B (degrees):</label>
+                                <input type="number" id="angleB" placeholder="Enter angle B">
+                            </div>
+                            <div>
+                                <label for="sideC">Side c:</label>
+                                <input type="number" id="sideC" placeholder="Enter side c">
+                            </div>
+                            <div>
+                                <label for="angleC">Angle C (degrees):</label>
+                                <input type="number" id="angleC" placeholder="Enter angle C">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\frac{a}{\\sin(A)} = \\frac{b}{\\sin(B)} = \\frac{c}{\\sin(C)} $$
+                        </div>
+                        <div class="info-box">
+                            The Law of Sines is used to find missing sides or angles in non-right triangles when you know:
+                            <br>- Two angles and one side (AAS or ASA)
+                            <br>- Two sides and a non-included angle (SSA - Ambiguous Case possible)
+                            <br>Enter at least 3 values (including at least one pair of side-angle opposite). Leave unknown values blank.
+                        </div>
+                    `
+                },
+                'law-of-cosines': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="side_a">Side a:</label>
+                                <input type="number" id="side_a" placeholder="Enter side a">
+                            </div>
+                            <div>
+                                <label for="side_b">Side b:</label>
+                                <input type="number" id="side_b" placeholder="Enter side b">
+                            </div>
+                            <div>
+                                <label for="side_c">Side c:</label>
+                                <input type="number" id="side_c" placeholder="Enter side c">
+                            </div>
+                            <div>
+                                <label for="angle_C">Angle C (degrees):</label>
+                                <input type="number" id="angle_C" placeholder="Enter angle C">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ c^2 = a^2 + b^2 - 2ab \\cos(C) $$
+                            $$ \\cos(C) = \\frac{a^2 + b^2 - c^2}{2ab} $$
+                        </div>
+                        <div class="info-box">
+                            The Law of Cosines is used to find missing sides or angles in non-right triangles when you know:
+                            <br>- Two sides and the included angle (SAS)
+                            <br>- All three sides (SSS)
+                            <br>Enter three values to find the fourth. For SAS, enter a, b, and C. For SSS, enter a, b, and c to find C.
+                        </div>
+                    `
+                },
+                'area-triangle': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="side1">Side 1:</label>
+                                <input type="number" id="side1" placeholder="Enter side 1">
+                            </div>
+                            <div>
+                                <label for="side2">Side 2:</label>
+                                <input type="number" id="side2" placeholder="Enter side 2">
+                            </div>
+                            <div>
+                                <label for="includedAngle">Included Angle (degrees):</label>
+                                <input type="number" id="includedAngle" placeholder="Enter included angle">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\text{Area} = \\frac{1}{2}ab \\sin(C) $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the area of a triangle given two sides and the included angle (SAS).
+                        </div>
+                    `
+                },
+                 'pythagorean-identity': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <p>Enter an angle or one trig value to see related identities.</p>
+                             <div>
+                                <label for="inputAngle">Angle (degrees):</label>
+                                <input type="number" id="inputAngle" placeholder="Optional: Enter angle">
+                            </div>
+                            <div>
+                                <label for="inputSin">sin(θ) value:</label>
+                                <input type="number" id="inputSin" step="any" placeholder="Optional: Enter sin(θ)">
+                            </div>
+                             <div>
+                                <label for="inputCos">cos(θ) value:</label>
+                                <input type="number" id="inputCos" step="any" placeholder="Optional: Enter cos(θ)">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\sin^2(\\theta) + \\cos^2(\\theta) = 1 $$
+                            $$ 1 + \\tan^2(\\theta) = \\sec^2(\\theta) $$
+                            $$ 1 + \\cot^2(\\theta) = \\csc^2(\\theta) $$
+                        </div>
+                        <div class="info-box">
+                            These are fundamental trigonometric identities relating sine, cosine, tangent, and their reciprocals.
+                            Enter an angle or one value (sin/cos) to see how it relates to the others.
+                        </div>
+                    `
+                },
+                'angle-sum-difference': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="angleX">Angle X (degrees):</label>
+                                <input type="number" id="angleX" placeholder="Enter angle X">
+                            </div>
+                            <div>
+                                <label for="angleY">Angle Y (degrees):</label>
+                                <input type="number" id="angleY" placeholder="Enter angle Y">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\sin(X \\pm Y) = \\sin(X)\\cos(Y) \\pm \\cos(X)\\sin(Y) $$
+                            $$ \\cos(X \\pm Y) = \\cos(X)\\cos(Y) \\mp \\sin(X)\\sin(Y) $$
+                            $$ \\tan(X \\pm Y) = \\frac{\\tan(X) \\pm \\tan(Y)}{1 \\mp \\tan(X)\\tan(Y)} $$
+                        </div>
+                        <div class="info-box">
+                            These identities express the sine, cosine, or tangent of a sum or difference of two angles in terms of the sines and cosines of the individual angles.
+                        </div>
+                    `
+                },
+                'double-angle': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="angleTheta">Angle θ (degrees):</label>
+                                <input type="number" id="angleTheta" placeholder="Enter angle θ">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\sin(2\\theta) = 2\\sin(\\theta)\\cos(\\theta) $$
+                            $$ \\cos(2\\theta) = \\cos^2(\\theta) - \\sin^2(\\theta) = 2\\cos^2(\\theta) - 1 = 1 - 2\\sin^2(\\theta) $$
+                            $$ \\tan(2\\theta) = \\frac{2\\tan(\\theta)}{1 - \\tan^2(\\theta)} $$
+                        </div>
+                        <div class="info-box">
+                            Double angle identities are special cases of the angle sum identities, where both angles are the same.
+                        </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            // Optionally update MathJax for new formulas if loaded
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'basic-trig':
+                        const angle = parseFloat(document.getElementById('angle').value);
+                        if (isNaN(angle)) throw new Error("Please enter a valid angle.");
+                        
+                        const angleRad = angle * DEG_TO_RAD;
+                        const sinVal = Math.sin(angleRad);
+                        const cosVal = Math.cos(angleRad);
+                        const tanVal = Math.tan(angleRad);
+
+                        output = `
+                            Angle: ${angle}°
+                            Sin(${angle}°): ${sinVal.toFixed(4)}
+                            Cos(${angle}°): ${cosVal.toFixed(4)}
+                            Tan(${angle}°): ${tanVal.toFixed(4)}
+                        `;
+                        break;
+
+                    case 'inverse-trig':
+                        const value = parseFloat(document.getElementById('value').value);
+                        if (isNaN(value)) throw new Error("Please enter a valid value.");
+                        
+                        let asinVal = NaN, acosVal = NaN, atanVal = NaN;
+
+                        if (value >= -1 && value <= 1) {
+                            asinVal = Math.asin(value) * RAD_TO_DEG;
+                            acosVal = Math.acos(value) * RAD_TO_DEG;
+                        } else {
+                            output += "Note: Arcsin and Arccos values require input between -1 and 1.\n";
+                        }
+                        atanVal = Math.atan(value) * RAD_TO_DEG;
+
+                        output += `
+                            Input Value: ${value}
+                            Arcsin(${value}): ${isNaN(asinVal) ? 'N/A' : asinVal.toFixed(4) + '°'}
+                            Arccos(${value}): ${isNaN(acosVal) ? 'N/A' : acosVal.toFixed(4) + '°'}
+                            Arctan(${value}): ${atanVal.toFixed(4)}°
+                        `;
+                        break;
+
+                    case 'law-of-sines':
+                        let sideA = parseFloat(document.getElementById('sideA').value);
+                        let angleA = parseFloat(document.getElementById('angleA').value);
+                        let sideB = parseFloat(document.getElementById('sideB').value);
+                        let angleB = parseFloat(document.getElementById('angleB').value);
+                        let sideC = parseFloat(document.getElementById('sideC').value);
+                        let angleC = parseFloat(document.getElementById('angleC').value);
+
+                        let unknowns = 0;
+                        if (isNaN(sideA)) unknowns++;
+                        if (isNaN(angleA)) unknowns++;
+                        if (isNaN(sideB)) unknowns++;
+                        if (isNaN(angleB)) unknowns++;
+                        if (isNaN(sideC)) unknowns++;
+                        if (isNaN(angleC)) unknowns++;
+
+                        if (unknowns > 3) throw new Error("Please enter at least 3 values for Law of Sines (e.g., AAS, ASA, or SSA).");
+
+                        // Convert known angles to radians
+                        if (!isNaN(angleA)) angleA *= DEG_TO_RAD;
+                        if (!isNaN(angleB)) angleB *= DEG_TO_RAD;
+                        if (!isNaN(angleC)) angleC *= DEG_TO_RAD;
+
+                        // Try to find missing values iteratively
+                        for (let i = 0; i < 5; i++) { // Max iterations to converge
+                            if (!isNaN(angleA) && !isNaN(angleB) && isNaN(angleC)) angleC = Math.PI - angleA - angleB;
+                            if (!isNaN(angleA) && !isNaN(angleC) && isNaN(angleB)) angleB = Math.PI - angleA - angleC;
+                            if (!isNaN(angleB) && !isNaN(angleC) && isNaN(angleA)) angleA = Math.PI - angleB - angleC;
+
+                            let commonRatio = NaN;
+                            if (!isNaN(sideA) && !isNaN(angleA) && Math.sin(angleA) !== 0) commonRatio = sideA / Math.sin(angleA);
+                            else if (!isNaN(sideB) && !isNaN(angleB) && Math.sin(angleB) !== 0) commonRatio = sideB / Math.sin(angleB);
+                            else if (!isNaN(sideC) && !isNaN(angleC) && Math.sin(angleC) !== 0) commonRatio = sideC / Math.sin(angleC);
+
+                            if (!isNaN(commonRatio)) {
+                                if (isNaN(sideA) && !isNaN(angleA)) sideA = commonRatio * Math.sin(angleA);
+                                if (isNaN(sideB) && !isNaN(angleB)) sideB = commonRatio * Math.sin(angleB);
+                                if (isNaN(sideC) && !isNaN(angleC)) sideC = commonRatio * Math.sin(angleC);
+
+                                if (isNaN(angleA) && !isNaN(sideA) && commonRatio !== 0 && Math.abs(sideA / commonRatio) <= 1) angleA = Math.asin(sideA / commonRatio);
+                                if (isNaN(angleB) && !isNaN(sideB) && commonRatio !== 0 && Math.abs(sideB / commonRatio) <= 1) angleB = Math.asin(sideB / commonRatio);
+                                if (isNaN(angleC) && !isNaN(sideC) && commonRatio !== 0 && Math.abs(sideC / commonRatio) <= 1) angleC = Math.asin(sideC / commonRatio);
+                            }
+                        }
+
+                        // Convert angles back to degrees for display
+                        angleA = isNaN(angleA) ? NaN : angleA * RAD_TO_DEG;
+                        angleB = isNaN(angleB) ? NaN : angleB * RAD_TO_DEG;
+                        angleC = isNaN(angleC) ? NaN : angleC * RAD_TO_DEG;
+
+                        output = `
+                            Law of Sines Results:
+                            Side a: ${isNaN(sideA) ? 'N/A' : sideA.toFixed(4)}
+                            Angle A: ${isNaN(angleA) ? 'N/A' : angleA.toFixed(4) + '°'}
+                            Side b: ${isNaN(sideB) ? 'N/A' : sideB.toFixed(4)}
+                            Angle B: ${isNaN(angleB) ? 'N/A' : angleB.toFixed(4) + '°'}
+                            Side c: ${isNaN(sideC) ? 'N/A' : sideC.toFixed(4)}
+                            Angle C: ${isNaN(angleC) ? 'N/A' : angleC.toFixed(4) + '°'}
+                        `;
+                        // Basic validation for valid triangle (sum of angles = 180)
+                        if (!isNaN(angleA) && !isNaN(angleB) && !isNaN(angleC) && Math.abs(angleA + angleB + angleC - 180) > 0.01) {
+                            output += "\nWarning: Angles do not sum to 180°. Check input values for triangle validity.";
+                        }
+                        break;
+
+                    case 'law-of-cosines':
+                        let side_a = parseFloat(document.getElementById('side_a').value);
+                        let side_b = parseFloat(document.getElementById('side_b').value);
+                        let side_c = parseFloat(document.getElementById('side_c').value);
+                        let angle_C = parseFloat(document.getElementById('angle_C').value);
+
+                        let calculated = false;
+                        if (!isNaN(side_a) && !isNaN(side_b) && !isNaN(angle_C)) { // SAS case: find side c
+                            angle_C_rad = angle_C * DEG_TO_RAD;
+                            side_c = Math.sqrt(side_a*side_a + side_b*side_b - 2*side_a*side_b*Math.cos(angle_C_rad));
+                            calculated = true;
+                        } else if (!isNaN(side_a) && !isNaN(side_b) && !isNaN(side_c)) { // SSS case: find angle C
+                            const cosC_val = (side_a*side_a + side_b*side_b - side_c*side_c) / (2 * side_a * side_b);
+                            if (Math.abs(cosC_val) > 1) throw new Error("Invalid side lengths for a triangle (Law of Cosines).");
+                            angle_C = Math.acos(cosC_val) * RAD_TO_DEG;
+                            calculated = true;
+                        } else {
+                            throw new Error("For Law of Cosines, enter either (side a, side b, angle C) or (side a, side b, side c).");
+                        }
+
+                        if (!calculated) throw new Error("Could not calculate missing value with provided inputs.");
+
+                        output = `
+                            Law of Cosines Results:
+                            Side a: ${side_a.toFixed(4)}
+                            Side b: ${side_b.toFixed(4)}
+                            Side c: ${side_c.toFixed(4)}
+                            Angle C: ${angle_C.toFixed(4)}°
+                        `;
+                        break;
+
+                    case 'area-triangle':
+                        const side1 = parseFloat(document.getElementById('side1').value);
+                        const side2 = parseFloat(document.getElementById('side2').value);
+                        const includedAngle = parseFloat(document.getElementById('includedAngle').value);
+
+                        if (isNaN(side1) || isNaN(side2) || isNaN(includedAngle)) throw new Error("Please enter valid values for both sides and the included angle.");
+                        if (side1 <= 0 || side2 <= 0) throw new Error("Side lengths must be positive.");
+                        
+                        const includedAngleRad = includedAngle * DEG_TO_RAD;
+                        const area = 0.5 * side1 * side2 * Math.sin(includedAngleRad);
+
+                        if (area <= 0) throw new Error("Cannot form a triangle with these values or angle is 0/180.");
+
+                        output = `
+                            Area of Triangle:
+                            Side 1: ${side1}
+                            Side 2: ${side2}
+                            Included Angle: ${includedAngle}°
+                            Area: ${area.toFixed(4)}
+                        `;
+                        break;
+                    
+                    case 'pythagorean-identity':
+                        const inputAngle = parseFloat(document.getElementById('inputAngle').value);
+                        const inputSin = parseFloat(document.getElementById('inputSin').value);
+                        const inputCos = parseFloat(document.getElementById('inputCos').value);
+
+                        let calculatedSin = NaN, calculatedCos = NaN, calculatedTan = NaN;
+                        let angleFromValue = NaN;
+
+                        if (!isNaN(inputAngle)) {
+                            const angleRad = inputAngle * DEG_TO_RAD;
+                            calculatedSin = Math.sin(angleRad);
+                            calculatedCos = Math.cos(angleRad);
+                            calculatedTan = Math.tan(angleRad);
+                            output += `For Angle θ = ${inputAngle}°:\n`;
+                        } else if (!isNaN(inputSin)) {
+                            if (Math.abs(inputSin) > 1) throw new Error("sin(θ) value must be between -1 and 1.");
+                            calculatedSin = inputSin;
+                            calculatedCos = Math.sqrt(1 - calculatedSin*calculatedSin); // Positive sqrt for simplicity
+                            calculatedTan = calculatedSin / calculatedCos;
+                            angleFromValue = Math.asin(calculatedSin) * RAD_TO_DEG;
+                            output += `For sin(θ) = ${inputSin} (assuming θ in Q1/Q2, angle is ${angleFromValue.toFixed(2)}°):\n`;
+                        } else if (!isNaN(inputCos)) {
+                            if (Math.abs(inputCos) > 1) throw new Error("cos(θ) value must be between -1 and 1.");
+                            calculatedCos = inputCos;
+                            calculatedSin = Math.sqrt(1 - calculatedCos*calculatedCos); // Positive sqrt for simplicity
+                            calculatedTan = calculatedSin / calculatedCos;
+                            angleFromValue = Math.acos(calculatedCos) * RAD_TO_DEG;
+                            output += `For cos(θ) = ${inputCos} (assuming θ in Q1/Q4, angle is ${angleFromValue.toFixed(2)}°):\n`;
+                        } else {
+                            throw new Error("Please enter an angle, sin(θ) value, or cos(θ) value.");
+                        }
+
+                        output += `
+                            sin(θ) = ${calculatedSin.toFixed(4)}
+                            cos(θ) = ${calculatedCos.toFixed(4)}
+                            tan(θ) = ${calculatedTan.toFixed(4)}
+                            sin²(θ) + cos²(θ) = ${(calculatedSin*calculatedSin + calculatedCos*calculatedCos).toFixed(4)} (should be 1)
+                            1 + tan²(θ) = ${isNaN(calculatedTan) ? 'N/A' : (1 + calculatedTan*calculatedTan).toFixed(4)}
+                            sec²(θ) = ${isNaN(calculatedCos) || calculatedCos === 0 ? 'N/A' : (1 / (calculatedCos*calculatedCos)).toFixed(4)}
+                            1 + cot²(θ) = ${isNaN(calculatedTan) || calculatedTan === 0 ? 'N/A' : (1 + (1/(calculatedTan*calculatedTan))).toFixed(4)}
+                            csc²(θ) = ${isNaN(calculatedSin) || calculatedSin === 0 ? 'N/A' : (1 / (calculatedSin*calculatedSin)).toFixed(4)}
+                        `;
+                        break;
+                    
+                    case 'angle-sum-difference':
+                        const angleX = parseFloat(document.getElementById('angleX').value);
+                        const angleY = parseFloat(document.getElementById('angleY').value);
+                        if (isNaN(angleX) || isNaN(angleY)) throw new Error("Please enter valid angles X and Y.");
+
+                        const radX = angleX * DEG_TO_RAD;
+                        const radY = angleY * DEG_TO_RAD;
+
+                        const sinX = Math.sin(radX), cosX = Math.cos(radX), tanX = Math.tan(radX);
+                        const sinY = Math.sin(radY), cosY = Math.cos(radY), tanY = Math.tan(radY);
+
+                        output = `
+                            Angles: X = ${angleX}°, Y = ${angleY}°
+                            
+                            Sine Sum/Difference:
+                            sin(X + Y) = ${Math.sin(radX + radY).toFixed(4)}
+                            (sinXcosY + cosXsinY) = ${(sinX*cosY + cosX*sinY).toFixed(4)}
+                            
+                            sin(X - Y) = ${Math.sin(radX - radY).toFixed(4)}
+                            (sinXcosY - cosXsinY) = ${(sinX*cosY - cosX*sinY).toFixed(4)}
+
+                            Cosine Sum/Difference:
+                            cos(X + Y) = ${Math.cos(radX + radY).toFixed(4)}
+                            (cosXcosY - sinXsinY) = ${(cosX*cosY - sinX*sinY).toFixed(4)}
+                            
+                            cos(X - Y) = ${Math.cos(radX - radY).toFixed(4)}
+                            (cosXcosY + sinXsinY) = ${(cosX*cosY + sinX*sinY).toFixed(4)}
+
+                            Tangent Sum/Difference:
+                            tan(X + Y) = ${Math.tan(radX + radY).toFixed(4)}
+                            (tanX + tanY) / (1 - tanXtanY) = ${((tanX + tanY) / (1 - tanX*tanY)).toFixed(4)}
+                            
+                            tan(X - Y) = ${Math.tan(radX - radY).toFixed(4)}
+                            (tanX - tanY) / (1 + tanXtanY) = ${((tanX - tanY) / (1 + tanX*tanY)).toFixed(4)}
+                        `;
+                        break;
+
+                    case 'double-angle':
+                        const angleTheta = parseFloat(document.getElementById('angleTheta').value);
+                        if (isNaN(angleTheta)) throw new Error("Please enter a valid angle θ.");
+
+                        const radTheta = angleTheta * DEG_TO_RAD;
+                        const sinTheta = Math.sin(radTheta);
+                        const cosTheta = Math.cos(radTheta);
+                        const tanTheta = Math.tan(radTheta);
+
+                        output = `
+                            Angle θ = ${angleTheta}°
+                            
+                            sin(2θ) = ${Math.sin(2 * radTheta).toFixed(4)}
+                            2sin(θ)cos(θ) = ${(2 * sinTheta * cosTheta).toFixed(4)}
+
+                            cos(2θ) = ${Math.cos(2 * radTheta).toFixed(4)}
+                            cos²(θ) - sin²(θ) = ${(cosTheta*cosTheta - sinTheta*sinTheta).toFixed(4)}
+                            2cos²(θ) - 1 = ${(2 * cosTheta*cosTheta - 1).toFixed(4)}
+                            1 - 2sin²(θ) = ${(1 - 2 * sinTheta*sinTheta).toFixed(4)}
+
+                            tan(2θ) = ${Math.tan(2 * radTheta).toFixed(4)}
+                            2tan(θ) / (1 - tan²(θ)) = ${((2 * tanTheta) / (1 - tanTheta*tanTheta)).toFixed(4)}
+                        `;
+                        break;
+
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

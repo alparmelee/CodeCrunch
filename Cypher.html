@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cryptography Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            /* Add background image */
+            background-image: url('Cypher.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't increase total width */
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px; /* Added for spacing between buttons */
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        /* Adjust for single column layout where needed */
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        #matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Added for spacing */
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #fff;
+        }
+        #matrix div {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🔐 Cryptography Cipher Calculator</h1>
+        
+        <div class="section">
+            <label>Select Cipher Type</label>
+            <select id="cipherType" class="calculation-type" onchange="updateCalculator()">
+                <option value="caesar">Caesar Cipher</option>
+                <option value="keyword">Keyword Cipher</option>
+                <option value="vigenere">Vigenère Cipher</option>
+                <option value="playfair">Playfair Cipher</option>
+                <option value="hill">Hill Cipher (2x2)</option>
+                <option value="railfence">Rail Fence Cipher</option>
+                <option value="columnar-transposition">Columnar Transposition Cipher</option>
+                <option value="ecb">ECB Encryption (Character Shift)</option>
+                <option value="cbc">CBC Encryption (Character Shift) & Binary XOR</option>
+                <option value="ofb">OFB Block Addition</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="encryptBtn" onclick="performCipher('encrypt')">Encrypt</button>
+        <button id="decryptBtn" onclick="performCipher('decrypt')">Decrypt</button>
+        <button id="calculateOnlyBtn" onclick="performCipher('calculate')" style="display: none;">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function updateCalculator() {
+            const type = document.getElementById('cipherType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            const encryptBtn = document.getElementById('encryptBtn');
+            const decryptBtn = document.getElementById('decryptBtn');
+            const calculateOnlyBtn = document.getElementById('calculateOnlyBtn');
+            
+            let htmlContent = '';
+            let hideEncryptDecrypt = false;
+
+            const cipherConfigs = {
+                'caesar': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Text:</label>
+                                <textarea id="plaintext" rows="4" placeholder="Type your text here..."></textarea>
+                            </div>
+                            <div>
+                                <label>Shift Value:</label>
+                                <input type="number" id="shift" placeholder="Enter shift value (e.g., 3)">
+                            </div>
+                        </div>
+                        <div class="formula-display">Formula: C = (P + S) mod 26 (Encryption), P = (C - S) mod 26 (Decryption)</div>
+                        <div class="info-box">
+                            The Caesar cipher is one of the simplest and most widely known encryption techniques. It's a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet.
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'keyword': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Text:</label>
+                                <textarea id="plaintext" rows="4" placeholder="Type your text here..."></textarea>
+                            </div>
+                            <div>
+                                <label>Keyword:</label>
+                                <input type="text" id="keyword" placeholder="Enter a keyword (e.g., SECRET)">
+                            </div>
+                        </div>
+                        <div class="formula-display">A substitution cipher where the key is a word or phrase that generates a new alphabet.</div>
+                        <div class="info-box">
+                            The Keyword cipher uses a keyword to create a mixed alphabet for substitution. The keyword is written first (removing duplicate letters), and then the remaining letters of the alphabet follow.
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'vigenere': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Message:</label>
+                                <textarea id="input" rows="5" placeholder="Enter your message"></textarea>
+                            </div>
+                            <div>
+                                <label>Key:</label>
+                                <input type="text" id="key" placeholder="Enter your key (letters only)">
+                            </div>
+                        </div>
+                        <div class="formula-display">Cᵢ = (Pᵢ + Kᵢ) mod 26 (Encryption), Pᵢ = (Cᵢ - Kᵢ + 26) mod 26 (Decryption)</div>
+                        <div class="info-box">
+                            The Vigenère cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It's a form of polyalphabetic substitution.
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'playfair': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Key:</label>
+                                <input type="text" id="key" placeholder="Enter your key">
+                            </div>
+                            <div>
+                                <label>Enter Message:</label>
+                                <textarea id="input" rows="5" placeholder="Enter your message"></textarea>
+                            </div>
+                        </div>
+                        <div class="formula-display">Uses a 5x5 matrix based on a keyword to encrypt pairs of letters.</div>
+                        <div class="info-box">
+                            The Playfair cipher encrypts pairs of letters (digraphs) instead of single letters. It uses a 5x5 matrix constructed from a keyword. 'J' is typically treated as 'I'.
+                            Rules for encryption: same row, same column, or forming a rectangle.
+                        </div>
+                        <h2>Playfair Matrix:</h2>
+                        <div id="matrix"></div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'hill': {
+                    inputs: `
+                        <h2>Key Matrix (2x2):</h2>
+                        <div class="key-grid additional-inputs">
+                            <input type="number" id="k00" placeholder="K00" value="3">
+                            <input type="number" id="k01" placeholder="K01" value="2">
+                            <input type="number" id="k10" placeholder="K10" value="5">
+                            <input type="number" id="k11" placeholder="K11" value="7">
+                        </div>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Message:</label>
+                                <textarea id="input" rows="3" placeholder="Enter your message"></textarea>
+                            </div>
+                        </div>
+                        <div class="formula-display">Matrix multiplication and modular inverse are used for encryption/decryption.</div>
+                        <div class="info-box">
+                            The Hill cipher is a polygraphic substitution cipher based on linear algebra. It uses a key matrix to encrypt blocks of plaintext. For a 2x2 matrix, it encrypts pairs of letters. The determinant of the key matrix must be invertible modulo 26.
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'railfence': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Number of Rails:</label>
+                                <input type="number" id="rails" min="2" value="3" placeholder="Number of rails">
+                            </div>
+                            <div>
+                                <label>Enter Message:</label>
+                                <textarea id="input" rows="5" placeholder="Enter your message"></textarea>
+                            </div>
+                        </div>
+                        <div class="formula-display">Characters are written diagonally on "rails" and then read off row by row.</div>
+                        <div class="info-box">
+                            The Rail Fence cipher is a form of transposition cipher that gets its name from the way it's encrypted. The plaintext is written downwards and diagonally on successive "rails" of an imaginary fence, then moving up when the bottom rail is hit, and so on. The ciphertext is then read off row by row.
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'columnar-transposition': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Message:</label>
+                                <textarea id="input" rows="5" placeholder="Enter your message"></textarea>
+                            </div>
+                            <div>
+                                <label>Key:</label>
+                                <input type="text" id="key" placeholder="Enter your key">
+                            </div>
+                        </div>
+                        <div class="formula-display">Columns are reordered based on the alphabetical order of the keyword.</div>
+                        <div class="info-box">
+                            The Columnar Transposition cipher is a basic form of transposition cipher. The plaintext is written in rows of a fixed length, and then columns are reordered according to the letters in a keyword.
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: true, calculate: false }
+                },
+                'ecb': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter the plaintext:</label>
+                                <input type="text" id="plaintext" placeholder="Enter your plaintext here" />
+                            </div>
+                            <div>
+                                <label>Enter the key:</label>
+                                <input type="text" id="key" placeholder="Enter the key" />
+                            </div>
+                            <div>
+                                <label>Enter the block size:</label>
+                                <input type="number" id="blocksize" placeholder="Enter block size" />
+                            </div>
+                        </div>
+                        <div class="formula-display">Each block of plaintext is encrypted independently using the same key.</div>
+                        <div class="info-box">
+                            Electronic Codebook (ECB) is the simplest of the block cipher modes of operation. Each block of plaintext is encrypted with the same key, independently of other blocks. This can lead to patterns in the ciphertext if the plaintext has repeating blocks.
+                            <br>
+                            *Note: This implementation uses a character shift mechanism for demonstration, not a true cryptographic block cipher.*
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: false, calculate: false } // ECB only has encrypt button in original
+                },
+                'cbc': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Block Size:</label>
+                                <input type="number" id="blocksize" placeholder="4">
+                            </div>
+                            <div>
+                                <label>Enter Initial Vector (IV):</label>
+                                <input type="text" id="iv" placeholder="IV">
+                            </div>
+                            <div>
+                                <label>Enter First Block of Text:</label>
+                                <input type="text" id="block1" placeholder="First Block">
+                            </div>
+                            <div>
+                                <label>Enter Second Block of Text:</label>
+                                <input type="text" id="block2" placeholder="Second Block">
+                            </div>
+                        </div>
+                        <div class="formula-display">Cᵢ = E(Pᵢ ⊕ Cᵢ₋₁) where C₀ = IV</div>
+                        <div class="info-box">
+                            Cipher Block Chaining (CBC) is a mode of operation for block ciphers. It uses an initialization vector (IV) to randomize the first plaintext block. Each subsequent plaintext block is XORed with the previous ciphertext block before being encrypted. This makes the ciphertext dependent on all previous plaintext blocks.
+                            <br>
+                            *Note: This implementation uses a character shift based XOR for demonstration, not a true cryptographic block cipher.*
+                        </div>
+                        <hr>
+                        <h3>Binary XOR Example (for CBC context)</h3>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter First Binary Number:</label>
+                                <input type="text" id="bin1" placeholder="Binary Number 1">
+                            </div>
+                            <div>
+                                <label>Enter Second Binary Number:</label>
+                                <input type="text" id="bin2" placeholder="Binary Number 2">
+                            </div>
+                        </div>
+                    `,
+                    buttons: { encrypt: true, decrypt: false, calculate: true } // CBC has an encrypt and a separate binary XOR calculate
+                },
+                'ofb': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Block Size:</label>
+                                <input type="number" id="blocksize" placeholder="Enter block size">
+                            </div>
+                            <div>
+                                <label>Enter First Word:</label>
+                                <input type="text" id="word1" placeholder="Enter first word">
+                            </div>
+                            <div>
+                                <label>Enter Second Word:</label>
+                                <input type="text" id="word2" placeholder="Enter second word">
+                            </div>
+                        </div>
+                        <div class="formula-display">Pᵢ = (Pᵢ + Kᵢ) mod 26 (Stream cipher based operation, here for block addition)</div>
+                        <div class="info-box">
+                            Output Feedback (OFB) is a mode of operation that makes a block cipher into a synchronous stream cipher. It generates keystream blocks, which are then XORed with the plaintext blocks to get the ciphertext.
+                            <br>
+                            *Note: This specific implementation demonstrates a simplified "block addition" for OFB, not a full OFB mode.*
+                        </div>
+                    `,
+                    buttons: { encrypt: false, decrypt: false, calculate: true }
+                }
+            };
+
+            // Set HTML content and button visibility
+            inputsDiv.innerHTML = cipherConfigs[type].inputs;
+            encryptBtn.style.display = cipherConfigs[type].buttons.encrypt ? 'block' : 'none';
+            decryptBtn.style.display = cipherConfigs[type].buttons.decrypt ? 'block' : 'none';
+            calculateOnlyBtn.style.display = cipherConfigs[type].buttons.calculate ? 'block' : 'none';
+
+            // Special case for CBC's binary XOR button
+            if (type === 'cbc') {
+                const cbcEncryptBtn = document.getElementById('encryptTextBtn'); // Original CBC encrypt
+                const cbcBinBtn = document.getElementById('encryptBinBtn'); // Original CBC binary XOR
+                if (cbcEncryptBtn) cbcEncryptBtn.remove(); // Remove old buttons if they exist
+                if (cbcBinBtn) cbcBinBtn.remove();
+
+                const newCbcEncryptBtn = document.createElement('button');
+                newCbcEncryptBtn.id = 'encryptTextBtn';
+                newCbcEncryptBtn.textContent = 'Encrypt Text (CBC)';
+                newCbcEncryptBtn.onclick = () => performCipher('encrypt', 'cbc-text');
+                inputsDiv.after(newCbcEncryptBtn); // Insert after inputs
+
+                const newCbcBinBtn = document.createElement('button');
+                newCbcBinBtn.id = 'encryptBinBtn';
+                newCbcBinBtn.textContent = 'Calculate Binary XOR';
+                newCbcBinBtn.onclick = () => performCipher('calculate', 'cbc-binary');
+                newCbcEncryptBtn.after(newCbcBinBtn); // Insert after CBC encrypt button
+
+                // Hide the main encrypt/decrypt/calculate buttons as specific buttons are used
+                encryptBtn.style.display = 'none';
+                decryptBtn.style.display = 'none';
+                calculateOnlyBtn.style.display = 'none';
+            } else {
+                // Remove CBC specific buttons if not on CBC page
+                if (document.getElementById('encryptTextBtn')) document.getElementById('encryptTextBtn').remove();
+                if (document.getElementById('encryptBinBtn')) document.getElementById('encryptBinBtn').remove();
+            }
+
+            // For Playfair, display the initial matrix if key is provided
+            if (type === 'playfair') {
+                const keyInput = document.getElementById('key');
+                keyInput.oninput = () => { // Update matrix as user types key
+                    displayMatrix(generateMatrix(keyInput.value));
+                };
+                // Initial display if a default key (or empty) is present
+                displayMatrix(generateMatrix(keyInput.value));
+            }
+        }
+
+        function performCipher(mode, subType = null) {
+            const type = document.getElementById('cipherType').value;
+            const resultDiv = document.getElementById('result');
+            let result = '';
+
+            try {
+                switch(type) {
+                    case 'caesar':
+                        const plaintextCaesar = document.getElementById("plaintext").value;
+                        const shift = parseInt(document.getElementById("shift").value);
+                        if (isNaN(shift)) throw new Error("Shift value must be a number.");
+                        if (mode === 'encrypt') {
+                            result = caesarCipher(plaintextCaesar, shift);
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = caesarCipher(plaintextCaesar, -shift);
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'keyword':
+                        const plaintextKeyword = document.getElementById("plaintext").value;
+                        const keyword = document.getElementById("keyword").value;
+                        if (!keyword) throw new Error("Keyword cannot be empty.");
+                        if (mode === 'encrypt') {
+                            result = keywordCipher(plaintextKeyword, keyword, 'encrypt');
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = keywordCipher(plaintextKeyword, keyword, 'decrypt');
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'vigenere':
+                        const textVigenere = document.getElementById('input').value;
+                        const keyVigenere = document.getElementById('key').value;
+                        if (!keyVigenere) throw new Error("Key cannot be empty.");
+                        if (mode === 'encrypt') {
+                            result = vigenereCipher(textVigenere, keyVigenere, 'encrypt');
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = vigenereCipher(textVigenere, keyVigenere, 'decrypt');
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'playfair':
+                        const inputPlayfair = document.getElementById('input').value;
+                        const keyPlayfair = document.getElementById('key').value;
+                        if (!keyPlayfair) throw new Error("Key cannot be empty.");
+                        if (mode === 'encrypt') {
+                            result = playfairCipher(inputPlayfair, keyPlayfair, 'encrypt');
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = playfairCipher(inputPlayfair, keyPlayfair, 'decrypt');
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        // Always update matrix for Playfair
+                        displayMatrix(generateMatrix(keyPlayfair));
+                        break;
+
+                    case 'hill':
+                        const keyMatrixHill = getKeyMatrix();
+                        const textHill = document.getElementById('input').value.replace(/[^A-Za-z]/g, '');
+                        if (!keyMatrixHill[0][0] && keyMatrixHill[0][0] !== 0 || !keyMatrixHill[0][1] && keyMatrixHill[0][1] !== 0 || !keyMatrixHill[1][0] && keyMatrixHill[1][0] !== 0 || !keyMatrixHill[1][1] && keyMatrixHill[1][1] !== 0) {
+                            throw new Error("All key matrix values must be entered.");
+                        }
+                        if (mode === 'encrypt') {
+                            result = hillCipher(textHill, keyMatrixHill, 'encrypt');
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = hillCipher(textHill, keyMatrixHill, 'decrypt');
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'railfence':
+                        const textRailFence = document.getElementById('input').value.replace(/\s/g, '');
+                        const rails = parseInt(document.getElementById('rails').value);
+                        if (isNaN(rails) || rails < 2) throw new Error("Number of rails must be 2 or more.");
+                        if (mode === 'encrypt') {
+                            result = encryptRailFence(textRailFence, rails);
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = decryptRailFence(textRailFence, rails);
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'columnar-transposition':
+                        const inputTransposition = document.getElementById('input').value;
+                        const keyTransposition = document.getElementById('key').value;
+                        if (!keyTransposition) throw new Error("Key cannot be empty.");
+                        if (mode === 'encrypt') {
+                            result = columnarTranspositionEncrypt(inputTransposition, keyTransposition);
+                            resultDiv.innerHTML = `<strong>Encrypted Text:</strong> ${result}`;
+                        } else {
+                            result = columnarTranspositionDecrypt(inputTransposition, keyTransposition);
+                            resultDiv.innerHTML = `<strong>Decrypted Text:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'ecb':
+                        const plaintextECB = document.getElementById('plaintext').value;
+                        const keyECB = document.getElementById('key').value;
+                        const blocksizeECB = parseInt(document.getElementById('blocksize').value);
+                        if (isNaN(blocksizeECB) || blocksizeECB <= 0) throw new Error("Block size must be a positive number.");
+                        if (!keyECB) throw new Error("Key cannot be empty.");
+                        
+                        result = encryptECB(plaintextECB, keyECB, blocksizeECB);
+                        resultDiv.innerHTML = `<strong>Ciphertext (ECB):</strong> ${result}`;
+                        break;
+
+                    case 'cbc':
+                        if (subType === 'cbc-text') {
+                            const blocksizeCBC = parseInt(document.getElementById('blocksize').value);
+                            const iv = document.getElementById('iv').value.toUpperCase().padEnd(blocksizeCBC, ' ').slice(0, blocksizeCBC);
+                            const block1 = document.getElementById('block1').value.toUpperCase().padEnd(blocksizeCBC, ' ').slice(0, blocksizeCBC);
+                            const block2 = document.getElementById('block2').value.toUpperCase().padEnd(blocksizeCBC, ' ').slice(0, blocksizeCBC);
+                            if (isNaN(blocksizeCBC) || blocksizeCBC <= 0) throw new Error("Block size must be a positive number.");
+                            if (!iv || !block1 || !block2) throw new Error("IV, Block 1, and Block 2 must be entered.");
+
+                            let [encryptedBlock1, encryptedBlock2] = encryptCBC(iv, block1, block2, blocksizeCBC);
+                            resultDiv.innerHTML = `<strong>Encrypted Block 1:</strong> ${encryptedBlock1}<br><strong>Encrypted Block 2:</strong> ${encryptedBlock2}`;
+                        } else if (subType === 'cbc-binary') {
+                            const bin1 = document.getElementById('bin1').value;
+                            const bin2 = document.getElementById('bin2').value;
+                            if (bin1.length === 0 || bin2.length === 0) throw new Error("Both binary numbers must be entered.");
+                            if (bin1.length !== bin2.length) throw new Error("Binary numbers must be of the same length.");
+                            if (!/^[01]+$/.test(bin1) || !/^[01]+$/.test(bin2)) throw new Error("Binary numbers must contain only 0s and 1s.");
+
+                            result = xorBinary(bin1, bin2);
+                            resultDiv.innerHTML = `<strong>Binary XOR Result:</strong> ${result}`;
+                        }
+                        break;
+
+                    case 'ofb':
+                        const blocksizeOFB = parseInt(document.getElementById('blocksize').value);
+                        const word1 = document.getElementById('word1').value.toUpperCase();
+                        const word2 = document.getElementById('word2').value.toUpperCase();
+                        if (isNaN(blocksizeOFB) || blocksizeOFB <= 0) throw new Error("Block size must be a positive number.");
+                        if (word1.length !== blocksizeOFB || word2.length !== blocksizeOFB) {
+                            throw new Error(`Both words must be ${blocksizeOFB} characters long.`);
+                        }
+                        if (!/^[A-Z]+$/.test(word1) || !/^[A-Z]+$/.test(word2)) throw new Error("Words must contain only uppercase English letters.");
+
+                        result = addWordsHelper(word1, word2);
+                        resultDiv.innerHTML = `<strong>Result:</strong> ${word1} + ${word2} = ${result}`;
+                        break;
+
+                    default:
+                        resultDiv.innerHTML = 'Select a cipher type to begin.';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+        }
+
+        // --- Caesar Cipher Functions (from Ceaser.html) ---
+        function caesarCipher(str, shift) {
+            return str.split('').map(function(char) {
+                if (char.match(/[a-z]/i)) {
+                    const code = char.charCodeAt(0);
+                    let base = (code >= 65 && code <= 90) ? 65 : 97;
+                    return String.fromCharCode(((code - base + shift) % 26 + 26) % 26 + base); // Added +26) % 26 for correct negative modulo
+                }
+                return char;
+            }).join('');
+        }
+
+        // --- Keyword Cipher Functions (from Keyword.html) ---
+        function generateKeyAlphabet(keyword) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let keyAlphabet = '';
+            keyword = keyword.toUpperCase().replace(/[^A-Z]/g, ''); // Clean keyword
+            
+            for (let i = 0; i < keyword.length; i++) {
+                if (!keyAlphabet.includes(keyword[i])) {
+                    keyAlphabet += keyword[i];
+                }
+            }
+            
+            for (let i = 0; i < alphabet.length; i++) {
+                if (!keyAlphabet.includes(alphabet[i])) {
+                    keyAlphabet += alphabet[i];
+                }
+            }
+            return keyAlphabet;
+        }
+
+        function keywordCipher(str, keyword, mode) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const keyAlphabet = generateKeyAlphabet(keyword);
+            let result = '';
+
+            str = str.toUpperCase();
+            for (let i = 0; i < str.length; i++) {
+                let char = str[i];
+
+                if (alphabet.includes(char)) {
+                    const alphabetIndex = mode === 'encrypt' 
+                        ? alphabet.indexOf(char) 
+                        : keyAlphabet.indexOf(char);
+                    result += mode === 'encrypt' 
+                        ? keyAlphabet[alphabetIndex] 
+                        : alphabet[alphabetIndex];
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+
+        // --- Vigenère Cipher Functions (from Vigenere.html) ---
+        function vigenereCipher(text, key, mode) {
+            text = text.toUpperCase().replace(/[^A-Z]/g, '');
+            key = key.toUpperCase().replace(/[^A-Z]/g, '');
+            if (key.length === 0) return ''; // Handle empty key
+
+            let result = '';
+            let keyIndex = 0;
+
+            for (let i = 0; i < text.length; i++) {
+                const textCharCode = text.charCodeAt(i) - 65;
+                const keyCharCode = key.charCodeAt(keyIndex % key.length) - 65;
+                let newCharCode;
+
+                if (mode === 'encrypt') {
+                    newCharCode = (textCharCode + keyCharCode) % 26;
+                } else {
+                    newCharCode = (textCharCode - keyCharCode + 26) % 26;
+                }
+
+                result += String.fromCharCode(newCharCode + 65);
+                keyIndex++;
+            }
+            return result;
+        }
+
+        // --- Playfair Cipher Functions (from Playfair.html) ---
+        function generateMatrix(key) {
+            const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // J is omitted
+            let matrix = [];
+            let usedChars = new Set();
+
+            key = key.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+            for (let char of key) {
+                if (!usedChars.has(char)) {
+                    matrix.push(char);
+                    usedChars.add(char);
+                }
+            }
+
+            for (let char of alphabet) {
+                if (!usedChars.has(char)) {
+                    matrix.push(char);
+                    usedChars.add(char);
+                }
+            }
+            return matrix;
+        }
+
+        function findPosition(matrix, char) {
+            const index = matrix.indexOf(char);
+            if (index === -1) return [-1, -1]; // Should not happen with cleaned text/key
+            return [Math.floor(index / 5), index % 5];
+        }
+
+        function playfairCipher(text, key, mode) {
+            const matrix = generateMatrix(key);
+            text = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+            let processedText = '';
+            // Prepare text: add X for double letters and odd length
+            for (let i = 0; i < text.length; i++) {
+                processedText += text[i];
+                if (i + 1 < text.length) {
+                    if (text[i] === text[i+1]) {
+                        processedText += 'X';
+                    }
+                }
+            }
+            if (processedText.length % 2 !== 0) {
+                processedText += 'X';
+            }
+
+            let result = '';
+
+            for (let i = 0; i < processedText.length; i += 2) {
+                let a = processedText[i];
+                let b = processedText[i + 1];
+
+                let [row1, col1] = findPosition(matrix, a);
+                let [row2, col2] = findPosition(matrix, b);
+
+                let newChar1, newChar2;
+
+                if (row1 === row2) { // Same row
+                    newChar1 = matrix[row1 * 5 + (col1 + (mode === 'encrypt' ? 1 : 4)) % 5];
+                    newChar2 = matrix[row2 * 5 + (col2 + (mode === 'encrypt' ? 1 : 4)) % 5];
+                } else if (col1 === col2) { // Same column
+                    newChar1 = matrix[((row1 + (mode === 'encrypt' ? 1 : 4)) % 5) * 5 + col1];
+                    newChar2 = matrix[((row2 + (mode === 'encrypt' ? 1 : 4)) % 5) * 5 + col2];
+                } else { // Rectangle
+                    newChar1 = matrix[row1 * 5 + col2];
+                    newChar2 = matrix[row2 * 5 + col1];
+                }
+                result += newChar1 + newChar2;
+            }
+            return result;
+        }
+
+        function displayMatrix(matrix) {
+            const matrixDiv = document.getElementById('matrix');
+            if (!matrixDiv) return; // Ensure element exists
+            matrixDiv.innerHTML = '';
+            for (let char of matrix) {
+                const div = document.createElement('div');
+                div.textContent = char;
+                matrixDiv.appendChild(div);
+            }
+        }
+
+        // --- Hill Cipher Functions (from HillCipher.html) ---
+        function mod(n, m) {
+            return ((n % m) + m) % m;
+        }
+
+        function matrixMultiply(matrixA, vectorB) {
+            let result = [];
+            result[0] = mod((matrixA[0][0] * vectorB[0] + matrixA[0][1] * vectorB[1]), 26);
+            result[1] = mod((matrixA[1][0] * vectorB[0] + matrixA[1][1] * vectorB[1]), 26);
+            return result;
+        }
+
+        function inverseMatrix(matrix) {
+            let det = mod((matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]), 26);
+            let detInv = 0;
+            // Find modular multiplicative inverse
+            for (let i = 0; i < 26; i++) {
+                if (mod(det * i, 26) === 1) {
+                    detInv = i;
+                    break;
+                }
+            }
+            if (detInv === 0) {
+                throw new Error("Key matrix is not invertible (determinant has no modular inverse modulo 26). Try different values.");
+            }
+            return [
+                [mod(matrix[1][1] * detInv, 26), mod(-matrix[0][1] * detInv, 26)],
+                [mod(-matrix[1][0] * detInv, 26), mod(matrix[0][0] * detInv, 26)]
+            ];
+        }
+
+        function hillCipher(text, key, mode) {
+            let result = "";
+            text = text.toUpperCase().replace(/[^A-Z]/g, '');
+            // Pad if odd length
+            if (text.length % 2 !== 0) {
+                text += 'X';
+            }
+
+            for (let i = 0; i < text.length; i += 2) {
+                let block = [text.charCodeAt(i) - 65, text.charCodeAt(i + 1) - 65];
+                let processedBlock;
+                if (mode === 'encrypt') {
+                    processedBlock = matrixMultiply(key, block);
+                } else {
+                    processedBlock = matrixMultiply(inverseMatrix(key), block);
+                }
+                result += String.fromCharCode(processedBlock[0] + 65) + String.fromCharCode(processedBlock[1] + 65);
+            }
+            return result;
+        }
+
+        function getKeyMatrix() {
+            return [
+                [parseInt(document.getElementById('k00').value), parseInt(document.getElementById('k01').value)],
+                [parseInt(document.getElementById('k10').value), parseInt(document.getElementById('k11').value)]
+            ];
+        }
+
+        // --- Rail Fence Cipher Functions (from RailFence.html) ---
+        function encryptRailFence(text, rails) {
+            if (rails === 1) return text;
+            let fence = Array(rails).fill().map(() => []);
+            let rail = 0;
+            let direction = 1; // 1 for down, -1 for up
+
+            for (let char of text) {
+                fence[rail].push(char);
+                rail += direction;
+                if (rail === 0 || rail === rails - 1) direction *= -1;
+            }
+            return fence.flat().join('');
+        }
+
+        function decryptRailFence(cipher, rails) {
+            if (rails === 1) return cipher;
+            let fence = Array(rails).fill().map(() => Array(cipher.length).fill(null));
+            let rail = 0;
+            let direction = 1;
+
+            // Mark the positions where characters will be placed
+            for (let i = 0; i < cipher.length; i++) {
+                fence[rail][i] = 'X'; // Placeholder
+                rail += direction;
+                if (rail === 0 || rail === rails - 1) direction *= -1;
+            }
+
+            // Fill the marked positions with ciphertext characters
+            let index = 0;
+            for (let i = 0; i < rails; i++) {
+                for (let j = 0; j < cipher.length; j++) {
+                    if (fence[i][j] === 'X') {
+                        fence[i][j] = cipher[index++];
+                    }
+                }
+            }
+
+            // Read the plaintext from the fence
+            let result = '';
+            rail = 0;
+            direction = 1;
+            for (let i = 0; i < cipher.length; i++) {
+                result += fence[rail][i];
+                rail += direction;
+                if (rail === 0 || rail === rails - 1) direction *= -1;
+            }
+            return result;
+        }
+
+        // --- Columnar Transposition Cipher Functions (from transposition.html) ---
+        function columnarTranspositionEncrypt(text, key) {
+            text = text.toUpperCase().replace(/\s/g, '').replace(/[^A-Z]/g, '');
+            key = key.toUpperCase().replace(/[^A-Z]/g, '');
+            if (key.length === 0) return ''; // Handle empty key
+
+            const numColumns = key.length;
+            const numRows = Math.ceil(text.length / numColumns);
+            const grid = Array(numRows).fill().map(() => Array(numColumns).fill(''));
+
+            let index = 0;
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numColumns; col++) {
+                    if (index < text.length) {
+                        grid[row][col] = text[index++];
+                    } else {
+                        grid[row][col] = 'X'; // Pad with X if necessary
+                    }
+                }
+            }
+
+            const keyOrder = [...key].map((char, idx) => ({ char, idx })).sort((a, b) => a.char.localeCompare(b.char));
+            
+            let result = '';
+            for (let i = 0; i < numColumns; i++) {
+                const originalColIndex = keyOrder[i].idx;
+                for (let row = 0; row < numRows; row++) {
+                    result += grid[row][originalColIndex];
+                }
+            }
+            return result;
+        }
+
+        function columnarTranspositionDecrypt(text, key) {
+            text = text.toUpperCase().replace(/\s/g, '').replace(/[^A-Z]/g, '');
+            key = key.toUpperCase().replace(/[^A-Z]/g, '');
+            if (key.length === 0) return ''; // Handle empty key
+
+            const numColumns = key.length;
+            const numRows = Math.ceil(text.length / numColumns);
+            const grid = Array(numRows).fill().map(() => Array(numColumns).fill(''));
+
+            const keyOrder = [...key].map((char, idx) => ({ char, idx })).sort((a, b) => a.char.localeCompare(b.char));
+
+            // Determine effective length of each column after padding
+            const colLengths = Array(numColumns).fill(numRows);
+            const numPaddedCells = (numColumns * numRows) - text.length;
+            for(let i = 0; i < numPaddedCells; i++){
+                // The columns that were padded in encryption are shorter in ciphertext
+                const originalIndex = keyOrder[numColumns - 1 - i].idx;
+                colLengths[originalIndex]--;
+            }
+
+            let textIndex = 0;
+            for (let i = 0; i < numColumns; i++) {
+                const originalColIndex = keyOrder[i].idx;
+                const currentColLength = colLengths[originalColIndex];
+                for (let row = 0; row < currentColLength; row++) {
+                    grid[row][originalColIndex] = text[textIndex++];
+                }
+            }
+
+            let result = '';
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numColumns; col++) {
+                    result += grid[row][col];
+                }
+            }
+            // Remove padding 'X' from the end
+            return result.replace(/X+$/, '');
+        }
+
+        // --- ECB Encryption Function (from ECB.html) ---
+        function padPlaintext(plaintext, blocksize) {
+            const paddingLength = blocksize - (plaintext.length % blocksize);
+            return paddingLength !== blocksize 
+                ? plaintext + 'X'.repeat(paddingLength) // Changed padding char to 'X' for consistency
+                : plaintext;
+        }
+
+        function encryptECB(plaintext, key, blocksize) {
+            plaintext = plaintext.replace(/\s+/g, '').toUpperCase().replace(/[^A-Z]/g, '');
+            key = key.replace(/\s+/g, '').toUpperCase().replace(/[^A-Z]/g, '');
+            if (key.length === 0) throw new Error("Key cannot be empty.");
+
+            plaintext = padPlaintext(plaintext, blocksize);
+            const repeatedKey = (key.repeat(Math.ceil(plaintext.length / key.length))).slice(0, plaintext.length); // Ensure key repeats correctly
+
+            let ciphertext = '';
+            for (let i = 0; i < plaintext.length; i++) {
+                const pChar = plaintext[i].charCodeAt(0) - 'A'.charCodeAt(0);
+                const kChar = repeatedKey[i].charCodeAt(0) - 'A'.charCodeAt(0);
+                const encryptedChar = String.fromCharCode(((pChar + kChar) % 26) + 'A'.charCodeAt(0));
+                ciphertext += encryptedChar;
+            }
+
+            const blocks = [];
+            for (let i = 0; i < ciphertext.length; i += blocksize) {
+                blocks.push(ciphertext.slice(i, i + blocksize));
+            }
+            return blocks.join(' ');
+        }
+
+        // --- CBC Encryption Function (from CBC.html) ---
+        function shiftChar(c1, c2) {
+            const charCodeA = 'A'.charCodeAt(0);
+            let shift = (c1.charCodeAt(0) - charCodeA + c2.charCodeAt(0) - charCodeA) % 26;
+            return String.fromCharCode(charCodeA + shift);
+        }
+
+        function encryptCBC(iv, block1, block2, blocksize) {
+            const charCodeA = 'A'.charCodeAt(0);
+
+            // Ensure IV, block1, block2 are all uppercase and trimmed/padded to blocksize
+            iv = iv.toUpperCase().padEnd(blocksize, 'A').slice(0, blocksize).replace(/[^A-Z]/g, 'A');
+            block1 = block1.toUpperCase().padEnd(blocksize, 'A').slice(0, blocksize).replace(/[^A-Z]/g, 'A');
+            block2 = block2.toUpperCase().padEnd(blocksize, 'A').slice(0, blocksize).replace(/[^A-Z]/g, 'A');
+
+            // Encrypt Block 1 using IV (P1 XOR IV)
+            let encryptedBlock1 = '';
+            for (let i = 0; i < blocksize; i++) {
+                // Simplified XOR for characters: (char_val1 + char_val2) % 26
+                encryptedBlock1 += shiftChar(block1[i], iv[i]);
+            }
+
+            // Encrypt Block 2 using the encrypted Block 1 (P2 XOR C1)
+            let encryptedBlock2 = '';
+            for (let i = 0; i < blocksize; i++) {
+                // Simplified XOR for characters: (char_val1 + char_val2) % 26
+                encryptedBlock2 += shiftChar(block2[i], encryptedBlock1[i]);
+            }
+
+            return [encryptedBlock1, encryptedBlock2];
+        }
+
+        // Binary XOR Function (from CBC.html)
+        function xorBinary(bin1, bin2) {
+            let result = '';
+            // Ensure inputs are strings of '0' or '1' and same length
+            bin1 = bin1.replace(/[^01]/g, '');
+            bin2 = bin2.replace(/[^01]/g, '');
+            if (bin1.length !== bin2.length) {
+                // This check is already done in performCipher, but good for direct call robustness
+                return "Error: Binary numbers must be of the same length";
+            }
+
+            for (let i = 0; i < bin1.length; i++) {
+                result += (parseInt(bin1[i]) ^ parseInt(bin2[i])).toString();
+            }
+            return result;
+        }
+
+        // --- OFB Calculator Function (from OFB.html) ---
+        function addWordsHelper(w1, w2) {
+            let result = '';
+            for (let i = 0; i < w1.length; i++) {
+                let pos1 = w1.charCodeAt(i) - 65; // A = 65 in ASCII
+                let pos2 = w2.charCodeAt(i) - 65;
+                let newPos = (pos1 + pos2) % 26; // Add and mod by 26
+                result += String.fromCharCode(newPos + 65); // Convert back to letter
+            }
+            return result;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+</body>
+</html>

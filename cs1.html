@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CS1 Concepts Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            /* Add background image */
+            background-image: url('cs.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>📚 CS1 Concepts Calculator</h1>
+        
+        <div class="section">
+            <label>Select Data Structure / Concept</label>
+            <select id="conceptType" class="calculation-type" onchange="updateCalculator()">
+                <option value="binary-tree">Binary Tree (Properties)</option>
+                <option value="binary-search-tree">Binary Search Tree (Validation)</option>
+                <option value="heap">Heap (Validation)</option>
+                <option value="trie">Trie (Word/Prefix Check)</option>
+                <option value="big-o-notation">Big O Notation (Complexity Growth)</option>
+                <option value="hash-table">Hash Table (Conceptual Insertion)</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // --- Utility Functions ---
+        function getNumericalArray(inputString, separator = ',', type = 'float') {
+            const values = inputString.split(separator).map(s => {
+                const trimmed = s.trim();
+                return type === 'int' ? parseInt(trimmed) : parseFloat(trimmed);
+            });
+            if (values.some(isNaN) || values.length === 0 || (values.length === 1 && values[0] === '')) {
+                throw new Error("Please enter valid numbers (comma-separated).");
+            }
+            return values;
+        }
+
+        function getStringArray(inputString, separator = ',') {
+            const values = inputString.split(separator).map(s => s.trim()).filter(s => s !== '');
+            if (values.length === 0) {
+                throw new Error("Please enter valid items (comma-separated).");
+            }
+            return values;
+        }
+
+        // --- Core Calculator Logic ---
+        function updateCalculator() {
+            const type = document.getElementById('conceptType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const conceptConfigs = {
+                'binary-tree': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="btHeight">Tree Height (h) (root at height 0):</label>
+                                <input type="number" id="btHeight" min="0" placeholder="e.g., 3">
+                            </div>
+                            <div>
+                                <label for="btLevel">Level Number (L) (root at level 0):</label>
+                                <input type="number" id="btLevel" min="0" placeholder="e.g., 2">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\text{Max Nodes at Level L} = 2^L $$
+                            $$ \\text{Max Nodes in Tree of Height h} = 2^{h+1} - 1 $$
+                        </div>
+                        <div class="info-box">
+                            Calculates properties of a full binary tree: maximum nodes at a specific level, and maximum total nodes for a given height.
+                            (Height: Longest path from root to a leaf, where root is at height 0).
+                            (Level: Distance from the root, where root is at level 0).
+                        </div>
+                    `
+                },
+                'binary-search-tree': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="bstArray">Array Representation of BST (comma-separated numbers):</label>
+                                <input type="text" id="bstArray" placeholder="e.g., 50,30,70,20,40,60,80">
+                                <small>This is a simplified check, assuming a level-order (or similar) representation to infer structure. A true BST validation requires tree traversal.</small>
+                            </div>
+                            <div>
+                                <label for="valueToSearch">Value to Search (optional):</label>
+                                <input type="number" id="valueToSearch" placeholder="e.g., 40">
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            Validates if a given array (interpreted as a BST in level-order) adheres to basic BST properties.
+                            Also performs a conceptual search for a value.
+                        </div>
+                    `
+                },
+                'heap': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="heapArray">Array Representation of Heap (comma-separated numbers):</label>
+                                <input type="text" id="heapArray" placeholder="e.g., 100,80,90,70,60 or 10,20,30,40,50">
+                                <small>This is for an array-based binary heap representation.</small>
+                            </div>
+                            <div>
+                                <label for="heapType">Heap Type:</label>
+                                <select id="heapType">
+                                    <option value="max">Max Heap</option>
+                                    <option value="min">Min Heap</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            Validates if a given array represents a valid Max Heap or Min Heap.
+                            (A heap is a complete binary tree that satisfies the heap property: parent nodes are either always greater than or equal to their children (max-heap) or less than or equal to (min-heap)).
+                        </div>
+                    `
+                },
+                'trie': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="trieWords">Words in Trie (comma-separated):</label>
+                                <input type="text" id="trieWords" placeholder="e.g., apple,apricot,apply,band,banana">
+                            </div>
+                            <div>
+                                <label for="wordToCheck">Word to Check Existence:</label>
+                                <input type="text" id="wordToCheck" placeholder="e.g., apple">
+                            </div>
+                            <div>
+                                <label for="prefixToCheck">Prefix to Check Existence:</label>
+                                <input type="text" id="prefixToCheck" placeholder="e.g., ap">
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            Simulates a Trie (Prefix Tree) by checking if a word or a prefix exists within a given set of words.
+                            (A Trie is an efficient information retrieval data structure that represents a set of strings in a tree-like structure).
+                        </div>
+                    `
+                },
+                'big-o-notation': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="nValue">Input Size (n):</label>
+                                <input type="number" id="nValue" min="1" placeholder="e.g., 100">
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            Compares the growth rates of common Big O complexities for a given input size 'n'.
+                            Big O notation describes the upper bound of an algorithm's running time or space requirements as the input size grows.
+                        </div>
+                    `
+                },
+                'hash-table': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="tableSize">Hash Table Size (m):</label>
+                                <input type="number" id="tableSize" min="1" value="10" placeholder="e.g., 10">
+                            </div>
+                            <div>
+                                <label for="keysToInsert">Keys to Insert (comma-separated numbers):</label>
+                                <input type="text" id="keysToInsert" placeholder="e.g., 15,22,35,48">
+                                <small>Uses simple hash function: h(key) = key % m (tableSize)</small>
+                            </div>
+                            <div>
+                                <label for="collisionResolution">Collision Resolution:</label>
+                                <select id="collisionResolution">
+                                    <option value="linear-probing">Linear Probing</option>
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            Simulates insertion into a hash table using a simple modulo hash function and linear probing for collision resolution.
+                            Shows the conceptual state of the hash table and calculates the load factor.
+                        </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = conceptConfigs[type].inputs;
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Concept Calculation Functions ---
+
+        // Binary Tree (Properties)
+        function calculateBinaryTreeProperties() {
+            const height = getNumericalArray(document.getElementById('btHeight').value, ',', 'int')[0];
+            const level = getNumericalArray(document.getElementById('btLevel').value, ',', 'int')[0];
+
+            if (height < 0 || level < 0) {
+                throw new Error("Height and Level must be non-negative.");
+            }
+
+            const maxNodesAtLevel = Math.pow(2, level);
+            const maxNodesInTree = Math.pow(2, height + 1) - 1;
+
+            return `
+                Binary Tree Properties:
+                Tree Height (h): ${height}
+                Level Number (L): ${level}
+                
+                Maximum nodes at Level ${level}: ${maxNodesAtLevel}
+                Maximum nodes in a tree of Height ${height}: ${maxNodesInTree}
+            `;
+        }
+
+        // Binary Search Tree (Validation)
+        function validateBinarySearchTree() {
+            const bstArray = getNumericalArray(document.getElementById('bstArray').value);
+            const valueToSearchInput = document.getElementById('valueToSearch').value;
+            const valueToSearch = parseFloat(valueToSearchInput);
+
+            // Simple validation: check if it *could* be a BST based on a level-order traversal
+            // This is a simplified check, not a full BST structural validation
+            let isValid = true;
+            let explanation = '';
+
+            if (bstArray.length > 1) {
+                // For each parent at index i: left child is 2i+1, right child is 2i+2
+                for (let i = 0; i < bstArray.length; i++) {
+                    const parentVal = bstArray[i];
+                    const leftChildIdx = 2 * i + 1;
+                    const rightChildIdx = 2 * i + 2;
+
+                    if (leftChildIdx < bstArray.length) {
+                        const leftChildVal = bstArray[leftChildIdx];
+                        if (leftChildVal >= parentVal) {
+                            isValid = false;
+                            explanation = `Value ${leftChildVal} at index ${leftChildIdx} (left child) is not less than parent ${parentVal} at index ${i}.`;
+                            break;
+                        }
+                    }
+                    if (rightChildIdx < bstArray.length) {
+                        const rightChildVal = bstArray[rightChildIdx];
+                        if (rightChildVal <= parentVal) {
+                            isValid = false;
+                            explanation = `Value ${rightChildVal} at index ${rightChildIdx} (right child) is not greater than parent ${parentVal} at index ${i}.`;
+                            break;
+                        }
+                    }
+                }
+            } else if (bstArray.length === 0) {
+                isValid = false;
+                explanation = "Array is empty.";
+            } else {
+                explanation = "Single element array is a valid BST.";
+            }
+
+
+            let searchResult = 'N/A';
+            if (valueToSearchInput !== '' && !isNaN(valueToSearch)) {
+                let found = false;
+                // Conceptual search assuming it's a BST based on its array representation
+                // A more robust search would build a tree structure first.
+                // This simulates traversal based on level-order array indexing for a *complete* tree
+                // where the BST property holds.
+                let tempBstArray = [...bstArray]; // Don't modify original
+                let currentIndex = 0;
+                let path = [];
+
+                while (currentIndex < tempBstArray.length && tempBstArray[currentIndex] !== undefined) {
+                    const currentVal = tempBstArray[currentIndex];
+                    if (currentVal === null) { // Handle nulls for missing nodes
+                        break;
+                    }
+                    path.push(`Index ${currentIndex}: ${currentVal}`);
+
+                    if (valueToSearch === currentVal) {
+                        found = true;
+                        break;
+                    } else if (valueToSearch < currentVal) {
+                        currentIndex = 2 * currentIndex + 1; // Go left
+                    } else {
+                        currentIndex = 2 * currentIndex + 2; // Go right
+                    }
+                }
+                searchResult = `Search Path: ${path.join(' -> ')}\n`;
+                searchResult += found ? `Value ${valueToSearch} found in the conceptual BST.` : `Value ${valueToSearch} NOT found in the conceptual BST.`;
+            }
+
+            return `
+                BST Array (Conceptual Level-Order): [${bstArray.join(', ')}]
+                
+                BST Validation:
+                ${isValid ? 'This array *could* represent a valid BST (basic level-order property check passed).' : `INVALID BST: ${explanation}`}
+                
+                Value Search (Conceptual):
+                ${searchResult}
+            `;
+        }
+
+
+        // Heap (Validation)
+        function validateHeap() {
+            const heapArray = getNumericalArray(document.getElementById('heapArray').value);
+            const heapType = document.getElementById('heapType').value;
+
+            let isValid = true;
+            let explanation = '';
+
+            if (heapArray.length === 0) {
+                isValid = false;
+                explanation = "Array is empty.";
+            } else if (heapArray.length === 1) {
+                explanation = "Single element array is a valid heap.";
+            } else {
+                // For a binary heap, children of node at index i are at 2i+1 (left) and 2i+2 (right)
+                for (let i = 0; i < Math.floor(heapArray.length / 2); i++) {
+                    const parentVal = heapArray[i];
+                    const leftChildIdx = 2 * i + 1;
+                    const rightChildIdx = 2 * i + 2;
+
+                    // Check left child
+                    if (leftChildIdx < heapArray.length) {
+                        const leftChildVal = heapArray[leftChildIdx];
+                        if (heapType === 'max') {
+                            if (leftChildVal > parentVal) {
+                                isValid = false;
+                                explanation = `Max Heap violation: Left child ${leftChildVal} at index ${leftChildIdx} is greater than parent ${parentVal} at index ${i}.`;
+                                break;
+                            }
+                        } else { // min heap
+                            if (leftChildVal < parentVal) {
+                                isValid = false;
+                                explanation = `Min Heap violation: Left child ${leftChildVal} at index ${leftChildIdx} is less than parent ${parentVal} at index ${i}.`;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Check right child
+                    if (rightChildIdx < heapArray.length) {
+                        const rightChildVal = heapArray[rightChildIdx];
+                        if (heapType === 'max') {
+                            if (rightChildVal > parentVal) {
+                                isValid = false;
+                                explanation = `Max Heap violation: Right child ${rightChildVal} at index ${rightChildIdx} is greater than parent ${parentVal} at index ${i}.`;
+                                break;
+                            }
+                        } else { // min heap
+                            if (rightChildVal < parentVal) {
+                                isValid = false;
+                                explanation = `Min Heap violation: Right child ${rightChildVal} at index ${rightChildIdx} is less than parent ${parentVal} at index ${i}.`;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return `
+                Heap Array: [${heapArray.join(', ')}]
+                Heap Type: ${heapType.charAt(0).toUpperCase() + heapType.slice(1)} Heap
+                
+                Heap Validation:
+                ${isValid ? 'This array is a valid ' + heapType.charAt(0).toUpperCase() + heapType.slice(1) + ' Heap.' : `INVALID HEAP: ${explanation}`}
+            `;
+        }
+
+        // Trie (Word/Prefix Check)
+        function checkTrie() {
+            const trieWords = getStringArray(document.getElementById('trieWords').value);
+            const wordToCheckInput = document.getElementById('wordToCheck').value.trim();
+            const prefixToCheckInput = document.getElementById('prefixToCheck').value.trim();
+
+            let wordExists = 'N/A';
+            let prefixExists = 'N/A';
+
+            if (trieWords.length === 0) {
+                wordExists = "No words provided for conceptual Trie.";
+                prefixExists = "No words provided for conceptual Trie.";
+            } else {
+                // For a conceptual Trie, we just check against the list of provided words
+                if (wordToCheckInput) {
+                    wordExists = trieWords.includes(wordToCheckInput) ? `Word "${wordToCheckInput}" EXISTS in the conceptual Trie.` : `Word "${wordToCheckInput}" DOES NOT EXIST in the conceptual Trie.`;
+                }
+
+                if (prefixToCheckInput) {
+                    let foundPrefix = false;
+                    for (let word of trieWords) {
+                        if (word.startsWith(prefixToCheckInput)) {
+                            foundPrefix = true;
+                            break;
+                        }
+                    }
+                    prefixExists = foundPrefix ? `Prefix "${prefixToCheckInput}" EXISTS in the conceptual Trie.` : `Prefix "${prefixToCheckInput}" DOES NOT EXIST in the conceptual Trie.`;
+                }
+            }
+
+            return `
+                Words in Conceptual Trie: [${trieWords.join(', ')}]
+                
+                Word Existence Check:
+                ${wordExists}
+                
+                Prefix Existence Check:
+                ${prefixExists}
+            `;
+        }
+
+        // Big O Notation (Complexity Growth)
+        function calculateBigONotation() {
+            const n = getNumericalArray(document.getElementById('nValue').value, ',', 'int')[0];
+
+            if (n < 1) throw new Error("Input size 'n' must be at least 1.");
+
+            const calculateGrowth = (func, label) => {
+                try {
+                    let val;
+                    if (label === 'O(1)') val = 1;
+                    else if (label === 'O(log n)') val = Math.log2(n);
+                    else if (label === 'O(n)') val = n;
+                    else if (label === 'O(n log n)') val = n * Math.log2(n);
+                    else if (label === 'O(n^2)') val = n * n;
+                    else if (label === 'O(2^n)') val = Math.pow(2, n);
+                    else if (label === 'O(n!)') {
+                        let f = 1;
+                        for (let i = 2; i <= n; i++) f *= i;
+                        val = f;
+                    }
+                    return isFinite(val) ? val.toExponential(4) : 'Too Large'; // Use exponential for large numbers
+                } catch (e) {
+                    return 'Error';
+                }
+            };
+
+            const complexities = [
+                'O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n^2)', 'O(2^n)', 'O(n!)'
+            ];
+
+            let output = `
+                Big O Complexity Growth for n = ${n}:
+                
+                Complexity | Value (approx)
+                -----------|-----------------
+            `;
+            complexities.forEach(c => {
+                output += `${c.padEnd(10)} | ${calculateGrowth(null, c).padStart(15)}\n`;
+            });
+
+            output += `
+                
+                Qualitative Comparison:
+                O(1) (Constant) - Fastest, independent of n.
+                O(log n) (Logarithmic) - Very fast, scales well with large n.
+                O(n) (Linear) - Good, directly proportional to n.
+                O(n log n) (Linearithmic) - Efficient for sorting algorithms.
+                O(n^2) (Quadratic) - Slower, grows quickly.
+                O(2^n) (Exponential) - Very slow, impractical for even moderate n.
+                O(n!) (Factorial) - Extremely slow, for very small n only.
+            `;
+            return output;
+        }
+
+        // Hash Table (Conceptual Insertion)
+        function calculateHashTable() {
+            const tableSize = getNumericalArray(document.getElementById('tableSize').value, ',', 'int')[0];
+            const keysToInsert = getNumericalArray(document.getElementById('keysToInsert').value, ',', 'int');
+            const collisionResolution = document.getElementById('collisionResolution').value;
+
+            if (tableSize < 1) throw new Error("Hash Table Size must be at least 1.");
+            if (keysToInsert.length === 0) throw new Error("Please enter keys to insert.");
+
+            let hashTable = new Array(tableSize).fill(null); // null indicates empty slot
+            let insertions = [];
+            let successfulInsertions = 0;
+
+            keysToInsert.forEach(key => {
+                let initialIndex = key % tableSize;
+                let currentIndex = initialIndex;
+                let probes = 0;
+                let inserted = false;
+                let collisionMessage = '';
+
+                while (probes < tableSize) { // Prevent infinite loop in full table
+                    if (hashTable[currentIndex] === null) {
+                        hashTable[currentIndex] = key;
+                        inserted = true;
+                        successfulInsertions++;
+                        insertions.push(`Key ${key}: Hashed to ${initialIndex}. Inserted at index ${currentIndex} (probes: ${probes}).`);
+                        break;
+                    } else {
+                        // Collision occurred
+                        collisionMessage = `Collision at index ${currentIndex} (contains ${hashTable[currentIndex]}). Probing...`;
+                        probes++;
+                        if (collisionResolution === 'linear-probing') {
+                            currentIndex = (initialIndex + probes) % tableSize; // Next slot
+                        }
+                        // Add more probing methods here if implemented (e.g., quadratic probing)
+                    }
+                }
+                if (!inserted) {
+                    insertions.push(`Key ${key}: Hashed to ${initialIndex}. FAILED to insert (Table full or probing failed after ${tableSize} probes).`);
+                }
+            });
+
+            const currentOccupancy = successfulInsertions;
+            const loadFactor = tableSize === 0 ? 0 : currentOccupancy / tableSize;
+
+            let tableDisplay = 'Hash Table State (null = empty):\n';
+            for (let i = 0; i < tableSize; i++) {
+                tableDisplay += `Index ${i}: ${hashTable[i] === null ? 'null' : hashTable[i]}\n`;
+            }
+
+            return `
+                Hash Table Simulation (Conceptual Insertion):
+                Table Size (m): ${tableSize}
+                Keys to Insert: [${keysToInsert.join(', ')}]
+                Collision Resolution: ${collisionResolution.replace('-', ' ').toUpperCase()}
+                
+                --- Insertion Steps ---
+                ${insertions.join('\n')}
+                
+                --- Final State ---
+                ${tableDisplay}
+                
+                Load Factor (alpha): ${currentOccupancy} / ${tableSize} = ${loadFactor.toFixed(4)}
+                (Load Factor = Number of Elements / Table Size)
+                
+                Note: This is a conceptual simulation. Real hash tables handle deletions and resizing, which are not simulated here.
+            `;
+        }
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('conceptType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'binary-tree':
+                        output = calculateBinaryTreeProperties();
+                        break;
+                    case 'binary-search-tree':
+                        output = validateBinarySearchTree();
+                        break;
+                    case 'heap':
+                        output = validateHeap();
+                        break;
+                    case 'trie':
+                        output = checkTrie();
+                        break;
+                    case 'big-o-notation':
+                        output = calculateBigONotation();
+                        break;
+                    case 'hash-table':
+                        output = calculateHashTable();
+                        break;
+                    default:
+                        output = 'Select a concept to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

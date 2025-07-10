@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Statistics Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            /* Add background image */
+            background-image: url('stat.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .array-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .array-input input {
+            width: 60px;
+            text-align: center;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>📊 Advanced Statistics Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="central-tendency-dispersion">Central Tendency and Dispersion</option>
+                <option value="basic-probability">Basic Probability</option>
+                <option value="discrete-probability">Discrete Probability (Binomial/Poisson)</option>
+                <option value="probability-distribution">Probability Distribution Values</option>
+                <option value="joint-probability">Joint Probability (P(A and B))</option>
+                <option value="confidence-interval">Confidence Interval</option>
+                <option value="hypothesis-testing">Hypothesis Testing (Z-test for Mean)</option>
+                <option value="linear-regression">Linear Regression</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // --- Utility Functions ---
+        function addInput(containerId) {
+            const container = document.getElementById(containerId);
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.placeholder = '#';
+            container.appendChild(input);
+        }
+
+        function getNumericalArray(containerId) {
+            const inputs = document.getElementById(containerId).getElementsByTagName('input');
+            const array = [];
+            for (let input of inputs) {
+                if (input.value !== '') {
+                    const num = parseFloat(input.value);
+                    if (isNaN(num)) {
+                        throw new Error("Please enter valid numbers only.");
+                    }
+                    array.push(num);
+                }
+            }
+            if (array.length === 0) {
+                throw new Error("Please enter at least one number.");
+            }
+            return array;
+        }
+
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        function combinations(n, k) {
+            if (k < 0 || k > n) return 0;
+            if (k === 0 || k === n) return 1;
+            if (k > n / 2) k = n - k; // Optimization for symmetry
+            let res = 1;
+            for (let i = 1; i <= k; i++) {
+                res = res * (n - i + 1) / i;
+            }
+            return res;
+        }
+
+        // Standard Normal CDF (approximated for Z-score to P-value)
+        function erf(x) {
+            // erf(x) = 2/sqrt(pi) * integral from 0 to x of exp(-t^2) dt
+            // Approximation from Abramowitz and Stegun (1964)
+            const a1 = 0.254829592;
+            const a2 = -0.284496736;
+            const a3 = 1.421413741;
+            const a4 = -1.453152027;
+            const a5 = 1.061405429;
+            const p = 0.3275911;
+
+            const sign = (x >= 0) ? 1 : -1;
+            x = Math.abs(x);
+
+            const t = 1.0 / (1.0 + p * x);
+            const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return sign * y;
+        }
+
+        function normCDF(z) {
+            return 0.5 * (1 + erf(z / Math.sqrt(2)));
+        }
+
+        // --- Core Calculation Logic ---
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'central-tendency-dispersion': {
+                    inputs: `
+                        <label>Enter Data (numbers only, use "Add Number" button):</label>
+                        <div class="array-input" id="dataInputs">
+                            <input type="number" placeholder="#">
+                        </div>
+                        <button type="button" onclick="addInput('dataInputs')" style="width: auto; margin-right: 10px;">Add Number</button>
+                        <div class="formula-display">
+                            $$ \\text{Mean} = \\frac{\\sum x}{n} $$
+                            $$ \\text{Variance (Population)} = \\frac{\\sum (x - \\mu)^2}{N} $$
+                            $$ \\text{Variance (Sample)} = \\frac{\\sum (x - \\bar{x})^2}{n-1} $$
+                            $$ \\text{Standard Deviation} = \\sqrt{\\text{Variance}} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates common descriptive statistics: Mean, Median, Mode, Range, Variance (Population & Sample), and Standard Deviation (Population & Sample).
+                        </div>
+                    `
+                },
+                'basic-probability': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="favorableOutcomes">Number of Favorable Outcomes:</label>
+                                <input type="number" id="favorableOutcomes" placeholder="e.g., 1">
+                            </div>
+                            <div>
+                                <label for="totalOutcomes">Total Number of Possible Outcomes:</label>
+                                <input type="number" id="totalOutcomes" placeholder="e.g., 6">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ P(E) = \\frac{\\text{Number of Favorable Outcomes}}{\\text{Total Number of Possible Outcomes}} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the basic probability of a single event.
+                        </div>
+                    `
+                },
+                'discrete-probability': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="probType">Select Distribution:</label>
+                                <select id="probType" onchange="updateDiscreteProbInputs()">
+                                    <option value="binomial">Binomial Distribution</option>
+                                    <option value="poisson">Poisson Distribution</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="discreteProbInputs">
+                            </div>
+                        <div class="formula-display" id="discreteProbFormula">
+                            </div>
+                        <div class="info-box" id="discreteProbInfo">
+                            </div>
+                    `
+                },
+                'probability-distribution': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                             <div>
+                                <label for="values">X Values (comma-separated):</label>
+                                <input type="text" id="values" placeholder="e.g., 0, 1, 2">
+                            </div>
+                            <div>
+                                <label for="probabilities">P(X) Probabilities (comma-separated):</label>
+                                <input type="text" id="probabilities" placeholder="e.g., 0.2, 0.5, 0.3">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\text{Expected Value } E(X) = \\sum [x \\cdot P(x)] $$
+                            $$ \\text{Variance } \\sigma^2 = \\sum [x^2 \\cdot P(x)] - [E(X)]^2 $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the Expected Value (Mean) and Variance of a discrete probability distribution.
+                            Ensure that the sum of probabilities equals 1.
+                        </div>
+                    `
+                },
+                'joint-probability': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="probA">Probability of A (P(A)):</label>
+                                <input type="number" id="probA" step="0.01" placeholder="e.g., 0.5">
+                            </div>
+                            <div>
+                                <label for="probB">Probability of B (P(B)):</label>
+                                <input type="number" id="probB" step="0.01" placeholder="e.g., 0.4">
+                            </div>
+                            <div>
+                                <label for="probAandB">Probability of A and B (P(A ∩ B) - if known for conditional):</label>
+                                <input type="number" id="probAandB" step="0.01" placeholder="e.g., 0.2 (Optional)">
+                            </div>
+                             <div>
+                                <label for="probBgivenA">Probability of B given A (P(B|A) - if known for conditional):</label>
+                                <input type="number" id="probBgivenA" step="0.01" placeholder="e.g., 0.4 (Optional)">
+                            </div>
+                             <div>
+                                <label for="eventsType">Are events independent?</label>
+                                <select id="eventsType">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No (Dependent / Conditional)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ P(A \\cap B) = P(A) \\cdot P(B) \\text{ (Independent)} $$
+                            $$ P(A \\cap B) = P(B|A) \\cdot P(A) \\text{ (Dependent)} $$
+                            $$ P(A \\cup B) = P(A) + P(B) - P(A \\cap B) $$
+                        </div>
+                        <div class="info-box">
+                            Calculates joint probabilities (P(A and B), P(A or B)) based on whether events are independent or dependent.
+                            For dependent events, you'll need to provide either P(A and B) or P(B|A).
+                        </div>
+                    `
+                },
+                'confidence-interval': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="sampleMean">Sample Mean (x̄):</label>
+                                <input type="number" id="sampleMean" placeholder="e.g., 50">
+                            </div>
+                            <div>
+                                <label for="stdDev">Population Standard Deviation (σ) or Sample Standard Deviation (s):</label>
+                                <input type="number" id="stdDev" placeholder="e.g., 10">
+                            </div>
+                            <div>
+                                <label for="sampleSize">Sample Size (n):</label>
+                                <input type="number" id="sampleSize" placeholder="e.g., 30">
+                            </div>
+                            <div>
+                                <label for="confidenceLevel">Confidence Level (%):</label>
+                                <input type="number" id="confidenceLevel" value="95" placeholder="e.g., 95">
+                            </div>
+                            <div>
+                                <label for="popStdDevKnown">Is Population Standard Deviation (σ) Known?</label>
+                                <select id="popStdDevKnown">
+                                    <option value="yes">Yes (Use Z-score)</option>
+                                    <option value="no">No (Use T-score - Approximation for large n)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\bar{x} \\pm Z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} \\text{ (Population Std Dev Known)} $$
+                            $$ \\bar{x} \\pm t_{\\alpha/2, n-1} \\frac{s}{\\sqrt{n}} \\text{ (Population Std Dev Unknown)} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates a confidence interval for the population mean. It estimates the range within which the true population mean is likely to fall. Uses Z-score if population standard deviation is known, otherwise uses T-score (approximated here for large n for simplicity).
+                        </div>
+                    `
+                },
+                'hypothesis-testing': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="sampleMeanHT">Sample Mean (x̄):</label>
+                                <input type="number" id="sampleMeanHT" placeholder="e.g., 52">
+                            </div>
+                            <div>
+                                <label for="popMeanNull">Hypothesized Population Mean (μ₀):</label>
+                                <input type="number" id="popMeanNull" placeholder="e.g., 50">
+                            </div>
+                            <div>
+                                <label for="stdDevHT">Population Standard Deviation (σ):</label>
+                                <input type="number" id="stdDevHT" placeholder="e.g., 10">
+                            </div>
+                            <div>
+                                <label for="sampleSizeHT">Sample Size (n):</label>
+                                <input type="number" id="sampleSizeHT" placeholder="e.g., 30">
+                            </div>
+                            <div>
+                                <label for="alphaLevel">Significance Level (α):</label>
+                                <input type="number" id="alphaLevel" step="0.01" value="0.05" placeholder="e.g., 0.05">
+                            </div>
+                            <div>
+                                <label for="testType">Hypothesis Test Type:</label>
+                                <select id="testType">
+                                    <option value="two-tailed">Two-tailed (μ ≠ μ₀)</option>
+                                    <option value="left-tailed">Left-tailed (μ < μ₀)</option>
+                                    <option value="right-tailed">Right-tailed (μ > μ₀)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ Z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}} $$
+                            $$ \\text{p-value (two-tailed)} = 2 \\cdot P(Z > |z_{calc}|) $$
+                        </div>
+                        <div class="info-box">
+                            Performs a Z-test for a population mean. It calculates the Z-score and p-value to determine whether to reject the null hypothesis. Assumes population standard deviation (σ) is known.
+                        </div>
+                    `
+                },
+                'linear-regression': {
+                    inputs: `
+                        <label>Enter X Values (comma-separated):</label>
+                        <input type="text" id="xValues" placeholder="e.g., 1, 2, 3, 4, 5">
+                        <label>Enter Y Values (comma-separated):</label>
+                        <input type="text" id="yValues" placeholder="e.g., 2, 4, 5, 4, 5">
+                        <div class="formula-display">
+                            $$ \\hat{y} = b_0 + b_1 x $$
+                            $$ b_1 = \\frac{n\\sum xy - (\\sum x)(\\sum y)}{n\\sum x^2 - (\\sum x)^2} $$
+                            $$ b_0 = \\bar{y} - b_1 \\bar{x} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates the slope ($b_1$) and y-intercept ($b_0$) for a simple linear regression line ($\hat{y} = b_0 + b_1 x$).
+                            Ensure that you have an equal number of X and Y values.
+                        </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            // Specific updates for discrete probability inputs
+            if (type === 'discrete-probability') {
+                updateDiscreteProbInputs();
+            }
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Discrete Probability Sub-Inputs ---
+        function updateDiscreteProbInputs() {
+            const probType = document.getElementById('probType').value;
+            const container = document.getElementById('discreteProbInputs');
+            const formulaDiv = document.getElementById('discreteProbFormula');
+            const infoDiv = document.getElementById('discreteProbInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            if (probType === 'binomial') {
+                inputsHtml = `
+                    <div class="additional-inputs">
+                        <div>
+                            <label for="nBinomial">Number of Trials (n):</label>
+                            <input type="number" id="nBinomial" placeholder="e.g., 10">
+                        </div>
+                        <div>
+                            <label for="kBinomial">Number of Successes (k):</label>
+                            <input type="number" id="kBinomial" placeholder="e.g., 3">
+                        </div>
+                        <div>
+                            <label for="pBinomial">Probability of Success (p):</label>
+                            <input type="number" id="pBinomial" step="0.01" placeholder="e.g., 0.5">
+                        </div>
+                    </div>
+                `;
+                formulaHtml = `
+                    $$ P(X=k) = C(n, k) \\cdot p^k \\cdot (1-p)^{n-k} $$
+                `;
+                infoHtml = `
+                    The Binomial Distribution models the number of successes in a fixed number of independent Bernoulli trials.
+                    <br>Parameters: n (number of trials), k (number of successes), p (probability of success).
+                `;
+            } else if (probType === 'poisson') {
+                inputsHtml = `
+                    <div class="additional-inputs">
+                        <div>
+                            <label for="kPoisson">Number of Events (k):</label>
+                            <input type="number" id="kPoisson" placeholder="e.g., 2">
+                        </div>
+                        <div>
+                            <label for="lambdaPoisson">Average rate of events (λ):</label>
+                            <input type="number" id="lambdaPoisson" step="any" placeholder="e.g., 3.5">
+                        </div>
+                    </div>
+                `;
+                formulaHtml = `
+                    $$ P(X=k) = \\frac{\\lambda^k e^{-\\lambda}}{k!} $$
+                `;
+                infoHtml = `
+                    The Poisson Distribution models the number of events occurring in a fixed interval of time or space, given a constant average rate of occurrence.
+                    <br>Parameters: k (number of events), λ (average rate of events).
+                `;
+            }
+            container.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+
+        // --- Statistical Calculation Functions ---
+
+        // Central Tendency and Dispersion
+        function calculateCentralTendencyDispersion() {
+            const data = getNumericalArray('dataInputs');
+            const n = data.length;
+            
+            // Mean
+            const sum = data.reduce((acc, val) => acc + val, 0);
+            const mean = sum / n;
+
+            // Median
+            const sortedData = [...data].sort((a, b) => a - b);
+            let median;
+            if (n % 2 === 0) {
+                median = (sortedData[n / 2 - 1] + sortedData[n / 2]) / 2;
+            } else {
+                median = sortedData[Math.floor(n / 2)];
+            }
+
+            // Mode
+            const frequencyMap = {};
+            data.forEach(num => {
+                frequencyMap[num] = (frequencyMap[num] || 0) + 1;
+            });
+            let maxFrequency = 0;
+            let modes = [];
+            for (const numStr in frequencyMap) {
+                const num = parseFloat(numStr);
+                if (frequencyMap[numStr] > maxFrequency) {
+                    maxFrequency = frequencyMap[numStr];
+                    modes = [num];
+                } else if (frequencyMap[numStr] === maxFrequency && maxFrequency > 1) {
+                    modes.push(num);
+                }
+            }
+            if (modes.length === 0 || (modes.length === data.length && data.length > 0)) modes = ['No unique mode (all unique or same frequency)'];
+            else if (maxFrequency === 1 && data.length > 0) modes = ['No unique mode (all unique)'];
+            
+
+            // Range
+            const range = Math.max(...data) - Math.min(...data);
+
+            // Variance (Population and Sample) and Standard Deviation
+            const sumOfSquaredDifferences = data.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0);
+            
+            const populationVariance = sumOfSquaredDifferences / n;
+            const populationStdDev = Math.sqrt(populationVariance);
+
+            let sampleVariance = NaN;
+            let sampleStdDev = NaN;
+            if (n > 1) {
+                sampleVariance = sumOfSquaredDifferences / (n - 1);
+                sampleStdDev = Math.sqrt(sampleVariance);
+            }
+
+            return `
+                Data Set: [${data.join(', ')}]
+                Count (n): ${n}
+                Mean (μ/x̄): ${mean.toFixed(4)}
+                Median: ${median.toFixed(4)}
+                Mode(s): ${modes.join(', ')}
+                Range: ${range.toFixed(4)}
+                
+                Population Variance (σ²): ${populationVariance.toFixed(4)}
+                Population Standard Deviation (σ): ${populationStdDev.toFixed(4)}
+                
+                Sample Variance (s²): ${isNaN(sampleVariance) ? 'N/A (n < 2)' : sampleVariance.toFixed(4)}
+                Sample Standard Deviation (s): ${isNaN(sampleStdDev) ? 'N/A (n < 2)' : sampleStdDev.toFixed(4)}
+            `;
+        }
+
+        // Basic Probability
+        function calculateBasicProbability() {
+            const favorable = parseInt(document.getElementById('favorableOutcomes').value);
+            const total = parseInt(document.getElementById('totalOutcomes').value);
+
+            if (isNaN(favorable) || isNaN(total)) throw new Error("Please enter valid numbers for outcomes.");
+            if (favorable < 0 || total <= 0) throw new Error("Favorable outcomes cannot be negative, total outcomes must be positive.");
+            if (favorable > total) throw new Error("Favorable outcomes cannot exceed total outcomes.");
+
+            const probability = favorable / total;
+            return `
+                Favorable Outcomes: ${favorable}
+                Total Outcomes: ${total}
+                Probability P(E): ${probability.toFixed(4)} (${(probability * 100).toFixed(2)}%)
+            `;
+        }
+
+        // Discrete Probability (Binomial/Poisson)
+        function calculateDiscreteProbability() {
+            const probType = document.getElementById('probType').value;
+            let result = '';
+
+            if (probType === 'binomial') {
+                const n = parseInt(document.getElementById('nBinomial').value);
+                const k = parseInt(document.getElementById('kBinomial').value);
+                const p = parseFloat(document.getElementById('pBinomial').value);
+
+                if (isNaN(n) || isNaN(k) || isNaN(p)) throw new Error("Please enter valid numbers for n, k, and p.");
+                if (n < 0 || k < 0 || p < 0 || p > 1) throw new Error("n and k must be non-negative integers, p must be between 0 and 1.");
+                if (k > n) throw new Error("k (successes) cannot be greater than n (trials).");
+
+                const binomialProb = combinations(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+                result = `
+                    Binomial Distribution (P(X=k)):
+                    Number of Trials (n): ${n}
+                    Number of Successes (k): ${k}
+                    Probability of Success (p): ${p}
+                    P(X=${k}) = ${binomialProb.toFixed(6)}
+                `;
+            } else if (probType === 'poisson') {
+                const k = parseInt(document.getElementById('kPoisson').value);
+                const lambda = parseFloat(document.getElementById('lambdaPoisson').value);
+
+                if (isNaN(k) || isNaN(lambda)) throw new Error("Please enter valid numbers for k and λ.");
+                if (k < 0 || lambda <= 0) throw new Error("k must be non-negative, λ must be positive.");
+
+                const poissonProb = (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
+                result = `
+                    Poisson Distribution (P(X=k)):
+                    Number of Events (k): ${k}
+                    Average Rate (λ): ${lambda}
+                    P(X=${k}) = ${poissonProb.toFixed(6)}
+                `;
+            }
+            return result;
+        }
+
+        // Probability Distribution Values (Expected Value & Variance)
+        function calculateProbabilityDistribution() {
+            const xValuesStr = document.getElementById('values').value;
+            const pValuesStr = document.getElementById('probabilities').value;
+
+            const xValues = xValuesStr.split(',').map(s => parseFloat(s.trim()));
+            const pValues = pValuesStr.split(',').map(s => parseFloat(s.trim()));
+
+            if (xValues.some(isNaN) || pValues.some(isNaN)) throw new Error("Please enter valid numbers for X values and Probabilities (comma-separated).");
+            if (xValues.length !== pValues.length) throw new Error("Number of X values must match number of probabilities.");
+            if (xValues.length === 0) throw new Error("Please enter at least one X value and probability.");
+            if (pValues.some(p => p < 0 || p > 1)) throw new Error("Probabilities must be between 0 and 1.");
+
+            const sumOfProbabilities = pValues.reduce((sum, p) => sum + p, 0);
+            if (Math.abs(sumOfProbabilities - 1) > 1e-6) { // Allow for floating point inaccuracies
+                throw new Error(`Sum of probabilities must equal 1. Current sum: ${sumOfProbabilities.toFixed(4)}`);
+            }
+
+            // Expected Value E(X)
+            const expectedValue = xValues.reduce((sum, x, i) => sum + (x * pValues[i]), 0);
+
+            // Variance Var(X) = E(X^2) - [E(X)]^2
+            const expectedValueSquared = xValues.reduce((sum, x, i) => sum + (Math.pow(x, 2) * pValues[i]), 0);
+            const variance = expectedValueSquared - Math.pow(expectedValue, 2);
+            const stdDev = Math.sqrt(variance);
+
+            return `
+                X Values: [${xValues.join(', ')}]
+                P(X) Values: [${pValues.join(', ')}]
+                Sum of P(X): ${sumOfProbabilities.toFixed(4)}
+                
+                Expected Value E(X): ${expectedValue.toFixed(4)}
+                Variance Var(X): ${variance.toFixed(4)}
+                Standard Deviation: ${stdDev.toFixed(4)}
+            `;
+        }
+
+        // Joint Probability
+        function calculateJointProbability() {
+            const probA = parseFloat(document.getElementById('probA').value);
+            const probB = parseFloat(document.getElementById('probB').value);
+            const probAandB = parseFloat(document.getElementById('probAandB').value);
+            const probBgivenA = parseFloat(document.getElementById('probBgivenA').value);
+            const eventsType = document.getElementById('eventsType').value;
+
+            if (isNaN(probA) || isNaN(probB)) throw new Error("Please enter valid probabilities for P(A) and P(B).");
+            if (probA < 0 || probA > 1 || probB < 0 || probB > 1) throw new Error("P(A) and P(B) must be between 0 and 1.");
+
+            let calculatedProbAandB;
+            let conditionalInfo = '';
+
+            if (eventsType === 'yes') { // Independent
+                calculatedProbAandB = probA * probB;
+            } else { // Dependent / Conditional
+                if (!isNaN(probAandB)) {
+                    calculatedProbAandB = probAandB;
+                    conditionalInfo = `(P(A ∩ B) was directly provided)`;
+                } else if (!isNaN(probBgivenA)) {
+                    calculatedProbAandB = probBgivenA * probA;
+                    conditionalInfo = `(P(B|A) * P(A))`;
+                } else {
+                    throw new Error("For dependent events, you must provide either P(A ∩ B) or P(B|A).");
+                }
+                if (calculatedProbAandB < 0 || calculatedProbAandB > 1) throw new Error("Calculated P(A ∩ B) is outside [0, 1]. Check inputs for dependent events.");
+            }
+
+            const probAorB = probA + probB - calculatedProbAandB;
+            if (probAorB < 0 || probAorB > 1) throw new Error("Calculated P(A ∪ B) is outside [0, 1]. Check inputs.");
+
+
+            return `
+                P(A): ${probA.toFixed(4)}
+                P(B): ${probB.toFixed(4)}
+                Events Type: ${eventsType === 'yes' ? 'Independent' : 'Dependent'}
+                
+                P(A ∩ B) (P(A and B)): ${calculatedProbAandB.toFixed(4)} ${conditionalInfo}
+                P(A ∪ B) (P(A or B)): ${probAorB.toFixed(4)}
+            `;
+        }
+
+        // Confidence Interval
+        function calculateConfidenceInterval() {
+            const sampleMean = parseFloat(document.getElementById('sampleMean').value);
+            const stdDev = parseFloat(document.getElementById('stdDev').value);
+            const sampleSize = parseInt(document.getElementById('sampleSize').value);
+            const confidenceLevel = parseFloat(document.getElementById('confidenceLevel').value);
+            const popStdDevKnown = document.getElementById('popStdDevKnown').value;
+
+            if (isNaN(sampleMean) || isNaN(stdDev) || isNaN(sampleSize) || isNaN(confidenceLevel)) throw new Error("Please enter valid numbers for all fields.");
+            if (stdDev <= 0 || sampleSize <= 0 || confidenceLevel <= 0 || confidenceLevel >= 100) throw new Error("Standard deviation, sample size, and confidence level must be positive. Confidence level must be < 100.");
+
+            const alpha = 1 - (confidenceLevel / 100);
+            let criticalValue;
+            let method = '';
+
+            // Common Z-scores for confidence levels
+            const zScores = {
+                90: 1.645,
+                95: 1.96,
+                99: 2.576
+            };
+
+            if (popStdDevKnown === 'yes') {
+                method = 'Z-interval (Population Std Dev Known)';
+                // Use a lookup for common CIs, otherwise approximate using normCDF inverse (not implemented directly here for simplicity, typically from tables)
+                criticalValue = zScores[confidenceLevel] || normCDF(1 - alpha / 2); // Fallback is not ideal
+                if (isNaN(criticalValue) || !zScores[confidenceLevel]) {
+                    // This is a simplification; a true inverse CDF (quantile function) would be needed
+                    throw new Error(`For 'Z-interval', critical value for ${confidenceLevel}% is not pre-defined. Please use 90, 95, or 99.`);
+                }
+
+            } else { // popStdDevKnown === 'no', use t-distribution (approximated for large n, or requires t-table)
+                method = 'T-interval (Population Std Dev Unknown - Approximation for large n)';
+                // For a proper T-distribution, a t-table or more complex statistical library is needed.
+                // For simplicity, we'll use Z-score as an approximation for n >= 30.
+                if (sampleSize < 30) {
+                    throw new Error("For 'T-interval' (Population Std Dev Unknown), a sample size of at least 30 is recommended for Z-approximation. For smaller n, a t-table is required which is not implemented.");
+                }
+                 criticalValue = zScores[confidenceLevel] || normCDF(1 - alpha / 2);
+                 if (isNaN(criticalValue) || !zScores[confidenceLevel]) {
+                    throw new Error(`For 'T-interval' with large n approximation, critical value for ${confidenceLevel}% is not pre-defined. Please use 90, 95, or 99.`);
+                }
+            }
+
+            const standardError = stdDev / Math.sqrt(sampleSize);
+            const marginOfError = criticalValue * standardError;
+
+            const lowerBound = sampleMean - marginOfError;
+            const upperBound = sampleMean + marginOfError;
+
+            return `
+                Confidence Interval Calculation:
+                Method: ${method}
+                Sample Mean (x̄): ${sampleMean.toFixed(4)}
+                Standard Deviation (${popStdDevKnown === 'yes' ? 'σ' : 's'}): ${stdDev.toFixed(4)}
+                Sample Size (n): ${sampleSize}
+                Confidence Level: ${confidenceLevel}% (α = ${alpha.toFixed(2)})
+                Critical Value (${popStdDevKnown === 'yes' ? 'Z' : 'approx T'}): ${criticalValue.toFixed(4)}
+                Standard Error: ${standardError.toFixed(4)}
+                Margin of Error: ${marginOfError.toFixed(4)}
+                
+                Confidence Interval: [${lowerBound.toFixed(4)}, ${upperBound.toFixed(4)}]
+            `;
+        }
+
+        // Hypothesis Testing (Z-test for Mean)
+        function calculateHypothesisTesting() {
+            const sampleMean = parseFloat(document.getElementById('sampleMeanHT').value);
+            const popMeanNull = parseFloat(document.getElementById('popMeanNull').value);
+            const stdDev = parseFloat(document.getElementById('stdDevHT').value);
+            const sampleSize = parseInt(document.getElementById('sampleSizeHT').value);
+            const alphaLevel = parseFloat(document.getElementById('alphaLevel').value);
+            const testType = document.getElementById('testType').value;
+
+            if (isNaN(sampleMean) || isNaN(popMeanNull) || isNaN(stdDev) || isNaN(sampleSize) || isNaN(alphaLevel)) throw new Error("Please enter valid numbers for all fields.");
+            if (stdDev <= 0 || sampleSize <= 0 || alphaLevel <= 0 || alphaLevel >= 1) throw new Error("Standard deviation and sample size must be positive. Alpha must be between 0 and 1.");
+
+            const zScore = (sampleMean - popMeanNull) / (stdDev / Math.sqrt(sampleSize));
+            let pValue;
+            let conclusion;
+
+            if (testType === 'two-tailed') {
+                pValue = 2 * (1 - normCDF(Math.abs(zScore)));
+            } else if (testType === 'left-tailed') {
+                pValue = normCDF(zScore);
+            } else { // right-tailed
+                pValue = 1 - normCDF(zScore);
+            }
+
+            if (pValue < alphaLevel) {
+                conclusion = "Reject the Null Hypothesis.";
+            } else {
+                conclusion = "Fail to Reject the Null Hypothesis.";
+            }
+
+            return `
+                Hypothesis Test (Z-test for Mean):
+                Sample Mean (x̄): ${sampleMean.toFixed(4)}
+                Hypothesized Population Mean (μ₀): ${popMeanNull.toFixed(4)}
+                Population Standard Deviation (σ): ${stdDev.toFixed(4)}
+                Sample Size (n): ${sampleSize}
+                Significance Level (α): ${alphaLevel.toFixed(2)}
+                Test Type: ${testType.replace('-', ' ').toUpperCase()}
+                
+                Calculated Z-score: ${zScore.toFixed(4)}
+                P-value: ${pValue.toFixed(6)}
+                
+                Conclusion: ${conclusion} (since p-value ${pValue.toFixed(6)} ${pValue < alphaLevel ? '<' : '>='} α ${alphaLevel.toFixed(2)})
+            `;
+        }
+
+        // Linear Regression
+        function calculateLinearRegression() {
+            const xValuesStr = document.getElementById('xValues').value;
+            const yValuesStr = document.getElementById('yValues').value;
+
+            const x = xValuesStr.split(',').map(s => parseFloat(s.trim()));
+            const y = yValuesStr.split(',').map(s => parseFloat(s.trim()));
+
+            if (x.some(isNaN) || y.some(isNaN)) throw new Error("Please enter valid numbers for X and Y values (comma-separated).");
+            if (x.length !== y.length) throw new Error("Number of X values must match number of Y values.");
+            if (x.length < 2) throw new Error("At least two data points are required for linear regression.");
+
+            const n = x.length;
+
+            const sumX = x.reduce((acc, val) => acc + val, 0);
+            const sumY = y.reduce((acc, val) => acc + val, 0);
+            const sumXY = x.reduce((acc, val, i) => acc + (val * y[i]), 0);
+            const sumX2 = x.reduce((acc, val) => acc + (val * val), 0);
+
+            const meanX = sumX / n;
+            const meanY = sumY / n;
+
+            // Calculate slope (b1)
+            const numeratorB1 = (n * sumXY) - (sumX * sumY);
+            const denominatorB1 = (n * sumX2) - (sumX * sumX);
+
+            if (denominatorB1 === 0) {
+                throw new Error("Cannot calculate slope (denominator is zero). X values are all the same.");
+            }
+
+            const b1 = numeratorB1 / denominatorB1;
+
+            // Calculate y-intercept (b0)
+            const b0 = meanY - (b1 * meanX);
+
+            return `
+                Linear Regression:
+                X Values: [${x.join(', ')}]
+                Y Values: [${y.join(', ')}]
+                Number of data points (n): ${n}
+                
+                Sum X (Σx): ${sumX.toFixed(2)}
+                Sum Y (Σy): ${sumY.toFixed(2)}
+                Sum XY (Σxy): ${sumXY.toFixed(2)}
+                Sum X² (Σx²): ${sumX2.toFixed(2)}
+                Mean X (x̄): ${meanX.toFixed(2)}
+                Mean Y (ȳ): ${meanY.toFixed(2)}
+                
+                Slope (b₁): ${b1.toFixed(4)}
+                Y-intercept (b₀): ${b0.toFixed(4)}
+                
+                Regression Equation: ŷ = ${b0.toFixed(4)} + ${b1.toFixed(4)}x
+            `;
+        }
+
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'central-tendency-dispersion':
+                        output = calculateCentralTendencyDispersion();
+                        break;
+                    case 'basic-probability':
+                        output = calculateBasicProbability();
+                        break;
+                    case 'discrete-probability':
+                        output = calculateDiscreteProbability();
+                        break;
+                    case 'probability-distribution':
+                        output = calculateProbabilityDistribution();
+                        break;
+                    case 'joint-probability':
+                        output = calculateJointProbability();
+                        break;
+                    case 'confidence-interval':
+                        output = calculateConfidenceInterval();
+                        break;
+                    case 'hypothesis-testing':
+                        output = calculateHypothesisTesting();
+                        break;
+                    case 'linear-regression':
+                        output = calculateLinearRegression();
+                        break;
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

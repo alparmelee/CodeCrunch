@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorting Algorithm Visualizer</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            background-image: url('cs.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator { /* Renamed from .container to match previous structure */
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section { /* Added for consistent section styling */
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type { /* Style for the dropdown */
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: auto; /* Allow buttons to size naturally */
+            min-width: 120px;
+            display: inline-block; /* Allow buttons to sit next to each other */
+            margin-right: 10px; /* Space between buttons */
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+        }
+
+        /* Sorting specific styles */
+        .input-area {
+            margin: 20px 0;
+        }
+        .array-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .array-input input {
+            width: 60px; /* Adjust input width for numbers */
+            text-align: center;
+        }
+
+        .steps-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            animation: fadeIn 0.5s;
+            border: 1px solid #ddd;
+        }
+        .number {
+            display: inline-flex; /* Use flex for centering text */
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            margin: 0 5px;
+            background-color: #fff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-weight: bold;
+        }
+        /* Specific colors for sorting visualization */
+        .current {
+            background-color: #fff3cd; /* Light yellow */
+            border-color: #ffeeba;
+        }
+        .sorted {
+            background-color: #d4edda; /* Light green */
+            border-color: #c3e6cb;
+        }
+        .comparing {
+            background-color: #cce5ff; /* Light blue */
+            border-color: #b8daff;
+        }
+        .swapped {
+            background-color: #f8d7da; /* Light red/pink */
+            border-color: #f5c6cb;
+        }
+        .inserted {
+            background-color: #d1ecf1; /* Light cyan */
+            border-color: #bee5eb;
+        }
+        .pivot {
+            background-color: #f9e4b7; /* Orange-ish for pivot */
+            border-color: #f7d287;
+            font-weight: bolder;
+        }
+        .divider { /* For Insertion Sort's sorted/unsorted boundary */
+            display: inline-block;
+            width: 2px;
+            height: 40px;
+            background-color: #666;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>📊 Sorting Algorithm Visualizer</h1>
+        
+        <div class="section">
+            <label>Select Algorithm</label>
+            <select id="algorithmType" class="calculation-type" onchange="updateCalculator()">
+                <option value="bubble-sort">Bubble Sort</option>
+                <option value="selection-sort">Selection Sort</option>
+                <option value="insertion-sort">Insertion Sort</option>
+                <option value="merge-sort">Merge Sort</option>
+                <option value="quick-sort">Quick Sort</option>
+            </select>
+        </div>
+
+        <div class="input-area section">
+            <h3>Enter up to 10 numbers:</h3>
+            <div class="array-input" id="arrayInputs">
+                <input type="number" placeholder="#">
+            </div>
+            <button onclick="addInput()">Add Number</button>
+            <button onclick="startSort()">Sort</button>
+            <button onclick="resetCalculator()">Reset</button>
+        </div>
+
+        <div class="error" id="errorMsg"></div>
+        
+        <div class="steps-container" id="stepsContainer"></div>
+    </div>
+
+    <script>
+        let steps = [];
+
+        function updateCalculator() {
+            const type = document.getElementById('algorithmType').value;
+            // No dynamic inputs beyond the array itself, just algorithm selection changes logic
+            // We can update information boxes here if we add them later.
+            document.getElementById('stepsContainer').innerHTML = '';
+            document.getElementById('errorMsg').textContent = '';
+        }
+
+        function addInput() {
+            const container = document.getElementById('arrayInputs');
+            if (container.children.length >= 10) {
+                showError('Maximum 10 numbers allowed');
+                return;
+            }
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.placeholder = '#';
+            container.appendChild(input);
+            showError(''); // Clear error if any
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = message;
+        }
+
+        function getInputArray() {
+            const inputs = document.getElementById('arrayInputs').getElementsByTagName('input');
+            const array = [];
+            
+            for (let input of inputs) {
+                if (input.value !== '') {
+                    const num = parseInt(input.value);
+                    if (isNaN(num)) {
+                        showError('Please enter valid numbers');
+                        return null;
+                    }
+                    array.push(num);
+                }
+            }
+            
+            if (array.length < 2) {
+                showError('Please enter at least 2 numbers for sorting algorithms to work.');
+                return null;
+            }
+            if (array.length > 10) {
+                showError('Please enter no more than 10 numbers.');
+                return null;
+            }
+            
+            return array;
+        }
+
+        function renderStep(step, index) {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step';
+            
+            const stepHeader = document.createElement('div');
+            stepHeader.textContent = `Step ${index + 1}: ${step.message}`;
+            stepDiv.appendChild(stepHeader);
+            
+            const arrayDiv = document.createElement('div');
+            arrayDiv.style.marginTop = '10px';
+            arrayDiv.style.display = 'flex';
+            arrayDiv.style.alignItems = 'center';
+
+            step.array.forEach((num, i) => {
+                // For Insertion Sort, add a visual divider
+                if (step.algorithm === 'insertion-sort' && i > 0 && step.sorted.includes(i-1) && !step.sorted.includes(i)) {
+                    const divider = document.createElement('div');
+                    divider.className = 'divider';
+                    arrayDiv.appendChild(divider);
+                }
+                
+                const numDiv = document.createElement('div');
+                numDiv.className = 'number';
+                numDiv.textContent = num;
+                
+                // Add specific classes based on step state
+                if (step.current && i === step.current) {
+                    numDiv.classList.add('current');
+                }
+                if (step.sorted && step.sorted.includes(i)) {
+                    numDiv.classList.add('sorted');
+                }
+                if (step.comparing && step.comparing.includes(i)) {
+                    numDiv.classList.add('comparing');
+                }
+                if (step.swapped && step.swapped.includes(i)) {
+                    numDiv.classList.add('swapped');
+                }
+                if (step.inserted && i === step.inserted) {
+                    numDiv.classList.add('inserted');
+                }
+                if (step.pivot !== undefined && step.pivot === i) {
+                    numDiv.classList.add('pivot');
+                }
+                // For merge sort, all elements in a merged step are 'merged'
+                if (step.algorithm === 'merge-sort' && step.message.startsWith('Merged:')) {
+                     numDiv.classList.add('merged');
+                }
+                
+                arrayDiv.appendChild(numDiv);
+            });
+            
+            stepDiv.appendChild(arrayDiv);
+            return stepDiv;
+        }
+
+        function startSort() {
+            const array = getInputArray();
+            if (!array) return;
+            
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = '';
+            
+            steps = []; // Clear steps for new sort
+            const algorithmType = document.getElementById('algorithmType').value;
+
+            switch (algorithmType) {
+                case 'bubble-sort':
+                    bubbleSort([...array]);
+                    break;
+                case 'selection-sort':
+                    selectionSort([...array]);
+                    break;
+                case 'insertion-sort':
+                    insertionSort([...array]);
+                    break;
+                case 'merge-sort':
+                    mergeSort([...array]);
+                    break;
+                case 'quick-sort':
+                    quickSort([...array], 0, array.length - 1);
+                    break;
+            }
+            
+            steps.forEach((step, index) => {
+                const stepElement = renderStep(step, index);
+                stepsContainer.appendChild(stepElement);
+            });
+        }
+
+        function resetCalculator() {
+            const container = document.getElementById('arrayInputs');
+            container.innerHTML = '<input type="number" placeholder="#">';
+            
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = '';
+            
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = '';
+            
+            steps = [];
+        }
+
+        // --- Bubble Sort Functions (from BubbleSort.html) ---
+        function bubbleSort(arr) {
+            const n = arr.length;
+            let sortedFlag;
+            
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [],
+                message: 'Initial array',
+                algorithm: 'bubble-sort'
+            });
+            
+            for (let i = 0; i < n - 1; i++) {
+                sortedFlag = true; // Assume sorted until a swap occurs
+                
+                for (let j = 0; j < n - i - 1; j++) {
+                    steps.push({
+                        array: [...arr],
+                        comparing: [j, j + 1],
+                        swapped: [],
+                        message: `Comparing ${arr[j]} and ${arr[j + 1]}`,
+                        algorithm: 'bubble-sort'
+                    });
+                    
+                    if (arr[j] > arr[j + 1]) {
+                        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; // Swap
+                        sortedFlag = false;
+                        
+                        steps.push({
+                            array: [...arr],
+                            comparing: [],
+                            swapped: [j, j + 1],
+                            message: `Swapped ${arr[j+1]} and ${arr[j]}`,
+                            algorithm: 'bubble-sort'
+                        });
+                    }
+                }
+                if (sortedFlag) {
+                    steps.push({
+                        array: [...arr],
+                        comparing: [],
+                        swapped: [],
+                        message: 'Array is sorted!',
+                        algorithm: 'bubble-sort'
+                    });
+                    break;
+                }
+            }
+            // Final state if loop completes without early exit
+            if (!sortedFlag) {
+                steps.push({
+                    array: [...arr],
+                    comparing: [],
+                    swapped: [],
+                    message: 'Array is sorted!',
+                    algorithm: 'bubble-sort'
+                });
+            }
+            return arr;
+        }
+
+        // --- Selection Sort Functions (from SelectionSort.html) ---
+        function selectionSort(arr) {
+            const n = arr.length;
+
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [],
+                message: 'Initial array',
+                algorithm: 'selection-sort'
+            });
+
+            for (let i = 0; i < n - 1; i++) {
+                let minIdx = i;
+
+                steps.push({
+                    array: [...arr],
+                    comparing: [minIdx], // Highlight current min candidate
+                    swapped: [],
+                    message: `Starting pass ${i + 1}. Assume ${arr[minIdx]} is minimum of unsorted part.`,
+                    algorithm: 'selection-sort'
+                });
+
+                for (let j = i + 1; j < n; j++) {
+                    steps.push({
+                        array: [...arr],
+                        comparing: [minIdx, j], // Highlight current min and element being compared
+                        swapped: [],
+                        message: `Comparing ${arr[minIdx]} (current min) and ${arr[j]}`,
+                        algorithm: 'selection-sort'
+                    });
+
+                    if (arr[j] < arr[minIdx]) {
+                        minIdx = j;
+                        steps.push({
+                            array: [...arr],
+                            comparing: [minIdx], // New min highlighted
+                            swapped: [],
+                            message: `New minimum found: ${arr[minIdx]} at index ${minIdx}`,
+                            algorithm: 'selection-sort'
+                        });
+                    }
+                }
+
+                if (minIdx !== i) {
+                    [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+                    steps.push({
+                        array: [...arr],
+                        comparing: [],
+                        swapped: [i, minIdx],
+                        message: `Swapped ${arr[i]} (now at ${i}) and ${arr[minIdx]} (now at ${minIdx})`,
+                        algorithm: 'selection-sort'
+                    });
+                } else {
+                     steps.push({
+                        array: [...arr],
+                        comparing: [],
+                        swapped: [],
+                        message: `${arr[i]} is already in its correct sorted position.`,
+                        algorithm: 'selection-sort'
+                    });
+                }
+            }
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [],
+                message: 'Array is sorted!',
+                algorithm: 'selection-sort'
+            });
+            return arr;
+        }
+
+        // --- Insertion Sort Functions (from InsertionSort.html) ---
+        function insertionSort(arr) {
+            const n = arr.length;
+            
+            steps.push({
+                array: [...arr],
+                current: -1,
+                sorted: [],
+                comparing: [],
+                inserted: -1,
+                message: 'Initial array',
+                algorithm: 'insertion-sort'
+            });
+            
+            // First element is considered sorted
+            steps.push({
+                array: [...arr],
+                current: -1,
+                sorted: [0], // Only index 0 is sorted initially
+                comparing: [],
+                inserted: -1,
+                message: 'First element considered sorted.',
+                algorithm: 'insertion-sort'
+            });
+
+            for (let i = 1; i < n; i++) {
+                let j = i;
+                const currentElement = arr[i];
+                
+                // Show current element being considered
+                steps.push({
+                    array: [...arr],
+                    current: i,
+                    sorted: Array.from({length: i}, (_, idx) => idx), // Elements from 0 to i-1 are sorted
+                    comparing: [],
+                    inserted: -1,
+                    message: `Considering element to insert: ${currentElement} (at index ${i})`,
+                    algorithm: 'insertion-sort'
+                });
+
+                while (j > 0 && arr[j - 1] > currentElement) {
+                    steps.push({
+                        array: [...arr],
+                        current: i, // Still focusing on the element originally at 'i'
+                        sorted: Array.from({length: i}, (_, idx) => idx),
+                        comparing: [j - 1, j], // Comparing arr[j-1] with the current 'gap' at j (where element will go)
+                        inserted: -1,
+                        message: `Comparing ${arr[j-1]} > ${currentElement}. Shifting ${arr[j-1]} to right.`,
+                        algorithm: 'insertion-sort'
+                    });
+                    
+                    arr[j] = arr[j - 1]; // Shift
+                    j--;
+                    
+                    steps.push({
+                        array: [...arr],
+                        current: i,
+                        sorted: Array.from({length: i}, (_, idx) => idx),
+                        comparing: [],
+                        inserted: j + 1, // Visual hint for where element was shifted FROM
+                        message: `Shifted to create space. Array: ${arr.join(', ')}`,
+                        algorithm: 'insertion-sort'
+                    });
+                }
+                
+                arr[j] = currentElement; // Insert
+                
+                steps.push({
+                    array: [...arr],
+                    current: -1, // No "current" element being held
+                    sorted: Array.from({length: i + 1}, (_, idx) => idx), // Now up to 'i' is sorted
+                    comparing: [],
+                    inserted: j, // Mark the newly inserted element's position
+                    message: `Inserted ${currentElement} at index ${j}.`,
+                    algorithm: 'insertion-sort'
+                });
+            }
+            
+            steps.push({
+                array: [...arr],
+                current: -1,
+                sorted: Array.from({length: n}, (_, idx) => idx), // All sorted
+                comparing: [],
+                inserted: -1,
+                message: 'Array is sorted!',
+                algorithm: 'insertion-sort'
+            });
+            
+            return arr;
+        }
+
+        // --- Merge Sort Functions (from MergeSort.html) ---
+        function mergeSort(arr, originalArr = null, offset = 0) {
+            if (originalArr === null) {
+                originalArr = [...arr]; // Keep a copy of the original array for visualization context
+                steps.push({
+                    array: [...originalArr],
+                    message: 'Initial array',
+                    algorithm: 'merge-sort'
+                });
+            }
+
+            if (arr.length < 2) return arr;
+
+            const mid = Math.floor(arr.length / 2);
+            const left = arr.slice(0, mid);
+            const right = arr.slice(mid);
+
+            steps.push({
+                array: [...left, ...right], // Show current parts being split
+                message: `Splitting: [${left.join(", ")}] and [${right.join(", ")}]`,
+                algorithm: 'merge-sort'
+            });
+
+            const sortedLeft = mergeSort(left, originalArr, offset);
+            const sortedRight = mergeSort(right, originalArr, offset + mid);
+
+            const mergedResult = merge(sortedLeft, sortedRight, offset);
+            
+            // To show the final merged state of this sub-array within the original array context:
+            // This part is tricky to visualize with full array context after recursive calls.
+            // For simplicity, showing the merged sub-array for now.
+            steps.push({
+                array: [...mergedResult],
+                message: `Finished merging: [${mergedResult.join(", ")}]`,
+                algorithm: 'merge-sort'
+            });
+
+            return mergedResult;
+        }
+
+        function merge(left, right, offset) {
+            const result = [];
+            let i = 0, j = 0;
+
+            while (i < left.length && j < right.length) {
+                steps.push({
+                    array: [...result, ...left.slice(i), ...right.slice(j)],
+                    comparing: [offset + i, offset + left.length + j], // Not perfect, but tries to highlight elements
+                    message: `Merging: Comparing ${left[i]} and ${right[j]}`,
+                    algorithm: 'merge-sort'
+                });
+
+                if (left[i] <= right[j]) {
+                    result.push(left[i++]);
+                } else {
+                    result.push(right[j++]);
+                }
+            }
+
+            while (i < left.length) result.push(left[i++]);
+            while (j < right.length) result.push(right[j++]);
+
+            return result;
+        }
+
+        // --- Quick Sort Functions (from QuickSort.html) ---
+        function quickSort(arr, low, high) {
+            // Initial call adds the original array state
+            if (low === 0 && high === arr.length - 1) {
+                steps.push({
+                    array: [...arr],
+                    comparing: [],
+                    swapped: [],
+                    pivot: -1,
+                    message: 'Initial array',
+                    algorithm: 'quick-sort'
+                });
+            }
+
+            if (low < high) {
+                const pivotIndex = partition(arr, low, high);
+                
+                steps.push({
+                    array: [...arr],
+                    comparing: [],
+                    swapped: [],
+                    pivot: pivotIndex,
+                    message: `Partitioned around pivot (${arr[pivotIndex]}). Sub-arrays to sort: [${arr.slice(low, pivotIndex).join(', ')}] and [${arr.slice(pivotIndex + 1, high + 1).join(', ')}]`,
+                    algorithm: 'quick-sort'
+                });
+
+                quickSort(arr, low, pivotIndex - 1);
+                quickSort(arr, pivotIndex + 1, high);
+            }
+            // Final sorted state for the entire array after all recursive calls
+            if (low === 0 && high === arr.length - 1 && steps[steps.length - 1].message !== 'Array is sorted!') {
+                 steps.push({
+                    array: [...arr],
+                    comparing: [],
+                    swapped: [],
+                    pivot: -1,
+                    message: 'Array is sorted!',
+                    algorithm: 'quick-sort'
+                });
+            }
+        }
+
+        function partition(arr, low, high) {
+            const pivot = arr[high]; // Last element as pivot
+            let i = low - 1;
+
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [],
+                pivot: high,
+                message: `Choosing pivot: ${pivot} (at index ${high}).`,
+                algorithm: 'quick-sort'
+            });
+
+            for (let j = low; j < high; j++) {
+                steps.push({
+                    array: [...arr],
+                    comparing: [j, high], // Comparing current element with pivot
+                    swapped: [],
+                    pivot: high,
+                    message: `Comparing ${arr[j]} with pivot ${pivot}.`,
+                    algorithm: 'quick-sort'
+                });
+
+                if (arr[j] < pivot) {
+                    i++;
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                    steps.push({
+                        array: [...arr],
+                        comparing: [],
+                        swapped: [i, j],
+                        pivot: high,
+                        message: `Swapped ${arr[i]} and ${arr[j]}.`,
+                        algorithm: 'quick-sort'
+                    });
+                }
+            }
+
+            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]; // Place pivot in correct position
+            steps.push({
+                array: [...arr],
+                comparing: [],
+                swapped: [i + 1, high],
+                pivot: i + 1, // New pivot position
+                message: `Placed pivot ${arr[i+1]} at its sorted position ${i+1}.`,
+                algorithm: 'quick-sort'
+            });
+
+            return i + 1; // Return the partitioning index
+        }
+
+        // Initialize with one input
+        resetCalculator();
+    </script>
+</body>
+</html>

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algebraic Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            /* Add background image */
+            background-image: url('algebra.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>✖️ Algebraic Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="basic-operations">Basic Operations & Simplifications</option>
+                <option value="linear-equation">Linear Equation Solver</option>
+                <option value="exponent-rules">Exponent Rules</option>
+                <option value="polynomial-operations">Polynomial Calculator</option>
+                <option value="factoring">Factoring Calculator</option>
+                <option value="rational-operations">Rational Calculator</option>
+                <option value="systems-solver">Systems Equation Solver (2x2)</option>
+                <option value="radical-simplification">Radical Simplification</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // --- Utility Functions ---
+        function getFloatValue(id) {
+            const val = parseFloat(document.getElementById(id).value);
+            if (isNaN(val)) {
+                throw new Error(`Please enter a valid number for the field.`);
+            }
+            return val;
+        }
+
+        // Helper for polynomial parsing and representation (basic for demonstration)
+        function parsePolynomial(polyStr) {
+            // Very basic parser: expects "coeff*x^power + coeff*x^power ..." or just numbers
+            // Does not handle negative powers, complex parsing, etc.
+            // Example: "3x^2 + 2x - 1"
+            const terms = polyStr.replace(/\s+/g, '').replace(/-/g, '+-').split('+').filter(t => t !== '');
+            const poly = {}; // { power: coefficient }
+
+            terms.forEach(term => {
+                let coeff = 1;
+                let power = 0;
+
+                if (term.includes('x')) {
+                    const parts = term.split('x');
+                    if (parts[0] !== '') {
+                        coeff = parseFloat(parts[0]);
+                    } else if (term.startsWith('-')) {
+                        coeff = -1;
+                    }
+                    if (parts.length > 1 && parts[1] !== '') {
+                        power = parseInt(parts[1].replace('^', ''));
+                    } else {
+                        power = 1;
+                    }
+                } else {
+                    coeff = parseFloat(term);
+                    power = 0;
+                }
+                poly[power] = (poly[power] || 0) + coeff;
+            });
+            return poly;
+        }
+
+        function polynomialToString(poly) {
+            let terms = [];
+            const powers = Object.keys(poly).map(Number).sort((a, b) => b - a); // Sort by descending power
+
+            powers.forEach(power => {
+                const coeff = poly[power];
+                if (coeff === 0) return;
+
+                let termStr = '';
+                if (coeff > 0 && terms.length > 0) termStr += '+';
+                if (coeff < 0) termStr += '-';
+
+                const absCoeff = Math.abs(coeff);
+                if (power === 0) {
+                    termStr += absCoeff;
+                } else if (power === 1) {
+                    termStr += (absCoeff === 1 ? '' : absCoeff) + 'x';
+                } else {
+                    termStr += (absCoeff === 1 ? '' : absCoeff) + 'x^' + power;
+                }
+                terms.push(termStr);
+            });
+
+            return terms.length > 0 ? terms.join('') : '0';
+        }
+
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'basic-operations': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="expr1">Expression 1 (e.g., 2x + 3):</label>
+                                <input type="text" id="expr1" placeholder="Enter first expression">
+                            </div>
+                            <div>
+                                <label for="expr2">Expression 2 (e.g., 5x - 7):</label>
+                                <input type="text" id="expr2" placeholder="Enter second expression">
+                            </div>
+                            <div>
+                                <label for="basicOp">Operation:</label>
+                                <select id="basicOp">
+                                    <option value="add">Add (+)</option>
+                                    <option value="subtract">Subtract (-)</option>
+                                    <option value="multiply">Multiply (*)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ (A) + (B) \\quad (A) - (B) \\quad (A) \\times (B) $$
+                        </div>
+                        <div class="info-box">
+                            Performs basic algebraic operations (addition, subtraction, multiplication) on simple expressions.
+                            Input format for expressions is limited (e.g., 2x+3, -5x^2, 7).
+                        </div>
+                    `
+                },
+                'linear-equation': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="coeffA">Coefficient of x (a):</label>
+                                <input type="number" id="coeffA" placeholder="e.g., 2">
+                            </div>
+                            <div>
+                                <label for="constB">Constant term (b):</label>
+                                <input type="number" id="constB" placeholder="e.g., 3">
+                            </div>
+                            <div>
+                                <label for="constC">Result constant (c):</label>
+                                <input type="number" id="constC" placeholder="e.g., 7">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ ax + b = c \\implies x = \\frac{c-b}{a} $$
+                        </div>
+                        <div class="info-box">
+                            Solves linear equations in the form $ax + b = c$ for $x$.
+                        </div>
+                    `
+                },
+                'exponent-rules': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="baseExp1">Base 1:</label>
+                                <input type="number" id="baseExp1" placeholder="e.g., 2">
+                            </div>
+                            <div>
+                                <label for="powerExp1">Exponent 1:</label>
+                                <input type="number" id="powerExp1" placeholder="e.g., 3">
+                            </div>
+                            <div>
+                                <label for="baseExp2">Base 2 (optional):</label>
+                                <input type="number" id="baseExp2" placeholder="e.g., 2">
+                            </div>
+                            <div>
+                                <label for="powerExp2">Exponent 2 (optional):</label>
+                                <input type="number" id="powerExp2" placeholder="e.g., 4">
+                            </div>
+                            <div>
+                                <label for="expOp">Operation:</label>
+                                <select id="expOp">
+                                    <option value="evaluate">Evaluate Single Power</option>
+                                    <option value="multiply">Multiply Powers (a^m * a^n)</option>
+                                    <option value="divide">Divide Powers (a^m / a^n)</option>
+                                    <option value="powerOfPower">Power of a Power ((a^m)^n)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ a^m \\cdot a^n = a^{m+n} \\quad \\frac{a^m}{a^n} = a^{m-n} \\quad (a^m)^n = a^{mn} $$
+                        </div>
+                        <div class="info-box">
+                            Applies basic exponent rules to simplify or evaluate expressions.
+                        </div>
+                    `
+                },
+                'polynomial-operations': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="poly1">Polynomial 1 (e.g., 3x^2 + 2x - 1):</label>
+                                <input type="text" id="poly1" placeholder="Enter first polynomial">
+                                <small>Format: use 'x^power', '+', '-' (e.g., 3x^2+2x-1, or just 5)</small>
+                            </div>
+                            <div>
+                                <label for="poly2">Polynomial 2 (e.g., x^2 - 4x + 5):</label>
+                                <input type="text" id="poly2" placeholder="Enter second polynomial">
+                            </div>
+                            <div>
+                                <label for="polyOp">Operation:</label>
+                                <select id="polyOp">
+                                    <option value="add">Add (+)</option>
+                                    <option value="subtract">Subtract (-)</option>
+                                    <option value="multiply">Multiply (*)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ (A) + (B) \\quad (A) - (B) \\quad (A) \\times (B) $$
+                        </div>
+                        <div class="info-box">
+                            Performs addition, subtraction, or multiplication of two polynomials.
+                            Currently supports integer coefficients and powers.
+                        </div>
+                    `
+                },
+                'factoring': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="factorType">Select Factoring Type:</label>
+                                <select id="factorType" onchange="updateFactoringInputs()">
+                                    <option value="quadratic">Quadratic (ax² + bx + c)</option>
+                                    <option value="difference-squares">Difference of Squares (a² - b²)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="factoringInputs">
+                            </div>
+                        <div class="formula-display" id="factoringFormula">
+                            </div>
+                        <div class="info-box" id="factoringInfo">
+                            </div>
+                    `
+                },
+                'rational-operations': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="num1_frac">Numerator 1:</label>
+                                <input type="number" id="num1_frac" placeholder="e.g., 1">
+                            </div>
+                            <div>
+                                <label for="den1_frac">Denominator 1:</label>
+                                <input type="number" id="den1_frac" placeholder="e.g., 2">
+                            </div>
+                            <div>
+                                <label for="num2_frac">Numerator 2:</label>
+                                <input type="number" id="num2_frac" placeholder="e.g., 3">
+                            </div>
+                            <div>
+                                <label for="den2_frac">Denominator 2:</label>
+                                <input type="number" id="den2_frac" placeholder="e.g., 4">
+                            </div>
+                            <div>
+                                <label for="rationalOp">Operation:</label>
+                                <select id="rationalOp">
+                                    <option value="add">Add (+)</option>
+                                    <option value="subtract">Subtract (-)</option>
+                                    <option value="multiply">Multiply (*)</option>
+                                    <option value="divide">Divide (/)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\frac{a}{b} + \\frac{c}{d} = \\frac{ad+bc}{bd} \\quad \\frac{a}{b} - \\frac{c}{d} = \\frac{ad-bc}{bd} $$
+                            $$ \\frac{a}{b} \\cdot \\frac{c}{d} = \\frac{ac}{bd} \\quad \\frac{a}{b} \\div \\frac{c}{d} = \\frac{ad}{bc} $$
+                        </div>
+                        <div class="info-box">
+                            Performs basic arithmetic operations on two rational numbers (fractions).
+                            Results are simplified to their lowest terms.
+                        </div>
+                    `
+                },
+                'systems-solver': {
+                    inputs: `
+                        <div class="sub-section-title">Equation 1: ax + by = c</div>
+                        <div class="additional-inputs">
+                            <div><label for="a1_sys">a1:</label><input type="number" id="a1_sys" placeholder="e.g., 2"></div>
+                            <div><label for="b1_sys">b1:</label><input type="number" id="b1_sys" placeholder="e.g., 3"></div>
+                            <div><label for="c1_sys">c1:</label><input type="number" id="c1_sys" placeholder="e.g., 7"></div>
+                        </div>
+                        <div class="sub-section-title">Equation 2: dx + ey = f</div>
+                        <div class="additional-inputs">
+                            <div><label for="a2_sys">a2 (d):</label><input type="number" id="a2_sys" placeholder="e.g., 4"></div>
+                            <div><label for="b2_sys">b2 (e):</label><input type="number" id="b2_sys" placeholder="e.g., -1"></div>
+                            <div><label for="c2_sys">c2 (f):</label><input type="number" id="c2_sys" placeholder="e.g., 9"></div>
+                        </div>
+                        <div class="formula-display">
+                            $$ ax + by = c $$
+                            $$ dx + ey = f $$
+                            Uses Cramer's Rule or substitution/elimination internally.
+                        </div>
+                        <div class="info-box">
+                            Solves a system of two linear equations with two variables (x and y).
+                            Enter coefficients for both equations in the form $ax + by = c$.
+                        </div>
+                    `
+                },
+                'radical-simplification': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="radicand">Radicand (Number inside the square root):</label>
+                                <input type="number" id="radicand" placeholder="e.g., 72">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\sqrt{ab} = \\sqrt{a} \\sqrt{b} \\quad \\text{where a is a perfect square} $$
+                        </div>
+                        <div class="info-box">
+                            Simplifies square root expressions by finding perfect square factors of the radicand.
+                            Only handles non-negative integer radicands for now.
+                        </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            // Specific updates for sub-calculators
+            if (type === 'factoring') {
+                updateFactoringInputs();
+            }
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Sub-Calculator Input Updaters ---
+        function updateFactoringInputs() {
+            const factorType = document.getElementById('factorType').value;
+            const inputsDiv = document.getElementById('factoringInputs');
+            const formulaDiv = document.getElementById('factoringFormula');
+            const infoDiv = document.getElementById('factoringInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            if (factorType === 'quadratic') {
+                inputsHtml = `
+                    <div class="additional-inputs">
+                        <div><label for="a_quad">Coefficient a (ax²):</label><input type="number" id="a_quad" placeholder="e.g., 1"></div>
+                        <div><label for="b_quad">Coefficient b (bx):</label><input type="number" id="b_quad" placeholder="e.g., -5"></div>
+                        <div><label for="c_quad">Constant c:</label><input type="number" id="c_quad" placeholder="e.g., 6"></div>
+                    </div>
+                `;
+                formulaHtml = `
+                    $$ ax^2 + bx + c $$
+                    $$ \\text{Find two numbers that multiply to } ac \\text{ and add to } b $$
+                `;
+                infoHtml = `
+                    Factors a quadratic expression of the form $ax^2 + bx + c$.
+                    Attempts to factor into $(px+q)(rx+s)$ or $(x-r_1)(x-r_2)$.
+                `;
+            } else if (factorType === 'difference-squares') {
+                inputsHtml = `
+                    <div class="additional-inputs">
+                        <div><label for="a_diff_sq">a² term (coefficient of x²):</label><input type="number" id="a_diff_sq" placeholder="e.g., 1"></div>
+                        <div><label for="b_diff_sq">b² term (constant):</label><input type="number" id="b_diff_sq" placeholder="e.g., 9"></div>
+                    </div>
+                `;
+                formulaHtml = `
+                    $$ a^2 - b^2 = (a-b)(a+b) $$
+                `;
+                infoHtml = `
+                    Factors expressions in the form of a difference of two squares, $A^2 - B^2$.
+                    The input should be $A^2 x^2 - B^2$ (enter coefficient of x² and constant term).
+                `;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        // --- Algebraic Calculation Functions ---
+
+        // Basic Operations & Simplifications
+        function calculateBasicOperations() {
+            const expr1Str = document.getElementById('expr1').value;
+            const expr2Str = document.getElementById('expr2').value;
+            const op = document.getElementById('basicOp').value;
+
+            // Simple parsing: assumes expressions are like "2x", "3x^2", "-1", "5"
+            // This is very rudimentary and will not handle complex expressions.
+            const parseSimpleExpr = (str) => {
+                const parts = str.replace(/\s/g, '').toLowerCase().split('x');
+                let coeff = parseFloat(parts[0]);
+                let power = 0; // Constant term
+
+                if (parts.length > 1 && parts[0] === '') { // Case like "x" or "-x"
+                    coeff = str.startsWith('-') ? -1 : 1;
+                } else if (parts.length > 1 && parts[0] === '+') { // Case like "+x"
+                     coeff = 1;
+                }
+
+                if (isNaN(coeff)) coeff = 1; // Default coeff for "x" without number
+
+                if (parts.length > 1) { // Has 'x'
+                    if (parts[1].startsWith('^')) {
+                        power = parseInt(parts[1].substring(1));
+                    } else if (parts[1] === '') {
+                        power = 1;
+                    }
+                }
+                 return { coeff: coeff, power: power };
+            };
+
+            const expr1 = parseSimpleExpr(expr1Str);
+            const expr2 = parseSimpleExpr(expr2Str);
+
+            let resultPoly = {}; // Use polynomial representation for generic addition/subtraction
+
+            if (op === 'add') {
+                resultPoly[expr1.power] = (resultPoly[expr1.power] || 0) + expr1.coeff;
+                resultPoly[expr2.power] = (resultPoly[expr2.power] || 0) + expr2.coeff;
+            } else if (op === 'subtract') {
+                resultPoly[expr1.power] = (resultPoly[expr1.power] || 0) + expr1.coeff;
+                resultPoly[expr2.power] = (resultPoly[expr2.power] || 0) - expr2.coeff;
+            } else if (op === 'multiply') {
+                // For multiplication, it's (c1*x^p1) * (c2*x^p2) = (c1*c2)*x^(p1+p2)
+                // This simple parser is limited to single-term "expressions" for multiplication.
+                const productCoeff = expr1.coeff * expr2.coeff;
+                const productPower = expr1.power + expr2.power;
+                resultPoly[productPower] = productCoeff;
+            }
+
+            const resultStr = polynomialToString(resultPoly);
+
+            return `
+                Expression 1: ${expr1Str}
+                Expression 2: ${expr2Str}
+                Operation: ${op.charAt(0).toUpperCase() + op.slice(1)}
+                Result: ${resultStr}
+            `;
+        }
+
+        // Linear Equation Solver
+        function solveLinearEquation() {
+            const a = getFloatValue('coeffA');
+            const b = getFloatValue('constB');
+            const c = getFloatValue('constC');
+
+            if (a === 0) {
+                if (b === c) {
+                    return `Equation: ${b} = ${c}\nResult: Infinite Solutions (0x = 0)`;
+                } else {
+                    return `Equation: ${b} = ${c}\nResult: No Solution (0x = non-zero)`;
+                }
+            }
+
+            const x = (c - b) / a;
+            return `
+                Equation: ${a}x + ${b} = ${c}
+                Solution: x = ${x.toFixed(4)}
+            `;
+        }
+
+        // Exponent Rules
+        function calculateExponentRules() {
+            const base1 = parseFloat(document.getElementById('baseExp1').value);
+            const power1 = parseFloat(document.getElementById('powerExp1').value);
+            const base2 = parseFloat(document.getElementById('baseExp2').value); // Optional
+            const power2 = parseFloat(document.getElementById('powerExp2').value); // Optional
+            const op = document.getElementById('expOp').value;
+
+            if (isNaN(base1) || isNaN(power1)) throw new Error("Base 1 and Exponent 1 are required.");
+
+            let result = '';
+            switch(op) {
+                case 'evaluate':
+                    result = Math.pow(base1, power1);
+                    return `
+                        Expression: ${base1}^${power1}
+                        Result: ${result.toFixed(4)}
+                    `;
+                case 'multiply':
+                    if (isNaN(base2) || isNaN(power2)) throw new Error("Base 2 and Exponent 2 are required for multiplication.");
+                    if (base1 !== base2) throw new Error("Bases must be the same for multiplication.");
+                    result = Math.pow(base1, power1 + power2);
+                    return `
+                        Expression: ${base1}^${power1} * ${base2}^${power2}
+                        Result: ${base1}^(${power1} + ${power2}) = ${base1}^${power1 + power2} = ${result.toFixed(4)}
+                    `;
+                case 'divide':
+                    if (isNaN(base2) || isNaN(power2)) throw new Error("Base 2 and Exponent 2 are required for division.");
+                    if (base1 !== base2) throw new Error("Bases must be the same for division.");
+                    if (base1 === 0) throw new Error("Cannot divide by zero base.");
+                    result = Math.pow(base1, power1 - power2);
+                    return `
+                        Expression: ${base1}^${power1} / ${base2}^${power2}
+                        Result: ${base1}^(${power1} - ${power2}) = ${base1}^${power1 - power2} = ${result.toFixed(4)}
+                    `;
+                case 'powerOfPower':
+                    if (isNaN(power2)) throw new Error("Exponent 2 is required for power of a power.");
+                    result = Math.pow(base1, power1 * power2);
+                    return `
+                        Expression: (${base1}^${power1})^${power2}
+                        Result: ${base1}^(${power1} * ${power2}) = ${base1}^${power1 * power2} = ${result.toFixed(4)}
+                    `;
+                default:
+                    throw new Error("Invalid exponent operation selected.");
+            }
+        }
+
+        // Polynomial Calculator
+        function calculatePolynomialOperations() {
+            const poly1Str = document.getElementById('poly1').value;
+            const poly2Str = document.getElementById('poly2').value;
+            const op = document.getElementById('polyOp').value;
+
+            const poly1 = parsePolynomial(poly1Str);
+            const poly2 = parsePolynomial(poly2Str);
+            let resultPoly = {};
+
+            if (op === 'add') {
+                Object.assign(resultPoly, poly1);
+                for (let power in poly2) {
+                    resultPoly[power] = (resultPoly[power] || 0) + poly2[power];
+                }
+            } else if (op === 'subtract') {
+                Object.assign(resultPoly, poly1);
+                for (let power in poly2) {
+                    resultPoly[power] = (resultPoly[power] || 0) - poly2[power];
+                }
+            } else if (op === 'multiply') {
+                for (let power1 in poly1) {
+                    for (let power2 in poly2) {
+                        const newPower = parseInt(power1) + parseInt(power2);
+                        const newCoeff = poly1[power1] * poly2[power2];
+                        resultPoly[newPower] = (resultPoly[newPower] || 0) + newCoeff;
+                    }
+                }
+            }
+
+            const resultStr = polynomialToString(resultPoly);
+
+            return `
+                Polynomial 1: ${poly1Str}
+                Polynomial 2: ${poly2Str}
+                Operation: ${op.charAt(0).toUpperCase() + op.slice(1)}
+                Result: ${resultStr}
+            `;
+        }
+
+        // Factoring Calculator
+        function calculateFactoring() {
+            const factorType = document.getElementById('factorType').value;
+            let result = '';
+
+            if (factorType === 'quadratic') {
+                const a = getFloatValue('a_quad');
+                const b = getFloatValue('b_quad');
+                const c = getFloatValue('c_quad');
+
+                const discriminant = b * b - 4 * a * c;
+
+                if (discriminant < 0) {
+                    result = "No real factors. Discriminant is negative.";
+                } else if (discriminant === 0) {
+                    const r = -b / (2 * a);
+                    if (a === 1) result = `(x - ${r.toFixed(4)})²`;
+                    else result = `${a.toFixed(0)}(x - ${r.toFixed(4)})²`;
+                } else {
+                    const r1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                    const r2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                    let factor1 = `(x - ${r1.toFixed(4)})`;
+                    let factor2 = `(x - ${r2.toFixed(4)})`;
+
+                    if (r1 % 1 === 0 && r2 % 1 === 0) { // Check for integer roots
+                        factor1 = `(x - ${r1})`;
+                        factor2 = `(x - ${r2})`;
+                    }
+                    
+                    if (a === 1) result = `${factor1}${factor2}`;
+                    else if (a === -1) result = `-${factor1}${factor2}`;
+                    else result = `${a.toFixed(0)}${factor1}${factor2}`;
+                }
+                 return `
+                    Quadratic: ${a}x² + ${b}x + ${c}
+                    Factored Form: ${result}
+                `;
+
+            } else if (factorType === 'difference-squares') {
+                const a2_coeff = getFloatValue('a_diff_sq');
+                const b2_const = getFloatValue('b_diff_sq');
+
+                if (a2_coeff <= 0 || b2_const <= 0) {
+                    throw new Error("Both terms must be positive to be a difference of squares.");
+                }
+
+                const sqrt_a2 = Math.sqrt(a2_coeff);
+                const sqrt_b2 = Math.sqrt(b2_const);
+
+                let term1 = sqrt_a2 === 1 ? 'x' : `${sqrt_a2.toFixed(4)}x`;
+                if (sqrt_a2 % 1 === 0) term1 = sqrt_a2 === 1 ? 'x' : `${sqrt_a2}x`;
+                
+                let term2 = sqrt_b2.toFixed(4);
+                if (sqrt_b2 % 1 === 0) term2 = `${sqrt_b2}`;
+
+
+                result = `(${term1} - ${term2})(${term1} + ${term2})`;
+                return `
+                    Expression: ${a2_coeff}x² - ${b2_const}
+                    Factored Form: ${result}
+                `;
+            }
+        }
+
+        // Rational Calculator
+        function calculateRationalOperations() {
+            const num1 = getFloatValue('num1_frac');
+            const den1 = getFloatValue('den1_frac');
+            const num2 = getFloatValue('num2_frac');
+            const den2 = getFloatValue('den2_frac');
+            const op = document.getElementById('rationalOp').value;
+
+            if (den1 === 0 || den2 === 0) throw new Error("Denominators cannot be zero.");
+
+            let resultNum, resultDen;
+
+            switch(op) {
+                case 'add':
+                    resultNum = num1 * den2 + num2 * den1;
+                    resultDen = den1 * den2;
+                    break;
+                case 'subtract':
+                    resultNum = num1 * den2 - num2 * den1;
+                    resultDen = den1 * den2;
+                    break;
+                case 'multiply':
+                    resultNum = num1 * num2;
+                    resultDen = den1 * den2;
+                    break;
+                case 'divide':
+                    if (num2 === 0) throw new Error("Cannot divide by zero.");
+                    resultNum = num1 * den2;
+                    resultDen = den1 * num2;
+                    break;
+                default:
+                    throw new Error("Invalid rational operation selected.");
+            }
+
+            const commonDivisor = gcd(resultNum, resultDen);
+            const simplifiedNum = resultNum / commonDivisor;
+            const simplifiedDen = resultDen / commonDivisor;
+
+            // Handle negative denominator by moving sign to numerator
+            const finalNum = simplifiedDen < 0 ? -simplifiedNum : simplifiedNum;
+            const finalDen = simplifiedDen < 0 ? -simplifiedDen : simplifiedDen;
+
+            return `
+                Fraction 1: ${num1}/${den1}
+                Fraction 2: ${num2}/${den2}
+                Operation: ${op.charAt(0).toUpperCase() + op.slice(1)}
+                Result: ${finalNum}/${finalDen}
+                (Simplified from ${resultNum}/${resultDen})
+            `;
+        }
+
+        // Systems Equation Solver
+        function solveSystemsEquation() {
+            const a1 = getFloatValue('a1_sys');
+            const b1 = getFloatValue('b1_sys');
+            const c1 = getFloatValue('c1_sys');
+            const a2 = getFloatValue('a2_sys');
+            const b2 = getFloatValue('b2_sys');
+            const c2 = getFloatValue('c2_sys');
+
+            const determinant = a1 * b2 - a2 * b1;
+
+            if (determinant === 0) {
+                if (a1 * c2 - a2 * c1 === 0 && b1 * c2 - b2 * c1 === 0) {
+                    return `
+                        System:
+                        ${a1}x + ${b1}y = ${c1}
+                        ${a2}x + ${b2}y = ${c2}
+                        Result: Infinite Solutions (Lines are coincident)
+                    `;
+                } else {
+                    return `
+                        System:
+                        ${a1}x + ${b1}y = ${c1}
+                        ${a2}x + ${b2}y = ${c2}
+                        Result: No Solution (Lines are parallel)
+                    `;
+                }
+            }
+
+            const x = (c1 * b2 - c2 * b1) / determinant;
+            const y = (a1 * c2 - a2 * c1) / determinant;
+
+            return `
+                System:
+                ${a1}x + ${b1}y = ${c1}
+                ${a2}x + ${b2}y = ${c2}
+                Solution:
+                x = ${x.toFixed(4)}
+                y = ${y.toFixed(4)}
+            `;
+        }
+
+        // Radical Calculator
+        function simplifyRadical() {
+            const radicand = getFloatValue('radicand');
+
+            if (radicand < 0) throw new Error("Radicand must be non-negative for real numbers.");
+            if (radicand === 0) return `√0 = 0`;
+
+            let outside = 1;
+            let inside = radicand;
+
+            for (let i = 2; i * i <= inside; i++) {
+                while (inside % (i * i) === 0) {
+                    outside *= i;
+                    inside /= (i * i);
+                }
+            }
+
+            if (outside === 1 && inside === 1) {
+                return `√${radicand} = 1`; // Perfect square of 1
+            } else if (inside === 1) {
+                return `√${radicand} = ${outside}`; // Perfect square
+            } else if (outside === 1) {
+                return `√${radicand} = √${inside}`; // No perfect square factor
+            } else {
+                return `√${radicand} = ${outside}√${inside}`;
+            }
+        }
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'basic-operations':
+                        output = calculateBasicOperations();
+                        break;
+                    case 'linear-equation':
+                        output = solveLinearEquation();
+                        break;
+                    case 'exponent-rules':
+                        output = calculateExponentRules();
+                        break;
+                    case 'polynomial-operations':
+                        output = calculatePolynomialOperations();
+                        break;
+                    case 'factoring':
+                        output = calculateFactoring();
+                        break;
+                    case 'rational-operations':
+                        output = calculateRationalOperations();
+                        break;
+                    case 'systems-solver':
+                        output = solveSystemsEquation();
+                        break;
+                    case 'radical-simplification':
+                        output = simplifyRadical();
+                        break;
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

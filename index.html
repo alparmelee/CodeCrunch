@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCrunch</title>
+    <meta name="description" content="calculators and formulas for math and technology">
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1000px; /* Increased max-width for more items */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            line-height: 1.6;
+            background-image: url('math.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .main-container { /* Renamed from .calculator for index page */
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 25px;
+            justify-content: center;
+            align-items: stretch;
+        }
+        .calculator-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Push title to top, button to bottom */
+        }
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        .calculator-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for images */
+            object-fit: cover; /* Cover the area, cropping if necessary */
+            border-bottom: 1px solid #eee;
+        }
+        .card-content {
+            padding: 15px;
+            flex-grow: 1; /* Allows content to expand */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-content h2 {
+            font-size: 1.4em;
+            color: #34495e;
+            margin-top: 0;
+            margin-bottom: 10px;
+            flex-grow: 1; /* Pushes button down if title is short */
+        }
+        .calculator-card a {
+            display: block; /* Make the button fill width */
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            transition: background-color 0.2s ease;
+            margin-top: 15px; /* Space above the button */
+        }
+        .calculator-card a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>CodeCrunch</h1>
+        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1em; color: #555;">
+            Explore a comprehensive collection of calculators for various fields of mathematics and computer science.
+        </p>
+
+        <div class="calculator-grid">
+            <div class="calculator-card">
+                <img src="physics.jpg" alt="Electrostatics & Electric Fields Calculator">
+                <div class="card-content">
+                    <h2>Physics 1</h2>
+                    <a href="physics1.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="physics2.jpg" alt="Advanced Physics Calculator">
+                <div class="card-content">
+                    <h2>Physics 2</h2>
+                    <a href="physics2.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="Cypher.jpg" alt="Cryptography Cipher Calculator">
+                <div class="card-content">
+                    <h2>Cryptography Ciphers</h2>
+                    <a href="Cypher.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="security.jpg" alt="Network Security & Number Theory Calculator">
+                <div class="card-content">
+                    <h2>Network Security & Number Theory</h2>
+                    <a href="Security.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="cs.jpg" alt="Sorting Algorithm Visualizer">
+                <div class="card-content">
+                    <h2>Sorting Algorithms</h2>
+                    <a href="sort.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="trig.jpg" alt="Trigonometry Calculator">
+                <div class="card-content">
+                    <h2>Trigonometry</h2>
+                    <a href="trig.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="stat.jpg" alt="Advanced Statistics Calculator">
+                <div class="card-content">
+                    <h2>Statistics</h2>
+                    <a href="statitsics.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="discrete.jpg" alt="Discrete Mathematics Calculator">
+                <div class="card-content">
+                    <h2>Discrete Mathematics</h2>
+                    <a href="discrete.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="geometry.jpg" alt="Geometry Calculator">
+                <div class="card-content">
+                    <h2>Geometry</h2>
+                    <a href="geometry.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="algebra.jpg" alt="Algebraic Calculator">
+                <div class="card-content">
+                    <h2>Algebra</h2>
+                    <a href="Algebra.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="comparch.jpg" alt="Computer Architecture Calculator">
+                <div class="card-content">
+                    <h2>Computer Architecture</h2>
+                    <a href="comparch.html">Go to Calculator</a>
+                </div>
+            </div>
+            <div class="calculator-card">
+                <img src="cs.jpg" alt="Computer Science 1">
+                <div class="card-content">
+                    <h2>Computer Science 1</h2>
+                    <a href="cs1.html">Go to Calculator</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

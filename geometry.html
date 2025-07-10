@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Geometry Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            background-image: url('geometry.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>📐 Geometry Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="circle">Circle Calculator</option>
+                <option value="quadrilateral">Quadrilateral Calculator</option>
+                <option value="triangle-similarity">Triangle Similarity</option>
+                <option value="triangle-congruence">Congruent Triangles Checker</option>
+                <option value="polygon-circle-properties">Polygon & Circle Properties</option>
+                <option value="right-triangle-trig">Right Triangle Trigonometry</option>
+                <option value="volume-surface-area">Volume & Surface Area (3D Shapes)</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const PI = Math.PI; // Using Math.PI for precision
+        const DEG_TO_RAD = Math.PI / 180;
+        const RAD_TO_DEG = 180 / Math.PI;
+
+        // --- Utility Functions ---
+        function getFloatValue(id) {
+            const val = parseFloat(document.getElementById(id).value);
+            if (isNaN(val)) {
+                throw new Error(`Please enter a valid number for ${id.replace(/([A-Z])/g, ' $1').trim().toLowerCase()}.`);
+            }
+            return val;
+        }
+
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'circle': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="radius">Radius (r):</label>
+                                <input type="number" id="radius" placeholder="Enter radius">
+                            </div>
+                            <div>
+                                <label for="diameter">Diameter (d):</label>
+                                <input type="number" id="diameter" placeholder="Enter diameter">
+                            </div>
+                            <div>
+                                <label for="circumference">Circumference (C):</label>
+                                <input type="number" id="circumference" placeholder="Enter circumference">
+                            </div>
+                            <div>
+                                <label for="area">Area (A):</label>
+                                <input type="number" id="area" placeholder="Enter area">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ C = 2\\pi r = \\pi d $$
+                            $$ A = \\pi r^2 = \\frac{\\pi d^2}{4} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates unknown properties of a circle (radius, diameter, circumference, area) given any one property.
+                        </div>
+                    `
+                },
+                'quadrilateral': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="quadType">Select Quadrilateral Type:</label>
+                                <select id="quadType" onchange="updateQuadrilateralInputs()">
+                                    <option value="square">Square</option>
+                                    <option value="rectangle">Rectangle</option>
+                                    <option value="parallelogram">Parallelogram</option>
+                                    <option value="rhombus">Rhombus</option>
+                                    <option value="trapezoid">Trapezoid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="quadInputs">
+                            </div>
+                        <div class="formula-display" id="quadFormula">
+                            </div>
+                        <div class="info-box" id="quadInfo">
+                            </div>
+                    `
+                },
+                'triangle-similarity': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="a1">Triangle 1 - Side a:</label>
+                                <input type="number" id="a1" placeholder="Side a1">
+                            </div>
+                            <div>
+                                <label for="b1">Triangle 1 - Side b:</label>
+                                <input type="number" id="b1" placeholder="Side b1">
+                            </div>
+                            <div>
+                                <label for="c1">Triangle 1 - Side c:</label>
+                                <input type="number" id="c1" placeholder="Side c1">
+                            </div>
+                            <div>
+                                <label for="A1">Triangle 1 - Angle A (deg):</label>
+                                <input type="number" id="A1" placeholder="Angle A1">
+                            </div>
+                             <div>
+                                <label for="B1">Triangle 1 - Angle B (deg):</label>
+                                <input type="number" id="B1" placeholder="Angle B1">
+                            </div>
+                            <div>
+                                <label for="C1">Triangle 1 - Angle C (deg):</label>
+                                <input type="number" id="C1" placeholder="Angle C1">
+                            </div>
+                        </div>
+                        <hr class="sub-section-title">
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="a2">Triangle 2 - Side a (Unknown? Leave blank):</label>
+                                <input type="number" id="a2" placeholder="Side a2">
+                            </div>
+                            <div>
+                                <label for="b2">Triangle 2 - Side b (Unknown? Leave blank):</label>
+                                <input type="number" id="b2" placeholder="Side b2">
+                            </div>
+                            <div>
+                                <label for="c2">Triangle 2 - Side c (Unknown? Leave blank):</label>
+                                <input type="number" id="c2" placeholder="Side c2">
+                            </div>
+                            <div>
+                                <label for="A2">Triangle 2 - Angle A (deg, Unknown? Leave blank):</label>
+                                <input type="number" id="A2" placeholder="Angle A2">
+                            </div>
+                             <div>
+                                <label for="B2">Triangle 2 - Angle B (deg, Unknown? Leave blank):</label>
+                                <input type="number" id="B2" placeholder="Angle B2">
+                            </div>
+                            <div>
+                                <label for="C2">Triangle 2 - Angle C (deg, Unknown? Leave blank):</label>
+                                <input type="number" id="C2" placeholder="Angle C2">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\text{If } \\triangle ABC \\sim \\triangle DEF \\text{ then } \\frac{AB}{DE} = \\frac{BC}{EF} = \\frac{CA}{FD} \\text{ and } \\angle A = \\angle D, \\dots $$
+                        </div>
+                        <div class="info-box">
+                            Determines missing sides or angles of a second triangle, given that it is similar to a fully defined first triangle. Ensure corresponding sides/angles are entered in order. Provide at least one corresponding side pair to determine the scale.
+                        </div>
+                    `
+                },
+                'triangle-congruence': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="triangle1Props">Triangle 1 Properties (e.g., SSS, SAS, ASA, AAS):</label>
+                                <input type="text" id="triangle1Props" placeholder="e.g., s=5,s=6,s=7 or s=5,a=60,s=7">
+                                <small>Format: "s=value" for side, "a=value" for angle (degrees). Example: s=5,s=6,s=7 or s=5,a=60,s=7</small>
+                            </div>
+                            <div>
+                                <label for="triangle2Props">Triangle 2 Properties (e.g., SSS, SAS, ASA, AAS):</label>
+                                <input type="text" id="triangle2Props" placeholder="e.g., s=5,s=6,s=7 or s=5,a=60,s=7">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ \\text{SSS} \\quad \\text{SAS} \\quad \\text{ASA} \\quad \\text{AAS} $$
+                        </div>
+                        <div class="info-box">
+                            Checks if two triangles are congruent based on common congruence postulates (SSS, SAS, ASA, AAS).
+                            Enter properties as comma-separated: 's=value' for side length, 'a=value' for angle (in degrees). Order matters for SAS/ASA/AAS. Provide enough properties (3 for SSS/SAS/ASA/AAS).
+                        </div>
+                    `
+                },
+                'polygon-circle-properties': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="polyCircType">Select Calculation:</label>
+                                <select id="polyCircType" onchange="updatePolygonCircleInputs()">
+                                    <option value="regular-polygon">Regular Polygon Properties</option>
+                                    <option value="circle-sector">Circle Sector Area/Arc Length</option>
+                                    <option value="circle-segment">Circle Segment Area</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="polyCircInputs">
+                            </div>
+                        <div class="formula-display" id="polyCircFormula">
+                            </div>
+                        <div class="info-box" id="polyCircInfo">
+                            </div>
+                    `
+                },
+                'right-triangle-trig': {
+                    inputs: `
+                        <div class="additional-inputs">
+                            <div>
+                                <label for="side_opp">Opposite Side (o):</label>
+                                <input type="number" id="side_opp" placeholder="Leave blank if unknown">
+                            </div>
+                            <div>
+                                <label for="side_adj">Adjacent Side (a):</label>
+                                <input type="number" id="side_adj" placeholder="Leave blank if unknown">
+                            </div>
+                            <div>
+                                <label for="side_hyp">Hypotenuse (h):</label>
+                                <input type="number" id="side_hyp" placeholder="Leave blank if unknown">
+                            </div>
+                            <div>
+                                <label for="angle_theta">Angle θ (degrees, not 90°):</label>
+                                <input type="number" id="angle_theta" placeholder="Leave blank if unknown">
+                            </div>
+                        </div>
+                        <div class="formula-display">
+                            $$ a^2 + b^2 = c^2 \\quad (\\text{Pythagorean Theorem}) $$
+                            $$ \\sin(\\theta) = \\frac{\\text{Opposite}}{\\text{Hypotenuse}} \\quad \\cos(\\theta) = \\frac{\\text{Adjacent}}{\\text{Hypotenuse}} \\quad \\tan(\\theta) = \\frac{\\text{Opposite}}{\\text{Adjacent}} $$
+                        </div>
+                        <div class="info-box">
+                            Calculates missing sides or angles of a right-angled triangle. Provide at least two known values.
+                            Angles should be in degrees.
+                        </div>
+                    `
+                },
+                'volume-surface-area': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="shapeType">Select 3D Shape:</label>
+                                <select id="shapeType" onchange="updateVolumeSurfaceInputs()">
+                                    <option value="cube">Cube</option>
+                                    <option value="cuboid">Cuboid</option>
+                                    <option value="cylinder">Cylinder</option>
+                                    <option value="cone">Cone</option>
+                                    <option value="sphere">Sphere</option>
+                                    <option value="square-pyramid">Square Pyramid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="volumeSurfaceInputs">
+                            </div>
+                        <div class="formula-display" id="volumeSurfaceFormula">
+                            </div>
+                        <div class="info-box" id="volumeSurfaceInfo">
+                            </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            // Specific updates for sub-calculators
+            if (type === 'quadrilateral') {
+                updateQuadrilateralInputs();
+            } else if (type === 'polygon-circle-properties') {
+                updatePolygonCircleInputs();
+            } else if (type === 'volume-surface-area') {
+                updateVolumeSurfaceInputs();
+            }
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Sub-Calculator Input Updaters ---
+
+        function updateQuadrilateralInputs() {
+            const quadType = document.getElementById('quadType').value;
+            const inputsDiv = document.getElementById('quadInputs');
+            const formulaDiv = document.getElementById('quadFormula');
+            const infoDiv = document.getElementById('quadInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(quadType) {
+                case 'square':
+                    inputsHtml = `
+                        <div class="additional-inputs single-column">
+                            <div><label for="sideSq">Side (s):</label><input type="number" id="sideSq" placeholder="Enter side length"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\text{Area} = s^2 \\quad \\text{Perimeter} = 4s $$`;
+                    infoHtml = `A square is a quadrilateral with four equal sides and four right angles.`;
+                    break;
+                case 'rectangle':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="lengthRect">Length (l):</label><input type="number" id="lengthRect" placeholder="Enter length"></div>
+                            <div><label for="widthRect">Width (w):</label><input type="number" id="widthRect" placeholder="Enter width"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\text{Area} = l \\cdot w \\quad \\text{Perimeter} = 2(l+w) $$`;
+                    infoHtml = `A rectangle is a quadrilateral with four right angles. Opposite sides are equal.`;
+                    break;
+                case 'parallelogram':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="basePar">Base (b):</label><input type="number" id="basePar" placeholder="Enter base"></div>
+                            <div><label for="heightPar">Height (h):</label><input type="number" id="heightPar" placeholder="Enter height"></div>
+                            <div><label for="sidePar">Side (s):</label><input type="number" id="sidePar" placeholder="Enter adjacent side"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\text{Area} = b \\cdot h \\quad \\text{Perimeter} = 2(b+s) $$`;
+                    infoHtml = `A parallelogram is a quadrilateral with two pairs of parallel sides. Opposite sides and angles are equal.`;
+                    break;
+                case 'rhombus':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="sideRh">Side (s):</label><input type="number" id="sideRh" placeholder="Enter side length"></div>
+                            <div><label for="diag1Rh">Diagonal 1 (d1):</label><input type="number" id="diag1Rh" placeholder="Enter diagonal 1"></div>
+                            <div><label for="diag2Rh">Diagonal 2 (d2):</label><input type="number" id="diag2Rh" placeholder="Enter diagonal 2"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\text{Area} = \\frac{1}{2} d_1 d_2 \\quad \\text{Perimeter} = 4s $$`;
+                    infoHtml = `A rhombus is a quadrilateral with all four sides equal in length. Diagonals bisect each other at right angles.`;
+                    break;
+                case 'trapezoid':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="base1Trap">Base 1 (b1):</label><input type="number" id="base1Trap" placeholder="Enter top base"></div>
+                            <div><label for="base2Trap">Base 2 (b2):</label><input type="number" id="base2Trap" placeholder="Enter bottom base"></div>
+                            <div><label for="heightTrap">Height (h):</label><input type="number" id="heightTrap" placeholder="Enter height"></div>
+                            <div><label for="side3Trap">Side 3:</label><input type="number" id="side3Trap" placeholder="Enter non-parallel side 1"></div>
+                            <div><label for="side4Trap">Side 4:</label><input type="number" id="side4Trap" placeholder="Enter non-parallel side 2"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\text{Area} = \\frac{1}{2} (b_1 + b_2) h \\quad \\text{Perimeter} = b_1 + b_2 + s_3 + s_4 $$`;
+                    infoHtml = `A trapezoid is a quadrilateral with at least one pair of parallel sides (the bases).`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function updatePolygonCircleInputs() {
+            const polyCircType = document.getElementById('polyCircType').value;
+            const inputsDiv = document.getElementById('polyCircInputs');
+            const formulaDiv = document.getElementById('polyCircFormula');
+            const infoDiv = document.getElementById('polyCircInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(polyCircType) {
+                case 'regular-polygon':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="numSidesPoly">Number of Sides (n):</label><input type="number" id="numSidesPoly" min="3" placeholder="e.g., 6"></div>
+                            <div><label for="sideLengthPoly">Side Length (s):</label><input type="number" id="sideLengthPoly" placeholder="Enter side length"></div>
+                            <div><label for="apothemPoly">Apothem (a):</label><input type="number" id="apothemPoly" placeholder="Enter apothem"></div>
+                            <div><label for="radiusPoly">Circumradius (R):</label><input type="number" id="radiusPoly" placeholder="Enter circumradius"></div>
+                        </div>
+                    `;
+                    formulaHtml = `
+                        $$ \\text{Perimeter} = n \\cdot s $$
+                        $$ \\text{Area} = \\frac{1}{2} n s a = \\frac{1}{2} P a $$
+                        $$ a = R \\cos\\left(\\frac{\\pi}{n}\\right) $$
+                        $$ s = 2 R \\sin\\left(\\frac{\\pi}{n}\\right) $$
+                    `;
+                    infoHtml = `Calculates properties of a regular polygon. Provide number of sides and at least one other measurement (side, apothem, or circumradius).`;
+                    break;
+                case 'circle-sector':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="radiusSec">Radius (r):</label><input type="number" id="radiusSec" placeholder="Enter radius"></div>
+                            <div><label for="angleSec">Central Angle (degrees):</label><input type="number" id="angleSec" placeholder="Enter angle"></div>
+                        </div>
+                    `;
+                    formulaHtml = `
+                        $$ \\text{Arc Length} = \\frac{\\theta}{360°} \\cdot 2\\pi r $$
+                        $$ \\text{Area of Sector} = \\frac{\\theta}{360°} \\cdot \\pi r^2 $$
+                    `;
+                    infoHtml = `Calculates the arc length and area of a circular sector given the radius and central angle in degrees.`;
+                    break;
+                case 'circle-segment':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="radiusSeg">Radius (r):</label><input type="number" id="radiusSeg" placeholder="Enter radius"></div>
+                            <div><label for="angleSeg">Central Angle (degrees):</label><input type="number" id="angleSeg" placeholder="Enter angle"></div>
+                        </div>
+                    `;
+                    formulaHtml = `
+                        $$ \\text{Area of Segment} = \\text{Area of Sector} - \\text{Area of Triangle} $$
+                        $$ \\text{Area of Sector} = \\frac{\\theta}{360°} \\cdot \\pi r^2 $$
+                        $$ \\text{Area of Triangle} = \\frac{1}{2} r^2 \\sin(\\theta) $$
+                    `;
+                    infoHtml = `Calculates the area of a circular segment. This is the area of the sector minus the area of the triangle formed by the two radii and the chord.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function updateVolumeSurfaceInputs() {
+            const shapeType = document.getElementById('shapeType').value;
+            const inputsDiv = document.getElementById('volumeSurfaceInputs');
+            const formulaDiv = document.getElementById('volumeSurfaceFormula');
+            const infoDiv = document.getElementById('volumeSurfaceInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(shapeType) {
+                case 'cube':
+                    inputsHtml = `
+                        <div class="additional-inputs single-column">
+                            <div><label for="sideCube">Side (s):</label><input type="number" id="sideCube" placeholder="Enter side length"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = s^3 \\quad SA = 6s^2 $$`;
+                    infoHtml = `A cube is a three-dimensional solid object bounded by six square faces, with three meeting at each vertex.`;
+                    break;
+                case 'cuboid':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="lengthCuboid">Length (l):</label><input type="number" id="lengthCuboid" placeholder="Enter length"></div>
+                            <div><label for="widthCuboid">Width (w):</label><input type="number" id="widthCuboid" placeholder="Enter width"></div>
+                            <div><label for="heightCuboid">Height (h):</label><input type="number" id="heightCuboid" placeholder="Enter height"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = lwh \\quad SA = 2(lw + lh + wh) $$`;
+                    infoHtml = `A cuboid is a box-shaped solid object with six rectangular faces.`;
+                    break;
+                case 'cylinder':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="radiusCyl">Radius (r):</label><input type="number" id="radiusCyl" placeholder="Enter radius"></div>
+                            <div><label for="heightCyl">Height (h):</label><input type="number" id="heightCyl" placeholder="Enter height"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = \\pi r^2 h \\quad SA = 2\\pi r h + 2\\pi r^2 $$`;
+                    infoHtml = `A cylinder is a solid geometric figure with straight parallel sides and a circular or oval cross-section.`;
+                    break;
+                case 'cone':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="radiusCone">Radius (r):</label><input type="number" id="radiusCone" placeholder="Enter radius"></div>
+                            <div><label for="heightCone">Height (h):</label><input type="number" id="heightCone" placeholder="Enter height"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = \\frac{1}{3} \\pi r^2 h \\quad SA = \\pi r (r + \\sqrt{h^2 + r^2}) $$`;
+                    infoHtml = `A cone is a three-dimensional geometric shape that tapers smoothly from a flat base (usually circular) to a point called the apex.`;
+                    break;
+                case 'sphere':
+                    inputsHtml = `
+                        <div class="additional-inputs single-column">
+                            <div><label for="radiusSph">Radius (r):</label><input type="number" id="radiusSph" placeholder="Enter radius"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = \\frac{4}{3} \\pi r^3 \\quad SA = 4\\pi r^2 $$`;
+                    infoHtml = `A sphere is a perfectly round geometrical object in three-dimensional space that is the surface of a perfectly round ball.`;
+                    break;
+                case 'square-pyramid':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="baseSidePyr">Base Side (s):</label><input type="number" id="baseSidePyr" placeholder="Enter base side length"></div>
+                            <div><label for="heightPyr">Height (h):</label><input type="number" id="heightPyr" placeholder="Enter height"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ V = \\frac{1}{3} s^2 h \\quad SA = s^2 + 2s\\sqrt{(\\frac{s}{2})^2 + h^2} $$`;
+                    infoHtml = `A square pyramid is a pyramid with a square base and four triangular faces.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        // --- Geometric Calculation Functions ---
+
+        // Circle Calculator
+        function calculateCircle() {
+            let r = parseFloat(document.getElementById('radius').value);
+            let d = parseFloat(document.getElementById('diameter').value);
+            let C = parseFloat(document.getElementById('circumference').value);
+            let A = parseFloat(document.getElementById('area').value);
+
+            let calculatedCount = 0;
+
+            if (!isNaN(r) && r > 0) {
+                d = r * 2;
+                C = 2 * PI * r;
+                A = PI * r * r;
+                calculatedCount++;
+            } else if (!isNaN(d) && d > 0) {
+                r = d / 2;
+                C = PI * d;
+                A = PI * r * r;
+                calculatedCount++;
+            } else if (!isNaN(C) && C > 0) {
+                r = C / (2 * PI);
+                d = C / PI;
+                A = PI * r * r;
+                calculatedCount++;
+            } else if (!isNaN(A) && A > 0) {
+                r = Math.sqrt(A / PI);
+                d = 2 * r;
+                C = 2 * PI * r;
+                calculatedCount++;
+            }
+
+            if (calculatedCount === 0) throw new Error("Please enter at least one positive value for the circle.");
+
+            return `
+                Circle Properties:
+                Radius (r): ${r.toFixed(4)}
+                Diameter (d): ${d.toFixed(4)}
+                Circumference (C): ${C.toFixed(4)}
+                Area (A): ${A.toFixed(4)}
+            `;
+        }
+
+        // Quadrilateral Calculator
+        function calculateQuadrilateral() {
+            const quadType = document.getElementById('quadType').value;
+            let result = '';
+
+            switch(quadType) {
+                case 'square':
+                    const sSq = getFloatValue('sideSq');
+                    if (sSq <= 0) throw new Error("Side length must be positive.");
+                    result = `
+                        Square (Side = ${sSq}):
+                        Area: ${(sSq * sSq).toFixed(4)}
+                        Perimeter: ${(4 * sSq).toFixed(4)}
+                    `;
+                    break;
+                case 'rectangle':
+                    const lRect = getFloatValue('lengthRect');
+                    const wRect = getFloatValue('widthRect');
+                    if (lRect <= 0 || wRect <= 0) throw new Error("Length and width must be positive.");
+                    result = `
+                        Rectangle (Length = ${lRect}, Width = ${wRect}):
+                        Area: ${(lRect * wRect).toFixed(4)}
+                        Perimeter: ${(2 * (lRect + wRect)).toFixed(4)}
+                    `;
+                    break;
+                case 'parallelogram':
+                    const bPar = getFloatValue('basePar');
+                    const hPar = getFloatValue('heightPar');
+                    const sPar = parseFloat(document.getElementById('sidePar').value); // Optional for perimeter
+                    if (bPar <= 0 || hPar <= 0) throw new Error("Base and height must be positive.");
+                    let perimeterPar = 'N/A (Adjacent side needed)';
+                    if (!isNaN(sPar) && sPar > 0) {
+                        perimeterPar = (2 * (bPar + sPar)).toFixed(4);
+                    }
+                    result = `
+                        Parallelogram (Base = ${bPar}, Height = ${hPar}):
+                        Area: ${(bPar * hPar).toFixed(4)}
+                        Perimeter: ${perimeterPar}
+                    `;
+                    break;
+                case 'rhombus':
+                    const sRh = parseFloat(document.getElementById('sideRh').value);
+                    const d1Rh = parseFloat(document.getElementById('diag1Rh').value);
+                    const d2Rh = parseFloat(document.getElementById('diag2Rh').value);
+                    
+                    if (isNaN(sRh) && (isNaN(d1Rh) || isNaN(d2Rh))) throw new Error("For Rhombus, enter side length, or both diagonals.");
+                    if ((!isNaN(d1Rh) && d1Rh <= 0) || (!isNaN(d2Rh) && d2Rh <= 0) || (!isNaN(sRh) && sRh <= 0)) throw new Error("Lengths must be positive.");
+
+                    let areaRh = 'N/A';
+                    if (!isNaN(d1Rh) && !isNaN(d2Rh)) {
+                        areaRh = (0.5 * d1Rh * d2Rh).toFixed(4);
+                    } else if (!isNaN(sRh) && !isNaN(d1Rh)) { // Can calculate d2 or angle using Pythagoras in half-rhombus
+                        const halfD2 = Math.sqrt(sRh*sRh - (d1Rh/2)*(d1Rh/2));
+                        if (isNaN(halfD2) || halfD2 <= 0) throw new Error("Invalid diagonal/side combination for rhombus (Pythagorean check failed).");
+                        areaRh = (0.5 * d1Rh * (2 * halfD2)).toFixed(4);
+                    }
+
+                    let perimeterRh = 'N/A';
+                    if (!isNaN(sRh)) {
+                        perimeterRh = (4 * sRh).toFixed(4);
+                    } else if (!isNaN(d1Rh) && !isNaN(d2Rh)) {
+                        const calculatedSRh = Math.sqrt((d1Rh/2)*(d1Rh/2) + (d2Rh/2)*(d2Rh/2));
+                        if (isNaN(calculatedSRh) || calculatedSRh <= 0) throw new Error("Invalid diagonal combination for rhombus (Pythagorean check failed).");
+                        perimeterRh = (4 * calculatedSRh).toFixed(4);
+                    }
+
+                    result = `
+                        Rhombus:
+                        Side: ${isNaN(sRh) ? 'N/A' : sRh.toFixed(4)}
+                        Diagonal 1: ${isNaN(d1Rh) ? 'N/A' : d1Rh.toFixed(4)}
+                        Diagonal 2: ${isNaN(d2Rh) ? 'N/A' : d2Rh.toFixed(4)}
+                        Area: ${areaRh}
+                        Perimeter: ${perimeterRh}
+                    `;
+                    break;
+                case 'trapezoid':
+                    const b1Trap = getFloatValue('base1Trap');
+                    const b2Trap = getFloatValue('base2Trap');
+                    const hTrap = getFloatValue('heightTrap');
+                    const s3Trap = parseFloat(document.getElementById('side3Trap').value);
+                    const s4Trap = parseFloat(document.getElementById('side4Trap').value);
+
+                    if (b1Trap <= 0 || b2Trap <= 0 || hTrap <= 0) throw new Error("Bases and height must be positive.");
+                    
+                    let perimeterTrap = 'N/A';
+                    if (!isNaN(s3Trap) && !isNaN(s4Trap) && s3Trap > 0 && s4Trap > 0) {
+                        perimeterTrap = (b1Trap + b2Trap + s3Trap + s4Trap).toFixed(4);
+                    }
+
+                    result = `
+                        Trapezoid (Base 1 = ${b1Trap}, Base 2 = ${b2Trap}, Height = ${hTrap}):
+                        Area: ${(0.5 * (b1Trap + b2Trap) * hTrap).toFixed(4)}
+                        Perimeter: ${perimeterTrap}
+                    `;
+                    break;
+            }
+            return result;
+        }
+
+        // Triangle Similarity
+        function calculateTriangleSimilarity() {
+            const a1 = parseFloat(document.getElementById('a1').value);
+            const b1 = parseFloat(document.getElementById('b1').value);
+            const c1 = parseFloat(document.getElementById('c1').value);
+            const A1 = parseFloat(document.getElementById('A1').value);
+            const B1 = parseFloat(document.getElementById('B1').value);
+            const C1 = parseFloat(document.getElementById('C1').value);
+
+            const a2 = parseFloat(document.getElementById('a2').value);
+            const b2 = parseFloat(document.getElementById('b2').value);
+            const c2 = parseFloat(document.getElementById('c2').value);
+            const A2 = parseFloat(document.getElementById('A2').value);
+            const B2 = parseFloat(document.getElementById('B2').value);
+            const C2 = parseFloat(document.getElementById('C2').value);
+
+            let known1 = [a1, b1, c1, A1, B1, C1].filter(val => !isNaN(val));
+            let known2 = [a2, b2, c2, A2, B2, C2].filter(val => !isNaN(val));
+
+            if (known1.length < 3) throw new Error("Please define Triangle 1 fully (at least 3 properties).");
+            if (known2.length === 0) throw new Error("Please provide at least one known property for Triangle 2.");
+
+            let scaleFactor = NaN;
+
+            if (!isNaN(a1) && !isNaN(a2) && a1 !== 0) scaleFactor = a2 / a1;
+            else if (!isNaN(b1) && !isNaN(b2) && b1 !== 0) scaleFactor = b2 / b1;
+            else if (!isNaN(c1) && !isNaN(c2) && c1 !== 0) scaleFactor = c2 / c1;
+
+            if (isNaN(scaleFactor) && (isNaN(A1) || isNaN(A2) || A1 !== A2) && (isNaN(B1) || isNaN(B2) || B1 !== B2) && (isNaN(C1) || isNaN(C2) || C1 !== C2)) {
+                throw new Error("Cannot determine similarity or scale factor. Provide at least one pair of corresponding known sides, or sufficient angles to confirm similarity.");
+            }
+
+            // Fill in missing angles in Triangle 1 if possible
+            let angles1 = [A1, B1, C1];
+            let knownAnglesCount1 = angles1.filter(val => !isNaN(val)).length;
+            if (knownAnglesCount1 >= 2) {
+                let sumKnownAngles = angles1.filter(val => !isNaN(val)).reduce((sum, val) => sum + val, 0);
+                if (sumKnownAngles > 180) throw new Error("Sum of known angles in Triangle 1 exceeds 180 degrees.");
+                if (knownAnglesCount1 === 2) {
+                    for (let i = 0; i < 3; i++) {
+                        if (isNaN(angles1[i])) {
+                            angles1[i] = 180 - sumKnownAngles;
+                            break;
+                        }
+                    }
+                }
+                A1 = angles1[0]; B1 = angles1[1]; C1 = angles1[2];
+            } else if (knownAnglesCount1 > 0 && knownAnglesCount1 < 2) {
+                // Not enough angles to complete, but we need to check for AA similarity
+                // If only one angle is given, we need corresponding angle in T2
+                if ((!isNaN(A1) && !isNaN(A2) && A1 !== A2) || (!isNaN(B1) && !isNaN(B2) && B1 !== B2) || (!isNaN(C1) && !isNaN(C2) && C1 !== C2)) {
+                    throw new Error("Angles in similar triangles must be equal.");
+                }
+            }
+
+
+            // Calculate missing values for Triangle 2
+            let output = `
+                Triangle 1 Properties: a=${a1 || 'N/A'}, b=${b1 || 'N/A'}, c=${c1 || 'N/A'}, A=${A1 || 'N/A'}°, B=${B1 || 'N/A'}°, C=${C1 || 'N/A'}°
+                Triangle 2 Properties: a=${a2 || 'N/A'}, b=${b2 || 'N/A'}, c=${c2 || 'N/A'}, A=${A2 || 'N/A'}°, B=${B2 || 'N/A'}°, C=${C2 || 'N/A'}°
+                
+                Scale Factor (T2/T1): ${scaleFactor.toFixed(4) || 'N/A (needs at least one corresponding side pair)'}
+                
+                --- Calculated Triangle 2 Properties (based on similarity) ---
+            `;
+
+            const calc_a2 = !isNaN(a1) && !isNaN(scaleFactor) ? (a1 * scaleFactor).toFixed(4) : (isNaN(a2) ? 'N/A' : a2.toFixed(4));
+            const calc_b2 = !isNaN(b1) && !isNaN(scaleFactor) ? (b1 * scaleFactor).toFixed(4) : (isNaN(b2) ? 'N/A' : b2.toFixed(4));
+            const calc_c2 = !isNaN(c1) && !isNaN(scaleFactor) ? (c1 * scaleFactor).toFixed(4) : (isNaN(c2) ? 'N/A' : c2.toFixed(4));
+
+            const calc_A2 = !isNaN(A1) ? A1.toFixed(4) + '°' : (isNaN(A2) ? 'N/A' : A2.toFixed(4) + '°');
+            const calc_B2 = !isNaN(B1) ? B1.toFixed(4) + '°' : (isNaN(B2) ? 'N/A' : B2.toFixed(4) + '°');
+            const calc_C2 = !isNaN(C1) ? C1.toFixed(4) + '°' : (isNaN(C2) ? 'N/A' : C2.toFixed(4) + '°');
+
+            output += `
+                Side a2: ${calc_a2}
+                Side b2: ${calc_b2}
+                Side c2: ${calc_c2}
+                Angle A2: ${calc_A2}
+                Angle B2: ${calc_B2}
+                Angle C2: ${calc_C2}
+            `;
+
+            return output;
+        }
+
+        // Congruent Triangles Checker
+        function calculateTriangleCongruence() {
+            const t1PropsStr = document.getElementById('triangle1Props').value.toLowerCase().replace(/\s/g, '');
+            const t2PropsStr = document.getElementById('triangle2Props').value.toLowerCase().replace(/\s/g, '');
+
+            const parseProps = (propStr) => {
+                const props = [];
+                const regex = /(s|a)=(\d+\.?\d*)/g;
+                let match;
+                while ((match = regex.exec(propStr)) !== null) {
+                    props.push({ type: match[1], value: parseFloat(match[2]) });
+                }
+                return props;
+            };
+
+            const t1Props = parseProps(t1PropsStr);
+            const t2Props = parseProps(t2PropsStr);
+
+            if (t1Props.length !== 3 || t2Props.length !== 3) {
+                throw new Error("Please enter exactly 3 properties for each triangle (e.g., s=5,a=60,s=7).");
+            }
+            if (t1Props.some(p => isNaN(p.value) || p.value <= 0) || t2Props.some(p => isNaN(p.value) || p.value <= 0)) {
+                throw new Error("All property values must be positive numbers.");
+            }
+
+            const areCongruent = (p1, p2) => {
+                if (p1.length !== p2.length) return false;
+                for (let i = 0; i < p1.length; i++) {
+                    if (p1[i].type !== p2[i].type) return false;
+                    // Allow for minor floating point differences for angles
+                    if (p1[i].type === 'a') {
+                        if (Math.abs(p1[i].value - p2[i].value) > 0.01) return false;
+                    } else { // side
+                        if (p1[i].value !== p2[i].value) return false;
+                    }
+                }
+                return true;
+            };
+
+            let congruenceRule = 'None';
+            let output = '';
+
+            if (areCongruent(t1Props, t2Props)) {
+                // Check SSS
+                if (t1Props.every(p => p.type === 's')) {
+                    congruenceRule = 'SSS (Side-Side-Side)';
+                }
+                // Check SAS
+                else if (t1Props[0].type === 's' && t1Props[1].type === 'a' && t1Props[2].type === 's') {
+                    congruenceRule = 'SAS (Side-Angle-Side)';
+                }
+                // Check ASA
+                else if (t1Props[0].type === 'a' && t1Props[1].type === 's' && t1Props[2].type === 'a') {
+                    congruenceRule = 'ASA (Angle-Side-Angle)';
+                }
+                // Check AAS (or SAA)
+                else if ((t1Props[0].type === 'a' && t1Props[1].type === 'a' && t1Props[2].type === 's') ||
+                         (t1Props[0].type === 's' && t1Props[1].type === 'a' && t1Props[2].type === 'a')) {
+                    congruenceRule = 'AAS (Angle-Angle-Side)';
+                }
+                // Check HL (Hypotenuse-Leg for Right Triangles) - requires specific input format or explicit right angle
+                // This calculator doesn't assume right triangles, so HL is not explicitly checked for.
+                
+                if (congruenceRule === 'None') {
+                     output = `The triangles have matching properties but do not fit a common congruence postulate with the given input order.`;
+                } else {
+                     output = `The triangles are CONGRUENT by ${congruenceRule}.`;
+                }
+               
+            } else {
+                output = `The triangles are NOT CONGRUENT with the provided properties.`;
+            }
+
+            return `
+                Triangle 1: ${t1PropsStr}
+                Triangle 2: ${t2PropsStr}
+                
+                ${output}
+            `;
+        }
+
+        // Polygon & Circle Properties
+        function calculatePolygonCircleProperties() {
+            const polyCircType = document.getElementById('polyCircType').value;
+            let result = '';
+
+            switch(polyCircType) {
+                case 'regular-polygon':
+                    const nPoly = getFloatValue('numSidesPoly');
+                    const sPoly = parseFloat(document.getElementById('sideLengthPoly').value);
+                    const aPoly = parseFloat(document.getElementById('apothemPoly').value);
+                    const RPoly = parseFloat(document.getElementById('radiusPoly').value);
+
+                    if (nPoly < 3) throw new Error("Number of sides must be 3 or more for a polygon.");
+                    let knownCount = (!isNaN(sPoly) ? 1 : 0) + (!isNaN(aPoly) ? 1 : 0) + (!isNaN(RPoly) ? 1 : 0);
+                    if (knownCount === 0) throw new Error("Provide at least one of Side Length, Apothem, or Circumradius.");
+
+                    let s_calc = sPoly, a_calc = aPoly, R_calc = RPoly;
+                    const angle_pi_n = PI / nPoly;
+
+                    // Derive missing values based on one known (iterative approach)
+                    for (let i = 0; i < 3; i++) { // Max 3 iterations to ensure all derived
+                        if (!isNaN(R_calc) && isNaN(s_calc)) {
+                            s_calc = 2 * R_calc * Math.sin(angle_pi_n);
+                        }
+                        if (!isNaN(R_calc) && isNaN(a_calc)) {
+                            a_calc = R_calc * Math.cos(angle_pi_n);
+                        }
+                        if (!isNaN(s_calc) && isNaN(R_calc)) {
+                            R_calc = s_calc / (2 * Math.sin(angle_pi_n));
+                        }
+                        if (!isNaN(s_calc) && isNaN(a_calc)) {
+                            a_calc = s_calc / (2 * Math.tan(angle_pi_n));
+                        }
+                        if (!isNaN(a_calc) && isNaN(R_calc)) {
+                            R_calc = a_calc / Math.cos(angle_pi_n);
+                        }
+                        if (!isNaN(a_calc) && isNaN(s_calc)) {
+                            s_calc = 2 * a_calc * Math.tan(angle_pi_n);
+                        }
+                    }
+
+                    if (isNaN(s_calc) || s_calc <= 0) throw new Error("Could not derive side length. Check inputs or ensure they are consistent.");
+                    if (isNaN(a_calc) || a_calc <= 0) throw new Error("Could not derive apothem. Check inputs or ensure they are consistent.");
+                    if (isNaN(R_calc) || R_calc <= 0) throw new Error("Could not derive circumradius. Check inputs or ensure they are consistent.");
+                    
+                    const perimeter = nPoly * s_calc;
+                    const area = 0.5 * perimeter * a_calc;
+
+                    result = `
+                        Regular Polygon (n=${nPoly}):
+                        Side Length (s): ${s_calc.toFixed(4)}
+                        Apothem (a): ${a_calc.toFixed(4)}
+                        Circumradius (R): ${R_calc.toFixed(4)}
+                        Perimeter: ${perimeter.toFixed(4)}
+                        Area: ${area.toFixed(4)}
+                    `;
+                    break;
+                case 'circle-sector':
+                    const rSec = getFloatValue('radiusSec');
+                    const angleSec = getFloatValue('angleSec');
+                    if (rSec <= 0 || angleSec < 0 || angleSec > 360) throw new Error("Radius must be positive, angle between 0 and 360.");
+                    
+                    const arcLength = (angleSec / 360) * 2 * PI * rSec;
+                    const sectorArea = (angleSec / 360) * PI * rSec * rSec;
+
+                    result = `
+                        Circle Sector (r=${rSec}, θ=${angleSec}°):
+                        Arc Length: ${arcLength.toFixed(4)}
+                        Area of Sector: ${sectorArea.toFixed(4)}
+                    `;
+                    break;
+                case 'circle-segment':
+                    const rSeg = getFloatValue('radiusSeg');
+                    const angleSeg = getFloatValue('angleSeg');
+                    if (rSeg <= 0 || angleSeg < 0 || angleSeg > 360) throw new Error("Radius must be positive, angle between 0 and 360.");
+                    
+                    const angleRadSeg = angleSeg * DEG_TO_RAD;
+                    const sectorAreaSeg = (angleSeg / 360) * PI * rSeg * rSeg;
+                    const triangleAreaSeg = 0.5 * rSeg * rSeg * Math.sin(angleRadSeg);
+                    const segmentArea = sectorAreaSeg - triangleAreaSeg;
+
+                    result = `
+                        Circle Segment (r=${rSeg}, θ=${angleSeg}°):
+                        Area of Sector: ${sectorAreaSeg.toFixed(4)}
+                        Area of Triangle: ${triangleAreaSeg.toFixed(4)}
+                        Area of Segment: ${segmentArea.toFixed(4)}
+                    `;
+                    break;
+            }
+            return result;
+        }
+
+        // Right Triangle Trigonometry
+        function calculateRightTriangleTrig() {
+            let o = parseFloat(document.getElementById('side_opp').value);
+            let a = parseFloat(document.getElementById('side_adj').value);
+            let h = parseFloat(document.getElementById('side_hyp').value);
+            let theta = parseFloat(document.getElementById('angle_theta').value); // in degrees
+
+            const knownSides = [o, a, h].filter(val => !isNaN(val) && val > 0);
+            const knownAngles = [theta].filter(val => !isNaN(val) && val > 0 && val < 90);
+
+            if (knownSides.length + knownAngles.length < 2) {
+                throw new Error("Please enter at least two known values (sides or one side and an angle).");
+            }
+            if (knownSides.some(val => val <= 0) || (knownAngles.length > 0 && (theta <= 0 || theta >= 90))) {
+                 throw new Error("Side lengths must be positive. Angles must be between 0 and 90 degrees (exclusive).");
+            }
+
+            let output = '';
+
+            // Solve for sides using Pythagorean theorem if two sides are known
+            if (knownSides.length === 2) {
+                if (isNaN(o) && !isNaN(a) && !isNaN(h)) { // find o
+                    if (h <= a) throw new Error("Hypotenuse must be greater than adjacent side.");
+                    o = Math.sqrt(h*h - a*a);
+                } else if (isNaN(a) && !isNaN(o) && !isNaN(h)) { // find a
+                    if (h <= o) throw new Error("Hypotenuse must be greater than opposite side.");
+                    a = Math.sqrt(h*h - o*o);
+                } else if (isNaN(h) && !isNaN(o) && !isNaN(a)) { // find h
+                    h = Math.sqrt(o*o + a*a);
+                }
+            }
+
+            // Solve for missing values using trigonometry
+            // Angles first if a side and an angle are known, or all sides are known
+            if (!isNaN(o) && !isNaN(h) && h !== 0 && isNaN(theta)) theta = Math.asin(o / h) * RAD_TO_DEG;
+            if (!isNaN(a) && !isNaN(h) && h !== 0 && isNaN(theta)) theta = Math.acos(a / h) * RAD_TO_DEG;
+            if (!isNaN(o) && !isNaN(a) && a !== 0 && isNaN(theta)) theta = Math.atan(o / a) * RAD_TO_DEG;
+
+            // Now, with theta, fill in missing sides
+            const thetaRad = theta * DEG_TO_RAD;
+            if (!isNaN(theta)) {
+                if (isNaN(h) && !isNaN(o)) h = o / Math.sin(thetaRad);
+                if (isNaN(h) && !isNaN(a)) h = a / Math.cos(thetaRad);
+                if (isNaN(o) && !isNaN(h)) o = h * Math.sin(thetaRad);
+                if (isNaN(a) && !isNaN(h)) a = h * Math.cos(thetaRad);
+                if (isNaN(o) && !isNaN(a)) o = a * Math.tan(thetaRad);
+                if (isNaN(a) && !isNaN(o)) a = o / Math.tan(thetaRad);
+            }
+
+            if (isNaN(o) || isNaN(a) || isNaN(h) || isNaN(theta)) {
+                throw new Error("Could not solve for all missing values. Check your inputs (e.g., ensure two values are provided and consistent).");
+            }
+             if (Math.abs(o*o + a*a - h*h) > 0.01) { // Check Pythagorean theorem for consistency
+                throw new Error("Inputs are inconsistent (do not satisfy Pythagorean theorem). Check side lengths.");
+            }
+            // Check sum of angles for consistency
+            if (Math.abs(theta + (90 - theta) + 90 - 180) > 0.01) {
+                throw new Error("Inputs are inconsistent (angles do not sum to 180). Check angle and side lengths.");
+            }
+
+
+            output = `
+                Right Triangle Properties:
+                Opposite Side (o): ${o.toFixed(4)}
+                Adjacent Side (a): ${a.toFixed(4)}
+                Hypotenuse (h): ${h.toFixed(4)}
+                Angle θ: ${theta.toFixed(4)}°
+                Other acute angle: ${(90 - theta).toFixed(4)}°
+            `;
+            return output;
+        }
+
+        // Volume & Surface Area
+        function calculateVolumeSurfaceArea() {
+            const shapeType = document.getElementById('shapeType').value;
+            let result = '';
+
+            switch(shapeType) {
+                case 'cube':
+                    const sCube = getFloatValue('sideCube');
+                    if (sCube <= 0) throw new Error("Side length must be positive.");
+                    result = `
+                        Cube (Side = ${sCube}):
+                        Volume (V): ${(sCube * sCube * sCube).toFixed(4)}
+                        Surface Area (SA): ${(6 * sCube * sCube).toFixed(4)}
+                    `;
+                    break;
+                case 'cuboid':
+                    const lCuboid = getFloatValue('lengthCuboid');
+                    const wCuboid = getFloatValue('widthCuboid');
+                    const hCuboid = getFloatValue('heightCuboid');
+                    if (lCuboid <= 0 || wCuboid <= 0 || hCuboid <= 0) throw new Error("Length, width, and height must be positive.");
+                    result = `
+                        Cuboid (l=${lCuboid}, w=${wCuboid}, h=${hCuboid}):
+                        Volume (V): ${(lCuboid * wCuboid * hCuboid).toFixed(4)}
+                        Surface Area (SA): ${(2 * (lCuboid * wCuboid + lCuboid * hCuboid + wCuboid * hCuboid)).toFixed(4)}
+                    `;
+                    break;
+                case 'cylinder':
+                    const rCyl = getFloatValue('radiusCyl');
+                    const hCyl = getFloatValue('heightCyl');
+                    if (rCyl <= 0 || hCyl <= 0) throw new Error("Radius and height must be positive.");
+                    result = `
+                        Cylinder (r=${rCyl}, h=${hCyl}):
+                        Volume (V): ${(PI * rCyl * rCyl * hCyl).toFixed(4)}
+                        Surface Area (SA): ${(2 * PI * rCyl * hCyl + 2 * PI * rCyl * rCyl).toFixed(4)}
+                    `;
+                    break;
+                case 'cone':
+                    const rCone = getFloatValue('radiusCone');
+                    const hCone = getFloatValue('heightCone');
+                    if (rCone <= 0 || hCone <= 0) throw new Error("Radius and height must be positive.");
+                    const slantHeightCone = Math.sqrt(hCone * hCone + rCone * rCone);
+                    result = `
+                        Cone (r=${rCone}, h=${hCone}):
+                        Volume (V): ${( (1/3) * PI * rCone * rCone * hCone).toFixed(4)}
+                        Surface Area (SA): ${(PI * rCone * (rCone + slantHeightCone)).toFixed(4)}
+                    `;
+                    break;
+                case 'sphere':
+                    const rSph = getFloatValue('radiusSph');
+                    if (rSph <= 0) throw new Error("Radius must be positive.");
+                    result = `
+                        Sphere (r=${rSph}):
+                        Volume (V): ${((4/3) * PI * rSph * rSph * rSph).toFixed(4)}
+                        Surface Area (SA): ${(4 * PI * rSph * rSph).toFixed(4)}
+                    `;
+                    break;
+                case 'square-pyramid':
+                    const sPyr = getFloatValue('baseSidePyr');
+                    const hPyr = getFloatValue('heightPyr');
+                    if (sPyr <= 0 || hPyr <= 0) throw new Error("Base side and height must be positive.");
+                    const slantHeightPyr = Math.sqrt((sPyr/2)*(sPyr/2) + hPyr*hPyr);
+                    result = `
+                        Square Pyramid (Base Side = ${sPyr}, Height = ${hPyr}):
+                        Volume (V): ${((1/3) * sPyr * sPyr * hPyr).toFixed(4)}
+                        Surface Area (SA): ${(sPyr * sPyr + 2 * sPyr * slantHeightPyr).toFixed(4)}
+                    `;
+                    break;
+            }
+            return result;
+        }
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'circle':
+                        output = calculateCircle();
+                        break;
+                    case 'quadrilateral':
+                        output = calculateQuadrilateral();
+                        break;
+                    case 'triangle-similarity':
+                        output = calculateTriangleSimilarity();
+                        break;
+                    case 'triangle-congruence':
+                        output = calculateTriangleCongruence();
+                        break;
+                    case 'polygon-circle-properties':
+                        output = calculatePolygonCircleProperties();
+                        break;
+                    case 'right-triangle-trig':
+                        output = calculateRightTriangleTrig();
+                        break;
+                    case 'volume-surface-area':
+                        output = calculateVolumeSurfaceArea();
+                        break;
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

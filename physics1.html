@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physics 1 Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            background-image: url('physics.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>⚛️ Physics 1 Calculator</h1>
+        
+        <div class="section">
+            <label>Select Topic</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="kinematics">Kinematics (Motion Equations)</option>
+                <option value="newtons-second-law">Newton's Second Law</option>
+                <option value="work-energy-momentum">Work, Energy & Momentum</option>
+                <option value="rotational-circular-motion">Rotational & Circular Motion</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // --- Utility Functions ---
+        function getFloatValue(id) {
+            const val = parseFloat(document.getElementById(id).value);
+            // Don't throw error here, allow null for optional inputs in kinematics
+            return isNaN(val) ? null : val;
+        }
+        
+        // --- Core Calculator Logic ---
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'kinematics': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div><label for="x_kine">Displacement (x) [m]</label><input type="number" id="x_kine" placeholder="Optional"></div>
+                            <div><label for="vf_kine">Final Velocity (vf) [m/s]</label><input type="number" id="vf_kine" placeholder="Optional"></div>
+                            <div><label for="vi_kine">Initial Velocity (vi) [m/s]</label><input type="number" id="vi_kine" placeholder="Optional"></div>
+                            <div><label for="a_kine">Acceleration (a) [m/s²]</label><input type="number" id="a_kine" placeholder="Optional"></div>
+                            <div><label for="t_kine">Time (t) [s]</label><input type="number" id="t_kine" placeholder="Optional"></div>
+                        </div>
+                        <div class="formula-display">
+                            $$ v_f = v_i + at $$
+                            $$ x = v_i t + \\frac{1}{2}at^2 $$
+                            $$ x = v_f t - \\frac{1}{2}at^2 $$
+                            $$ v_f^2 = v_i^2 + 2ax $$
+                            $$ x = \\frac{1}{2}(v_i + v_f)t $$
+                        </div>
+                        <div class="info-box">
+                            Solves for any missing kinematic variable (displacement, final velocity, initial velocity, acceleration, time) given three others.
+                            Enter the three known values and leave the unknowns blank.
+                        </div>
+                    `
+                },
+                'newtons-second-law': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div><label for="mass_nsl">Mass (m) [kg]</label><input type="number" id="mass_nsl" placeholder="Enter mass"></div>
+                            <div><label for="acceleration_nsl">Acceleration (a) [m/s²]</label><input type="number" id="acceleration_nsl" placeholder="Enter acceleration"></div>
+                            <div><label for="force_nsl">Net Force (F_net) [N]</label><input type="number" id="force_nsl" placeholder="Enter force"></div>
+                        </div>
+                        <div class="formula-display">$$ F_{net} = ma $$</div>
+                        <div class="info-box">
+                            Calculates the missing value (Net Force, Mass, or Acceleration) using Newton's Second Law.
+                            Enter any two known values and leave the unknown blank.
+                        </div>
+                    `
+                },
+                'work-energy-momentum': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="wemType">Select Calculation:</label>
+                                <select id="wemType" onchange="updateWEMInputs()">
+                                    <option value="work">Work (W = Fd cosθ)</option>
+                                    <option value="kinetic-energy">Kinetic Energy (KE = 1/2 mv²)</option>
+                                    <option value="potential-energy">Gravitational Potential Energy (PE = mgh)</option>
+                                    <option value="momentum">Momentum (p = mv)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="wemInputs">
+                            </div>
+                        <div class="formula-display" id="wemFormula">
+                            </div>
+                        <div class="info-box" id="wemInfo">
+                            </div>
+                    `
+                },
+                'rotational-circular-motion': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="rcmType">Select Calculation:</label>
+                                <select id="rcmType" onchange="updateRCMInputs()">
+                                    <option value="centripetal-force">Centripetal Force (F = mv²/r)</option>
+                                    <option value="torque-rotational">Torque (τ = Iα)</option>
+                                    <option value="angular-kinematics">Angular Kinematics</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="rcmInputs">
+                            </div>
+                        <div class="formula-display" id="rcmFormula">
+                            </div>
+                        <div class="info-box" id="rcmInfo">
+                            </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+            // Specific updates for sub-calculators
+            if (type === 'work-energy-momentum') {
+                updateWEMInputs();
+            } else if (type === 'rotational-circular-motion') {
+                updateRCMInputs();
+            }
+            if (window.MathJax) {
+                MathJax.typesetPromise(); // Re-render LaTeX
+            }
+        }
+
+        // --- Sub-Calculator Input Updaters ---
+
+        function updateWEMInputs() {
+            const wemType = document.getElementById('wemType').value;
+            const inputsDiv = document.getElementById('wemInputs');
+            const formulaDiv = document.getElementById('wemFormula');
+            const infoDiv = document.getElementById('wemInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(wemType) {
+                case 'work':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="workForce">Force (F) [N]</label><input type="number" id="workForce" placeholder="Enter force"></div>
+                            <div><label for="workDistance">Distance (d) [m]</label><input type="number" id="workDistance" placeholder="Enter distance"></div>
+                            <div><label for="workAngle">Angle (θ) [degrees]</label><input type="number" id="workAngle" placeholder="Enter angle"></div>
+                            <div><label for="work_val">Work (W) [J]</label><input type="number" id="work_val" placeholder="Enter work"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ W = F d \\cos(\\theta) $$`;
+                    infoHtml = `Work is done when a force causes a displacement. Enter three known values to find the fourth.`;
+                    break;
+                case 'kinetic-energy':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="keMass">Mass (m) [kg]</label><input type="number" id="keMass" placeholder="Enter mass"></div>
+                            <div><label for="keVelocity">Velocity (v) [m/s]</label><input type="number" id="keVelocity" placeholder="Enter velocity"></div>
+                            <div><label for="ke_val">Kinetic Energy (KE) [J]</label><input type="number" id="ke_val" placeholder="Enter KE"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ KE = \\frac{1}{2} mv^2 $$`;
+                    infoHtml = `Kinetic energy is the energy an object possesses due to its motion. Enter two known values to find the third.`;
+                    break;
+                case 'potential-energy':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="peMass">Mass (m) [kg]</label><input type="number" id="peMass" placeholder="Enter mass"></div>
+                            <div><label for="peHeight">Height (h) [m]</label><input type="number" id="peHeight" placeholder="Enter height"></div>
+                            <div><label for="pe_val">Potential Energy (PE) [J]</label><input type="number" id="pe_val" placeholder="Enter PE"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ PE = mgh \\quad (g = 9.81 \\text{ m/s}^2) $$`;
+                    infoHtml = `Gravitational potential energy is the energy an object possesses due to its position in a gravitational field. Enter two known values to find the third. Assumes standard gravity $g = 9.81 m/s^2$.`;
+                    break;
+                case 'momentum':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="momMass">Mass (m) [kg]</label><input type="number" id="momMass" placeholder="Enter mass"></div>
+                            <div><label for="momVelocity">Velocity (v) [m/s]</label><input type="number" id="momVelocity" placeholder="Enter velocity"></div>
+                            <div><label for="mom_val">Momentum (p) [kg·m/s]</label><input type="number" id="mom_val" placeholder="Enter momentum"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ p = mv $$`;
+                    infoHtml = `Momentum is the product of an object's mass and velocity. Enter two known values to find the third.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+        function updateRCMInputs() {
+            const rcmType = document.getElementById('rcmType').value;
+            const inputsDiv = document.getElementById('rcmInputs');
+            const formulaDiv = document.getElementById('rcmFormula');
+            const infoDiv = document.getElementById('rcmInfo');
+
+            let inputsHtml = '';
+            let formulaHtml = '';
+            let infoHtml = '';
+
+            switch(rcmType) {
+                case 'centripetal-force':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="rcmMass">Mass (m) [kg]</label><input type="number" id="rcmMass" placeholder="Enter mass"></div>
+                            <div><label for="rcmVelocity">Velocity (v) [m/s]</label><input type="number" id="rcmVelocity" placeholder="Enter velocity"></div>
+                            <div><label for="rcmRadius">Radius (r) [m]</label><input type="number" id="rcmRadius" placeholder="Enter radius"></div>
+                            <div><label for="rcmForce">Centripetal Force (F_c) [N]</label><input type="number" id="rcmForce" placeholder="Enter force"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ F_c = \\frac{mv^2}{r} $$`;
+                    infoHtml = `Calculates centripetal force, mass, velocity, or radius for uniform circular motion. Enter three known values to find the fourth.`;
+                    break;
+                case 'torque-rotational':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="rcmInertia">Moment of Inertia (I) [kg·m²]</label><input type="number" id="rcmInertia" placeholder="Enter moment of inertia"></div>
+                            <div><label for="rcmAngularAcc">Angular Acceleration (α) [rad/s²]</label><input type="number" id="rcmAngularAcc" placeholder="Enter angular acceleration"></div>
+                            <div><label for="rcmTorque">Torque (τ) [N·m]</label><input type="number" id="rcmTorque" placeholder="Enter torque"></div>
+                        </div>
+                    `;
+                    formulaHtml = `$$ \\tau = I \\alpha $$`;
+                    infoHtml = `Calculates torque, moment of inertia, or angular acceleration. Enter two known values to find the third.`;
+                    break;
+                case 'angular-kinematics':
+                    inputsHtml = `
+                        <div class="additional-inputs">
+                            <div><label for="rcmTheta">Angular Displacement (θ) [rad]</label><input type="number" id="rcmTheta" placeholder="Optional"></div>
+                            <div><label for="rcmOmegaF">Final Angular Velocity (ω_f) [rad/s]</label><input type="number" id="rcmOmegaF" placeholder="Optional"></div>
+                            <div><label for="rcmOmegaI">Initial Angular Velocity (ω_i) [rad/s]</label><input type="number" id="rcmOmegaI" placeholder="Optional"></div>
+                            <div><label for="rcmAlpha">Angular Acceleration (α) [rad/s²]</label><input type="number" id="rcmAlpha" placeholder="Optional"></div>
+                            <div><label for="rcmTime">Time (t) [s]</label><input type="number" id="rcmTime" placeholder="Optional"></div>
+                        </div>
+                    `;
+                    formulaHtml = `
+                        $$ \\omega_f = \\omega_i + \\alpha t $$
+                        $$ \\theta = \\omega_i t + \\frac{1}{2}\\alpha t^2 $$
+                        $$ \\theta = \\omega_f t - \\frac{1}{2}\\alpha t^2 $$
+                        $$ \\omega_f^2 = \\omega_i^2 + 2\\alpha \\theta $$
+                        $$ \\theta = \\frac{1}{2}(\\omega_i + \\omega_f)t $$
+                    `;
+                    infoHtml = `Solves for any missing angular kinematic variable (angular displacement, final angular velocity, initial angular velocity, angular acceleration, time) given three others. Enter the three known values and leave the unknowns blank.`;
+                    break;
+            }
+            inputsDiv.innerHTML = inputsHtml;
+            formulaDiv.innerHTML = formulaHtml;
+            infoDiv.innerHTML = infoHtml;
+            if (window.MathJax) { MathJax.typesetPromise(); }
+        }
+
+
+        // --- Physics 1 Calculation Functions ---
+
+        // Kinematics (Enhanced Solver)
+        function solveKinematicEquation() {
+            let x = getFloatValue('x_kine');
+            let vf = getFloatValue('vf_kine');
+            let vi = getFloatValue('vi_kine');
+            let a = getFloatValue('a_kine');
+            let t = getFloatValue('t_kine');
+
+            let knownCount = [x, vf, vi, a, t].filter(val => val !== null).length;
+
+            if (knownCount < 3) {
+                throw new Error("Please enter at least three known variables to solve kinematic equations.");
+            }
+
+            let resultOutput = 'Calculated Results:\n';
+            let equationsUsed = 'Equations Used:\n';
+            let solved = false;
+
+            // Iterate to solve for unknowns until no more progress can be made
+            for (let i = 0; i < 5 && !solved; i++) { // Max iterations to converge if possible
+                // v = v0 + at
+                if (vf === null && vi !== null && a !== null && t !== null) { vf = vi + a * t; equationsUsed += "1. vf = vi + a*t\n"; solved = true; }
+                if (vi === null && vf !== null && a !== null && t !== null) { vi = vf - a * t; equationsUsed += "1. vi = vf - a*t\n"; solved = true; }
+                if (a === null && vf !== null && vi !== null && t !== null) { a = (vf - vi) / t; equationsUsed += "1. a = (vf - vi)/t\n"; solved = true; }
+                if (t === null && vf !== null && vi !== null && a !== null && a !== 0) { t = (vf - vi) / a; equationsUsed += "1. t = (vf - vi)/a\n"; solved = true; }
+
+                // x = v0t + 0.5at^2
+                if (x === null && vi !== null && a !== null && t !== null) { x = vi * t + 0.5 * a * t * t; equationsUsed += "2. x = vi*t + 0.5*a*t²\n"; solved = true; }
+                // Solving for vi or a or t from this might require quadratic formula,
+                // which is beyond simple substitution for this general solver.
+                // Will rely on other equations to get those.
+
+                // vf^2 = vi^2 + 2ax
+                if (vf === null && vi !== null && a !== null && x !== null) { vf = Math.sqrt(vi * vi + 2 * a * x); equationsUsed += "3. vf² = vi² + 2ax\n"; solved = true; }
+                if (vi === null && vf !== null && a !== null && x !== null) { vi = Math.sqrt(vf * vf - 2 * a * x); equationsUsed += "3. vi² = vf² - 2ax\n"; solved = true; }
+                if (a === null && vf !== null && vi !== null && x !== null && x !== 0) { a = (vf * vf - vi * vi) / (2 * x); equationsUsed += "3. a = (vf² - vi²)/(2x)\n"; solved = true; }
+                if (x === null && vf !== null && vi !== null && a !== null && a !== 0) { x = (vf * vf - vi * vi) / (2 * a); equationsUsed += "3. x = (vf² - vi²)/(2a)\n"; solved = true; }
+
+                // x = 0.5(vi + vf)t
+                if (x === null && vi !== null && vf !== null && t !== null) { x = 0.5 * (vi + vf) * t; equationsUsed += "4. x = 0.5(vi + vf)t\n"; solved = true; }
+                if (vi === null && x !== null && vf !== null && t !== null && t !== 0) { vi = (2 * x / t) - vf; equationsUsed += "4. vi = (2x/t) - vf\n"; solved = true; }
+                if (vf === null && x !== null && vi !== null && t !== null && t !== 0) { vf = (2 * x / t) - vi; equationsUsed += "4. vf = (2x/t) - vi\n"; solved = true; }
+                if (t === null && x !== null && vi !== null && vf !== null && (vi + vf) !== 0) { t = (2 * x) / (vi + vf); equationsUsed += "4. t = 2x/(vi + vf)\n"; solved = true; }
+
+                // x = vft - 0.5at^2
+                if (x === null && vf !== null && a !== null && t !== null) { x = vf * t - 0.5 * a * t * t; equationsUsed += "5. x = vf*t - 0.5*a*t²\n"; solved = true; }
+
+                // Check if all are solved
+                if (x !== null && vf !== null && vi !== null && a !== null && t !== null) {
+                    break;
+                }
+                 solved = false; // Reset solved flag if no new variable was found in this iteration
+            }
+
+            if (x === null || vf === null || vi === null || a === null || t === null) {
+                throw new Error("Could not solve all unknown variables with the given inputs. Ensure you have provided enough consistent information.");
+            }
+
+            resultOutput += `Displacement (x): ${x.toFixed(4)} m\n`;
+            resultOutput += `Final Velocity (vf): ${vf.toFixed(4)} m/s\n`;
+            resultOutput += `Initial Velocity (vi): ${vi.toFixed(4)} m/s\n`;
+            resultOutput += `Acceleration (a): ${a.toFixed(4)} m/s²\n`;
+            resultOutput += `Time (t): ${t.toFixed(4)} s\n\n`;
+            resultOutput += equationsUsed;
+
+            return resultOutput;
+        }
+
+        // Newton's Second Law
+        function calculateNewtonsSecondLaw() {
+            let mass = getFloatValue('mass_nsl');
+            let acceleration = getFloatValue('acceleration_nsl');
+            let force = getFloatValue('force_nsl');
+
+            let knownCount = [mass, acceleration, force].filter(val => val !== null).length;
+
+            if (knownCount !== 2) {
+                throw new Error("Please enter exactly two known values (Mass, Acceleration, or Net Force) for Newton's Second Law.");
+            }
+
+            if (force === null && mass !== null && acceleration !== null) {
+                force = mass * acceleration;
+            } else if (mass === null && force !== null && acceleration !== null) {
+                if (acceleration === 0) throw new Error("Acceleration cannot be zero if finding mass from non-zero force.");
+                mass = force / acceleration;
+            } else if (acceleration === null && force !== null && mass !== null) {
+                if (mass === 0) throw new Error("Mass cannot be zero if finding acceleration from non-zero force.");
+                acceleration = force / mass;
+            } else {
+                throw new Error("Could not solve. Ensure two unique values are provided, and avoid division by zero scenarios.");
+            }
+            
+            return `
+                Newton's Second Law Calculation:
+                Mass (m): ${mass.toFixed(4)} kg
+                Acceleration (a): ${acceleration.toFixed(4)} m/s²
+                Net Force (F_net): ${force.toFixed(4)} N
+            `;
+        }
+
+        // Work, Energy & Momentum
+        function calculateWorkEnergyMomentum() {
+            const wemType = document.getElementById('wemType').value;
+            let result = '';
+            const g = 9.81; // Standard gravity
+
+            switch(wemType) {
+                case 'work':
+                    let workForce = getFloatValue('workForce');
+                    let workDistance = getFloatValue('workDistance');
+                    let workAngle = getFloatValue('workAngle');
+                    let work_val = getFloatValue('work_val');
+
+                    let knownCountWork = [workForce, workDistance, workAngle, work_val].filter(val => val !== null).length;
+                    if (knownCountWork !== 3) throw new Error("Enter exactly three values for Work calculation.");
+
+                    if (work_val === null && workForce !== null && workDistance !== null && workAngle !== null) {
+                        work_val = workForce * workDistance * Math.cos(workAngle * Math.PI / 180);
+                    } else if (workForce === null && work_val !== null && workDistance !== null && workAngle !== null) {
+                        if (workDistance === 0 || Math.cos(workAngle * Math.PI / 180) === 0) throw new Error("Cannot solve for force with zero distance or 90-degree angle.");
+                        workForce = work_val / (workDistance * Math.cos(workAngle * Math.PI / 180));
+                    } else if (workDistance === null && work_val !== null && workForce !== null && workAngle !== null) {
+                         if (workForce === 0 || Math.cos(workAngle * Math.PI / 180) === 0) throw new Error("Cannot solve for distance with zero force or 90-degree angle.");
+                        workDistance = work_val / (workForce * Math.cos(workAngle * Math.PI / 180));
+                    } else if (workAngle === null && work_val !== null && workForce !== null && workDistance !== null) {
+                        if (workForce === 0 || workDistance === 0) throw new Error("Cannot solve for angle with zero force or distance.");
+                        let cosTheta = work_val / (workForce * workDistance);
+                        if (Math.abs(cosTheta) > 1) throw new Error("Invalid work, force, distance combination (cos(theta) > 1 or < -1).");
+                        workAngle = Math.acos(cosTheta) * (180 / Math.PI);
+                    } else {
+                        throw new Error("Could not solve for missing Work variable. Check your inputs.");
+                    }
+                    
+                    result = `
+                        Work Calculation:
+                        Force (F): ${workForce.toFixed(4)} N
+                        Distance (d): ${workDistance.toFixed(4)} m
+                        Angle (θ): ${workAngle.toFixed(4)}°
+                        Work (W): ${work_val.toFixed(4)} J
+                    `;
+                    break;
+                case 'kinetic-energy':
+                    let keMass = getFloatValue('keMass');
+                    let keVelocity = getFloatValue('keVelocity');
+                    let ke_val = getFloatValue('ke_val');
+
+                    let knownCountKE = [keMass, keVelocity, ke_val].filter(val => val !== null).length;
+                    if (knownCountKE !== 2) throw new Error("Enter exactly two values for Kinetic Energy calculation.");
+
+                    if (ke_val === null && keMass !== null && keVelocity !== null) {
+                        ke_val = 0.5 * keMass * keVelocity * keVelocity;
+                    } else if (keMass === null && ke_val !== null && keVelocity !== null) {
+                        if (keVelocity === 0) throw new Error("Velocity cannot be zero if finding mass from non-zero KE.");
+                        keMass = (2 * ke_val) / (keVelocity * keVelocity);
+                    } else if (keVelocity === null && ke_val !== null && keMass !== null) {
+                        if (keMass === 0) throw new Error("Mass cannot be zero if finding velocity from non-zero KE.");
+                        let v2 = (2 * ke_val) / keMass;
+                        if (v2 < 0) throw new Error("Kinetic Energy cannot be negative.");
+                        keVelocity = Math.sqrt(v2);
+                    } else {
+                        throw new Error("Could not solve for missing Kinetic Energy variable. Check your inputs.");
+                    }
+                    result = `
+                        Kinetic Energy Calculation:
+                        Mass (m): ${keMass.toFixed(4)} kg
+                        Velocity (v): ${keVelocity.toFixed(4)} m/s
+                        Kinetic Energy (KE): ${ke_val.toFixed(4)} J
+                    `;
+                    break;
+                case 'potential-energy':
+                    let peMass = getFloatValue('peMass');
+                    let peHeight = getFloatValue('peHeight');
+                    let pe_val = getFloatValue('pe_val');
+
+                    let knownCountPE = [peMass, peHeight, pe_val].filter(val => val !== null).length;
+                    if (knownCountPE !== 2) throw new Error("Enter exactly two values for Gravitational Potential Energy calculation.");
+
+                    if (pe_val === null && peMass !== null && peHeight !== null) {
+                        pe_val = peMass * g * peHeight;
+                    } else if (peMass === null && pe_val !== null && peHeight !== null) {
+                        if (peHeight === 0) throw new Error("Height cannot be zero if finding mass from non-zero PE.");
+                        peMass = pe_val / (g * peHeight);
+                    } else if (peHeight === null && pe_val !== null && peMass !== null) {
+                        if (peMass === 0) throw new Error("Mass cannot be zero if finding height from non-zero PE.");
+                        peHeight = pe_val / (g * peMass);
+                    } else {
+                        throw new Error("Could not solve for missing Potential Energy variable. Check your inputs.");
+                    }
+                    result = `
+                        Gravitational Potential Energy Calculation:
+                        Mass (m): ${peMass.toFixed(4)} kg
+                        Height (h): ${peHeight.toFixed(4)} m
+                        Gravitational Potential Energy (PE): ${pe_val.toFixed(4)} J
+                        (g = ${g} m/s²)
+                    `;
+                    break;
+                case 'momentum':
+                    let momMass = getFloatValue('momMass');
+                    let momVelocity = getFloatValue('momVelocity');
+                    let mom_val = getFloatValue('mom_val');
+
+                    let knownCountMom = [momMass, momVelocity, mom_val].filter(val => val !== null).length;
+                    if (knownCountMom !== 2) throw new Error("Enter exactly two values for Momentum calculation.");
+
+                    if (mom_val === null && momMass !== null && momVelocity !== null) {
+                        mom_val = momMass * momVelocity;
+                    } else if (momMass === null && mom_val !== null && momVelocity !== null) {
+                        if (momVelocity === 0) throw new Error("Velocity cannot be zero if finding mass from non-zero momentum.");
+                        momMass = mom_val / momVelocity;
+                    } else if (momVelocity === null && mom_val !== null && momMass !== null) {
+                        if (momMass === 0) throw new Error("Mass cannot be zero if finding velocity from non-zero momentum.");
+                        momVelocity = mom_val / momMass;
+                    } else {
+                        throw new Error("Could not solve for missing Momentum variable. Check your inputs.");
+                    }
+                    result = `
+                        Momentum Calculation:
+                        Mass (m): ${momMass.toFixed(4)} kg
+                        Velocity (v): ${momVelocity.toFixed(4)} m/s
+                        Momentum (p): ${mom_val.toFixed(4)} kg·m/s
+                    `;
+                    break;
+            }
+            return result;
+        }
+
+        // Rotational & Circular Motion
+        function calculateRotationalCircularMotion() {
+            const rcmType = document.getElementById('rcmType').value;
+            let result = '';
+
+            switch(rcmType) {
+                case 'centripetal-force':
+                    let rcmMass = getFloatValue('rcmMass');
+                    let rcmVelocity = getFloatValue('rcmVelocity');
+                    let rcmRadius = getFloatValue('rcmRadius');
+                    let rcmForce = getFloatValue('rcmForce');
+
+                    let knownCountForce = [rcmMass, rcmVelocity, rcmRadius, rcmForce].filter(val => val !== null).length;
+                    if (knownCountForce !== 3) throw new Error("Enter exactly three values for Centripetal Force calculation.");
+
+                    if (rcmForce === null && rcmMass !== null && rcmVelocity !== null && rcmRadius !== null) {
+                        if (rcmRadius === 0) throw new Error("Radius cannot be zero.");
+                        rcmForce = (rcmMass * rcmVelocity * rcmVelocity) / rcmRadius;
+                    } else if (rcmMass === null && rcmForce !== null && rcmVelocity !== null && rcmRadius !== null) {
+                        if (rcmVelocity === 0 || rcmVelocity * rcmVelocity === 0) throw new Error("Velocity cannot be zero if finding mass from non-zero force.");
+                        rcmMass = (rcmForce * rcmRadius) / (rcmVelocity * rcmVelocity);
+                    } else if (rcmVelocity === null && rcmForce !== null && rcmMass !== null && rcmRadius !== null) {
+                        if (rcmMass === 0) throw new Error("Mass cannot be zero if finding velocity from non-zero force.");
+                        let v2 = (rcmForce * rcmRadius) / rcmMass;
+                        if (v2 < 0) throw new Error("Cannot calculate real velocity with given inputs (v² is negative).");
+                        rcmVelocity = Math.sqrt(v2);
+                    } else if (rcmRadius === null && rcmForce !== null && rcmMass !== null && rcmVelocity !== null) {
+                        if (rcmForce === 0) throw new Error("Force cannot be zero if finding radius from non-zero mass/velocity.");
+                        rcmRadius = (rcmMass * rcmVelocity * rcmVelocity) / rcmForce;
+                    } else {
+                        throw new Error("Could not solve for missing Centripetal Force variable. Check your inputs.");
+                    }
+
+                    result = `
+                        Centripetal Force Calculation:
+                        Mass (m): ${rcmMass.toFixed(4)} kg
+                        Velocity (v): ${rcmVelocity.toFixed(4)} m/s
+                        Radius (r): ${rcmRadius.toFixed(4)} m
+                        Centripetal Force (F_c): ${rcmForce.toFixed(4)} N
+                    `;
+                    break;
+                case 'torque-rotational':
+                    let rcmInertia = getFloatValue('rcmInertia');
+                    let rcmAngularAcc = getFloatValue('rcmAngularAcc');
+                    let rcmTorque = getFloatValue('rcmTorque');
+
+                    let knownCountTorque = [rcmInertia, rcmAngularAcc, rcmTorque].filter(val => val !== null).length;
+                    if (knownCountTorque !== 2) throw new Error("Enter exactly two values for Torque calculation.");
+
+                    if (rcmTorque === null && rcmInertia !== null && rcmAngularAcc !== null) {
+                        rcmTorque = rcmInertia * rcmAngularAcc;
+                    } else if (rcmInertia === null && rcmTorque !== null && rcmAngularAcc !== null) {
+                        if (rcmAngularAcc === 0) throw new Error("Angular acceleration cannot be zero if finding moment of inertia from non-zero torque.");
+                        rcmInertia = rcmTorque / rcmAngularAcc;
+                    } else if (rcmAngularAcc === null && rcmTorque !== null && rcmInertia !== null) {
+                        if (rcmInertia === 0) throw new Error("Moment of inertia cannot be zero if finding angular acceleration from non-zero torque.");
+                        rcmAngularAcc = rcmTorque / rcmInertia;
+                    } else {
+                        throw new Error("Could not solve for missing Torque variable. Check your inputs.");
+                    }
+                    result = `
+                        Torque Calculation:
+                        Moment of Inertia (I): ${rcmInertia.toFixed(4)} kg·m²
+                        Angular Acceleration (α): ${rcmAngularAcc.toFixed(4)} rad/s²
+                        Torque (τ): ${rcmTorque.toFixed(4)} N·m
+                    `;
+                    break;
+                case 'angular-kinematics':
+                    let theta = getFloatValue('rcmTheta');
+                    let omegaF = getFloatValue('rcmOmegaF');
+                    let omegaI = getFloatValue('rcmOmegaI');
+                    let alpha = getFloatValue('rcmAlpha');
+                    let time = getFloatValue('rcmTime');
+
+                    let knownCountAngular = [theta, omegaF, omegaI, alpha, time].filter(val => val !== null).length;
+                    if (knownCountAngular < 3) {
+                        throw new Error("Please enter at least three known variables for Angular Kinematics.");
+                    }
+
+                    let angularResultOutput = 'Calculated Results:\n';
+                    let angularEquationsUsed = 'Equations Used:\n';
+                    let angularSolved = false;
+
+                    // Similar iterative approach as linear kinematics
+                    for (let i = 0; i < 5 && !angularSolved; i++) {
+                        // ω_f = ω_i + αt
+                        if (omegaF === null && omegaI !== null && alpha !== null && time !== null) { omegaF = omegaI + alpha * time; angularEquationsUsed += "1. ω_f = ω_i + αt\n"; angularSolved = true; }
+                        if (omegaI === null && omegaF !== null && alpha !== null && time !== null) { omegaI = omegaF - alpha * time; angularEquationsUsed += "1. ω_i = ω_f - αt\n"; angularSolved = true; }
+                        if (alpha === null && omegaF !== null && omegaI !== null && time !== null) { alpha = (omegaF - omegaI) / time; angularEquationsUsed += "1. α = (ω_f - ω_i)/t\n"; angularSolved = true; }
+                        if (time === null && omegaF !== null && omegaI !== null && alpha !== null && alpha !== 0) { time = (omegaF - omegaI) / alpha; angularEquationsUsed += "1. t = (ω_f - ω_i)/α\n"; angularSolved = true; }
+
+                        // θ = ω_i t + 0.5αt^2
+                        if (theta === null && omegaI !== null && alpha !== null && time !== null) { theta = omegaI * time + 0.5 * alpha * time * time; angularEquationsUsed += "2. θ = ω_i t + 0.5αt²\n"; angularSolved = true; }
+                        
+                        // ω_f^2 = ω_i^2 + 2αθ
+                        if (omegaF === null && omegaI !== null && alpha !== null && theta !== null) { omegaF = Math.sqrt(omegaI * omegaI + 2 * alpha * theta); angularEquationsUsed += "3. ω_f² = ω_i² + 2αθ\n"; angularSolved = true; }
+                        if (omegaI === null && omegaF !== null && alpha !== null && theta !== null) { omegaI = Math.sqrt(omegaF * omegaF - 2 * alpha * theta); angularEquationsUsed += "3. ω_i² = ω_f² - 2αθ\n"; angularSolved = true; }
+                        if (alpha === null && omegaF !== null && omegaI !== null && theta !== null && theta !== 0) { alpha = (omegaF * omegaF - omegaI * omegaI) / (2 * theta); angularEquationsUsed += "3. α = (ω_f² - ω_i²)/(2θ)\n"; angularSolved = true; }
+                        if (theta === null && omegaF !== null && omegaI !== null && alpha !== null && alpha !== 0) { theta = (omegaF * omegaF - omegaI * omegaI) / (2 * alpha); angularEquationsUsed += "3. θ = (ω_f² - ω_i²)/(2α)\n"; angularSolved = true; }
+
+                        // θ = 0.5(ω_i + ω_f)t
+                        if (theta === null && omegaI !== null && omegaF !== null && time !== null) { theta = 0.5 * (omegaI + omegaF) * time; angularEquationsUsed += "4. θ = 0.5(ω_i + ω_f)t\n"; angularSolved = true; }
+                        if (omegaI === null && theta !== null && omegaF !== null && time !== null && time !== 0) { omegaI = (2 * theta / time) - omegaF; angularEquationsUsed += "4. ω_i = (2θ/t) - ω_f\n"; angularSolved = true; }
+                        if (omegaF === null && theta !== null && omegaI !== null && time !== null && time !== 0) { omegaF = (2 * theta / time) - omegaI; angularEquationsUsed += "4. ω_f = (2θ/t) - ω_i\n"; angularSolved = true; }
+                        if (time === null && theta !== null && omegaI !== null && omegaF !== null && (omegaI + omegaF) !== 0) { time = (2 * theta) / (omegaI + omegaF); angularEquationsUsed += "4. t = 2θ/(ω_i + ω_f)\n"; angularSolved = true; }
+
+                        // θ = ω_f t - 0.5αt^2
+                        if (theta === null && omegaF !== null && alpha !== null && time !== null) { theta = omegaF * time - 0.5 * alpha * time * time; angularEquationsUsed += "5. θ = ω_f t - 0.5αt²\n"; angularSolved = true; }
+
+                        if (theta !== null && omegaF !== null && omegaI !== null && alpha !== null && time !== null) {
+                            break;
+                        }
+                        angularSolved = false; // Reset solved flag if no new variable was found in this iteration
+                    }
+
+                    if (theta === null || omegaF === null || omegaI === null || alpha === null || time === null) {
+                        throw new Error("Could not solve all unknown variables with the given inputs. Ensure you have provided enough consistent information.");
+                    }
+
+                    angularResultOutput += `Angular Displacement (θ): ${theta.toFixed(4)} rad\n`;
+                    angularResultOutput += `Final Angular Velocity (ω_f): ${omegaF.toFixed(4)} rad/s\n`;
+                    angularResultOutput += `Initial Angular Velocity (ω_i): ${omegaI.toFixed(4)} rad/s\n`;
+                    angularResultOutput += `Angular Acceleration (α): ${alpha.toFixed(4)} rad/s²\n`;
+                    angularResultOutput += `Time (t): ${time.toFixed(4)} s\n\n`;
+                    angularResultOutput += angularEquationsUsed;
+
+                    result = angularResultOutput;
+                    break;
+            }
+            return result;
+        }
+
+
+        // --- Main Calculation Dispatcher ---
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let output = '';
+
+            try {
+                switch(type) {
+                    case 'kinematics':
+                        output = solveKinematicEquation();
+                        break;
+                    case 'newtons-second-law':
+                        output = calculateNewtonsSecondLaw();
+                        break;
+                    case 'work-energy-momentum':
+                        output = calculateWorkEnergyMomentum();
+                        break;
+                    case 'rotational-circular-motion':
+                        output = calculateRotationalCircularMotion();
+                        break;
+                    default:
+                        output = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                output = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+            resultDiv.innerHTML = output;
+        }
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

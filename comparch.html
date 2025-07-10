@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logic Gates Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            background-image: url('comparch.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #deeaf5;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>💡 Logic Gates Calculator</h1>
+        
+        <div class="section">
+            <label>Select Logic Gate</label>
+            <select id="gateType" class="calculation-type" onchange="performCalculation()">
+                <option value="AND">AND Gate</option>
+                <option value="OR">OR Gate</option>
+                <option value="NOT">NOT Gate</option>
+                <option value="XOR">XOR Gate</option>
+                <option value="NAND">NAND Gate</option>
+                <option value="NOR">NOR Gate</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            <div class="info-box" id="gateInfo">
+                </div>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function performCalculation() {
+            const gateType = document.getElementById('gateType').value;
+            const resultDiv = document.getElementById('result');
+            const infoBox = document.getElementById('gateInfo');
+            let outputTable = '';
+            let gateDescription = '';
+
+            switch(gateType) {
+                case 'AND':
+                    gateDescription = "The AND gate outputs HIGH (1) only if both inputs are HIGH (1). Otherwise, it outputs LOW (0).";
+                    outputTable = `
+                        <table>
+                            <thead>
+                                <tr><th>A</th><th>B</th><th>A AND B</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td>0</td><td>0</td></tr>
+                                <tr><td>0</td><td>1</td><td>0</td></tr>
+                                <tr><td>1</td><td>0</td><td>0</td></tr>
+                                <tr><td>1</td><td>1</td><td>1</td></tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'OR':
+                    gateDescription = "The OR gate outputs HIGH (1) if at least one of its inputs is HIGH (1). It outputs LOW (0) only if both inputs are LOW (0).";
+                    outputTable = `
+                        <table>
+                            <thead>
+                                <tr><th>A</th><th>B</th><th>A OR B</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td>0</td><td>0</td></tr>
+                                <tr><td>0</td><td>1</td><td>1</td></tr>
+                                <tr><td>1</td><td>0</td><td>1</td></tr>
+                                <tr><td>1</td><td>1</td><td>1</td></tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'NOT':
+                    gateDescription = "The NOT gate (inverter) outputs the inverse of its single input. If the input is HIGH (1), the output is LOW (0), and vice versa.";
+                    outputTable = `
+                        <table>
+                            <thead>
+                                <tr><th>A</th><th>NOT A</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td>1</td></tr>
+                                <tr><td>1</td><td>0</td></tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'XOR':
+                    gateDescription = "The XOR (Exclusive OR) gate outputs HIGH (1) if its inputs are different. It outputs LOW (0) if the inputs are the same.";
+                    outputTable = `
+                        <table>
+                            <thead>
+                                <tr><th>A</th><th>B</th><th>A XOR B</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td>0</td><td>0</td></tr>
+                                <tr><td>0</td><td>1</td><td>1</td></tr>
+                                <tr><td>1</td><td>0</td><td>1</td></tr>
+                                <tr><td>1</td><td>1</td><td>0</td></tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'NAND':
+                    gateDescription = "The NAND (NOT AND) gate outputs LOW (0) only if both inputs are HIGH (1). Otherwise, it outputs HIGH (1). It is the inverse of the AND gate.";
+                    outputTable = `
+                        <table>
+                            <thead>
+                                <tr><th>A</th><th>B</th><th>A NAND B</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td>0</td><td>1</td></tr>
+                                <tr><td>0</td><td>1</td><td>1</td></tr>
+                                <tr><td>1</td><td>0</td><td>1</td></tr>
+                                <tr><td>1</td><td>1</td><td>0</td></tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                case 'NOR':
+                    gateDescription = "The NOR (NOT OR) gate outputs HIGH (1) only if both inputs are LOW (0). Otherwise, it outputs LOW (0). It is the inverse of the OR gate.";
+                    outputTable = `
+                        <table>
+                            <thead>
+                                <tr><th>A</th><th>B</th><th>A NOR B</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td>0</td><td>1</td></tr>
+                                <tr><td>0</td><td>1</td><td>0</td></tr>
+                                <tr><td>1</td><td>0</td><td>0</td></tr>
+                                <tr><td>1</td><td>1</td><td>0</td></tr>
+                            </tbody>
+                        </table>
+                    `;
+                    break;
+                default:
+                    outputTable = 'Select a logic gate to see its truth table.';
+                    gateDescription = '';
+            }
+
+            infoBox.innerHTML = gateDescription;
+            resultDiv.innerHTML = `<h3>Truth Table:</h3>${outputTable}`;
+        }
+
+        // Initialize calculator on page load
+        performCalculation();
+    </script>
+</body>
+</html>

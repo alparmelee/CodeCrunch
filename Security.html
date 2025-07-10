@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Network Security & Number Theory Calculator</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            /* Add background image */
+            background-image: url('security.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't increase total width */
+        }
+        .calculation-type {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px; /* Added for spacing between buttons */
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .additional-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        /* Adjust for single column layout where needed */
+        .additional-inputs.single-column {
+            grid-template-columns: 1fr;
+        }
+        .formula-display {
+            margin-top: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sub-section-title {
+            text-align: center;
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>📊 Network Security & Number Theory Calculator</h1>
+        
+        <div class="section">
+            <label>Select Calculation Type</label>
+            <select id="calculationType" class="calculation-type" onchange="updateCalculator()">
+                <option value="checksum-calculate-single">Checksum Calculation (Single Hex String)</option>
+                <option value="checksum-calculate-spaces">Checksum Calculation (Space-Separated Hex)</option>
+                <option value="checksum-validate-single">Checksum Validation (Single Hex String)</option>
+                <option value="checksum-validate-spaces">Checksum Validation (Space-Separated Hex)</option>
+                <option value="crc-calculate">CRC Calculation</option>
+                <option value="crc-validate">CRC Validation</option>
+                <option value="eulers-totient">Euler's Totient Function</option>
+                <option value="mod-operations">Modular Arithmetic Operations</option>
+                <option value="diffie-hellman">Diffie-Hellman Key Exchange</option>
+                <option value="rsa-keys">RSA Key Calculations</option>
+            </select>
+        </div>
+
+        <div id="dynamicInputs" class="section">
+            </div>
+        
+        <button id="calculateBtn" onclick="performCalculation()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function updateCalculator() {
+            const type = document.getElementById('calculationType').value;
+            const inputsDiv = document.getElementById('dynamicInputs');
+            const calculateBtn = document.getElementById('calculateBtn');
+            
+            let htmlContent = '';
+            
+            const calculationConfigs = {
+                'checksum-calculate-single': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Hexadecimal Message:</label>
+                                <input type="text" id="hexInput" placeholder="Enter hex message">
+                            </div>
+                        </div>
+                        <div class="formula-display">Calculates the 1's complement sum of 4-bit hex digits.</div>
+                        <div class="info-box">
+                            This calculator computes the checksum for a given hexadecimal message. Each hex digit is treated as a 4-bit binary number. The checksum is the two's complement of the sum of these numbers.
+                        </div>
+                    `
+                },
+                'checksum-calculate-spaces': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Hexadecimal Values (space-separated):</label>
+                                <input type="text" id="hexInput" placeholder="e.g., 32 64 96 C8">
+                            </div>
+                        </div>
+                        <div class="formula-display">Calculates the 1's complement sum of 8-bit hex values.</div>
+                        <div class="info-box">
+                            This calculator computes the checksum for a series of 8-bit hexadecimal values. The checksum is the two's complement of the sum of these values.
+                        </div>
+                    `
+                },
+                'checksum-validate-single': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Hexadecimal Message (with checksum):</label>
+                                <input type="text" id="hexInput" placeholder="Enter hex message with checksum">
+                            </div>
+                        </div>
+                        <div class="formula-display">Validates if the sum of all 4-bit hex digits (including checksum) is zero.</div>
+                        <div class="info-box">
+                            This validator checks if a received message (including its checksum) is valid. It sums all 4-bit hex digits. If the final sum is zero, the message is considered valid.
+                        </div>
+                    `
+                },
+                'checksum-validate-spaces': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter Hexadecimal Values (space-separated, including checksum):</label>
+                                <input type="text" id="hexInput" placeholder="Enter hex values">
+                            </div>
+                        </div>
+                        <div class="formula-display">Validates if the sum of all 8-bit hex values (including checksum) is zero.</div>
+                        <div class="info-box">
+                            This validator checks if a received message (including its checksum) is valid. It sums all 8-bit hex values. If the final sum is all zeros, the message is considered valid.
+                        </div>
+                    `
+                },
+                'crc-calculate': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="messageData">G(x) - Message Data (Binary):</label>
+                                <input type="text" id="messageData" placeholder="e.g., 1001100" required>
+                            </div>
+                            <div>
+                                <label for="generatorPoly">P(x) - Generator Polynomial (Binary):</label>
+                                <input type="text" id="generatorPoly" placeholder="e.g., 1101" required>
+                            </div>
+                        </div>
+                        <div class="formula-display">CRC is calculated by dividing the padded message by the generator polynomial (modulo-2 division).</div>
+                        <div class="info-box">
+                            Cyclic Redundancy Check (CRC) is an error-detecting code often used in digital networks and storage devices to detect accidental changes to raw data. It involves binary division.
+                        </div>
+                    `
+                },
+                'crc-validate': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="message">Binary Message:</label>
+                                <input type="text" id="message" placeholder="Enter binary message (e.g., 10100001110010)" required>
+                            </div>
+                            <div>
+                                <label for="generator">Generator Polynomial (Binary):</label>
+                                <input type="text" id="generator" placeholder="Enter generator polynomial (e.g., 1101)" required>
+                            </div>
+                        </div>
+                        <div class="formula-display">A message is valid if its modulo-2 division by the generator polynomial yields a remainder of zero.</div>
+                        <div class="info-box">
+                            CRC validation involves performing the same binary division on the received message (including its CRC remainder). If the result is a zero remainder (syndrome), the message is considered error-free.
+                        </div>
+                    `
+                },
+                'eulers-totient': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter a number n:</label>
+                                <input type="number" id="n" placeholder="Enter a number n">
+                            </div>
+                        </div>
+                        <div class="formula-display">ϕ(n) = count of positive integers up to n that are relatively prime to n.</div>
+                        <div class="info-box">
+                            Euler's Totient function (also called Euler's phi function) counts the positive integers up to a given integer n that are relatively prime to n. It's crucial in RSA cryptography.
+                        </div>
+                    `
+                },
+                'mod-operations': {
+                    inputs: `
+                        <h2 class="sub-section-title">Modulus Calculator</h2>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="num1">Enter Number (a):</label>
+                                <input type="number" id="num1" placeholder="Enter number a" required>
+                            </div>
+                            <div>
+                                <label for="mod1">Enter Modulus (n):</label>
+                                <input type="number" id="mod1" placeholder="Enter modulus n" required>
+                            </div>
+                        </div>
+
+                        <h2 class="sub-section-title">Inverse Mod Calculator</h2>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="num2">Enter Number (a):</label>
+                                <input type="number" id="num2" placeholder="Enter number a" required>
+                            </div>
+                            <div>
+                                <label for="mod2">Enter Modulus (n):</label>
+                                <input type="number" id="mod2" placeholder="Enter modulus n" required>
+                            </div>
+                        </div>
+
+                        <h2 class="sub-section-title">Exponentiation by Squaring (Modular Exponentiation)</h2>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="base">Enter Base (a):</label>
+                                <input type="number" id="base" placeholder="Enter base a" required>
+                            </div>
+                            <div>
+                                <label for="exp">Enter Exponent (e):</label>
+                                <input type="number" id="exp" placeholder="Enter exponent e" required>
+                            </div>
+                            <div>
+                                <label for="modExp">Enter Modulus (n):</label>
+                                <input type="number" id="modExp" placeholder="Enter modulus n" required>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            This section provides tools for various modular arithmetic operations:
+                            <ul>
+                                <li>**Modulus:** Calculates $a \pmod n$.</li>
+                                <li>**Inverse Mod:** Finds $x$ such that $(a \cdot x) \pmod n = 1$.</li>
+                                <li>**Modular Exponentiation:** Calculates $a^e \pmod n$ efficiently.</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'diffie-hellman': {
+                    inputs: `
+                        <h2 class="sub-section-title">Bob's Value Calculation</h2>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="qBob">Enter prime value q:</label>
+                                <input type="number" id="qBob" placeholder="Enter prime value q">
+                            </div>
+                            <div>
+                                <label for="gBob">Enter primitive root g:</label>
+                                <input type="number" id="gBob" placeholder="Enter primitive root g">
+                            </div>
+                            <div>
+                                <label for="bBob">Enter Bob's secret key b:</label>
+                                <input type="number" id="bBob" placeholder="Enter Bob's secret key b">
+                            </div>
+                        </div>
+
+                        <h2 class="sub-section-title">Shared Key Calculation</h2>
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label for="qShared">Enter prime value q:</label>
+                                <input type="number" id="qShared" placeholder="Enter prime value q">
+                            </div>
+                            <div>
+                                <label for="gShared">Enter primitive root g:</label>
+                                <input type="number" id="gShared" placeholder="Enter primitive root g">
+                            </div>
+                            <div>
+                                <label for="aShared">Enter Alice's secret key a:</label>
+                                <input type="number" id="aShared" placeholder="Enter Alice's secret key a">
+                            </div>
+                            <div>
+                                <label for="bShared">Enter Bob's secret key b:</label>
+                                <input type="number" id="bShared" placeholder="Enter Bob's secret key b">
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            Diffie-Hellman is a method of securely exchanging cryptographic keys over a public channel. It's one of the first public-key protocols.
+                            <ul>
+                                <li>**Bob's Value:** Calculates $g^b \pmod q$.</li>
+                                <li>**Shared Key:** Calculates $(g^b)^a \pmod q = (g^a)^b \pmod q$.</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'rsa-keys': {
+                    inputs: `
+                        <div class="additional-inputs single-column">
+                            <div>
+                                <label>Enter prime number p:</label>
+                                <input type="number" id="p" placeholder="Enter prime number p">
+                            </div>
+                            <div>
+                                <label>Enter prime number q:</label>
+                                <input type="number" id="q" placeholder="Enter prime number q">
+                            </div>
+                            <div>
+                                <label>Enter public exponent e:</label>
+                                <input type="number" id="e" placeholder="Enter public exponent e">
+                            </div>
+                            <div>
+                                <label>Enter private exponent d:</label>
+                                <input type="number" id="d" placeholder="Enter private exponent d">
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            RSA is a public-key cryptosystem widely used for secure data transmission. It relies on the difficulty of factoring large numbers.
+                            <ul>
+                                <li>**n (modulus):** $n = p \cdot q$</li>
+                                <li>**Φ(n) (Euler's Totient):** $Φ(n) = (p-1)(q-1)$</li>
+                                <li>**Public Key:** $(e, n)$</li>
+                                <li>**Private Key:** $(d, n)$, where $d \cdot e \equiv 1 \pmod{Φ(n)}$</li>
+                            </ul>
+                        </div>
+                    `
+                }
+            };
+
+            inputsDiv.innerHTML = calculationConfigs[type].inputs;
+        }
+
+        function performCalculation() {
+            const type = document.getElementById('calculationType').value;
+            const resultDiv = document.getElementById('result');
+            let result = '';
+
+            try {
+                switch(type) {
+                    case 'checksum-calculate-single':
+                        result = calculateChecksumSingleHex();
+                        resultDiv.innerHTML = `<strong>Final Message with Checksum:</strong> ${result}`;
+                        break;
+                    case 'checksum-calculate-spaces':
+                        result = calculateChecksumSpaceSeparatedHex();
+                        resultDiv.innerHTML = `<strong>Calculated Checksum (in hex):</strong> ${result}`;
+                        break;
+                    case 'checksum-validate-single':
+                        result = validateChecksumSingleHex();
+                        resultDiv.innerHTML = `<strong>Validation Result:</strong> ${result}`;
+                        break;
+                    case 'checksum-validate-spaces':
+                        result = validateChecksumSpaceSeparatedHex();
+                        resultDiv.innerHTML = `<strong>Validation Result:</strong> ${result}`;
+                        break;
+                    case 'crc-calculate':
+                        result = calculateCRCWrapper();
+                        resultDiv.innerHTML = result;
+                        break;
+                    case 'crc-validate':
+                        result = validateCRCWrapper();
+                        resultDiv.innerHTML = result;
+                        break;
+                    case 'eulers-totient':
+                        result = calculateTotientWrapper();
+                        resultDiv.innerHTML = result;
+                        break;
+                    case 'mod-operations':
+                        calculateMod();
+                        calculateInverseMod();
+                        modExponentiation();
+                        resultDiv.innerHTML = `<p>Results displayed above in their respective sections.</p>`;
+                        break;
+                    case 'diffie-hellman':
+                        calculateBobValue();
+                        calculateSharedKey();
+                        resultDiv.innerHTML = `<p>Results displayed above in their respective sections.</p>`;
+                        break;
+                    case 'rsa-keys':
+                        calculateN();
+                        calculatePhiN();
+                        calculatePublicKey();
+                        calculatePrivateKey();
+                        resultDiv.innerHTML = `<p>Results displayed above in their respective sections.</p>`;
+                        break;
+                    default:
+                        resultDiv.innerHTML = 'Select a calculation type to begin.';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Error: ${error.message}`;
+                console.error(error);
+            }
+        }
+
+        // --- Checksum Calculator (single hex string - from Checksum.html) ---
+        function hexToBin4Bit(hex) {
+            return parseInt(hex, 16).toString(2).padStart(4, '0');
+        }
+
+        function binAdditionFixedLength(a, b, len) {
+            let carry = 0;
+            let result = '';
+            for (let i = len - 1; i >= 0; i--) {
+                let sum = (parseInt(a[i]) || 0) + (parseInt(b[i]) || 0) + carry;
+                result = (sum % 2) + result;
+                carry = Math.floor(sum / 2);
+            }
+            return result;
+        }
+
+        function calculateChecksumSingleHex() {
+            let hexMessage = document.getElementById("hexInput").value.toUpperCase();
+            if (!/^[0-9A-F]+$/.test(hexMessage)) {
+                throw new Error("Input must be a valid hexadecimal string (0-9, A-F).");
+            }
+            if (hexMessage.length === 0) {
+                throw new Error("Hex message cannot be empty.");
+            }
+
+            let sum = '0000'; // Initialize sum as 4 bits of zeros
+
+            // Convert each hex digit to binary and perform binary addition
+            for (let i = 0; i < hexMessage.length; i++) {
+                let binaryDigit = hexToBin4Bit(hexMessage[i]);
+                sum = binAdditionFixedLength(sum, binaryDigit, 4);
+            }
+
+            // Perform Two's complement of the sum
+            let complement = '';
+            for (let i = 0; i < sum.length; i++) {
+                complement += sum[i] === '0' ? '1' : '0'; // invert the bits
+            }
+            let twosComplement = binAdditionFixedLength(complement, '0001', 4); // add 1
+
+            // Convert two's complement back to hexadecimal
+            let checksum = parseInt(twosComplement, 2).toString(16).toUpperCase();
+            return hexMessage + checksum;
+        }
+
+        // --- Checksum Calculator (space-separated hex - from ChecsumSpaces.html) ---
+        function hexToBin8Bit(hex) {
+            return parseInt(hex, 16).toString(2).padStart(8, '0');
+        }
+
+        function binAddition8Bit(a, b) {
+            let carry = 0;
+            let result = '';
+
+            for (let i = 7; i >= 0; i--) {
+                let sum = parseInt(a[i]) + parseInt(b[i]) + carry;
+                result = (sum % 2) + result;
+                carry = Math.floor(sum / 2);
+            }
+            return result.padStart(8, '0'); // Pad to 8 bits
+        }
+
+        function twoComplement8Bit(bin) {
+            // Invert bits
+            let inverted = bin.split('').map(bit => bit === '1' ? '0' : '1').join('');
+            // Add 1
+            let carry = 1;
+            let result = '';
+            for (let i = inverted.length - 1; i >= 0; i--) {
+                let sum = parseInt(inverted[i]) + carry;
+                result = (sum % 2) + result;
+                carry = Math.floor(sum / 2);
+            }
+            return result.padStart(8, '0'); // Pad to 8 bits
+        }
+
+        function calculateChecksumSpaceSeparatedHex() {
+            let hexInput = document.getElementById("hexInput").value.trim().split(' ');
+            if (hexInput.length === 0 || hexInput[0] === '') {
+                throw new Error("Input cannot be empty.");
+            }
+            // Validate each hex entry and ensure they are 2 characters (8-bit)
+            for (let hex of hexInput) {
+                if (!/^[0-9A-F]{1,2}$/.test(hex)) { // Allow 1 or 2 digits, pad to 2 later
+                    throw new Error(`Invalid hex value: ${hex}. Each value must be 1 or 2 hex digits.`);
+                }
+            }
+
+            let sum = '00000000'; // Initialize sum as 8 bits of zeros
+
+            for (let hex of hexInput) {
+                let binary = hexToBin8Bit(hex);
+                sum = binAddition8Bit(sum, binary);
+            }
+
+            let checksum = twoComplement8Bit(sum);
+            let checksumHex = parseInt(checksum, 2).toString(16).toUpperCase().padStart(2, '0');
+            return checksumHex;
+        }
+
+        // --- Checksum Validator (single hex string - from ChecksumValidation.html) ---
+        function validateChecksumSingleHex() {
+            let hexMessage = document.getElementById("hexInput").value.toUpperCase();
+            if (!/^[0-9A-F]+$/.test(hexMessage)) {
+                throw new Error("Input must be a valid hexadecimal string (0-9, A-F).");
+            }
+            if (hexMessage.length === 0) {
+                throw new Error("Hex message cannot be empty.");
+            }
+
+            let sum = '0000'; // Initialize sum as 4 bits of zeros
+
+            for (let i = 0; i < hexMessage.length; i++) {
+                let binaryDigit = hexToBin4Bit(hexMessage[i]);
+                sum = binAdditionFixedLength(sum, binaryDigit, 4);
+            }
+
+            let isValid = (sum === '0000');
+            return isValid
+                ? "The message is valid. The checksum is correct!"
+                : "The message is invalid. The checksum is incorrect.";
+        }
+
+        // --- Checksum Validator (space-separated hex - from CheckSumSpacesValidation.html) ---
+        function validateChecksumSpaceSeparatedHex() {
+            let hexMessage = document.getElementById("hexInput").value.trim().split(" ");
+            if (hexMessage.length === 0 || hexMessage[0] === '') {
+                throw new Error("Input cannot be empty.");
+            }
+            for (let hex of hexMessage) {
+                if (!/^[0-9A-F]{1,2}$/.test(hex)) {
+                    throw new Error(`Invalid hex value: ${hex}. Each value must be 1 or 2 hex digits.`);
+                }
+            }
+
+            let sum = '00000000'; // Initialize sum as 8 bits of zeros
+
+            for (let hex of hexMessage) {
+                let binaryDigit = hexToBin8Bit(hex);
+                sum = binAddition8Bit(sum, binaryDigit);
+            }
+
+            let isValid = (sum === '00000000');
+            return isValid
+                ? "The message is valid. The checksum is correct!"
+                : "The message is invalid. The checksum is incorrect.";
+        }
+
+        // --- CRC Calculator (from CRC.html) ---
+        function calculateCRC(message, generator) {
+            let messagePadded = message + '0'.repeat(generator.length - 1);
+            let messageArr = messagePadded.split('').map(Number);
+            let generatorArr = generator.split('').map(Number);
+            let genLen = generatorArr.length;
+
+            for (let i = 0; i <= messageArr.length - genLen; i++) {
+                if (messageArr[i] === 1) {
+                    for (let j = 0; j < genLen; j++) {
+                        messageArr[i + j] ^= generatorArr[j];
+                    }
+                }
+            }
+
+            const remainder = messageArr.slice(-genLen + 1).join('');
+            const transmittedMessage = message + remainder;
+            return { remainder, transmittedMessage };
+        }
+
+        function calculateCRCWrapper() {
+            const messageData = document.getElementById('messageData').value;
+            const generatorPoly = document.getElementById('generatorPoly').value;
+
+            if (!/^[01]+$/.test(messageData) || !/^[01]+$/.test(generatorPoly)) {
+                throw new Error("Message and Generator must be binary strings (0s and 1s).");
+            }
+            if (messageData.length === 0 || generatorPoly.length === 0) {
+                 throw new Error("Message and Generator cannot be empty.");
+            }
+            if (generatorPoly.length === 1 && generatorPoly[0] === '0') {
+                throw new Error("Generator polynomial cannot be '0'.");
+            }
+            if (generatorPoly.length > messageData.length) {
+                throw new Error("Generator polynomial cannot be longer than the message data.");
+            }
+
+
+            const { remainder, transmittedMessage } = calculateCRC(messageData, generatorPoly);
+
+            return `<strong>Remainder:</strong> ${remainder}<br><strong>Transmitted Message:</strong> ${transmittedMessage}`;
+        }
+
+        // --- CRC Validation (from CRCValidate.html) ---
+        function xorBinaryString(a, b) {
+            let result = "";
+            for (let i = 0; i < a.length; i++) {
+                result += a[i] === b[i] ? "0" : "1";
+            }
+            return result;
+        }
+
+        function modulo2Division(dividend, divisor) {
+            let remainder = dividend.slice(0, divisor.length);
+
+            for (let i = divisor.length; i <= dividend.length; i++) {
+                if (remainder[0] === '1') {
+                    remainder = xorBinaryString(remainder, divisor) + (dividend[i] || '');
+                } else {
+                    remainder = xorBinaryString(remainder, '0'.repeat(divisor.length)) + (dividend[i] || '');
+                }
+                remainder = remainder.slice(1);
+            }
+            return remainder;
+        }
+
+        function validateCRCWrapper() {
+            let message = document.getElementById("message").value;
+            let generator = document.getElementById("generator").value;
+
+            if (!/^[01]+$/.test(message) || !/^[01]+$/.test(generator)) {
+                throw new Error("Message and Generator must be binary strings (0s and 1s).");
+            }
+            if (message.length === 0 || generator.length === 0) {
+                 throw new Error("Message and Generator cannot be empty.");
+            }
+            if (generator.length === 1 && generator[0] === '0') {
+                throw new Error("Generator polynomial cannot be '0'.");
+            }
+             if (generator.length > message.length) {
+                throw new Error("Generator polynomial cannot be longer than the message data.");
+            }
+
+
+            let remainder = modulo2Division(message, generator); // Message here is transmitted message
+
+            let isValid = (remainder === '0'.repeat(generator.length - 1));
+            return isValid
+                ? "The message is valid. CRC remainder (syndrome) is 0."
+                : "The message is invalid. CRC remainder (syndrome) is " + remainder + ".";
+        }
+
+        // --- Euler's Totient Function (from Euler's Totient Function.html) ---
+        function gcd(a, b) {
+            // Calculate the greatest common divisor using the Euclidean algorithm
+            if (b === 0) {
+                return a;
+            }
+            return gcd(b, a % b);
+        }
+
+        function calculateTotientWrapper() {
+            const n = parseInt(document.getElementById("n").value);
+
+            if (isNaN(n) || n <= 0) {
+                throw new Error("Please enter a valid positive integer for n.");
+            }
+
+            let totient = 0;
+            let coprimeNumbers = [];
+
+            for (let i = 1; i < n; i++) {
+                if (gcd(i, n) === 1) {
+                    totient++;
+                    coprimeNumbers.push(i);
+                }
+            }
+
+            return `<h3>Result</h3><p>ϕ(${n}) = ${totient}</p><p>Coprime numbers less than ${n}: {${coprimeNumbers.join(', ')}}</p>`;
+        }
+
+        // --- Modular Arithmetic Operations (from Mod.html) ---
+        function calculateMod() {
+            const resultDiv = document.getElementById('modResult');
+            let a = parseInt(document.getElementById("num1").value);
+            let n = parseInt(document.getElementById("mod1").value);
+            
+            if (isNaN(a) || isNaN(n) || n <= 0) {
+                resultDiv.textContent = "Please enter valid numbers for a and n for Modulus calculation.";
+                return;
+            }
+            let result = a % n;
+            if (result < 0) {
+                result += n; // Ensure non-negative result
+            }
+            resultDiv.textContent = `Result: ${a} mod ${n} = ${result}`;
+        }
+
+        function modInverse(a, n) {
+            a = mod(a, n); // Ensure 'a' is within [0, n-1]
+            let t = 0, newT = 1;
+            let r = n, newR = a;
+
+            while (newR !== 0) {
+                let quotient = Math.floor(r / newR);
+                [t, newT] = [newT, t - quotient * newT];
+                [r, newR] = [newR, r - quotient * newR];
+            }
+
+            if (r > 1) {
+                return -1; // No inverse exists
+            }
+            if (t < 0) {
+                t += n;
+            }
+            return t;
+        }
+
+        function calculateInverseMod() {
+            const resultDiv = document.getElementById('inverseModResult');
+            let a = parseInt(document.getElementById("num2").value);
+            let n = parseInt(document.getElementById("mod2").value);
+
+            if (isNaN(a) || isNaN(n) || n <= 0) {
+                resultDiv.textContent = "Please enter valid numbers for a and n for Inverse Mod calculation.";
+                return;
+            }
+
+            let result = modInverse(a, n);
+            if (result !== -1) {
+                resultDiv.textContent = `Inverse of ${a} mod ${n} = ${result}`;
+            } else {
+                resultDiv.textContent = `No inverse exists for ${a} mod ${n} (gcd(${a}, ${n}) ≠ 1)`;
+            }
+        }
+        
+        function expBySquaring(base, exponent, mod) {
+            let result = 1;
+            base = mod(base, mod); // Ensure base is within [0, mod-1]
+
+            while (exponent > 0) {
+                if (exponent % 2 === 1) {
+                    result = mod((result * base), mod);
+                }
+                exponent = Math.floor(exponent / 2);
+                base = mod((base * base), mod);
+            }
+            return result;
+        }
+
+        function modExponentiation() {
+            const resultDiv = document.getElementById('expResult');
+            let a = parseInt(document.getElementById("base").value);
+            let e = parseInt(document.getElementById("exp").value);
+            let n = parseInt(document.getElementById("modExp").value);
+
+            if (isNaN(a) || isNaN(e) || isNaN(n) || n <= 0) {
+                resultDiv.textContent = "Please enter valid numbers for a, e, and n for Exponentiation.";
+                return;
+            }
+            let result = expBySquaring(a, e, n);
+            resultDiv.textContent = `Result: ${a}^${e} mod ${n} = ${result}`;
+        }
+
+        // --- Diffie-Hellman Key Exchange (from Diffie-Hellman.html) ---
+        function calculateBobValue() {
+            const q = parseInt(document.getElementById("qBob").value);
+            const g = parseInt(document.getElementById("gBob").value);
+            const b = parseInt(document.getElementById("bBob").value);
+            const resultDiv = document.getElementById("bobValueResult");
+
+            if (isNaN(q) || isNaN(g) || isNaN(b) || q <= 0 || g <= 0 || b <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter valid positive integers for q, g, and b.</p>";
+                return;
+            }
+
+            const bobValue = expBySquaring(g, b, q); // Re-using modular exponentiation
+            resultDiv.innerHTML = `<p><strong>Value Bob sends to Alice (B):</strong> ${bobValue} ($g^b \pmod q$)</p>`;
+        }
+
+        function calculateSharedKey() {
+            const q = parseInt(document.getElementById("qShared").value);
+            const g = parseInt(document.getElementById("gShared").value);
+            const a = parseInt(document.getElementById("aShared").value);
+            const b = parseInt(document.getElementById("bShared").value);
+            const resultDiv = document.getElementById("sharedKeyResult");
+
+            if (isNaN(q) || isNaN(g) || isNaN(a) || isNaN(b) || q <= 0 || g <= 0 || a <= 0 || b <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter valid positive integers for q, g, a, and b.</p>";
+                return;
+            }
+
+            // Alice's public value X_A = (g^a) % q
+            const alicePublic = expBySquaring(g, a, q);
+            // Bob's public value X_B = (g^b) % q
+            const bobPublic = expBySquaring(g, b, q);
+
+            // Alice calculates shared key: K_AB = (X_B^a) % q
+            const sharedKeyAliceSide = expBySquaring(bobPublic, a, q);
+            // Bob calculates shared key: K_BA = (X_A^b) % q
+            const sharedKeyBobSide = expBySquaring(alicePublic, b, q);
+
+            if (sharedKeyAliceSide === sharedKeyBobSide) {
+                resultDiv.innerHTML = `<p><strong>Shared Key:</strong> ${sharedKeyAliceSide}</p>`;
+            } else {
+                resultDiv.innerHTML = `<p style='color: red;'>Error: Shared keys do not match. Check inputs.</p>`;
+            }
+        }
+
+        // --- RSA Key Calculators (from RSA.html) ---
+        function calculateN() {
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+            const resultDiv = document.getElementById("nResult");
+
+            if (isNaN(p) || isNaN(q) || p <= 0 || q <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter valid positive integers for p and q.</p>";
+                return;
+            }
+            if (!isPrime(p) || !isPrime(q)) {
+                 resultDiv.innerHTML = "<p style='color: red;'>Both p and q must be prime numbers.</p>";
+                return;
+            }
+
+
+            const n = p * q;
+            resultDiv.innerHTML = `<p><strong>n:</strong> ${n}</p>`;
+        }
+
+        function calculatePhiN() {
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+            const resultDiv = document.getElementById("phiNResult");
+
+            if (isNaN(p) || isNaN(q) || p <= 0 || q <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter valid positive integers for p and q.</p>";
+                return;
+            }
+            if (!isPrime(p) || !isPrime(q)) {
+                 resultDiv.innerHTML = "<p style='color: red;'>Both p and q must be prime numbers.</p>";
+                return;
+            }
+
+
+            const phiN = (p - 1) * (q - 1);
+            resultDiv.innerHTML = `<p><strong>Φ(n):</strong> ${phiN}</p>`;
+        }
+
+        function isPrime(num) {
+            if (num <= 1) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        function gcdExtended(a, b) {
+            if (a === 0) {
+                return { gcd: b, x: 0, y: 1 };
+            }
+            const { gcd, x, y } = gcdExtended(b % a, a);
+            return { gcd: gcd, x: y - Math.floor(b / a) * x, y: x };
+        }
+
+        function calculatePublicKey() {
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+            const e = parseInt(document.getElementById("e").value);
+            const resultDiv = document.getElementById("publicKeyResult");
+
+            if (isNaN(p) || isNaN(q) || isNaN(e) || p <= 0 || q <= 0 || e <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter valid positive integers for p, q, and e.</p>";
+                return;
+            }
+            if (!isPrime(p) || !isPrime(q)) {
+                 resultDiv.innerHTML = "<p style='color: red;'>Both p and q must be prime numbers.</p>";
+                return;
+            }
+
+            const n = p * q;
+            const phiN = (p - 1) * (q - 1);
+
+            // Validate e: 1 < e < phiN and gcd(e, phiN) = 1
+            if (e <= 1 || e >= phiN || gcd(e, phiN) !== 1) {
+                resultDiv.innerHTML = `<p style='color: red;'>Invalid 'e'. It must be 1 &lt; e &lt; Φ(n) and gcd(e, Φ(n)) = 1. (Current Φ(n) = ${phiN})</p>`;
+                return;
+            }
+
+            const publicKey = `{${e}, ${n}}`;
+            resultDiv.innerHTML = `<p><strong>Public Key (e, n):</strong> ${publicKey}</p>`;
+        }
+
+        function calculatePrivateKey() {
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+            const d = parseInt(document.getElementById("d").value); // User input for d
+            const e = parseInt(document.getElementById("e").value); // Need e to calculate d if not provided
+            const resultDiv = document.getElementById("privateKeyResult");
+
+            if (isNaN(p) || isNaN(q) || p <= 0 || q <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter valid positive integers for p and q.</p>";
+                return;
+            }
+            if (!isPrime(p) || !isPrime(q)) {
+                 resultDiv.innerHTML = "<p style='color: red;'>Both p and q must be prime numbers.</p>";
+                return;
+            }
+
+            const n = p * q;
+            const phiN = (p - 1) * (q - 1);
+            
+            let calculatedD = d; // Assume user provides d
+
+            if (isNaN(e) || e <= 0) {
+                resultDiv.innerHTML = "<p style='color: red;'>Please enter a valid public exponent 'e' to calculate the private key 'd'.</p>";
+                return;
+            }
+            if (e <= 1 || e >= phiN || gcd(e, phiN) !== 1) {
+                resultDiv.innerHTML = `<p style='color: red;'>Invalid 'e' for private key calculation. It must be 1 &lt; e &lt; Φ(n) and gcd(e, Φ(n)) = 1. (Current Φ(n) = ${phiN})</p>`;
+                return;
+            }
+
+            // Calculate 'd' using modular multiplicative inverse if it's not provided or is 0
+            if (isNaN(d) || d === 0) {
+                calculatedD = modInverse(e, phiN);
+                 if (calculatedD === -1) {
+                    resultDiv.innerHTML = `<p style='color: red;'>Could not calculate 'd'. 'e' (${e}) has no modular inverse modulo Φ(n) (${phiN}).</p>`;
+                    return;
+                }
+            } else {
+                // If 'd' is provided, validate it
+                if (mod((e * d), phiN) !== 1) {
+                    resultDiv.innerHTML = `<p style='color: red;'>Provided 'd' (${d}) is not the correct private exponent for 'e' (${e}) and Φ(n) (${phiN}). It should satisfy (e * d) mod Φ(n) = 1.</p>`;
+                    return;
+                }
+            }
+            
+            const privateKey = `{${calculatedD}, ${n}}`;
+            resultDiv.innerHTML = `<p><strong>Private Key (d, n):</strong> {${calculatedD}, ${n}}</p>`;
+        }
+
+
+        // Initialize calculator on page load
+        updateCalculator();
+    </script>
+</body>
+</html>
