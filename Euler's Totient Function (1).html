@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euler's Totient Function Calculator</title>
+    <style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8; /* A light, cool blue-gray background */
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e8f0;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 2.5em;
+    letter-spacing: -0.5px;
+}
+
+input {
+    width: 100%; /* Changed to 100% to fill the container */
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #c9d6e4;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 16px;
+}
+
+input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db; /* Blue color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    background-color: #1f618d; /* Even darker blue on click */
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light background for results */
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #34495e;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Euler's Totient Function Calculator</h1>
+    <input type="number" id="n" placeholder="Enter a number n">
+    <button onclick="calculateTotient()">Calculate ϕ(n)</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function gcd(a, b) {
+        // Calculate the greatest common divisor using the Euclidean algorithm
+        if (b === 0) {
+            return a;
+        }
+        return gcd(b, a % b);
+    }
+
+    function calculateTotient() {
+        const n = parseInt(document.getElementById("n").value);
+
+        if (isNaN(n) || n <= 0) {
+            document.getElementById("result").innerHTML = "<p style='color: red;'>Please enter a valid positive integer.</p>";
+            return;
+        }
+
+        let totient = 0;
+        let coprimeNumbers = [];
+
+        for (let i = 1; i < n; i++) {
+            if (gcd(i, n) === 1) {
+                totient++;
+                coprimeNumbers.push(i); // Collecting coprime numbers
+            }
+        }
+
+        // Display the result
+        document.getElementById("result").innerHTML = `
+            <h3>Result</h3>
+            <p>ϕ(${n}) = ${totient}</p>
+            <p>Coprime numbers less than ${n}: {${coprimeNumbers.join(', ')}}</p>
+        `;
+    }
+</script>
+
+</body>
+</html>

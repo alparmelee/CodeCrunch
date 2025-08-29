@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OFB Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            min-height: 50px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #34495e;
+            word-wrap: break-word;
+        }
+        
+        .result strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>OFB Word Adder</h2>
+        <label for="blocksize">Enter Block Size:</label>
+        <input type="number" id="blocksize" placeholder="Enter block size">
+
+        <label for="word1">Enter First Word:</label>
+        <input type="text" id="word1" placeholder="Enter first word">
+
+        <label for="word2">Enter Second Word:</label>
+        <input type="text" id="word2" placeholder="Enter second word">
+
+        <button onclick="addWords()">Add Words</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function addWords() {
+            const blocksize = parseInt(document.getElementById('blocksize').value);
+            let word1 = document.getElementById('word1').value.replace(/[^A-Za-z]/g, '').toUpperCase();
+            let word2 = document.getElementById('word2').value.replace(/[^A-Za-z]/g, '').toUpperCase();
+            let resultDiv = document.getElementById('result');
+            
+            resultDiv.style.color = '#34495e'; // Reset result color
+
+            if (isNaN(blocksize) || blocksize <= 0) {
+                resultDiv.innerHTML = "Please enter a valid block size.";
+                resultDiv.style.color = '#d32f2f'; // Error color
+                return;
+            }
+            
+            if (word1.length !== blocksize || word2.length !== blocksize) {
+                resultDiv.innerHTML = `Both words must be exactly ${blocksize} characters long.`;
+                resultDiv.style.color = '#d32f2f'; // Error color
+                return;
+            }
+
+            function addWordsHelper(w1, w2) {
+                let result = '';
+                for (let i = 0; i < w1.length; i++) {
+                    let pos1 = w1.charCodeAt(i) - 65;
+                    let pos2 = w2.charCodeAt(i) - 65;
+                    let newPos = (pos1 + pos2) % 26;
+                    result += String.fromCharCode(newPos + 65);
+                }
+                return result;
+            }
+
+            let addedWord = addWordsHelper(word1, word2);
+            resultDiv.innerHTML = `<strong>Result:</strong> ${word1} + ${word2} = ${addedWord}`;
+        }
+    </script>
+</body>
+</html>

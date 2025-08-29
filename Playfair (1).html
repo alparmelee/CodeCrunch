@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playfair Cipher Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            max-width: 200px;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #34495e;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+        
+        #matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        #matrix div {
+            border: 1px solid #c9d6e4;
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2em;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Playfair Cipher Calculator</h1>
+        <input type="text" id="key" placeholder="Enter your key">
+        <textarea id="input" rows="5" placeholder="Enter your message"></textarea>
+        <div class="button-group">
+            <button onclick="encrypt()">Encrypt</button>
+            <button onclick="decrypt()">Decrypt</button>
+        </div>
+        <h2>Result:</h2>
+        <textarea id="output" rows="5" readonly></textarea>
+        <h2>Playfair Matrix:</h2>
+        <div id="matrix"></div>
+    </div>
+
+    <script>
+        function generateMatrix(key) {
+            const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
+            let matrix = [];
+            let usedChars = new Set();
+
+            key = key.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+            for (let char of key) {
+                if (!usedChars.has(char)) {
+                    matrix.push(char);
+                    usedChars.add(char);
+                }
+            }
+
+            for (let char of alphabet) {
+                if (!usedChars.has(char)) {
+                    matrix.push(char);
+                    usedChars.add(char);
+                }
+            }
+
+            return matrix;
+        }
+
+        function findPosition(matrix, char) {
+            const index = matrix.indexOf(char);
+            return [Math.floor(index / 5), index % 5];
+        }
+
+        function playfairCipher(text, key, mode) {
+            const matrix = generateMatrix(key);
+            text = text.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
+            
+            // Prepare the plaintext: add 'X' between identical consecutive letters
+            let preparedText = '';
+            for (let i = 0; i < text.length; i++) {
+                if (i > 0 && text[i] === text[i-1]) {
+                    preparedText += 'X' + text[i];
+                } else {
+                    preparedText += text[i];
+                }
+            }
+
+            // Ensure an even length for the final prepared text
+            if (preparedText.length % 2 !== 0) {
+                preparedText += 'X';
+            }
+
+            let result = '';
+
+            for (let i = 0; i < preparedText.length; i += 2) {
+                let a = preparedText[i];
+                let b = preparedText[i + 1];
+
+                let [row1, col1] = findPosition(matrix, a);
+                let [row2, col2] = findPosition(matrix, b);
+
+                let newChar1, newChar2;
+                const direction = (mode === 'encrypt' ? 1 : 4);
+
+                if (row1 === row2) {
+                    newChar1 = matrix[row1 * 5 + (col1 + direction) % 5];
+                    newChar2 = matrix[row2 * 5 + (col2 + direction) % 5];
+                } else if (col1 === col2) {
+                    newChar1 = matrix[((row1 + direction) % 5) * 5 + col1];
+                    newChar2 = matrix[((row2 + direction) % 5) * 5 + col2];
+                } else {
+                    newChar1 = matrix[row1 * 5 + col2];
+                    newChar2 = matrix[row2 * 5 + col1];
+                }
+
+                result += newChar1 + newChar2;
+            }
+
+            return result;
+        }
+
+        function encrypt() {
+            const input = document.getElementById('input').value;
+            const key = document.getElementById('key').value;
+            const result = playfairCipher(input, key, 'encrypt');
+            document.getElementById('output').value = result;
+            displayMatrix(generateMatrix(key));
+        }
+
+        function decrypt() {
+            const input = document.getElementById('input').value;
+            const key = document.getElementById('key').value;
+            const result = playfairCipher(input, key, 'decrypt');
+            document.getElementById('output').value = result;
+            displayMatrix(generateMatrix(key));
+        }
+
+        function displayMatrix(matrix) {
+            const matrixDiv = document.getElementById('matrix');
+            matrixDiv.innerHTML = '';
+            for (let char of matrix) {
+                const div = document.createElement('div');
+                div.textContent = char;
+                matrixDiv.appendChild(div);
+            }
+        }
+    </script>
+</body>
+</html>

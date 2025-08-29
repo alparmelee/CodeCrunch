@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffie-Hellman Key Exchange Calculator</title>
+    <style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8; /* A light, cool blue-gray background */
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e8f0;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 2.5em;
+    letter-spacing: -0.5px;
+}
+
+input {
+    width: 100%; /* Changed to 100% to fill the container */
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #c9d6e4;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 16px;
+}
+
+input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db; /* Blue color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    background-color: #1f618d; /* Even darker blue on click */
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light background for results */
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #34495e;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Diffie-Hellman Key Exchange</h1>
+    <h2>Bob's Value Calculation</h2>
+    <input type="number" id="qBob" placeholder="Enter prime value q">
+    <input type="number" id="gBob" placeholder="Enter primitive root g">
+    <input type="number" id="bBob" placeholder="Enter Bob's secret key b">
+    <button onclick="calculateBobValue()">Calculate Bob's Value</button>
+    <div class="result" id="bobValueResult"></div>
+
+    <h2>Shared Key Calculation</h2>
+    <input type="number" id="qShared" placeholder="Enter prime value q">
+    <input type="number" id="gShared" placeholder="Enter primitive root g">
+    <input type="number" id="aShared" placeholder="Enter Alice's secret key a">
+    <input type="number" id="bShared" placeholder="Enter Bob's secret key b">
+    <button onclick="calculateSharedKey()">Calculate Shared Key</button>
+    <div class="result" id="sharedKeyResult"></div>
+</div>
+
+<script>
+    // Function to calculate the value Bob sends to Alice
+    function calculateBobValue() {
+        const q = parseInt(document.getElementById("qBob").value);
+        const g = parseInt(document.getElementById("gBob").value);
+        const b = parseInt(document.getElementById("bBob").value);
+
+        if (isNaN(q) || isNaN(g) || isNaN(b) || q <= 0 || g <= 0 || b <= 0) {
+            document.getElementById("bobValueResult").innerHTML = "<p style='color: red;'>Please enter valid positive integers for q, g, and b.</p>";
+            return;
+        }
+
+        // Bob calculates (g^b) % q
+        const bobValue = Math.pow(g, b) % q;
+        document.getElementById("bobValueResult").innerHTML = `<p><strong>Value Bob sends to Alice:</strong> ${bobValue}</p>`;
+    }
+
+    // Function to calculate the shared key
+    function calculateSharedKey() {
+        const q = parseInt(document.getElementById("qShared").value);
+        const g = parseInt(document.getElementById("gShared").value);
+        const a = parseInt(document.getElementById("aShared").value);
+        const b = parseInt(document.getElementById("bShared").value);
+
+        if (isNaN(q) || isNaN(g) || isNaN(a) || isNaN(b) || q <= 0 || g <= 0 || a <= 0 || b <= 0) {
+            document.getElementById("sharedKeyResult").innerHTML = "<p style='color: red;'>Please enter valid positive integers for q, g, a, and b.</p>";
+            return;
+        }
+
+        // Bob calculates value to send: B = (g^b) % q
+        const bobValue = Math.pow(g, b) % q;
+
+        // Alice calculates shared key: S = (B^a) % q
+        const sharedKey = Math.pow(bobValue, a) % q;
+        document.getElementById("sharedKeyResult").innerHTML = `<p><strong>Shared Key:</strong> ${sharedKey}</p>`;
+    }
+</script>
+
+</body>
+</html>

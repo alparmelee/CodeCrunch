@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affine Cipher Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 1.1em;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            flex: 1;
+            max-width: 200px;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #output {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #34495e;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+
+        #error-message {
+            color: #d9534f;
+            background-color: #fbecec;
+            border: 1px solid #f1c2c2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Affine Cipher Calculator</h1>
+        
+        <label for="t">Text:</label>
+        <textarea id="t" rows="3" cols="50"></textarea>
+
+        <label for="a">Key 'a' (coprime with 26):</label>
+        <input id="a" type="number" value="5">
+
+        <label for="b">Key 'b':</label>
+        <input id="b" type="number" value="8">
+
+        <div class="button-group">
+            <button onclick="encrypt()">Encrypt</button>
+            <button onclick="decrypt()">Decrypt</button>
+        </div>
+
+        <div id="error-message"></div>
+
+        <h2 style="margin-top:20px;">Result:</h2>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        function showMessage(message, isError = false) {
+            const outputDiv = $('output');
+            const errorDiv = $('error-message');
+            if (isError) {
+                errorDiv.innerText = message;
+                errorDiv.style.display = 'block';
+                outputDiv.style.display = 'none';
+            } else {
+                outputDiv.innerText = message;
+                outputDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        function modInverse(a, m) {
+            for (let x = 1; x < m; x++) {
+                if (((a % m) * (x % m)) % m === 1) {
+                    return x;
+                }
+            }
+            return undefined;
+        }
+
+        function encrypt() {
+            const a = parseInt($('a').value);
+            const b = parseInt($('b').value);
+            const text = $('t').value;
+            const alphabetRegex = /[a-zA-Z]/g;
+
+            if (modInverse(a, 26) === undefined) {
+                showMessage("Error: Key 'a' must be coprime with 26. Possible values: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25.", true);
+                return;
+            }
+
+            const encrypted = text.replace(alphabetRegex, c => {
+                const isUpperCase = c === c.toUpperCase();
+                const x = c.toLowerCase().charCodeAt(0) - 97;
+                const encryptedChar = String.fromCharCode(((a * x + b) % 26) + 97);
+                return isUpperCase ? encryptedChar.toUpperCase() : encryptedChar;
+            });
+            showMessage(encrypted);
+        }
+
+        function decrypt() {
+            const a = parseInt($('a').value);
+            const b = parseInt($('b').value);
+            const text = $('t').value;
+            const alphabetRegex = /[a-zA-Z]/g;
+
+            const aInv = modInverse(a, 26);
+            if (aInv === undefined) {
+                showMessage("Error: Key 'a' must be coprime with 26. Possible values: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25.", true);
+                return;
+            }
+
+            const decrypted = text.replace(alphabetRegex, c => {
+                const isUpperCase = c === c.toUpperCase();
+                const y = c.toLowerCase().charCodeAt(0) - 97;
+                const decryptedChar = String.fromCharCode((aInv * (y - b + 26)) % 26 + 97);
+                return isUpperCase ? decryptedChar.toUpperCase() : decryptedChar;
+            });
+            showMessage(decrypted);
+        }
+    </script>
+</body>
+</html>

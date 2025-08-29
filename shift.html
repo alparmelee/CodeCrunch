@@ -1,0 +1,36 @@
+<!doctype html><meta charset="utf-8">
+<style>
+  label {display:block; margin-top:8px; font-size:16px;}
+  input, textarea {
+    font-size:18px; 
+    padding:6px; 
+    margin-bottom:6px;
+    resize: both;       /* lets you resize manually */
+    overflow: auto;     /* needed for resize handle */
+  }
+  button {font-size:16px; padding:6px 12px; margin-top:8px;}
+  pre {font-size:18px; margin-top:12px; white-space:pre-wrap;}
+</style>
+
+<label for="t">Text to shift:</label>
+<textarea id="t" rows="3" cols="50">kivgwcjmtqmdmqiulzqvsqvoixatzqopbvwe</textarea>
+
+<label for="k">Shift amount:</label>
+<input id="k" type="number" value="8">
+
+<br>
+<button onclick="sh(-1)">Shift Left</button>
+<button onclick="sh(1)">Shift Right</button>
+
+<pre id="o"></pre>
+
+<script>
+const $=id=>document.getElementById(id);
+function sh(d){
+  const k=d*(+$('k').value||0);
+  $('o').textContent=$('t').value.replace(/[a-z]/gi,c=>{
+    const a=c<'a'?65:97, x=c.charCodeAt(0)-a;
+    return String.fromCharCode((x+k%26+26)%26+a);
+  });
+}
+</script>

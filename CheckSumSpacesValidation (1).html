@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Checksum Validator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: #555;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            min-height: 50px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .result.valid {
+            background-color: #e6f7e9;
+            border-color: #c0e0c6;
+            color: #2e7d32;
+        }
+
+        .result.invalid {
+            background-color: #fbecec;
+            border-color: #f1c2c2;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hex Checksum Validator</h1>
+        <p>Enter hexadecimal values (space-separated):</p>
+        <input type="text" id="hexInput" placeholder="Enter hex values">
+        <button onclick="validateChecksum()">Validate Checksum</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function hexToBin(hex) {
+            return parseInt(hex, 16).toString(2).padStart(8, '0');
+        }
+
+        function binAddition(a, b) {
+            let maxLength = Math.max(a.length, b.length);
+            a = a.padStart(maxLength, '0');
+            b = b.padStart(maxLength, '0');
+            let carry = 0;
+            let result = '';
+
+            for (let i = maxLength - 1; i >= 0; i--) {
+                let sum = (parseInt(a[i]) || 0) + (parseInt(b[i]) || 0) + carry;
+                result = (sum % 2) + result;
+                carry = Math.floor(sum / 2);
+            }
+            return result;
+        }
+
+        function validateChecksum() {
+            let hexValues = document.getElementById("hexInput").value.trim().split(" ");
+            const resultDiv = document.getElementById("result");
+            
+            if (hexValues.length === 0 || hexValues[0] === '') {
+                resultDiv.innerText = "Please enter hexadecimal values.";
+                resultDiv.className = 'result invalid';
+                return;
+            }
+
+            let totalSum = '0000000000000000'; // Initialize with 16 bits
+
+            for (let hex of hexValues) {
+                if (!/^[0-9A-Fa-f]+$/.test(hex)) {
+                    resultDiv.innerText = `Invalid hex value: ${hex}`;
+                    resultDiv.className = 'result invalid';
+                    return;
+                }
+                const binaryValue = parseInt(hex, 16).toString(2).padStart(16, '0');
+                totalSum = binAddition(totalSum, binaryValue);
+            }
+            
+            // Re-add any overflow
+            while (totalSum.length > 16) {
+                const carryBits = totalSum.substring(0, totalSum.length - 16);
+                const remainingSum = totalSum.substring(totalSum.length - 16);
+                totalSum = binAddition(carryBits, remainingSum);
+            }
+            
+            // One's complement
+            let complement = '';
+            for (let i = 0; i < totalSum.length; i++) {
+                complement += totalSum[i] === '0' ? '1' : '0';
+            }
+            
+            // Validate checksum (should result in all F's in hex, or all 1s in binary)
+            const isValid = (complement.trim() === '1111111111111111');
+            
+            if (isValid) {
+                resultDiv.innerText = "The message is valid. The checksum is correct! ✅";
+                resultDiv.className = 'result valid';
+            } else {
+                resultDiv.innerText = "The message is invalid. The checksum is incorrect. ❌";
+                resultDiv.className = 'result invalid';
+            }
+        }
+    </script>
+</body>
+</html>

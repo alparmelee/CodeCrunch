@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Columnar Transposition Cipher Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            flex: 1;
+            max-width: 200px;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #34495e;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Columnar Transposition Cipher Calculator</h1>
+        <textarea id="input" rows="5" placeholder="Enter your message"></textarea>
+        <input type="text" id="key" placeholder="Enter your key">
+        <div class="button-group">
+            <button onclick="encrypt()">Encrypt</button>
+            <button onclick="decrypt()">Decrypt</button>
+        </div>
+        <h2>Result:</h2>
+        <textarea id="output" rows="5" readonly></textarea>
+    </div>
+
+    <script>
+        function encrypt() {
+            const input = document.getElementById('input').value.replace(/[^A-Za-z]/g, '').toUpperCase();
+            const key = document.getElementById('key').value.replace(/[^A-Za-z]/g, '').toUpperCase();
+            const result = columnarTranspositionEncrypt(input, key);
+            document.getElementById('output').value = result;
+        }
+
+        function decrypt() {
+            const input = document.getElementById('input').value.replace(/[^A-Za-z]/g, '').toUpperCase();
+            const key = document.getElementById('key').value.replace(/[^A-Za-z]/g, '').toUpperCase();
+            const result = columnarTranspositionDecrypt(input, key);
+            document.getElementById('output').value = result;
+        }
+
+        function columnarTranspositionEncrypt(text, key) {
+            if (key.length === 0) return text;
+            const numColumns = key.length;
+            const numRows = Math.ceil(text.length / numColumns);
+            const grid = Array(numRows).fill().map(() => Array(numColumns).fill(''));
+
+            let index = 0;
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numColumns; col++) {
+                    if (index < text.length) {
+                        grid[row][col] = text[index++];
+                    }
+                }
+            }
+
+            const sortedKey = [...key].sort();
+            let result = '';
+            for (let i = 0; i < numColumns; i++) {
+                const col = key.indexOf(sortedKey[i]);
+                for (let row = 0; row < numRows; row++) {
+                    result += grid[row][col] || '';
+                }
+            }
+            return result;
+        }
+
+        function columnarTranspositionDecrypt(text, key) {
+            if (key.length === 0) return text;
+            const numColumns = key.length;
+            const numRows = Math.ceil(text.length / numColumns);
+            const grid = Array(numRows).fill().map(() => Array(numColumns).fill(''));
+
+            const sortedKey = [...key].sort();
+            let index = 0;
+            for (let i = 0; i < numColumns; i++) {
+                const col = key.indexOf(sortedKey[i]);
+                for (let row = 0; row < numRows; row++) {
+                    if (index < text.length) {
+                        grid[row][col] = text[index++];
+                    }
+                }
+            }
+
+            let result = '';
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numColumns; col++) {
+                    result += grid[row][col] || '';
+                }
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>

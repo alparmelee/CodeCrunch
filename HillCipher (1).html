@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hill Cipher Calculator (2x2)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        textarea,
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        textarea:focus,
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .key-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .key-grid input {
+            text-align: center;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            max-width: 200px;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #34495e;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+
+        .error-message {
+            color: #d9534f;
+            background-color: #fbecec;
+            border: 1px solid #f1c2c2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hill Cipher Calculator (2x2)</h1>
+        <h2>Key Matrix (2x2):</h2>
+        <div class="key-grid">
+            <input type="number" id="k00" placeholder="K00">
+            <input type="number" id="k01" placeholder="K01">
+            <input type="number" id="k10" placeholder="K10">
+            <input type="number" id="k11" placeholder="K11">
+        </div>
+        <textarea id="input" rows="3" placeholder="Enter your message"></textarea>
+        <div class="button-group">
+            <button onclick="encrypt()">Encrypt</button>
+            <button onclick="decrypt()">Decrypt</button>
+        </div>
+        <h2>Result:</h2>
+        <textarea id="output" rows="3" readonly></textarea>
+        <div id="error-message" class="error-message" style="display:none;"></div>
+    </div>
+
+    <script>
+        function mod(n, m) {
+            return ((n % m) + m) % m;
+        }
+
+        function matrixMultiply(a, b) {
+            let result = [];
+            for (let i = 0; i < a.length; i++) {
+                result[i] = 0;
+                for (let j = 0; j < b.length; j++) {
+                    result[i] += a[i][j] * b[j];
+                }
+                result[i] = mod(result[i], 26);
+            }
+            return result;
+        }
+
+        function inverseMatrix(matrix) {
+            let det = mod((matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]), 26);
+            let detInv = 0;
+            for (let i = 0; i < 26; i++) {
+                if (mod(det * i, 26) === 1) {
+                    detInv = i;
+                    break;
+                }
+            }
+            if (detInv === 0) {
+                throw new Error("Matrix is not invertible. Determinant has no modular inverse. Try a different key.");
+            }
+            return [
+                [mod(matrix[1][1] * detInv, 26), mod(-matrix[0][1] * detInv, 26)],
+                [mod(-matrix[1][0] * detInv, 26), mod(matrix[0][0] * detInv, 26)]
+            ];
+        }
+
+        function hillCipher(text, key, mode) {
+            let result = "";
+            let cleanedText = text.replace(/[^A-Za-z]/g, '').toUpperCase();
+            
+            if (cleanedText.length % 2 !== 0) {
+                cleanedText += 'X'; // Pad with 'X'
+            }
+            
+            for (let i = 0; i < cleanedText.length; i += 2) {
+                let block = cleanedText.slice(i, i + 2).split('').map(char => char.charCodeAt(0) - 65);
+                let encrypted;
+                try {
+                    const matrixToUse = mode === 'encrypt' ? key : inverseMatrix(key);
+                    encrypted = matrixMultiply(matrixToUse, block);
+                    result += encrypted.map(num => String.fromCharCode(num + 65)).join('');
+                } catch (e) {
+                    throw e; // Re-throw error from inverseMatrix
+                }
+            }
+            return result;
+        }
+
+        function getKeyMatrix() {
+            const k00 = parseInt(document.getElementById('k00').value);
+            const k01 = parseInt(document.getElementById('k01').value);
+            const k10 = parseInt(document.getElementById('k10').value);
+            const k11 = parseInt(document.getElementById('k11').value);
+            
+            if (isNaN(k00) || isNaN(k01) || isNaN(k10) || isNaN(k11)) {
+                throw new Error("Please enter all four values for the key matrix.");
+            }
+            return [
+                [k00, k01],
+                [k10, k11]
+            ];
+        }
+
+        function displayResult(message, isError = false) {
+            const output = document.getElementById('output');
+            const errorDiv = document.getElementById('error-message');
+            
+            if (isError) {
+                output.style.display = 'none';
+                errorDiv.innerText = message;
+                errorDiv.style.display = 'block';
+            } else {
+                output.style.display = 'block';
+                output.value = message;
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        function encrypt() {
+            try {
+                const keyMatrix = getKeyMatrix();
+                const text = document.getElementById('input').value;
+                const result = hillCipher(text, keyMatrix, 'encrypt');
+                displayResult(result);
+            } catch (e) {
+                displayResult(e.message, true);
+            }
+        }
+
+        function decrypt() {
+            try {
+                const keyMatrix = getKeyMatrix();
+                const text = document.getElementById('input').value;
+                const result = hillCipher(text, keyMatrix, 'decrypt');
+                displayResult(result);
+            } catch (e) {
+                displayResult(e.message, true);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Arithmetic Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8; /* A light, cool blue-gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #e1e8f0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            color: #3498db;
+            text-align: center;
+            font-size: 1.8em;
+            margin: 30px 0 15px;
+            font-weight: 600;
+        }
+
+        .calculator {
+            margin: 30px 0;
+            padding: 25px;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            background-color: #f9fbfd;
+        }
+        
+        .calculator:first-of-type {
+            margin-top: 0;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 1px solid #c9d6e4;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 25px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+            word-wrap: break-word;
+        }
+
+        #modResult, #inverseModResult, #expResult {
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Modular Arithmetic Calculator</h1>
+
+        <div class="calculator">
+            <h2>Modulus Calculator</h2>
+            <label for="num1">Enter Number (a):</label>
+            <input type="number" id="num1" placeholder="Enter number a" required>
+            
+            <label for="mod1">Enter Modulus (n):</label>
+            <input type="number" id="mod1" placeholder="Enter modulus n" required>
+            
+            <button onclick="calculateMod()">Calculate Modulus</button>
+            <p id="modResult"></p>
+        </div>
+
+        <div class="calculator">
+            <h2>Modular Inverse</h2>
+            <label for="num2">Enter Number (a):</label>
+            <input type="number" id="num2" placeholder="Enter number a" required>
+            
+            <label for="mod2">Enter Modulus (n):</label>
+            <input type="number" id="mod2" placeholder="Enter modulus n" required>
+            
+            <button onclick="calculateInverseMod()">Calculate Modular Inverse</button>
+            <p id="inverseModResult"></p>
+        </div>
+
+        <div class="calculator">
+            <h2>Modular Exponentiation</h2>
+            <label for="base">Enter Base (a):</label>
+            <input type="number" id="base" placeholder="Enter base a" required>
+            
+            <label for="exp">Enter Exponent (e):</label>
+            <input type="number" id="exp" placeholder="Enter exponent e" required>
+            
+            <label for="modExp">Enter Modulus (n):</label>
+            <input type="number" id="modExp" placeholder="Enter modulus n" required>
+            
+            <button onclick="modExponentiation()">Calculate a^e mod n</button>
+            <p id="expResult"></p>
+        </div>
+    </div>
+
+    <script>
+        // Function to calculate a mod n
+        function calculateMod() {
+            let a = parseInt(document.getElementById("num1").value);
+            let n = parseInt(document.getElementById("mod1").value);
+            
+            if (!isNaN(a) && !isNaN(n) && n > 0) {
+                let result = ((a % n) + n) % n; // Ensures a positive result for negative 'a'
+                document.getElementById("modResult").innerHTML = `Result: ${a} mod ${n} = <span style="font-weight:bold; color: #3498db;">${result}</span>`;
+            } else {
+                document.getElementById("modResult").className = 'error-message';
+                document.getElementById("modResult").textContent = "Please enter valid numbers for a and n (n must be positive).";
+            }
+        }
+
+        // Extended Euclidean Algorithm to find the inverse mod
+        function calculateInverseMod() {
+            let a = parseInt(document.getElementById("num2").value);
+            let n = parseInt(document.getElementById("mod2").value);
+
+            if (!isNaN(a) && !isNaN(n) && n > 0) {
+                const gcd = extendedGcd(a, n);
+                if (gcd.d !== 1) {
+                    document.getElementById("inverseModResult").className = 'error-message';
+                    document.getElementById("inverseModResult").textContent = `No inverse exists for ${a} mod ${n} because gcd(${a}, ${n}) = ${gcd.d} ≠ 1.`;
+                } else {
+                    let result = ((gcd.x % n) + n) % n; // Ensures positive result
+                    document.getElementById("inverseModResult").className = '';
+                    document.getElementById("inverseModResult").innerHTML = `Inverse of ${a} mod ${n} = <span style="font-weight:bold; color: #3498db;">${result}</span>`;
+                }
+            } else {
+                document.getElementById("inverseModResult").className = 'error-message';
+                document.getElementById("inverseModResult").textContent = "Please enter valid numbers for a and n (n must be positive).";
+            }
+        }
+        
+        function extendedGcd(a, b) {
+            if (a === 0) {
+                return { d: b, x: 0, y: 1 };
+            }
+            const { d, x, y } = extendedGcd(b % a, a);
+            return { d, x: y - Math.floor(b / a) * x, y: x };
+        }
+
+        // Function for exponentiation by squaring (modular exponentiation)
+        function modExponentiation() {
+            let a = parseInt(document.getElementById("base").value);
+            let e = parseInt(document.getElementById("exp").value);
+            let n = parseInt(document.getElementById("modExp").value);
+
+            if (!isNaN(a) && !isNaN(e) && !isNaN(n) && n > 0 && e >= 0) {
+                let result = expBySquaring(a, e, n);
+                document.getElementById("expResult").className = '';
+                document.getElementById("expResult").innerHTML = `Result: ${a}^${e} mod ${n} = <span style="font-weight:bold; color: #3498db;">${result}</span>`;
+            } else {
+                document.getElementById("expResult").className = 'error-message';
+                document.getElementById("expResult").textContent = "Please enter valid numbers for a, e, and n (n must be positive, e must be non-negative).";
+            }
+        }
+
+        // Helper function for exponentiation by squaring
+        function expBySquaring(base, exponent, mod) {
+            if (mod === 1) return 0;
+            let result = 1;
+            base = ((base % mod) + mod) % mod;
+
+            while (exponent > 0) {
+                if (exponent % 2 === 1) {
+                    result = (result * base) % mod;
+                }
+                exponent = Math.floor(exponent / 2);
+                base = (base * base) % mod;
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>

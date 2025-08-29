@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number System Converter</title>
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+h3 {
+    color: #34495e;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+button:active {
+    background-color: #1f618d;
+    transform: translateY(0);
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #ecf0f1;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+}
+
+.result h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.result p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2980b9;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Number System Converters</h2>
+
+        <!-- Binary to Decimal Converter -->
+        <h3>Binary to Decimal</h3>
+        <input type="text" id="binaryInput" placeholder="Enter binary number (e.g., 1010)" />
+        <button id="binaryToDecimalButton">Convert to Decimal</button>
+        <div class="result">
+            <h4>Decimal Result:</h4>
+            <p id="binaryToDecimalResult"></p>
+        </div>
+
+        <!-- Decimal to Binary Converter -->
+        <h3>Decimal to Binary</h3>
+        <input type="number" id="decimalInput" placeholder="Enter decimal number" />
+        <button id="decimalToBinaryButton">Convert to Binary</button>
+        <div class="result">
+            <h4>Binary Result:</h4>
+            <p id="decimalToBinaryResult"></p>
+        </div>
+
+        <!-- Decimal to Hexadecimal Converter -->
+        <h3>Decimal to Hexadecimal</h3>
+        <input type="number" id="decimalHexInput" placeholder="Enter decimal number" />
+        <button id="decimalToHexButton">Convert to Hexadecimal</button>
+        <div class="result">
+            <h4>Hexadecimal Result:</h4>
+            <p id="decimalToHexResult"></p>
+        </div>
+
+        <!-- Hexadecimal to Decimal Converter -->
+        <h3>Hexadecimal to Decimal</h3>
+        <input type="text" id="hexInput" placeholder="Enter hexadecimal number (e.g., A1F)" />
+        <button id="hexToDecimalButton">Convert to Decimal</button>
+        <div class="result">
+            <h4>Decimal Result:</h4>
+            <p id="hexToDecimalResult"></p>
+        </div>
+
+        <!-- Binary to Hexadecimal Converter -->
+        <h3>Binary to Hexadecimal</h3>
+        <input type="text" id="binaryHexInput" placeholder="Enter binary number (e.g., 1010)" />
+        <button id="binaryToHexButton">Convert to Hexadecimal</button>
+        <div class="result">
+            <h4>Hexadecimal Result:</h4>
+            <p id="binaryToHexResult"></p>
+        </div>
+
+        <!-- Hexadecimal to Binary Converter -->
+        <h3>Hexadecimal to Binary</h3>
+        <input type="text" id="hexBinaryInput" placeholder="Enter hexadecimal number (e.g., A1F)" />
+        <button id="hexToBinaryButton">Convert to Binary</button>
+        <div class="result">
+            <h4>Binary Result:</h4>
+            <p id="hexToBinaryResult"></p>
+        </div>
+    </div>
+
+    <script>
+        // Convert binary to decimal
+        document.getElementById('binaryToDecimalButton').onclick = function() {
+            const binary = document.getElementById('binaryInput').value;
+            const decimal = parseInt(binary, 2);
+            document.getElementById('binaryToDecimalResult').innerText = isNaN(decimal) ? 'Invalid binary number' : decimal;
+        };
+
+        // Convert decimal to binary
+        document.getElementById('decimalToBinaryButton').onclick = function() {
+            const decimal = document.getElementById('decimalInput').value;
+            const binary = (decimal >>> 0).toString(2);
+            document.getElementById('decimalToBinaryResult').innerText = binary;
+        };
+
+        // Convert decimal to hexadecimal
+        document.getElementById('decimalToHexButton').onclick = function() {
+            const decimal = document.getElementById('decimalHexInput').value;
+            const hex = Number(decimal).toString(16).toUpperCase();
+            document.getElementById('decimalToHexResult').innerText = hex;
+        };
+
+        // Convert hexadecimal to decimal
+        document.getElementById('hexToDecimalButton').onclick = function() {
+            const hex = document.getElementById('hexInput').value;
+            const decimal = parseInt(hex, 16);
+            document.getElementById('hexToDecimalResult').innerText = isNaN(decimal) ? 'Invalid hexadecimal number' : decimal;
+        };
+
+        // Convert binary to hexadecimal
+        document.getElementById('binaryToHexButton').onclick = function() {
+            const binary = document.getElementById('binaryHexInput').value;
+            const hex = parseInt(binary, 2).toString(16).toUpperCase();
+            document.getElementById('binaryToHexResult').innerText = isNaN(hex) ? 'Invalid binary number' : hex;
+        };
+
+        // Convert hexadecimal to binary
+        document.getElementById('hexToBinaryButton').onclick = function() {
+            const hex = document.getElementById('hexBinaryInput').value;
+            const binary = parseInt(hex, 16).toString(2);
+            document.getElementById('hexToBinaryResult').innerText = isNaN(binary) ? 'Invalid hexadecimal number' : binary;
+        };
+    </script>
+</body>
+</html>

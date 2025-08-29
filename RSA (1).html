@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Key Calculators</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8f0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5em;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.8em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            background-color: #1f618d;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            min-height: 50px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .result strong {
+            color: #3498db;
+        }
+        
+        .error {
+            color: #d9534f;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>RSA Key Calculators</h1>
+    <input type="number" id="p" placeholder="Enter prime number p">
+    <input type="number" id="q" placeholder="Enter prime number q">
+    <input type="number" id="e" placeholder="Enter public exponent e">
+    <input type="number" id="d" placeholder="Enter private exponent d">
+
+    <button onclick="calculateN()">Calculate n</button>
+    <div class="result" id="nResult"></div>
+
+    <button onclick="calculatePhiN()">Calculate Φ(n)</button>
+    <div class="result" id="phiNResult"></div>
+
+    <button onclick="calculatePublicKey()">Calculate Public Key</button>
+    <div class="result" id="publicKeyResult"></div>
+
+    <button onclick="calculatePrivateKey()">Calculate Private Key</button>
+    <div class="result" id="privateKeyResult"></div>
+</div>
+
+<script>
+    function isPrime(num) {
+        if (num <= 1) return false;
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i === 0) return false;
+        }
+        return true;
+    }
+
+    function gcd(a, b) {
+        while (b) {
+            [a, b] = [b, a % b];
+        }
+        return a;
+    }
+
+    function modInverse(a, m) {
+        a = (a % m + m) % m;
+        for (let x = 1; x < m; x++) {
+            if ((a * x) % m === 1) {
+                return x;
+            }
+        }
+        return null;
+    }
+
+    // Function to calculate n (modulus)
+    function calculateN() {
+        const p = parseInt(document.getElementById("p").value);
+        const q = parseInt(document.getElementById("q").value);
+
+        if (isNaN(p) || isNaN(q) || !isPrime(p) || !isPrime(q)) {
+            document.getElementById("nResult").innerHTML = "<p class='error'>Please enter valid prime numbers for p and q.</p>";
+            return;
+        }
+
+        const n = p * q;
+        document.getElementById("nResult").innerHTML = `<p><strong>n:</strong> ${n}</p>`;
+    }
+
+    // Function to calculate Φ(n) (Euler's Totient function)
+    function calculatePhiN() {
+        const p = parseInt(document.getElementById("p").value);
+        const q = parseInt(document.getElementById("q").value);
+
+        if (isNaN(p) || isNaN(q) || !isPrime(p) || !isPrime(q)) {
+            document.getElementById("phiNResult").innerHTML = "<p class='error'>Please enter valid prime numbers for p and q.</p>";
+            return;
+        }
+
+        const phiN = (p - 1) * (q - 1);
+        document.getElementById("phiNResult").innerHTML = `<p><strong>Φ(n):</strong> ${phiN}</p>`;
+    }
+
+    // Function to calculate public key
+    function calculatePublicKey() {
+        const p = parseInt(document.getElementById("p").value);
+        const q = parseInt(document.getElementById("q").value);
+        const e = parseInt(document.getElementById("e").value);
+
+        if (isNaN(p) || isNaN(q) || isNaN(e) || !isPrime(p) || !isPrime(q)) {
+            document.getElementById("publicKeyResult").innerHTML = "<p class='error'>Please enter valid prime numbers for p and q and a valid number for e.</p>";
+            return;
+        }
+        
+        const n = p * q;
+        const phiN = (p - 1) * (q - 1);
+
+        if (e <= 1 || e >= phiN || gcd(e, phiN) !== 1) {
+            document.getElementById("publicKeyResult").innerHTML = `<p class='error'>The public exponent 'e' must be coprime to Φ(n) (${phiN}) and be greater than 1 and less than Φ(n).</p>`;
+            return;
+        }
+
+        const publicKey = `{${e}, ${n}}`;
+        document.getElementById("publicKeyResult").innerHTML = `<p><strong>Public Key:</strong> ${publicKey}</p>`;
+    }
+
+    // Function to calculate private key
+    function calculatePrivateKey() {
+        const p = parseInt(document.getElementById("p").value);
+        const q = parseInt(document.getElementById("q").value);
+        const e = parseInt(document.getElementById("e").value);
+
+        if (isNaN(p) || isNaN(q) || isNaN(e) || !isPrime(p) || !isPrime(q)) {
+            document.getElementById("privateKeyResult").innerHTML = "<p class='error'>Please enter valid prime numbers for p and q and a valid number for e.</p>";
+            return;
+        }
+        
+        const n = p * q;
+        const phiN = (p - 1) * (q - 1);
+
+        if (e <= 1 || e >= phiN || gcd(e, phiN) !== 1) {
+            document.getElementById("privateKeyResult").innerHTML = `<p class='error'>The public exponent 'e' must be coprime to Φ(n) (${phiN}) and be greater than 1 and less than Φ(n).</p>`;
+            return;
+        }
+
+        const d = modInverse(e, phiN);
+        if (d === null) {
+            document.getElementById("privateKeyResult").innerHTML = `<p class='error'>A modular inverse for e=${e} mod Φ(n)=${phiN} does not exist.</p>`;
+            return;
+        }
+
+        const privateKey = `{${d}, ${n}}`;
+        document.getElementById("privateKeyResult").innerHTML = `<p><strong>Private Key:</strong> ${privateKey}</p>`;
+    }
+</script>
+
+</body>
+</html>
