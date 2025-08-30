@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Cipher Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Shift Cipher Questions</h1>
+
+        <!-- Fall 2021 Question -->
+        <div class="question-card" id="q-fall21">
+            <div class="question-title">Fall 2021 Quiz #1</div>
+            <p class="question-text">
+                <b>(5 pts)</b> Encrypt "SEPTEMBER" using the shift cipher with an encryption key of 21.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('q-fall21')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: NZKOZHZWM</p>
+                <div class="answer-work">
+                    To encrypt the plaintext "SEPTEMBER" with a shift key of 21, you shift each letter 21 positions forward in the alphabet.
+                    
+                    S (18) + 21 = 39 ≡ 13 mod 26 = N
+                    E (4) + 21 = 25 ≡ 25 mod 26 = Z
+                    P (15) + 21 = 36 ≡ 10 mod 26 = K
+                    T (19) + 21 = 40 ≡ 14 mod 26 = O
+                    E (4) + 21 = 25 ≡ 25 mod 26 = Z
+                    M (12) + 21 = 33 ≡ 7 mod 26 = H
+                    B (1) + 21 = 22 ≡ 22 mod 26 = W
+                    E (4) + 21 = 25 ≡ 25 mod 26 = Z
+                    R (17) + 21 = 38 ≡ 12 mod 26 = M
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2022 Question 1 -->
+        <div class="question-card" id="q-fall22-1">
+            <div class="question-title">Fall 2022 Quiz #1</div>
+            <p class="question-text">
+                <b>(5 pts)</b> Decrypt the following cipher text, which was encrypted via the shift cipher with an encryption key of 11: AFXAVTYWLEEP.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('q-fall22-1')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: PUMPKINLATTE</p>
+                <div class="answer-work">
+                    The encryption key is 11, so the decryption key is -11, which is equivalent to +15 mod 26. To decrypt, shift each letter of the ciphertext 15 positions forward (or 11 positions backward).
+                    
+                    A (0) - 11 = -11 ≡ 15 mod 26 = P
+                    F (5) - 11 = -6 ≡ 20 mod 26 = U
+                    X (23) - 11 = 12 ≡ 12 mod 26 = M
+                    A (0) - 11 = -11 ≡ 15 mod 26 = P
+                    V (21) - 11 = 10 ≡ 10 mod 26 = K
+                    T (19) - 11 = 8 ≡ 8 mod 26 = I
+                    Y (24) - 11 = 13 ≡ 13 mod 26 = N
+                    W (22) - 11 = 11 ≡ 11 mod 26 = L
+                    L (11) - 11 = 0 ≡ 0 mod 26 = A
+                    E (4) - 11 = -7 ≡ 19 mod 26 = T
+                    E (4) - 11 = -7 ≡ 19 mod 26 = T
+                    P (15) - 11 = 4 ≡ 4 mod 26 = E
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2022 Question 7 -->
+        <div class="question-card" id="q-fall22-7">
+            <div class="question-title">Fall 2022 Quiz #1</div>
+            <p class="question-text">
+                <b>(6 pts)</b> What is the error with the code below which is supposed to decrypt its input string via the shift cipher? Provide the fix to the error.
+            </p>
+            <div class="code-block">
+                void decrypt (char* cipher, int key) {
+                    int len  strlen(cipher), i;
+                    for ( $(i=0$; i&lt;len; i++)
+                        printf("%c", (cipher [i]-'a'-key)%26+'a');
+                    printf("\n");
+                }
+            </div>
+            <button class="show-answer-btn" onclick="toggleAnswer('q-fall22-7')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer:</p>
+                <div class="answer-work">
+                    The error is that the modulo operator (%) in C does not handle negative numbers in a way that is useful for modular arithmetic. If the result of (cipher[i] - 'a' - key) is negative, the modulo operation will return a negative number, which will result in an incorrect character.
+                    
+                    The fix is to add 26 to the result before the modulo operation to ensure it is always non-negative.
+                    
+                    Corrected Code:
+                    
+                    void decrypt (char* cipher, int key) {
+                        int len = strlen(cipher);
+                        for (int i=0; i&lt;len; i++) {
+                            printf("%c", (cipher[i] - 'a' - key + 26) % 26 + 'a');
+                        }
+                        printf("\n");
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2020 Question -->
+        <div class="question-card" id="q-fall20">
+            <div class="question-title">Fall 2020 Quiz #1</div>
+            <p class="question-text">
+                <b>(9 pts)</b> Encrypt the plaintext "HOWAREYOU" using the shift cipher with the key = 11.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('q-fall20')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: SZHLC PJZF</p>
+                <div class="answer-work">
+                    To encrypt the plaintext "HOWAREYOU" with a shift key of 11, you shift each letter 11 positions forward in the alphabet.
+                    
+                    H (7) + 11 = 18 ≡ 18 mod 26 = S
+                    O (14) + 11 = 25 ≡ 25 mod 26 = Z
+                    W (22) + 11 = 33 ≡ 7 mod 26 = H
+                    A (0) + 11 = 11 ≡ 11 mod 26 = L
+                    R (17) + 11 = 28 ≡ 2 mod 26 = C
+                    E (4) + 11 = 15 ≡ 15 mod 26 = P
+                    Y (24) + 11 = 35 ≡ 9 mod 26 = J
+                    O (14) + 11 = 25 ≡ 25 mod 26 = Z
+                    U (20) + 11 = 31 ≡ 5 mod 26 = F
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>

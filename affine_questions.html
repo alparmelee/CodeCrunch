@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affine Cipher Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-12">Affine Cipher Questions</h1>
+        
+        <!-- Fall 2021 Question 5 -->
+        <div class="question-card" id="affine-q-fall21-5">
+            <div class="question-title">Fall 2021 Quiz #1</div>
+            <p class="question-text">
+                <b>(10 pts)</b> Consider an affine cipher with the encryption function f(x)=(19x+12) mod 35. What is the corresponding decryption function?
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('affine-q-fall21-5')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: f^-1(x) = (24x+27) mod 35</p>
+                <div class="answer-work">
+                    To find the decryption function, you first need to find the multiplicative inverse of the encryption key a, which is 19, modulo 35. We're looking for 19^-1 mod 35.
+                    
+                    Using the Extended Euclidean Algorithm:
+                    
+                    35 = 1 * 19 + 16
+                    19 = 1 * 16 + 3
+                    16 = 5 * 3 + 1
+                    
+                    Working backwards to express 1 as a linear combination of 19 and 35, we find the inverse of 19 mod 35 is 24.
+                    
+                    The decryption function is f^-1(x) = a^-1(x-b) mod m, where a=19, b=12, and m=35.
+                    
+                    f^-1(x) = 24(x-12) mod 35
+                    f^-1(x) = (24x - 288) mod 35
+                    
+                    Since 288 is equivalent to 8 mod 35, we have:
+                    f^-1(x) = (24x - 8) mod 35
+                    
+                    To make the constant term positive, add 35:
+                    f^-1(x) = (24x + 27) mod 35
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2022 Question 2 -->
+        <div class="question-card" id="affine-q-fall22-2">
+            <div class="question-title">Fall 2022 Quiz #1</div>
+            <p class="question-text">
+                <b>(6 pts)</b> Consider an Affine cipher for an alphabet with 49 symbols. How many possible encryption keys could there be? Please leave your answer in prime factorized form.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('affine-q-fall22-2')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: 2 * 3 * 7^3</p>
+                <div class="answer-work">
+                    The number of possible encryption keys is m * phi(m), where m is the alphabet size and phi(m) is Euler's totient function.
+                    
+                    In this case, m=49. First, we find the prime factorization of 49: 7^2.
+                    
+                    phi(49) = 49(1 - 1/7) = 49(6/7) = 42.
+                    
+                    The total number of keys is 49 * 42.
+                    
+                    Expressed in prime factorized form:
+                    49 = 7^2
+                    42 = 2 * 3 * 7
+                    
+                    Total keys = 7^2 * (2 * 3 * 7) = 2 * 3 * 7^3.
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2022 Question 3 -->
+        <div class="question-card" id="affine-q-fall22-3">
+            <div class="question-title">Fall 2022 Quiz #1</div>
+            <p class="question-text">
+                <b>(10 pts)</b> You believe that the ciphertext of 'W' maps to the plaintext letter 'I' and the ciphertext letter 'H' maps to the plaintext letter 'R' for a ciphertext that you know to be encrypted via the Affine Cipher. What is the only encryption function that is consistent with this information? Your answer should be of the form f(x)=(ax+b) mod 26, where gcd(a,26)=1 and 0 <= a, b < 26.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('affine-q-fall22-3')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: f(x) = (7x + 18) mod 26</p>
+                <div class="answer-work">
+                    We are given two pairs of plaintext and ciphertext letters and need to find the encryption function f(x) = (ax+b) mod 26.
+                    
+                    'I'(8) maps to 'W'(22): 22 = (8a+b) mod 26
+                    'R'(17) maps to 'H'(7): 7 = (17a+b) mod 26
+                    
+                    Subtracting the first equation from the second gives:
+                    9a = -15 mod 26
+                    9a = 11 mod 26
+                    
+                    The inverse of 9 mod 26 is 3, since 9 * 3 = 27 which is equivalent to 1 mod 26.
+                    
+                    3 * 9a = 3 * 11 mod 26
+                    a = 33 mod 26
+                    a = 7 mod 26
+                    
+                    Substituting a=7 back into the first equation:
+                    8(7) + b = 22 mod 26
+                    56 + b = 22 mod 26
+                    4 + b = 22 mod 26
+                    b = 18 mod 26
+                    
+                    The encryption function is f(x) = (7x+18) mod 26.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fall 2020 Question 2 -->
+        <div class="question-card" id="affine-q-fall20-2">
+            <div class="question-title">Fall 2020 Quiz #1</div>
+            <p class="question-text">
+                <b>(5 pts)</b> Consider an Affine cipher for an alphabet with 42 symbols. How many possible encryption keys would there be for the Affine cipher on an alphabet of this size?
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('affine-q-fall20-2')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: 504</p>
+                <div class="answer-work">
+                    The number of possible encryption keys is m * phi(m), where m is the alphabet size and phi(m) is Euler's totient function.
+                    
+                    In this case, m=42. The prime factorization of 42 is 2 * 3 * 7.
+                    
+                    phi(42) = 42(1 - 1/2)(1 - 1/3)(1 - 1/7) = 42(1/2)(2/3)(6/7) = 12.
+                    
+                    Total keys = 42 * 12 = 504.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fall 2020 Question 3 -->
+        <div class="question-card" id="affine-q-fall20-3">
+            <div class="question-title">Fall 2020 Quiz #1</div>
+            <p class="question-text">
+                <b>(5 pts)</b> The encryption function for an Affine Cipher (in English) is f(x)=(19x+3) mod 26. What is the corresponding decryption function, f^-1(x)?
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('affine-q-fall20-3')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: f^-1(x) = (11x+19) mod 26</p>
+                <div class="answer-work">
+                    The decryption function is f^-1(x) = a^-1(x-b) mod 26. Here, a=19, b=3, and the modulus is 26.
+                    
+                    Using the Extended Euclidean Algorithm, the multiplicative inverse of 19 modulo 26 is 11.
+                    
+                    f^-1(x) = 11(x-3) mod 26
+                    f^-1(x) = (11x - 33) mod 26
+                    
+                    Since -33 is equivalent to -7 which is equivalent to 19 mod 26, the final function is:
+                    
+                    f^-1(x) = (11x+19) mod 26
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>
