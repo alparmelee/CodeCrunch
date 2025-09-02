@@ -83,34 +83,25 @@
             </p>
             <button class="show-answer-btn" onclick="toggleAnswer('ic-q-fall21-1')">Show Answer & Work</button>
             <div class="answer-container">
-                <p class="answer-text">Answer: 77/555</p>
+                <p class="answer-text">Answer: 131/447 ≈ 0.29306</p>
                 <div class="answer-work">
-                    The total number of letters, N, is $10+50+50+40=150$.
+                    The total number of letters, N, is 10+50+50+40=150.
                     The formula for the index of coincidence, IC, is:
-                    IC = $\frac{\sum_{i=A}^{D} f_i(f_i-1)}{N(N-1)}$
+                    IC = Sum of [ f(i) * (f(i) - 1) ] / [ N * (N - 1) ]
                     
-                    The sum of $f_i(f_i-1)$ is:
-                    A: $10(10-1) = 10 \cdot 9 = 90$
-                    B: $50(50-1) = 50 \cdot 49 = 2450$
-                    C: $50(50-1) = 50 \cdot 49 = 2450$
-                    D: $40(40-1) = 40 \cdot 39 = 1560$
-                    Sum = $90 + 2450 + 2450 + 1560 = 6550$
+                    The sum of f(i) * (f(i) - 1) is:
+                    A: 10(10-1) = 90
+                    B: 50(50-1) = 2450
+                    C: 50(50-1) = 2450
+                    D: 40(40-1) = 1560
+                    Sum = 90 + 2450 + 2450 + 1560 = 6550
                     
-                    The denominator is $N(N-1) = 150(149) = 22350$.
+                    The denominator is N(N-1) = 150(149) = 22350.
                     
-                    IC = $\frac{6550}{22350}$
-                    To reduce the fraction, divide both the numerator and denominator by their greatest common divisor.
-                    $6550 = 10 \cdot 655 = 10 \cdot 5 \cdot 131 = 50 \cdot 131$
-                    $22350 = 10 \cdot 2235 = 10 \cdot 5 \cdot 447 = 50 \cdot 447 = 50 \cdot 3 \cdot 149$
-                    The GCD is 50.
+                    IC = 6550 / 22350
+                    To reduce the fraction, divide both the numerator and denominator by their greatest common divisor, 50.
                     
-                    IC = $\frac{6550 \div 50}{22350 \div 50} = \frac{131}{447}$. (Wait, there's a calculation error in the original prompt's solution.) Let's re-calculate.
-                    
-                    Total letters = 150
-                    Sum = $10 \cdot 9 + 50 \cdot 49 + 50 \cdot 49 + 40 \cdot 39 = 90 + 2450 + 2450 + 1560 = 6550$
-                    Denominator = $150 \cdot 149 = 22350$
-                    
-                    IC = $\frac{6550}{22350} = \frac{655}{2235} = \frac{131}{447}$. This is the correct fraction.
+                    IC = (6550 / 50) / (22350 / 50) = 131 / 447.
                 </div>
             </div>
         </div>
@@ -123,35 +114,25 @@
             </p>
             <button class="show-answer-btn" onclick="toggleAnswer('ic-q-fall22-6')">Show Answer & Work</button>
             <div class="answer-container">
-                <p class="answer-text">Answer: 50/149</p>
+                <p class="answer-text">Answer: 167/447 ≈ 0.37360</p>
                 <div class="answer-work">
-                    The total number of letters, N, is $10+40+20+80=150$.
+                    The total number of letters, N, is 10+40+20+80=150.
                     The formula for the index of coincidence, IC, is:
-                    IC = $\frac{\sum_{i=A}^{D} f_i(f_i-1)}{N(N-1)}$
+                    IC = Sum of [ f(i) * (f(i) - 1) ] / [ N * (N - 1) ]
                     
-                    The sum of $f_i(f_i-1)$ is:
-                    A: $10(10-1) = 90$
-                    B: $40(40-1) = 40 \cdot 39 = 1560$
-                    C: $20(20-1) = 20 \cdot 19 = 380$
-                    D: $80(80-1) = 80 \cdot 79 = 6320$
-                    Sum = $90 + 1560 + 380 + 6320 = 8350$
+                    The sum of f(i) * (f(i) - 1) is:
+                    A: 10(10-1) = 90
+                    B: 40(40-1) = 1560
+                    C: 20(20-1) = 380
+                    D: 80(80-1) = 6320
+                    Sum = 90 + 1560 + 380 + 6320 = 8350
                     
-                    The denominator is $N(N-1) = 150(149) = 22350$.
+                    The denominator is N(N-1) = 150(149) = 22350.
                     
-                    IC = $\frac{8350}{22350}$
-                    To reduce the fraction, divide both the numerator and denominator by their greatest common divisor.
-                    $8350 = 10 \cdot 835 = 10 \cdot 5 \cdot 167 = 50 \cdot 167$
-                    $22350 = 10 \cdot 2235 = 10 \cdot 5 \cdot 447 = 50 \cdot 447 = 50 \cdot 3 \cdot 149$
-                    The GCD is 50.
+                    IC = 8350 / 22350
+                    To reduce the fraction, divide both the numerator and denominator by their greatest common divisor, 50.
                     
-                    IC = $\frac{8350 \div 50}{22350 \div 50} = \frac{167}{447}$. Wait, another error.
-                    Let's check the original provided answer of 50/149.
-                    $50/149$
-                    $N = 150$
-                    Sum = $\sum f_i(f_i-1) = 10(9) + 40(39) + 20(19) + 80(79) = 90+1560+380+6320 = 8350$
-                    Denominator = $150 \cdot 149 = 22350$
-                    $\frac{8350}{22350} = \frac{835}{2235} = \frac{167}{447}$.
-                    The provided solution is likely incorrect based on the problem data. I will provide the answer I calculated.
+                    IC = (8350 / 50) / (22350 / 50) = 167 / 447.
                 </div>
             </div>
         </div>
@@ -164,36 +145,21 @@
             </p>
             <button class="show-answer-btn" onclick="toggleAnswer('ic-q-fall20-2')">Show Answer & Work</button>
             <div class="answer-container">
-                <p class="answer-text">Answer: 13/287</p>
+                <p class="answer-text">Answer: 1/21 ≈ 0.04762</p>
                 <div class="answer-work">
-                    The number of letters is the sum of the first 26 integers: $N = \sum_{i=1}^{26} i = \frac{26(27)}{2} = 13 \cdot 27 = 351$.
+                    The total number of letters is the sum of the first 26 integers: N = (26 * 27) / 2 = 351.
                     
-                    The numerator of the IC formula is $\sum_{i=1}^{26} n_i(n_i-1)$, where $n_i$ is the count of each letter. In this case, $n_i = i$.
-                    Numerator = $\sum_{i=1}^{26} i(i-1) = \sum_{i=1}^{26} (i^2 - i)$
+                    The numerator of the IC formula is the sum of n(i) * (n(i) - 1), where n(i) is the count of each letter.
+                    Numerator = Sum from i=1 to 26 of [ i * (i-1) ]
+                    Using the hint from the original document: [(n-1) * n * (n+1)] / 3 for n=26.
+                    Numerator = [(26-1) * 26 * (26+1)] / 3 = (25 * 26 * 27) / 3 = 5850.
                     
-                    Using the sum of squares and sum of integers formulas:
-                    $\sum_{i=1}^{26} i^2 = \frac{26(27)(2 \cdot 26 + 1)}{6} = \frac{26 \cdot 27 \cdot 53}{6} = 13 \cdot 9 \cdot 53 = 117 \cdot 53 = 6201$
-                    $\sum_{i=1}^{26} i = \frac{26(27)}{2} = 351$
+                    The denominator of the IC formula is N * (N-1) = 351 * 350 = 122850.
                     
-                    Numerator = $6201 - 351 = 5850$
+                    IC = 5850 / 122850.
+                    To reduce the fraction, divide both the numerator and denominator by their greatest common divisor, 5850.
                     
-                    The denominator of the IC formula is $N(N-1) = 351(350)$.
-                    
-                    IC = $\frac{5850}{351 \cdot 350} = \frac{585}{351 \cdot 35} = \frac{117}{351 \cdot 7} = \frac{1}{3 \cdot 7} = \frac{1}{21}$.
-                    
-                    Let's check the hint provided in the original document.
-                    Sum $1 \times 2 + 2 \times 3 + \dots + (n-1) \times n = \frac{(n-1)n(n+1)}{3}$
-                    Here, we have a sum from 1 to 25: $\sum_{i=1}^{25} i(i+1)$. This is not quite the same.
-                    The sum is $\sum_{i=1}^{26} n_i(n_i-1) = \sum_{i=1}^{26} i(i-1)$.
-                    This matches the sum of $1 \times 0 + 2 \times 1 + 3 \times 2 + \dots + 26 \times 25$.
-                    Using the hint with $n=26$:
-                    $\frac{(26-1)(26)(26+1)}{3} = \frac{25 \cdot 26 \cdot 27}{3} = 25 \cdot 26 \cdot 9 = 5850$.
-                    This confirms our numerator calculation.
-                    
-                    IC = $\frac{5850}{351 \cdot 350} = \frac{585}{351 \cdot 35} = \frac{117}{351 \cdot 7}$.
-                    $117 = 9 \cdot 13$
-                    $351 = 9 \cdot 39 = 9 \cdot 3 \cdot 13 = 27 \cdot 13$
-                    IC = $\frac{9 \cdot 13}{27 \cdot 13 \cdot 7} = \frac{9}{27 \cdot 7} = \frac{1}{3 \cdot 7} = \frac{1}{21}$.
+                    IC = (5850 / 5850) / (122850 / 5850) = 1 / 21.
                 </div>
             </div>
         </div>
