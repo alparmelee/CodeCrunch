@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navajo Code Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            font-family: sans-serif;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-12">Navajo Code Questions</h1>
+
+        <!-- Fall 2022 Question 4 -->
+        <div class="question-card" id="navajo-q-fall22-4">
+            <div class="question-title">Fall 2022 Quiz #2</div>
+            <p class="question-text">
+                <b>(8 pts)</b> Describe the details of how the Navajo Code worked, including how Navajo words were used and what they represented. (Credit will be given relatively, based on the level of detail. Quite a bit of class time was spent on this description.)
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('navajo-q-fall22-4')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer:</p>
+                <div class="answer-work">
+                    The Navajo Code was a code developed by Philip Johnston, a non-Navajo who grew up on a Navajo reservation and was fluent in the language. He proposed it to the Marine Corps as a way to send secure messages. The code was based on the Navajo language, which was considered ideal because it was unwritten, unintelligible to non-Navajos, and had a complex grammar and syntax.
+
+                    The code worked by using a two-part system:
+                    <br>
+                    1. A phonetic alphabet: For spelling out words that didn't have a Navajo equivalent, the code used Navajo words that corresponded to a letter in the English alphabet. For example, the Navajo word for 'ant' (wol-la-chee) was used to represent the letter 'A'.
+                    <br>
+                    2. A dictionary of military terms: The code also had a dictionary of common military terms that were assigned specific Navajo code words. For example, a battleship was called 'lo-tso' (whale), and a hand grenade was 'ni-mas-ba-eh' (round potato).
+                    <br>
+                    This system allowed for fast and secure communication, as the code was both complex and flexible.
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2021 Question 4 -->
+        <div class="question-card" id="navajo-q-fall21-4">
+            <div class="question-title">Fall 2021 Quiz #2</div>
+            <p class="question-text">
+                <b>(6 pts)</b> There were two reasons why the Navajo language was chosen among several potential Native American languages as the basis for the American WWII code. What are those reasons?
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('navajo-q-fall21-4')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer:</p>
+                <div class="answer-work">
+                    1. Its complexity: The Navajo language is an unwritten language with a very complex syntax and grammar, making it virtually impossible for non-speakers to learn or decipher.
+                    <br>
+                    2. The small number of non-Navajo speakers: At the time, there were very few people outside of the Navajo tribe who could speak the language, and even fewer who could understand its nuances, making it a highly secure choice for a code.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>

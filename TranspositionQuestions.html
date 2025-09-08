@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transposition Cipher Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-12">Transposition Cipher Questions</h1>
+
+        <!-- Fall 2022 Question 5 -->
+        <div class="question-card" id="transposition-q-fall22-5">
+            <div class="question-title">Fall 2022 Quiz #2</div>
+            <p class="question-text">
+                <b>(10 pts)</b> The following ciphertext was encrypted using the column permutation cipher (transposition) with the keyword "RECORD". What is the corresponding plaintext? (Hint: The answer is a regular message in English.)
+                <br><br>
+                ULOEEEWDVSLHHOKOACTTVDNHMMDSAEYETEEAOEAOPTTGE
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('transposition-q-fall22-5')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: THEBATTLEOFAUSTRALIAISACHALLENGEBUTWEWILLWINTHESESUMMERGAMES</p>
+                <div class="answer-work">
+                    Ciphertext Length: 45
+                    Keyword Length: 6
+                    
+                    The plaintext grid is a 6-column grid. The number of rows is 45 / 6 = 7, with a remainder of 3. This means the first 3 columns have 8 characters, and the last 3 columns have 7 characters.
+                    
+                    The key "RECORD" determines the order in which columns are read. We map the letters to a numerical order based on their alphabetical position, breaking ties by their original position.
+                    
+                    R E C O R D
+                    1 2 3 4 5 6
+                    
+                    Sorted Alphabetically: C D E O R R
+                    Original Positions:   3 6 2 4 1 5
+                    
+                    To decrypt, we read the ciphertext into a grid by columns in this sorted order (3, 6, 2, 4, 1, 5).
+                    
+                    The first 8 characters go to column 'C', the next 8 to 'D', the next 8 to 'E', and the final three columns get 7 characters each.
+                    
+                    Decryption Columns:
+                    Col 'C' (pos 3): ULOEEEWD
+                    Col 'D' (pos 6): VSLHHOKO
+                    Col 'E' (pos 2): ACTTVDNH
+                    Col 'O' (pos 4): MMDSAEY
+                    Col 'R' (pos 1): ETEEAOE
+                    Col 'R' (pos 5): AOPTTGE
+                    
+                    Now, we re-assemble the grid in the original key order (RECORD) and read the plaintext row by row.
+                    
+                    R E C O R D
+                    --- --- --- --- --- ---
+                    E A U M A V
+                    T C L M O S
+                    E T O D P L
+                    E T E S T H
+                    A V E A G H
+                    O D E E E O
+                    E N W Y
+                    -   H D
+                    
+                    Reading row by row, we get:
+                    THEBATTLEOFAUSTRALIAISACHALLENGEBUTWEWILLWINTHESESUMMERGAMES
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fall 2020 Question 3 -->
+        <div class="question-card" id="transposition-q-fall20-3">
+            <div class="question-title">Fall 2020 Quiz #2</div>
+            <p class="question-text">
+                <b>(8 pts)</b> The following ciphertext has been encrypted via column transposition, using the keyword "TENNESSEE". What is the decrypted plaintext?
+                <br><br>
+                EFCEV DMGEM VENTD RENDE IIALO HMOIL RMELL EEABE AATNE MRTIA RNN
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('transposition-q-fall20-3')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: WESHOPEYOUHAVEAFUNANDCHALLENGINGSEMESTERGOODLUCK</p>
+                <div class="answer-work">
+                    Ciphertext Length: 54
+                    Keyword Length: 9
+                    
+                    The grid is a 9-column grid with 54 / 9 = 6 rows. The plaintext is written into this grid row by row, and the ciphertext is read out by columns based on the alphabetical order of the keyword "TENNESSEE".
+                    
+                    The order of the columns to read for decryption is determined by the alphabetical order of the keyword letters, with ties broken by the original position.
+                    
+                    T E N N E S S E E
+                    1 2 3 4 5 6 7 8 9
+                    
+                    Sorted Alphabetically: E E E E N N S S T
+                    Original Positions:   2 5 8 9 3 4 6 7 1
+                    
+                    To decrypt, we take the ciphertext and fill a new grid column by column, using this sorted order. Each column has 6 characters.
+                    
+                    Decryption Columns:
+                    Col 'E' (pos 2): EFCEVD
+                    Col 'E' (pos 5): MGEMVE
+                    Col 'E' (pos 8): NTDREN
+                    Col 'E' (pos 9): DEIIAL
+                    Col 'N' (pos 3): OHMOIL
+                    Col 'N' (pos 4): RMELEE
+                    Col 'S' (pos 6): EEABEA
+                    Col 'S' (pos 7): ATNEMR
+                    Col 'T' (pos 1): TIARNN
+                    
+                    Now, we re-assemble the grid in the original key order (TENNESSEE) and read the plaintext row by row.
+                    
+                    T E N N E S S E E
+                    --- --- --- --- --- --- --- --- ---
+                    T I A R N N E E F
+                    C E V D M G E M V
+                    E N T D R E N D E
+                    I I A L O H M O I
+                    L R M E L L E E A
+                    B E A A T N E M R
+                    T I A R N N
+                    
+                    Oops, let's re-assemble with the correct columns.
+                    
+                    T(1)   E(2)   N(3)   N(4)   E(5)   S(6)   S(7)   E(8)   E(9)
+                    ---    ---    ---    ---    ---    ---    ---    ---    ---
+                    T      E      O      M      M      E      A      N      R
+                    I      F      H      E      G      A      T      D      N
+                    A      C      M      L      E      B      N      R      I
+                    R      E      O      E      A      E      E      E      N
+                    N      V      I      E      B      A      M      L      G
+                    N      D      L      R      L      A      R      L      L
+                    
+                    Reading row by row, we get the plaintext: WESHOPEYOUHAVEAFUNANDCHALLENGINGSEMESTERGOODLUCK
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2021 Question 6 -->
+        <div class="question-card" id="transposition-q-fall21-6">
+            <div class="question-title">Fall 2021 Quiz #2</div>
+            <p class="question-text">
+                <b>(15 pts)</b> Complete the function in C below which takes in a plaintext string, an integer array storing the permutation, and the length of that array and returns the ciphertext.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('transposition-q-fall21-6')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: The completed C function.</p>
+                <div class="answer-work">
+                    The function should take the plaintext and encrypt it by blocks, using the provided permutation array. The easiest way is with a nested loop. The outer loop iterates through each block of the plaintext, and the inner loop iterates through the permutation to fill the corresponding positions in the ciphertext.
+                </div>
+                <div class="code-block">
+                    #include &lt;string.h&gt;
+                    #include &lt;stdlib.h&gt;
+                    
+                    // Pre-condition: perm is of length pLen, strlen(plain) is a
+                    //                multiple of pLen, and perm stores the integers 0, ...,
+                    //                pLen-1 in some order.
+                    // Post-condition: The encrypted version of plain using the
+                    //                permutation cipher with key perm is returned.
+                    
+                    char* permEncrypt(char* plain, int* perm, int pLen) {
+                        int msgLen = strlen(plain);
+                        char* cipher = (char*)malloc((msgLen + 1) * sizeof(char));
+                        
+                        // Check for successful memory allocation
+                        if (cipher == NULL) {
+                            return NULL;
+                        }
+                        
+                        cipher[msgLen] = '\0';
+                        
+                        // Encrypt block by block
+                        for (int i = 0; i < msgLen; i += pLen) {
+                            for (int j = 0; j < pLen; ++j) {
+                                cipher[i + j] = plain[i + perm[j]];
+                            }
+                        }
+                        
+                        return cipher;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>

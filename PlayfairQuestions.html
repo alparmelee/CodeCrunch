@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playfair Cipher Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+        }
+        .playfair-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            margin-top: 1rem;
+            background-color: #1f2937;
+            padding: 2px;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .grid-cell {
+            background-color: white;
+            color: #1f2937;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-12">Playfair Cipher Questions</h1>
+
+        <!-- Fall 2022 Question 1 -->
+        <div class="question-card" id="playfair-q-fall22-1">
+            <div class="question-title">Fall 2022 Quiz #2</div>
+            <p class="question-text">
+                <b>(10 pts)</b> Encrypt the plaintext "ITSTIMEFORTHEWEEKEND" using the Playfair cipher and the keyword "SUMMERTIME". Please use 'X' as the padding character and please use the box provided below to visualize the key.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('playfair-q-fall22-1')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: TRTINIMHPVFCRURYVGMYGL</p>
+                <div class="answer-work">
+                    The Playfair matrix is constructed from the keyword "SUMMERTIME" (unique letters: SUMERTIN).
+                    
+                    The matrix (with I/J combined) is:
+                    S U M E R
+                    T I N A B
+                    C D F G H
+                    K L O P Q
+                    V W X Y Z
+                    
+                    The plaintext "ITSTIMEFORTHEWEEKEND" is broken into bigrams. The double letter 'EE' is padded with 'X'. The last letter 'D' is also padded with an 'X'.
+                    
+                    Plaintext bigrams: IT, ST, IM, EF, OR, TH, EW, EX, EK, EN, DX.
+                    
+                    Encryption rules:
+                    - IT (Same row): TR
+                    - ST (Same column): TI
+                    - IM (Rectangle): NI
+                    - EF (Rectangle): MH
+                    - OR (Rectangle): PV
+                    - TH (Rectangle): FC
+                    - EW (Rectangle): RU
+                    - EX (Rectangle): RY
+                    - EK (Rectangle): VG
+                    - EN (Rectangle): MY
+                    - DX (Rectangle): GL
+                    
+                    Ciphertext: TRTINIMHPVFCRURYVGMYGL
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fall 2021 Question 1 -->
+        <div class="question-card" id="playfair-q-fall21-1">
+            <div class="question-title">Fall 2021 Quiz #2</div>
+            <p class="question-text">
+                <b>(5 pts)</b> What is the Playfair box for the keyword: "MISSISSIPPITENNESSEE"? Fill in the grid given below.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('playfair-q-fall21-1')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer:</p>
+                <div class="answer-work">
+                    The Playfair matrix is created by taking the unique letters of the keyword "MISSISSIPPITENNESSEE" and placing them first in the grid, followed by the rest of the alphabet (excluding 'J').
+                    
+                    Unique letters from the keyword, in order of appearance: M, I, S, P, T, E, N.
+                    
+                    The resulting matrix is:
+                </div>
+                <div class="playfair-grid">
+                    <div class="grid-cell">M</div>
+                    <div class="grid-cell">I</div>
+                    <div class="grid-cell">S</div>
+                    <div class="grid-cell">P</div>
+                    <div class="grid-cell">T</div>
+                    <div class="grid-cell">E</div>
+                    <div class="grid-cell">N</div>
+                    <div class="grid-cell">A</div>
+                    <div class="grid-cell">B</div>
+                    <div class="grid-cell">C</div>
+                    <div class="grid-cell">D</div>
+                    <div class="grid-cell">F</div>
+                    <div class="grid-cell">G</div>
+                    <div class="grid-cell">H</div>
+                    <div class="grid-cell">K</div>
+                    <div class="grid-cell">L</div>
+                    <div class="grid-cell">O</div>
+                    <div class="grid-cell">Q</div>
+                    <div class="grid-cell">R</div>
+                    <div class="grid-cell">U</div>
+                    <div class="grid-cell">V</div>
+                    <div class="grid-cell">W</div>
+                    <div class="grid-cell">X</div>
+                    <div class="grid-cell">Y</div>
+                    <div class="grid-cell">Z</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2020 Question 1 & 2 -->
+        <div class="question-card" id="playfair-q-fall20-1-2">
+            <div class="question-title">Fall 2020 Quiz #2</div>
+            <p class="question-text">
+                <b>(8 pts)</b> Show the playfair box created with the keyword, "BLOODORANGELEMONADE".
+                <br><br>
+                <b>(9 pts)</b> Using your playfair box from question #1, encrypt the following plaintext: "TAKINGAPHONECALL". Please use the padding character 'Z', if necessary.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('playfair-q-fall20-1-2')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">
+                    Answer for Q1: See matrix below.
+                    <br>
+                    Answer for Q2: PECKGEPVIDGMPC YQYQ
+                </p>
+                <div class="answer-work">
+                    The Playfair matrix is created from the keyword "BLOODORANGELEMONADE". Unique letters in order of appearance are B, L, O, D, R, A, N, G, E, M. The rest of the alphabet follows.
+                </div>
+                <div class="playfair-grid">
+                    <div class="grid-cell">B</div>
+                    <div class="grid-cell">L</div>
+                    <div class="grid-cell">O</div>
+                    <div class="grid-cell">D</div>
+                    <div class="grid-cell">R</div>
+                    <div class="grid-cell">A</div>
+                    <div class="grid-cell">N</div>
+                    <div class="grid-cell">G</div>
+                    <div class="grid-cell">E</div>
+                    <div class="grid-cell">M</div>
+                    <div class="grid-cell">C</div>
+                    <div class="grid-cell">F</div>
+                    <div class="grid-cell">H</div>
+                    <div class="grid-cell">I/J</div>
+                    <div class="grid-cell">K</div>
+                    <div class="grid-cell">P</div>
+                    <div class="grid-cell">Q</div>
+                    <div class="grid-cell">S</div>
+                    <div class="grid-cell">T</div>
+                    <div class="grid-cell">U</div>
+                    <div class="grid-cell">V</div>
+                    <div class="grid-cell">W</div>
+                    <div class="grid-cell">X</div>
+                    <div class="grid-cell">Y</div>
+                    <div class="grid-cell">Z</div>
+                </div>
+                <div class="answer-work mt-4">
+                    The plaintext "TAKINGAPHONECALL" is broken into bigrams. The double letter 'LL' is padded with 'Z'. The last letter 'L' is padded with a 'Z'.
+                    
+                    Plaintext bigrams: TA, KI, NG, AP, HO, NE, CA, LZ, LZ.
+                    
+                    Using the matrix above:
+                    - TA (Rectangle): PE
+                    - KI (Same row): CK
+                    - NG (Same row): GE
+                    - AP (Same column): PV
+                    - HO (Same column): ID
+                    - NE (Same row): GM
+                    - CA (Same column): PC
+                    - LZ (Rectangle): YQ
+                    - LZ (Rectangle): YQ
+                    
+                    Ciphertext: PECKGEPVIDGMPC YQYQ
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>

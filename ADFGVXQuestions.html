@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADFGVX Cipher Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            white-space: pre-wrap;
+            font-family: monospace;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-12">ADFGVX Cipher Questions</h1>
+
+        <!-- Fall 2022 Question 2 -->
+        <div class="question-card" id="adfgvx-q-fall22-2">
+            <div class="question-title">Fall 2022 Quiz #2</div>
+            <p class="question-text">
+                <b>(3 pts)</b> What is the full set of plaintext characters that could be encrypted by the ADFGVX cipher? (Describe the set. State its size and which characters it contains.)
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('adfgvx-q-fall22-2')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: The set contains 36 characters: the 26 letters of the English alphabet and the 10 digits.</p>
+                <div class="answer-work">
+                    The ADFGVX cipher uses a 6x6 polybius square. This grid has 36 cells. Each cell corresponds to a plaintext character. The set of characters is typically the 26 letters (A-Z) and the 10 digits (0-9).
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2021 Question 2 -->
+        <div class="question-card" id="adfgvx-q-fall21-2">
+            <div class="question-title">Fall 2021 Quiz #2</div>
+            <p class="question-text">
+                <b>(3 pts)</b> Why were the letters ADFGVX chosen for the ADFGVX cipher?
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('adfgvx-q-fall21-2')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: The letters were chosen because of their distinct phonetic sounds when spoken over a radio.</p>
+                <div class="answer-work">
+                    The ADFGVX cipher was used by the German army during World War I. The letters were chosen because they have very different sounds when spoken in German, which helped to reduce the number of errors when transcribing a message received via Morse code or radio transmission.
+                </div>
+            </div>
+        </div>
+
+        <!-- Fall 2020 Question 3 -->
+        <div class="question-card" id="adfgvx-q-fall20-3">
+            <div class="question-title">Fall 2020 Quiz #2</div>
+            <p class="question-text">
+                <b>(8 pts)</b> Consider a plaintext message of 91 symbols (letters/digits) encrypted with the ADFGVX cipher and the keyword "HARRYPOTTER". The ciphertext has 182 symbols. The plaintext symbol in the zero-index based position of 19 is represented in the ciphertext with two letters (A, D, F, G, V, or X, not necessarily distinct). What are the index positions of those two letters in the ciphertext? Please give your answers as two distinct integers in between 0 and 181, inclusive.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('adfgvx-q-fall20-3')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: The ciphertext index positions are 71 and 169.</p>
+                <div class="answer-work">
+                    The ADFGVX cipher involves two stages: a polybius square substitution and a columnar transposition.
+                    
+                    1.  The plaintext is first converted to an intermediate string of ADFGVX letters using a polybius square. Since the plaintext has 91 symbols, and each symbol is represented by a pair of letters, this intermediate string has 182 characters. The plaintext symbol at index 19 corresponds to the intermediate characters at indices 38 and 39 (since 19 * 2 = 38).
+                    
+                    2.  The intermediate string is then written into a grid for a columnar transposition. The keyword "HARRYPOTTER" has a length of 11, which defines the number of columns. The number of rows is 182 / 11 = 16 with a remainder of 6. This means the first 6 columns have 17 characters (16+1), and the remaining 5 columns have 16 characters.
+                    
+                    3.  We determine the position of the intermediate characters (at indices 38 and 39) in this grid.
+                        - Character at index 38: It is at row floor(38/11) = 3 and column 38 % 11 = 5. (Using 0-based indexing for rows and columns).
+                        - Character at index 39: It is at row floor(39/11) = 3 and column 39 % 11 = 6.
+                    
+                    4.  The columns are reordered alphabetically based on the keyword "HARRYPOTTER".
+                        - Keyword: H A R R Y P O T T E R
+                        - Original Pos: 1 2 3 4 5 6 7 8 9 10 11
+                        - Sorted:   A E H O P R R R T T Y
+                        - Sorted Pos: 2 10 1 7 6 3 4 11 8 9 5
+                    
+                    5.  The ciphertext is read out by concatenating the columns in the sorted order. We calculate the final position of our two characters.
+                        - The character from original column 6 (P) is the 5th column in the sorted order. The 4 columns before it (A, E, H, O) all have 17 characters. The total length of these columns is 4 * 17 = 68. Since our character is in row 3, its ciphertext index is 68 + 3 = 71.
+                        - The character from original column 5 (Y) is the 11th (and last) column in the sorted order. The total length of the 10 columns before it is 6*17 + 4*16 = 166. Since our character is in row 3, its ciphertext index is 166 + 3 = 169.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>

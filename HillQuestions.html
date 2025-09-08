@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hill Cipher Questions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .answer-container {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+        }
+        .answer-text {
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .answer-work {
+            font-family: sans-serif;
+            margin-top: 0.5rem;
+            color: #374151;
+        }
+        .show-answer-btn {
+            background-color: #4b5563;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .show-answer-btn:hover {
+            background-color: #1f2937;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 mt-12">Hill Cipher Questions</h1>
+
+        <!-- Fall 2022 Question 6 -->
+        <div class="question-card" id="hill-q-fall22-6">
+            <div class="question-title">Fall 2022 Quiz #2</div>
+            <p class="question-text">
+                <b>(12 pts)</b> The ciphertext from the Hill cipher is "IAJL". The encryption key is 
+                $$
+                \begin{pmatrix}
+                6 & 9 \\
+                3 & 7
+                \end{pmatrix}
+                $$
+                What is the original plaintext? (Hint: The answer is a normal English word. If you don't get a word you recognized, you did something wrong.)
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('hill-q-fall22-6')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: COIN</p>
+                <div class="answer-work">
+                    $$K = \begin{pmatrix}6&9\\ 3&7\end{pmatrix}$$
+                    $$det(K) = (6 \times 7 - 9 \times 3) \pmod{26} = 15 \pmod{26}$$
+                    $$15^{-1} \equiv 7 \pmod{26}$$
+                    $$K^{-1} = 7 \times \begin{pmatrix}7&17\\ 23&6\end{pmatrix} \pmod{26} = \begin{pmatrix}23&15\\ 5&16\end{pmatrix} \pmod{26}$$
+                    The bigram "IA" corresponds to the numbers
+                    $$(8, 0)$$
+                    $$\begin{pmatrix}23&15\\ 5&16\end{pmatrix} \times \begin{pmatrix}8\\ 0\end{pmatrix} = \begin{pmatrix}184\\ 40\end{pmatrix} \pmod{26} \to \begin{pmatrix}2\\ 14\end{pmatrix} \to \text{"CO"}$$
+                    The bigram "JL" corresponds to the numbers
+                    $$(9, 11)$$
+                    $$\begin{pmatrix}23&15\\ 5&16\end{pmatrix} \times \begin{pmatrix}9\\ 11\end{pmatrix} = \begin{pmatrix}372\\ 221\end{pmatrix} \pmod{26} \to \begin{pmatrix}8\\ 13\end{pmatrix} \to \text{"IN"}$$
+                    The plaintext is "COIN".
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fall 2021 Question 5 -->
+        <div class="question-card" id="hill-q-fall21-5">
+            <div class="question-title">Fall 2021 Quiz #2</div>
+            <p class="question-text">
+                <b>(12 pts)</b> Using the Hill cipher with a 2 x 2 key, the plaintext "FORT" encrypts to the ciphertext "FMRB". What are the possible encryption keys? (Make sure to remove extraneous solutions.)
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('hill-q-fall21-5')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer: The only possible encryption key is</p>
+                <p class="answer-text"> $$ \begin{pmatrix}21&25\\ 20&17\end{pmatrix} $$ </p>
+                <div class="answer-work">
+                    Plaintext "FORT" corresponds to the numbers
+                    $$(5, 14, 17, 19)$$
+                    Ciphertext "FMRB" corresponds to the numbers
+                    $$(5, 12, 17, 1)$$
+                    $$C = PK \pmod{26} \implies K = P^{-1}C \pmod{26}$$
+                    $$P = \begin{pmatrix}5&17\\ 14&19\end{pmatrix}$$
+                    $$det(P) = (5 \times 19 - 17 \times 14) \pmod{26} = (95 - 238) \pmod{26} = 13 \pmod{26}$$
+                    Since
+                    $$\gcd(13, 26) \neq 1$$
+                    there is no modular inverse. The plaintext is not a valid basis to find a unique key.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fall 2020 Question 1 -->
+        <div class="question-card" id="hill-q-fall20-1">
+            <div class="question-title">Fall 2020 Quiz #1</div>
+            <p class="question-text">
+                <b>(10 pts)</b> In the cryptanalysis of Hill cipher, you've determined that two values of the key matrix satisfy the following equations:
+                <br>
+                $$19a+4b\equiv13 \pmod{26}$$
+                $$18a+19b\equiv14 \pmod{26}$$
+                <br>
+                Determine the values of a and b. Please express both as integers in between 0 and 25, inclusive.
+            </p>
+            <button class="show-answer-btn" onclick="toggleAnswer('hill-q-fall20-1')">Show Answer & Work</button>
+            <div class="answer-container">
+                <p class="answer-text">Answer:</p>
+                <div class="answer-work">
+                    $$a = 3$$
+                    $$b = 2$$
+                </div>
+                <div class="answer-work">
+                    1) $$19a+4b\equiv13 \pmod{26}$$
+                    2) $$18a+19b\equiv14 \pmod{26}$$
+                    $$19a \equiv 13 - 4b \pmod{26} \implies a \equiv 11(13 - 4b) \pmod{26} \implies a \equiv 13 + 8b \pmod{26}$$
+                    Substitute into (2):
+                    $$18(13+8b) + 19b \equiv 14 \pmod{26}$$
+                    $$234 + 144b + 19b \equiv 14 \pmod{26}$$
+                    $$0 + 14b + 19b \equiv 14 \pmod{26}$$
+                    $$33b \equiv 14 \pmod{26} \implies 7b \equiv 14 \pmod{26}$$
+                    $$b \equiv 14 \times 15 \pmod{26} \implies b \equiv 210 \pmod{26} \implies b \equiv 2 \pmod{26}$$
+                    Find a:
+                    $$a \equiv 13 + 8(2) \pmod{26} \implies a \equiv 29 \pmod{26} \implies a \equiv 3 \pmod{26}$$
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            const container = document.querySelector(`#${id} .answer-container`);
+            const button = document.querySelector(`#${id} .show-answer-btn`);
+            if (container.style.display === 'block') {
+                container.style.display = 'none';
+                button.textContent = 'Show Answer & Work';
+            } else {
+                container.style.display = 'block';
+                button.textContent = 'Hide Answer & Work';
+            }
+        }
+    </script>
+</body>
+</html>
