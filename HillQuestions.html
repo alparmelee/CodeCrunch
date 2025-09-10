@@ -114,29 +114,59 @@
         </div>
         
         <!-- Fall 2021 Question 5 -->
-        <div class="question-card" id="hill-q-fall21-5">
-            <div class="question-title">Fall 2021 Quiz #2</div>
-            <p class="question-text">
-                <b>(12 pts)</b> Using the Hill cipher with a 2 x 2 key, the plaintext "FORT" encrypts to the ciphertext "FMRB". What are the possible encryption keys? (Make sure to remove extraneous solutions.)
-            </p>
-            <button class="show-answer-btn" onclick="toggleAnswer('hill-q-fall21-5')">Show Answer & Work</button>
-            <div class="answer-container">
-                <p class="answer-text">Answer: The only possible encryption key is</p>
-                <p class="answer-text"> $$ \begin{pmatrix}21&25\\ 20&17\end{pmatrix} $$ </p>
-                <div class="answer-work">
-                    Plaintext "FORT" corresponds to the numbers
-                    $$(5, 14, 17, 19)$$
-                    Ciphertext "FMRB" corresponds to the numbers
-                    $$(5, 12, 17, 1)$$
-                    $$C = PK \pmod{26} \implies K = P^{-1}C \pmod{26}$$
-                    $$P = \begin{pmatrix}5&17\\ 14&19\end{pmatrix}$$
-                    $$det(P) = (5 \times 19 - 17 \times 14) \pmod{26} = (95 - 238) \pmod{26} = 13 \pmod{26}$$
-                    Since
-                    $$\gcd(13, 26) \neq 1$$
-                    there is no modular inverse. The plaintext is not a valid basis to find a unique key.
-                </div>
-            </div>
+<div class="question-card" id="hill-q-fall21-5">
+    <div class="question-title">Fall 2021 Quiz #2</div>
+    <p class="question-text">
+        <b>(12 pts)</b> Using the Hill cipher with a 2 x 2 key, the plaintext "FORT" encrypts to the ciphertext "FMRB". What are the possible encryption keys? (Make sure to remove extraneous solutions.)
+    </p>
+    <button class="show-answer-btn" onclick="toggleAnswer('hill-q-fall21-5')">Show Answer & Work</button>
+    <div class="answer-container">
+        <p class="answer-text">Answer: There is no possible encryption key for this plaintext/ciphertext pair.</p>
+        <div class="answer-work">
+            This gives us the following two matrix equations, where the encryption key is an unknown 2 by 2
+            matrix with entries a, b, c and d:
+            $$
+            \begin{pmatrix} a & b \\ c & d \end{pmatrix} 
+            \begin{pmatrix}5 \\ 14\end{pmatrix} = 
+            \begin{pmatrix}5 \\ 12\end{pmatrix}, \quad
+            \begin{pmatrix} a & b \\ c & d \end{pmatrix} 
+            \begin{pmatrix}17 \\ 19\end{pmatrix} = 
+            \begin{pmatrix}17 \\ 1\end{pmatrix}
+            $$
+            Unpacking this, we get the following 4 equations in a, b, c and d:
+            $$
+            5a + 14b \equiv 5 \pmod{26}, \quad 5c + 14d \equiv 12 \pmod{26}
+            $$
+            $$
+            17a + 19b \equiv 17 \pmod{26}, \quad 17c + 19d \equiv 1 \pmod{26}
+            $$
+            Since 19 ≡ -7 (mod 26), substitute:
+            $$
+            5a + 14b \equiv 5 \pmod{26}, \quad 5c + 14d \equiv 12 \pmod{26}
+            $$
+            $$
+            17a - 7b \equiv 17 \pmod{26}, \quad 17c - 7d \equiv 1 \pmod{26}
+            $$
+            Multiply the bottom equations by 2:
+            $$
+            5a + 14b \equiv 5 \pmod{26}, \quad 5c + 14d \equiv 12 \pmod{26}
+            $$
+            $$
+            34a - 14b \equiv 34 \pmod{26}, \quad 34c - 14d \equiv 2 \pmod{26}
+            $$
+            Add the pairs of equations:
+            $$
+            39a \equiv 39 \pmod{26}, \quad 39c \equiv 14 \pmod{26}
+            $$
+            $$
+            13a \equiv 13 \pmod{26}, \quad 13c \equiv 14 \pmod{26}
+            $$
+            The second equation has no solution, since 13c must always be either 0 or 13 mod 26.  
+            Therefore, the system as a whole has no possible solutions.
         </div>
+    </div>
+</div>
+
         
         <!-- Fall 2020 Question 1 -->
         <div class="question-card" id="hill-q-fall20-1">
