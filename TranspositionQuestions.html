@@ -91,48 +91,34 @@
             </p>
             <button class="show-answer-btn" onclick="toggleAnswer('transposition-q-fall22-5')">Show Answer & Work</button>
             <div class="answer-container">
-                <p class="answer-text">Answer: THEBATTLEOFAUSTRALIAISACHALLENGEBUTWEWILLWINTHESESUMMERGAMES</p>
+                <p class="answer-text">Answer: YOUHAVEALMOSTCOMPLETEDTHETESTHAVEAGOODWEEKEND</p>
                 <div class="answer-work">
-                    Ciphertext Length: 45
-                    Keyword Length: 6
-                    
-                    The plaintext grid is a 6-column grid. The number of rows is 45 / 6 = 7, with a remainder of 3. This means the first 3 columns have 8 characters, and the last 3 columns have 7 characters.
-                    
-                    The key "RECORD" determines the order in which columns are read. We map the letters to a numerical order based on their alphabetical position, breaking ties by their original position.
-                    
-                    R E C O R D
-                    1 2 3 4 5 6
-                    
-                    Sorted Alphabetically: C D E O R R
-                    Original Positions:   3 6 2 4 1 5
-                    
-                    To decrypt, we read the ciphertext into a grid by columns in this sorted order (3, 6, 2, 4, 1, 5).
-                    
-                    The first 8 characters go to column 'C', the next 8 to 'D', the next 8 to 'E', and the final three columns get 7 characters each.
-                    
-                    Decryption Columns:
-                    Col 'C' (pos 3): ULOEEEWD
-                    Col 'D' (pos 6): VSLHHOKO
-                    Col 'E' (pos 2): ACTTVDNH
-                    Col 'O' (pos 4): MMDSAEY
-                    Col 'R' (pos 1): ETEEAOE
-                    Col 'R' (pos 5): AOPTTGE
-                    
-                    Now, we re-assemble the grid in the original key order (RECORD) and read the plaintext row by row.
-                    
-                    R E C O R D
-                    --- --- --- --- --- ---
-                    E A U M A V
-                    T C L M O S
-                    E T O D P L
-                    E T E S T H
-                    A V E A G H
-                    O D E E E O
-                    E N W Y
-                    -   H D
-                    
-                    Reading row by row, we get:
-                    THEBATTLEOFAUSTRALIAISACHALLENGEBUTWEWILLWINTHESESUMMERGAMES
+Keyword: RECORD → ranks [5,3,1,4,6,2]
+Order of reading: [2,5,1,3,0,4]
+
+Ciphertext length = 45 → 6 columns → 8 rows (3 short)
+Column lengths: [8,8,8,7,7,7]
+
+Split ciphertext:
+col2 = ULOEEEWD
+col5 = VSLHHOK
+col1 = OACTTVDN
+col3 = HMMDSAE
+col0 = YETEEAOE
+col4 = AOPTTGE
+
+Rearranged grid:
+Y O U H A V
+E A L M O S
+T C O M P L
+E T E D T H
+E S T H A V
+A G O O D W
+E E K E N D
+O N D
+
+Reading row-wise:
+YOUHAVEALMOSTCOMPLETEDTHETESTHAVEAGOODWEEKEND
                 </div>
             </div>
         </div>
@@ -147,58 +133,36 @@
             </p>
             <button class="show-answer-btn" onclick="toggleAnswer('transposition-q-fall20-3')">Show Answer & Work</button>
             <div class="answer-container">
-                <p class="answer-text">Answer: WESHOPEYOUHAVEAFUNANDCHALLENGINGSEMESTERGOODLUCK</p>
+                <p class="answer-text">Answer: TELLMEANDIFORGETTEACHMEANDIREMEMBERINVOLVEMEANDILEARN</p>
                 <div class="answer-work">
-                    Ciphertext Length: 54
-                    Keyword Length: 9
-                    
-                    The grid is a 9-column grid with 54 / 9 = 6 rows. The plaintext is written into this grid row by row, and the ciphertext is read out by columns based on the alphabetical order of the keyword "TENNESSEE".
-                    
-                    The order of the columns to read for decryption is determined by the alphabetical order of the keyword letters, with ties broken by the original position.
-                    
-                    T E N N E S S E E
-                    1 2 3 4 5 6 7 8 9
-                    
-                    Sorted Alphabetically: E E E E N N S S T
-                    Original Positions:   2 5 8 9 3 4 6 7 1
-                    
-                    To decrypt, we take the ciphertext and fill a new grid column by column, using this sorted order. Each column has 6 characters.
-                    
-                    Decryption Columns:
-                    Col 'E' (pos 2): EFCEVD
-                    Col 'E' (pos 5): MGEMVE
-                    Col 'E' (pos 8): NTDREN
-                    Col 'E' (pos 9): DEIIAL
-                    Col 'N' (pos 3): OHMOIL
-                    Col 'N' (pos 4): RMELEE
-                    Col 'S' (pos 6): EEABEA
-                    Col 'S' (pos 7): ATNEMR
-                    Col 'T' (pos 1): TIARNN
-                    
-                    Now, we re-assemble the grid in the original key order (TENNESSEE) and read the plaintext row by row.
-                    
-                    T E N N E S S E E
-                    --- --- --- --- --- --- --- --- ---
-                    T I A R N N E E F
-                    C E V D M G E M V
-                    E N T D R E N D E
-                    I I A L O H M O I
-                    L R M E L L E E A
-                    B E A A T N E M R
-                    T I A R N N
-                    
-                    Oops, let's re-assemble with the correct columns.
-                    
-                    T(1)   E(2)   N(3)   N(4)   E(5)   S(6)   S(7)   E(8)   E(9)
-                    ---    ---    ---    ---    ---    ---    ---    ---    ---
-                    T      E      O      M      M      E      A      N      R
-                    I      F      H      E      G      A      T      D      N
-                    A      C      M      L      E      B      N      R      I
-                    R      E      O      E      A      E      E      E      N
-                    N      V      I      E      B      A      M      L      G
-                    N      D      L      R      L      A      R      L      L
-                    
-                    Reading row by row, we get the plaintext: WESHOPEYOUHAVEAFUNANDCHALLENGINGSEMESTERGOODLUCK
+Keyword: TENNESSEE (9 letters)
+Ranks → [T=9, E1=1, N1=5, N2=6, E2=2, S1=7, S2=8, E3=3, E4=4]
+Order of reading: [1,4,7,8,2,3,5,6,0]
+
+Ciphertext length = 53 → 9 columns → 6 rows (one short)
+Column lengths: [6,6,6,6,6,6,6,6,5]
+
+Split ciphertext:
+col1 = EFCEVD
+col4 = MGEMVE
+col7 = NTDREN
+col8 = DEIIA
+col2 = LOHMOI
+col3 = LRMELL
+col5 = EEABEA
+col6 = ATNEMR
+col0 = TIARNN
+
+Rearranged grid:
+T E L L M E A N D
+I F O R G E T T E
+A C H M E A N D I
+R E M E M B E R I
+N V O L V E M E A
+N D I L E A R N
+
+Reading row-wise:
+TELLMEANDIFORGETTEACHMEANDIREMEMBERINVOLVEMEANDILEARN
                 </div>
             </div>
         </div>
@@ -213,38 +177,25 @@
             <div class="answer-container">
                 <p class="answer-text">Answer: The completed C function.</p>
                 <div class="answer-work">
-                    The function should take the plaintext and encrypt it by blocks, using the provided permutation array. The easiest way is with a nested loop. The outer loop iterates through each block of the plaintext, and the inner loop iterates through the permutation to fill the corresponding positions in the ciphertext.
+The function takes the plaintext and encrypts it block by block using the permutation array.
                 </div>
                 <div class="code-block">
-                    #include &lt;string.h&gt;
-                    #include &lt;stdlib.h&gt;
-                    
-                    // Pre-condition: perm is of length pLen, strlen(plain) is a
-                    //                multiple of pLen, and perm stores the integers 0, ...,
-                    //                pLen-1 in some order.
-                    // Post-condition: The encrypted version of plain using the
-                    //                permutation cipher with key perm is returned.
-                    
-                    char* permEncrypt(char* plain, int* perm, int pLen) {
-                        int msgLen = strlen(plain);
-                        char* cipher = (char*)malloc((msgLen + 1) * sizeof(char));
-                        
-                        // Check for successful memory allocation
-                        if (cipher == NULL) {
-                            return NULL;
-                        }
-                        
-                        cipher[msgLen] = '\0';
-                        
-                        // Encrypt block by block
-                        for (int i = 0; i < msgLen; i += pLen) {
-                            for (int j = 0; j < pLen; ++j) {
-                                cipher[i + j] = plain[i + perm[j]];
-                            }
-                        }
-                        
-                        return cipher;
-                    }
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+char* permEncrypt(char* plain, int* perm, int pLen) {
+    int msgLen = strlen(plain);
+    char* cipher = (char*)malloc((msgLen + 1) * sizeof(char));
+    if (cipher == NULL) return NULL;
+    cipher[msgLen] = '\0';
+
+    for (int i = 0; i &lt; msgLen; i += pLen) {
+        for (int j = 0; j &lt; pLen; ++j) {
+            cipher[i + j] = plain[i + perm[j]];
+        }
+    }
+    return cipher;
+}
                 </div>
             </div>
         </div>
