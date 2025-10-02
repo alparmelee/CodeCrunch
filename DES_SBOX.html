@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DES S-Box Substitution Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better monospace display and readability */
+        #hexInput {
+            font-family: 'Inter', monospace;
+            letter-spacing: 0.1em;
+        }
+        .mono-display {
+            font-family: 'Inter', monospace;
+            font-size: 1.1rem;
+            word-break: break-all;
+            white-space: pre-wrap;
+            padding: 0.5rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+        }
+        .bit-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            user-select: none;
+            display: inline-block;
+        }
+        .section-header {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            color: #10b981;
+        }
+        .s-box-output {
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-weight: bold;
+            color: #ef4444; /* Red for emphasis */
+            border: 1px solid #fee2e2;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            background-color: #fef2f2;
+            margin-bottom: 0.5rem;
+        }
+        .s-block {
+            border: 1px solid #d1d5db;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 6px;
+        }
+        .s-block-label {
+            font-weight: bold;
+            color: #3b82f6; /* Blue for S-box label */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-5xl bg-white shadow-2xl rounded-xl p-8 space-y-6">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">DES S-Box Substitution Solver</h1>
+        <p class="text-center text-gray-600">Calculates the binary output from the DES S-boxes. Input length must be a multiple of 6 bits.</p>
+        
+        <!-- Input Section -->
+        <div class="space-y-4">
+            <div class="flex space-x-4">
+                <div class="w-1/3">
+                    <label for="hexLength" class="block text-lg font-medium text-gray-700">Select Hex Input Length:</label>
+                    <select id="hexLength" onchange="updateInputState()"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-gray-900 shadow-sm transition duration-150 ease-in-out">
+                        <option value="12">12 Hex Chars (48 bits)</option>
+                        <option value="6" selected>6 Hex Chars (24 bits)</option>
+                    </select>
+                </div>
+                <div class="w-1/3">
+                    <label for="startSBoxIndex" class="block text-lg font-medium text-gray-700">Starting S-Box:</label>
+                    <select id="startSBoxIndex" onchange="calculateSBox()"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-gray-900 shadow-sm transition duration-150 ease-in-out">
+                        <option value="0">S1 (S1, S2, ...)</option>
+                        <option value="4">S5 (S5, S6, ...)</option>
+                    </select>
+                </div>
+                <div class="w-1/3">
+                    <label for="hexInput" class="block text-lg font-medium text-gray-700" id="inputLabel">24-bit Hex Input (6 chars, 4 S-Boxes):</label>
+                    <input type="text" id="hexInput" value="70D6B9" maxlength="6"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-gray-900 shadow-sm transition duration-150 ease-in-out uppercase"
+                           oninput="this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, '');">
+                </div>
+            </div>
+
+            <button onclick="calculateSBox()"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
+                Calculate S-Box Output
+            </button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Results & Steps</h2>
+
+            <!-- Final Binary Output -->
+            <div class="space-y-2 mb-4">
+                <p class="section-header">Final Binary Output:</p>
+                <div id="finalBinaryOutput" class="text-2xl font-extrabold text-red-600 text-center p-3 bg-white rounded-lg border-2 border-dashed border-red-300 mono-display"></div>
+            </div>
+
+            <!-- Binary Input -->
+            <div class="space-y-2">
+                <p class="section-header" id="binaryInputHeader">Step 1: 24-bit Binary Input (70D6B9):</p>
+                <div id="binaryInput" class="bg-white p-3 rounded-lg border mono-display"></div>
+            </div>
+
+            <!-- S-Box Processing -->
+            <div class="space-y-2 mt-4">
+                <p class="section-header">Step 2: 6-bit Block Processing through S-Boxes:</p>
+                <div id="sBoxDetails" class="space-y-3">
+                    <!-- Details will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DES S-Boxes (S1 to S8). Each is a 4x16 matrix of 4-bit decimal outputs.
+        const S_BOXES = [
+            // S1 (Index 0)
+            [[14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
+             [0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8],
+             [4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0],
+             [15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13]],
+            // S2 (Index 1)
+            [[15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10],
+             [3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5],
+             [0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15],
+             [13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9]],
+            // S3 (Index 2)
+            [[10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8],
+             [13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1],
+             [13, 6, 4, 9, 8, 15, 3, 0, 11, 1, 2, 12, 5, 10, 14, 7],
+             [1, 10, 13, 0, 6, 9, 8, 7, 4, 15, 14, 3, 11, 5, 2, 12]],
+            // S4 (Index 3)
+            [[7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15],
+             [13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9],
+             [10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4],
+             [3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14]],
+            // S5 (Index 4)
+            [[2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9],
+             [14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6],
+             [4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14],
+             [11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3]],
+            // S6 (Index 5)
+            [[12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11],
+             [10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8],
+             [9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6],
+             [4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13]],
+            // S7 (Index 6)
+            [[4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1],
+             [13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6],
+             [1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 0, 8, 2, 13, 5],
+             [10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8]],
+            // S8 (Index 7)
+            [[13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7],
+             [1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2],
+             [7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8],
+             [2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]]
+        ];
+
+        // --- Core Conversion and Formatting Functions ---
+
+        /**
+         * Converts a hexadecimal string to a binary string.
+         * @param {string} hex - Hex input.
+         * @returns {string} Binary string.
+         */
+        function hexToBinary(hex) {
+            let binary = '';
+            for (let i = 0; i < hex.length; i++) {
+                let bits = parseInt(hex[i], 16).toString(2).padStart(4, '0');
+                binary += bits;
+            }
+            return binary;
+        }
+
+        /**
+         * Converts a decimal number to a 4-bit binary string.
+         * @param {number} dec - Decimal input (0-15).
+         * @returns {string} 4-bit binary string.
+         */
+        function decToBinary4(dec) {
+            return dec.toString(2).padStart(4, '0');
+        }
+
+        /**
+         * Formats binary strings for display with bit position labels.
+         * @param {string} binary - The binary string.
+         * @param {number} bitsPerGroup - How many bits to group together (always 6 for S-box input).
+         * @returns {string} Formatted HTML string.
+         */
+        function formatBinary(binary, bitsPerGroup) {
+            let segments = [];
+            for (let i = 0; i < binary.length; i += bitsPerGroup) {
+                segments.push(binary.substring(i, i + bitsPerGroup));
+            }
+            
+            // Generate bit position labels (1-indexed)
+            let labels = '<div class="flex flex-wrap text-xs text-gray-500">';
+            for(let i=0; i<binary.length; i++) {
+                labels += `<span class="bit-label w-5 text-center">${i + 1}</span>`;
+                if ((i + 1) % bitsPerGroup === 0 && (i + 1) !== binary.length) {
+                    labels += '<span class="w-2 text-center"> </span>';
+                }
+            }
+            labels += '</div>';
+
+            // Generate bit values
+            let values = '<div class="flex flex-wrap font-bold text-gray-900">';
+            for(let i=0; i<segments.length; i++) {
+                const segment = segments[i];
+                for(let j=0; j<segment.length; j++) {
+                    values += `<span class="w-5 text-center">${segment[j]}</span>`;
+                }
+                if (i !== segments.length - 1) {
+                    values += '<span class="w-2 text-center"> </span>';
+                }
+            }
+            values += '</div>';
+
+            return labels + values;
+        }
+
+        /**
+         * Updates the input field length and example based on the selection.
+         */
+        function updateInputState() {
+            const hexLength = parseInt(document.getElementById('hexLength').value);
+            const hexInputEl = document.getElementById('hexInput');
+            const inputLabelEl = document.getElementById('inputLabel');
+            const startSBoxEl = document.getElementById('startSBoxIndex');
+
+            const numberOfSBoxes = hexLength * 4 / 6;
+            const bitLength = hexLength * 4;
+
+            hexInputEl.setAttribute('maxlength', hexLength);
+            
+            const labelText = `${bitLength}-bit Hex Input (${hexLength} chars, ${numberOfSBoxes} S-Boxes):`;
+            inputLabelEl.textContent = labelText;
+            document.getElementById('binaryInputHeader').textContent = `Step 1: ${bitLength}-bit Binary Input:`;
+
+            if (hexLength === 12) {
+                hexInputEl.value = '13579BDFC840';
+                startSBoxEl.value = '0'; // Only S1 start makes sense for 48 bits
+                startSBoxEl.disabled = true;
+            } else if (hexLength === 6) {
+                hexInputEl.value = '70D6B9';
+                startSBoxEl.value = '4'; // Default to S5 for the user's specific case
+                startSBoxEl.disabled = false;
+            }
+            
+            calculateSBox();
+        }
+
+        // --- Main Calculation Function ---
+        
+        function calculateSBox() {
+            const hexInput = document.getElementById('hexInput').value.trim().toUpperCase();
+            const hexLength = parseInt(document.getElementById('hexLength').value);
+            const startSBoxOffset = parseInt(document.getElementById('startSBoxIndex').value);
+            const numberOfSBoxes = hexLength * 4 / 6;
+
+            const finalBinaryOutputEl = document.getElementById('finalBinaryOutput');
+            const binaryInputEl = document.getElementById('binaryInput');
+            const sBoxDetailsEl = document.getElementById('sBoxDetails');
+
+            // 1. Validation
+            if (hexInput.length !== hexLength || !/^[0-9A-F]+$/.test(hexInput)) {
+                finalBinaryOutputEl.textContent = `Invalid Input: Must be exactly ${hexLength} hexadecimal characters.`;
+                binaryInputEl.innerHTML = '';
+                sBoxDetailsEl.innerHTML = '';
+                return;
+            }
+
+            // 1. Hex to Binary
+            const binary = hexToBinary(hexInput);
+            const expectedBits = hexLength * 4;
+            const binaryInputBits = binary.substring(0, expectedBits);
+            
+            document.getElementById('binaryInputHeader').textContent = `Step 1: ${expectedBits}-bit Binary Input (${hexInput}):`;
+            binaryInputEl.innerHTML = formatBinary(binaryInputBits, 6);
+
+            let finalBinaryOutput = '';
+            let detailsHTML = '';
+            
+            let finalOutputTitle = 'Final Binary Output:';
+
+            // 2. Process through S-Boxes (using dynamic count and start offset)
+            for (let i = 0; i < numberOfSBoxes; i++) {
+                const currentSBoxIndex = i + startSBoxOffset; // 0 for S1, 4 for S5
+                
+                // If the required index is out of bounds (S1-S8 only)
+                if (currentSBoxIndex >= S_BOXES.length) {
+                     finalBinaryOutputEl.textContent = 'Error: Calculation exceeded S-Box 8.';
+                     sBoxDetailsEl.innerHTML = '';
+                     return;
+                }
+
+                // Extract the 6-bit block for S-box i+1
+                const start = i * 6;
+                const block6 = binaryInputBits.substring(start, start + 6);
+                
+                // Determine Row (b1 and b6)
+                const b1 = block6[0];
+                const b6 = block6[5];
+                const rowBinary = b1 + b6; // e.g., '01'
+                const row = parseInt(rowBinary, 2); // decimal row index (0-3)
+
+                // Determine Column (b2 through b5)
+                const colBinary = block6.substring(1, 5); // e.g., '1011'
+                const col = parseInt(colBinary, 2); // decimal column index (0-15)
+
+                // Look up 4-bit output value
+                const sBox = S_BOXES[currentSBoxIndex]; 
+                const decOutput = sBox[row][col];
+                
+                // Convert decimal output to 4-bit binary
+                const binary4 = decToBinary4(decOutput);
+                
+                // Append to final result
+                finalBinaryOutput += binary4;
+
+                // Build HTML details for this S-box
+                detailsHTML += `
+                    <div class="s-block flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                        <div class="s-block-label">S${currentSBoxIndex + 1} Input:</div>
+                        <div class="font-mono text-base text-gray-700">${block6}</div>
+                        <div class="s-block-label">Row/Col:</div>
+                        <div class="text-sm font-semibold text-gray-700">R: ${row} / C: ${col} (Dec: ${decOutput})</div>
+                        <div class="s-block-label">4-bit Output:</div>
+                        <div class="s-box-output">${binary4}</div>
+                    </div>
+                `;
+            }
+
+            // 3. Display Final Binary Output
+            sBoxDetailsEl.innerHTML = detailsHTML;
+            
+            // Format the final output into 4-bit groups
+            const finalOutputBitLength = numberOfSBoxes * 4;
+            const segments = [];
+            for (let i = 0; i < finalOutputBitLength; i += 4) {
+                segments.push(finalBinaryOutput.substring(i, i + 4));
+            }
+            finalBinaryOutputEl.textContent = segments.join(' ');
+        }
+        
+        // Initialize the calculation on page load with the example
+        window.onload = updateInputState;
+    </script>
+</body>
+</html>

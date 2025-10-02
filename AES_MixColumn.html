@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES MixColumns Solver (Custom Row)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        .matrix-cell {
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Inter', monospace;
+            border-radius: 0.375rem;
+            background-color: #f3f4f6;
+            line-height: 1;
+        }
+        input[type="text"] {
+            width: 100%;
+            text-align: center;
+            padding: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+        }
+        .result-cell {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-size: 1.5rem;
+            border: 2px solid #34d399;
+            grid-column: span 4;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .step-detail {
+            font-family: monospace;
+            background-color: #fffbeb;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+        }
+        .custom-row-input {
+            background-color: #e0f2fe; /* light blue for custom input */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 space-y-8">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">AES MixColumns: Custom Row Solver</h1>
+        <p class="text-center text-gray-600">Calculates the result of multiplying a custom constant row by an input column in the $GF(2^8)$ finite field.</p>
+
+        <!-- Input Matrices and Calculation Row -->
+        <div class="space-y-6">
+            <h2 class="text-xl font-bold text-gray-700">Input State Matrix (Column 1)</h2>
+            
+            <div class="matrix-grid w-full max-w-xs mx-auto">
+                <div class="matrix-cell font-normal text-sm col-span-4 bg-gray-200">State Matrix Column 1 (Bytes 1-4)</div>
+                <div class="matrix-cell col-span-4">
+                    <input type="text" id="s_0_0" value="B5" maxlength="2" placeholder="B5" oninput="validateHex(this); calculateMixCols();">
+                </div>
+                <div class="matrix-cell col-span-4">
+                    <input type="text" id="s_1_0" value="A6" maxlength="2" placeholder="A6" oninput="validateHex(this); calculateMixCols();">
+                </div>
+                <div class="matrix-cell col-span-4">
+                    <input type="text" id="s_2_0" value="63" maxlength="2" placeholder="63" oninput="validateHex(this); calculateMixCols();">
+                </div>
+                <div class="matrix-cell col-span-4">
+                    <input type="text" id="s_3_0" value="DB" maxlength="2" placeholder="DB" oninput="validateHex(this); calculateMixCols();">
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold text-gray-700 mt-6">Custom MixColumns Constant Row</h2>
+            <div class="matrix-grid w-full max-w-xs mx-auto">
+                <div class="matrix-cell font-normal text-sm col-span-4 bg-gray-200">MixColumns Row (Coefficients)</div>
+                <div class="matrix-cell custom-row-input">
+                    <input type="text" id="c_row_0" value="03" maxlength="2" placeholder="C1" oninput="validateHex(this); calculateMixCols();">
+                </div>
+                <div class="matrix-cell custom-row-input">
+                    <input type="text" id="c_row_1" value="01" maxlength="2" placeholder="C2" oninput="validateHex(this); calculateMixCols();">
+                </div>
+                <div class="matrix-cell custom-row-input">
+                    <input type="text" id="c_row_2" value="01" maxlength="2" placeholder="C3" oninput="validateHex(this); calculateMixCols();">
+                </div>
+                <div class="matrix-cell custom-row-input">
+                    <input type="text" id="c_row_3" value="02" maxlength="2" placeholder="C4" oninput="validateHex(this); calculateMixCols();">
+                </div>
+            </div>
+
+            <button onclick="calculateMixCols()"
+                    class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50">
+                Calculate Output Byte
+            </button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200 space-y-4">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2">Result: Output Byte (Row • Col)</h2>
+            <div id="finalResult" class="result-cell text-center">---</div>
+
+            <h3 class="font-medium text-gray-700 mt-4">Multiplication Steps:</h3>
+            <div id="stepDetails" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <script>
+        // Irreducible polynomial for GF(2^8) (x^8 + x^4 + x^3 + x + 1)
+        const MODULUS = 0x11B; 
+
+        // --- Utility Functions ---
+
+        /** Converts a 2-char hex string to a decimal integer. */
+        function hexToDec(hex) {
+            return parseInt(hex, 16);
+        }
+
+        /** Converts a decimal integer to a 2-char hex string. */
+        function decToHex(dec) {
+            return dec.toString(16).padStart(2, '0').toUpperCase();
+        }
+
+        /** Performs XOR operation on two integers. */
+        function xor(a, b) {
+            return a ^ b;
+        }
+
+        /** Validates and cleans hex input. */
+        function validateHex(inputElement) {
+            inputElement.value = inputElement.value.toUpperCase().replace(/[^0-9A-F]/g, '').substring(0, 2);
+        }
+
+        // --- GF(2^8) Multiplication Functions ---
+
+        /**
+         * Multiplies a byte by 02 in GF(2^8). This is a conditional left shift.
+         * @param {number} a - The byte value (0-255).
+         * @returns {number} The result of a * 02.
+         */
+        function multBy02(a) {
+            let result = a << 1; // Left shift (multiplication by x)
+            if (result & 0x100) {
+                // If the 8th bit is set, XOR with the irreducible polynomial (0x11B)
+                // Note: 0x11B XOR 0x100 = 0x1B
+                result ^= MODULUS;
+            }
+            return result & 0xFF; // Keep only the lower 8 bits
+        }
+
+        /**
+         * Multiplies a byte by 03 in GF(2^8). This is a * 02 XOR a * 01.
+         * @param {number} a - The byte value (0-255).
+         * @returns {number} The result of a * 03.
+         */
+        function multBy03(a) {
+            // a * 03 = (a * 02) ⊕ (a * 01)
+            const a_times_02 = multBy02(a);
+            // a * 01 is just a
+            return xor(a_times_02, a);
+        }
+
+        /**
+         * Performs the full MixColumns multiplication for one term.
+         * @param {number} mult - The constant multiplier (01, 02, or 03).
+         * @param {number} byteVal - The state matrix byte value.
+         * @returns {number} The result of the multiplication.
+         */
+        function gfMultiply(mult, byteVal) {
+            if (mult === 0x01) {
+                return byteVal;
+            } else if (mult === 0x02) {
+                return multBy02(byteVal);
+            } else if (mult === 0x03) {
+                return multBy03(byteVal);
+            }
+            return 0; // Handle arbitrary input multiplier (treat as 00)
+        }
+
+        // --- Main Logic ---
+
+        function calculateMixCols() {
+            // Read Custom MixColumns Row
+            const C_ROW_HEX = [
+                document.getElementById('c_row_0').value.trim(),
+                document.getElementById('c_row_1').value.trim(),
+                document.getElementById('c_row_2').value.trim(),
+                document.getElementById('c_row_3').value.trim()
+            ];
+            
+            // Read Input State Column
+            const S_COL_1_HEX = [
+                document.getElementById('s_0_0').value.trim(),
+                document.getElementById('s_1_0').value.trim(),
+                document.getElementById('s_2_0').value.trim(),
+                document.getElementById('s_3_0').value.trim()
+            ];
+
+            let S_COL_1_DEC = [];
+            let C_ROW_DEC = [];
+            let isValid = true;
+
+            // Validate and convert input column
+            S_COL_1_HEX.forEach(hex => {
+                if (hex.length !== 2 || !/^[0-9A-F]+$/.test(hex)) {
+                    isValid = false;
+                }
+                S_COL_1_DEC.push(hexToDec(hex));
+            });
+
+            // Validate and convert custom row
+            C_ROW_HEX.forEach(hex => {
+                if (hex.length !== 2 || !/^[0-9A-F]+$/.test(hex)) {
+                    isValid = false;
+                }
+                C_ROW_DEC.push(hexToDec(hex));
+            });
+
+            const resultDiv = document.getElementById('finalResult');
+            const stepsDiv = document.getElementById('stepDetails');
+            
+            if (!isValid) {
+                resultDiv.textContent = "Error: Please enter 2 valid hex characters for all inputs.";
+                stepsDiv.innerHTML = '';
+                return;
+            }
+
+            let stepsHTML = '';
+            let finalResultDec = 0;
+            let finalXORSummary = '';
+
+            // Perform (C_ROW[i] * S_COL_1_DEC[i])
+            for (let i = 0; i < 4; i++) {
+                const multiplier = C_ROW_DEC[i]; // Coefficient (e.g., 03)
+                const inputByteDec = S_COL_1_DEC[i]; // State byte (e.g., B5)
+                const inputByteHex = decToHex(inputByteDec);
+                
+                // Calculate the multiplication term in GF(2^8)
+                const termDec = gfMultiply(multiplier, inputByteDec);
+                const termHex = decToHex(termDec);
+
+                // Accumulate the final result using XOR (addition in GF(2^8))
+                finalResultDec = xor(finalResultDec, termDec);
+                
+                // Detailed step output
+                const operation = `(${decToHex(multiplier)} • ${inputByteHex}) = ${termHex}`;
+                
+                // Explanation for 02 and 03
+                let multExplanation = "";
+                if (multiplier === 0x02) {
+                    multExplanation = " (Left shift and possible XOR 1B)";
+                } else if (multiplier === 0x03) {
+                    multExplanation = " (Result is (Byte • 02) ⊕ Byte)";
+                } else if (multiplier > 0x03 || multiplier === 0x00) {
+                    multExplanation = " (Arbitrary multiplier is treated as 00 for now)";
+                }
+
+                stepsHTML += `
+                    <div>
+                        <span class="font-bold">${i + 1}. Term:</span> ${operation} ${multExplanation}
+                        <span class="font-bold text-orange-700">| Current XOR Sum: ${decToHex(finalResultDec)}</span>
+                    </div>
+                `;
+                
+                // Build the final XOR summary string
+                if (i > 0) {
+                    finalXORSummary += ` ⊕ `;
+                }
+                finalXORSummary += termHex;
+            }
+
+            const finalResultHex = decToHex(finalResultDec);
+            
+            resultDiv.textContent = `Result = ${finalResultHex}`;
+            
+            // Final summary of the calculation
+            finalXORSummary += ` = ${finalResultHex}`;
+
+            stepsHTML += `<h3 class="font-medium text-gray-700 mt-4 border-t pt-2">Final XOR Summation:</h3><div class="step-detail">${finalXORSummary}</div>`;
+            stepsDiv.innerHTML = stepsHTML;
+        }
+
+        // Initialize and calculate on load
+        window.onload = calculateMixCols;
+    </script>
+</body>
+</html>

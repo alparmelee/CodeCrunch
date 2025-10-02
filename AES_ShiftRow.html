@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES ShiftRows Transformation Solver (Question 6)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the matrix display */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        .matrix-cell {
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Inter', monospace;
+        }
+        input[type="text"] {
+            width: 100%;
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            text-transform: uppercase;
+        }
+        .input-cell { background-color: #f3f4f6; }
+        .output-cell { background-color: #ecfdf5; color: #065f46; font-size: 1.25rem; border: 2px solid #34d399; border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 space-y-8">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">AES ShiftRows Transformation</h1>
+        <p class="text-center text-gray-600">Solves Question 6: Applies the row shifts based on the 4x4 State Matrix input (output from SubBytes).</p>
+        
+        <!-- Input Matrix Section -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-bold text-gray-700">Input State Matrix (Post-SubBytes):</h2>
+            <div id="inputMatrix" class="matrix-grid">
+                <!-- Input fields will be generated here -->
+            </div>
+            <button onclick="calculateShiftRows()"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+                Apply ShiftRows
+            </button>
+        </div>
+
+        <!-- Output Matrix Section -->
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Output State Matrix (After ShiftRows)</h2>
+            <div id="outputMatrix" class="matrix-grid">
+                <!-- Output results will be displayed here -->
+            </div>
+        </div>
+        
+        <!-- Explanation -->
+        <div class="text-sm text-gray-600 border-t pt-4">
+            <h3 class="font-semibold text-gray-700 mb-2">AES ShiftRows Rules:</h3>
+            <ul class="list-disc list-inside space-y-1">
+                <li>Row 0: Shifted 0 bytes to the left (no change).</li>
+                <li>Row 1: Shifted 1 byte cyclically to the left.</li>
+                <li>Row 2: Shifted 2 bytes cyclically to the left.</li>
+                <li>Row 3: Shifted 3 bytes cyclically to the left.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Input matrix data for Question 6 (which is the output of Question 5).
+        // Reading row by row from the SubBytes result:
+        // A5 38 67 AF
+        // C4 15 58 A8
+        // 0A A9 25 74
+        // E1 69 FA 45
+        const QUESTION_6_INPUT = [
+            "A5", "38", "67", "AF",
+            "C4", "15", "58", "A8",
+            "0A", "A9", "25", "74",
+            "E1", "69", "FA", "45"
+        ];
+        
+        /**
+         * Performs a cyclic left shift on an array (row).
+         * @param {Array<string>} row - The 4-byte array row.
+         * @param {number} shifts - Number of places to shift left (0-3).
+         * @returns {Array<string>} The shifted array.
+         */
+        function cyclicLeftShift(row, shifts) {
+            // Normalize shifts to be between 0 and 3
+            shifts = shifts % 4; 
+            
+            // If shifts is 0, return the row as is
+            if (shifts === 0) {
+                return [...row]; // Return a copy
+            }
+
+            // Perform the cyclic shift using slice and concatenation
+            const shiftedRow = row.slice(shifts).concat(row.slice(0, shifts));
+            return shiftedRow;
+        }
+
+        /**
+         * Dynamically generates the 4x4 input matrix fields and pre-fills Question 6 data.
+         */
+        function generateInputMatrix() {
+            const container = document.getElementById('inputMatrix');
+            let html = '';
+            for (let i = 0; i < 16; i++) {
+                const row = Math.floor(i / 4);
+                const col = i % 4;
+                
+                // Set the ID as byte_R_C for easy access and value from the pre-calculated input
+                html += `<div class="matrix-cell input-cell">
+                            <input type="text" id="byte_${row}_${col}" value="${QUESTION_6_INPUT[i]}" 
+                                maxlength="2" 
+                                oninput="this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, '');">
+                        </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        /**
+         * Reads the input matrix, performs ShiftRows, and updates the output matrix display.
+         */
+        function calculateShiftRows() {
+            const outputContainer = document.getElementById('outputMatrix');
+            let outputHtml = '';
+            let inputMatrix = [];
+            let hasError = false;
+
+            // 1. Read input matrix row by row (4 rows, 4 columns)
+            for (let r = 0; r < 4; r++) {
+                let currentRow = [];
+                for (let c = 0; c < 4; c++) {
+                    const inputElement = document.getElementById(`byte_${r}_${c}`);
+                    const inputByte = inputElement.value.trim().toUpperCase();
+
+                    if (inputByte.length !== 2) {
+                        hasError = true;
+                        break; 
+                    }
+                    currentRow.push(inputByte);
+                }
+                if (hasError) break;
+                inputMatrix.push(currentRow);
+            }
+
+            if (hasError) {
+                // Display error if any input was bad
+                outputContainer.innerHTML = `<div class="col-span-4 text-center text-red-600 font-semibold p-4">Please ensure all 16 input fields contain exactly 2 valid hexadecimal characters.</div>`;
+                return;
+            }
+
+            // 2. Perform ShiftRows transformation
+            let outputMatrix = [];
+            for (let r = 0; r < 4; r++) {
+                // Row 'r' is shifted 'r' times to the left
+                const shifts = r; 
+                const shiftedRow = cyclicLeftShift(inputMatrix[r], shifts);
+                outputMatrix.push(shiftedRow);
+            }
+
+            // 3. Display the output matrix
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 4; c++) {
+                    outputHtml += `<div class="matrix-cell output-cell">${outputMatrix[r][c]}</div>`;
+                }
+            }
+            
+            outputContainer.innerHTML = outputHtml;
+        }
+
+        // Initialize the input matrix fields and calculate the solution immediately on page load
+        window.onload = () => {
+            generateInputMatrix();
+            calculateShiftRows(); 
+        };
+    </script>
+</body>
+</html>

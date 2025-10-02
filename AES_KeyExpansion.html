@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES Key Expansion Solver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the key word display */
+        .word-display {
+            font-family: 'Inter', monospace;
+            font-size: 1.25rem;
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        .input-word { background-color: #f3f4f6; border: 1px solid #d1d5db; }
+        .result-word { background-color: #d1fae5; color: #065f46; border: 2px solid #34d399; }
+        .step-word { background-color: #fffbeb; color: #b45309; border: 1px dashed #f59e0b; }
+        .explanation { color: #4b5563; font-size: 0.9rem; margin-top: 0.5rem; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-xl bg-white shadow-2xl rounded-xl p-8 space-y-8">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">AES Key Expansion Solver</h1>
+        <p class="text-center text-gray-600">Calculates the next key word w[i] based on previous words and the Rcon table.</p>
+        
+        <!-- Target Index Input -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-bold text-gray-700 border-b pb-2">Target Word Index (i)</h2>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Calculate word w[i], where i is (Min 4, Max 40):</label>
+                <input type="number" id="targetIndex" value="32" min="4" max="40" step="1" 
+                       class="w-full word-display input-word text-2xl" oninput="updateInputLabels(); calculateWord();">
+            </div>
+        </div>
+
+        <!-- Input Words -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-bold text-gray-700 border-b pb-2">Required Input Key Words</h2>
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700" id="wIMinus4Label">w[i-4]:</label>
+                    <input type="text" id="wIMinus4Input" value="B52F3C97" maxlength="8" class="w-full word-display input-word" oninput="this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, ''); calculateWord();">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700" id="wIMinus1Label">w[i-1]:</label>
+                    <input type="text" id="wIMinus1Input" value="1E06A84D" maxlength="8" class="w-full word-display input-word" oninput="this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, ''); calculateWord();">
+                </div>
+            </div>
+            <button onclick="calculateWord()"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                Calculate w[<span id="buttonIndex">32</span>]
+            </button>
+        </div>
+
+        <!-- Output Steps Section -->
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200 space-y-4">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2">Calculation Steps for w[<span id="stepsIndex">32</span>]</h2>
+            
+            <div id="coreCalculationSteps">
+                <!-- Dynamic steps will be injected here -->
+            </div>
+
+            <!-- Final XOR Step -->
+            <div>
+                <div class="font-medium text-gray-700">Final w[<span id="finalIndex">32</span>] = w[i-4] XOR T:</div>
+                <div id="wIOutput" class="word-display result-word"></div>
+                <div class="explanation">T is the result of the complex steps above (if 'i' is a multiple of 4) or simply w[i-1] (if 'i' is not a multiple of 4).</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AES S-Box table
+        const SBOX = [
+            0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76,
+            0xca ,0x82 ,0xc9 ,0x7d ,0xfa ,0x59 ,0x47 ,0xf0 ,0xad ,0xd4 ,0xa2 ,0xaf ,0x9c ,0xa4 ,0x72 ,0xc0,
+            0xb7 ,0xfd ,0x93 ,0x26 ,0x36 ,0x3f ,0xf7 ,0xcc ,0x34 ,0xa5 ,0xe5 ,0xf1 ,0x71 ,0xd8 ,0x31 ,0x15,
+            0x04 ,0xc7 ,0x23 ,0xc3 ,0x18 ,0x96 ,0x05 ,0x9a ,0x07 ,0x12 ,0x80 ,0xe2 ,0xeb ,0x27 ,0xb2 ,0x75,
+            0x09 ,0x83 ,0x2c ,0x1a ,0x1b ,0x6e ,0x5a ,0xa0 ,0x52 ,0x3b ,0xd6 ,0xb3 ,0x29 ,0xe3 ,0x2f ,0x84,
+            0x53 ,0xd1 ,0x00 ,0xed ,0x20 ,0xfc ,0xb1 ,0x5b ,0x6a ,0xcb ,0xbe ,0x39 ,0x4a ,0x4c ,0x58 ,0xcf,
+            0xd0 ,0xef ,0xaa ,0xfb ,0x43 ,0x4d ,0x33 ,0x85 ,0x45 ,0xf9 ,0x02 ,0x7f ,0x50 ,0x3c ,0x9f ,0xa8,
+            0x51 ,0xa3 ,0x40 ,0x8f ,0x92 ,0x9d ,0x38 ,0xf5 ,0xbc ,0xb6 ,0xda ,0x21 ,0x10 ,0xff ,0xf3 ,0xd2,
+            0xcd ,0x0c ,0x13 ,0xec ,0x5f ,0x97 ,0x44 ,0x17 ,0xc4 ,0xa7 ,0x7e ,0x3d ,0x64 ,0x5d ,0x19 ,0x73,
+            0x60 ,0x81 ,0x4f ,0xdc ,0x22 ,0x2a ,0x90 ,0x88 ,0x46 ,0xee ,0xb8 ,0x14 ,0xde ,0x5e ,0x0b ,0xdb,
+            0xe0 ,0x32 ,0x3a ,0x0a ,0x49 ,0x06 ,0x24 ,0x5c ,0xc2 ,0xd3 ,0xac ,0x62 ,0x91 ,0x95 ,0xe4 ,0x79,
+            0xe7 ,0xc8 ,0x37 ,0x6d ,0x8d ,0xd5 ,0x4e ,0xa9 ,0x6c ,0x56 ,0xf4 ,0xea ,0x65 ,0x7a ,0xae ,0x08,
+            0xba ,0x78 ,0x25 ,0x2e ,0x1c ,0xa6 ,0xb4 ,0xc6 ,0xe8 ,0xdd ,0x74 ,0x1f ,0x4b ,0xbd ,0x8b ,0x8a,
+            0x70 ,0x3e ,0xb5 ,0x66 ,0x48 ,0x03 ,0xf6 ,0x0e ,0x61 ,0x35 ,0x57 ,0xb9 ,0x86 ,0xc1 ,0x1d ,0x9e,
+            0xe1 ,0xf8 ,0x98 ,0x11 ,0x69 ,0xd9 ,0x8e ,0x94 ,0x9b ,0x1e ,0x87 ,0xe9 ,0xce ,0x55 ,0x28 ,0xdf,
+            0x8c ,0xa1 ,0x89 ,0x0d ,0xbf ,0xe6 ,0x42 ,0x68 ,0x41 ,0x99 ,0x2d ,0x0f ,0xb0 ,0x54 ,0xbb ,0x16
+        ];
+
+        // Rcon values (only used for i=multiple of 4)
+        // Rcon[j] where j = i/4. Array index is j - 1.
+        const RCON = [
+            '01000000', '02000000', '04000000', '08000000', // Rcon[1] to Rcon[4]
+            '10000000', '20000000', '40000000', '80000000', // Rcon[5] to Rcon[8]
+            '1b000000', '36000000'                           // Rcon[9] and Rcon[10]
+        ];
+        
+        // --- Utility Functions ---
+
+        /**
+         * Parses an 8-char hex string into an array of 4 bytes (strings).
+         */
+        function parseWord(hexWord) {
+            return hexWord.match(/.{2}/g) || [];
+        }
+
+        /**
+         * Converts a decimal number to a 2-character hex string.
+         */
+        function decToHex(dec) {
+            return dec.toString(16).padStart(2, '0').toUpperCase();
+        }
+
+        /**
+         * Formats hex string with spaces (e.g., "B52F3C97" -> "B5 2F 3C 97")
+         */
+        function formatHexWord(hexWord) {
+            return hexWord.match(/.{2}/g)?.join(' ') || '---';
+        }
+
+
+        /**
+         * Performs the SubBytes substitution on a single hex byte.
+         */
+        function substituteByte(hexByte) {
+            const index = parseInt(hexByte, 16);
+            if (isNaN(index)) return 'XX';
+            const substitutedDec = SBOX[index];
+            return decToHex(substitutedDec);
+        }
+
+        /**
+         * Performs XOR operation on two 8-char hex words.
+         */
+        function xorWords(hexWordA, hexWordB) {
+            let result = '';
+            for (let i = 0; i < 8; i += 2) {
+                const byteA = parseInt(hexWordA.substring(i, i + 2), 16);
+                const byteB = parseInt(hexWordB.substring(i, i + 2), 16);
+                const xorResult = byteA ^ byteB;
+                result += decToHex(xorResult);
+            }
+            return result;
+        }
+
+        // --- Key Expansion Functions ---
+
+        /**
+         * Step 1: RotWord - Cyclic left shift by one byte.
+         */
+        function rotWord(hexWord) {
+            // "B1 B2 B3 B4" -> "B2 B3 B4 B1"
+            return hexWord.substring(2) + hexWord.substring(0, 2);
+        }
+
+        /**
+         * Step 2: SubWord - Apply S-Box to each of the four bytes.
+         */
+        function subWord(hexWord) {
+            let result = '';
+            const bytes = parseWord(hexWord);
+            for (const byte of bytes) {
+                result += substituteByte(byte);
+            }
+            return result;
+        }
+
+        // Function to update input labels dynamically
+        function updateInputLabels() {
+            const i = parseInt(document.getElementById('targetIndex').value);
+            const wIMinus4Label = document.getElementById('wIMinus4Label');
+            const wIMinus1Label = document.getElementById('wIMinus1Label');
+            
+            // Update labels
+            wIMinus4Label.textContent = `w[${i - 4}]:`;
+            wIMinus1Label.textContent = `w[${i - 1}]:`;
+            
+            // Update titles and button
+            document.getElementById('buttonIndex').textContent = i;
+            document.getElementById('stepsIndex').textContent = i;
+            document.getElementById('finalIndex').textContent = i;
+        }
+
+
+        /**
+         * Main calculation function for w[i].
+         */
+        function calculateWord() {
+            updateInputLabels(); // Ensure labels are correct before calculation
+
+            const i = parseInt(document.getElementById('targetIndex').value);
+            const wIMinus4Hex = document.getElementById('wIMinus4Input').value.trim().toUpperCase();
+            const wIMinus1Hex = document.getElementById('wIMinus1Input').value.trim().toUpperCase();
+
+            // Simple validation
+            if (isNaN(i) || i < 4 || i > 40 || wIMinus4Hex.length !== 8 || wIMinus1Hex.length !== 8) {
+                document.getElementById('wIOutput').textContent = 'Invalid Input/Index or Index Out of Rcon Bounds (4-40)';
+                document.getElementById('coreCalculationSteps').innerHTML = '';
+                return;
+            }
+
+            let T_hex; // T is the calculated term (w[i-1] or g(w[i-1]))
+            const isRoundKeyStart = (i % 4 === 0);
+
+            let detailsHTML = '';
+
+            if (isRoundKeyStart) {
+                // --- Case 1: i is a multiple of 4 (i.e., w[i] starts a new round key) ---
+
+                // 1. RotWord (on w[i-1])
+                const rotWordResult = rotWord(wIMinus1Hex);
+
+                // 2. SubWord
+                const subWordResult = subWord(rotWordResult);
+
+                // 3. Rcon[i/4]
+                const rconIndex = i / 4;
+                const rconHex = RCON[rconIndex - 1]; 
+                
+                // 4. XOR SubWord and Rcon
+                T_hex = xorWords(subWordResult, rconHex);
+
+                // Populate dynamic HTML for complex steps
+                detailsHTML = `
+                    <!-- Step 1: RotWord(w[i-1]) -->
+                    <div>
+                        <div class="font-medium text-gray-700">1. RotWord(w[${i-1}]): Cyclic left shift by one byte.</div>
+                        <div id="rotWordOutput" class="word-display step-word">${formatHexWord(rotWordResult)}</div>
+                        <div class="explanation">w[${i-1}] is rotated $\\rightarrow$ ${formatHexWord(rotWordResult)}</div>
+                    </div>
+
+                    <!-- Step 2: SubWord(RotWord) -->
+                    <div>
+                        <div class="font-medium text-gray-700">2. SubWord(RotWord): Apply S-Box to each byte.</div>
+                        <div id="subWordOutput" class="word-display step-word">${formatHexWord(subWordResult)}</div>
+                    </div>
+
+                    <!-- Step 3: Rcon[i/4] -->
+                    <div>
+                        <div class="font-medium text-gray-700">3. Rcon[i/4]: For i=${i}, Rcon[${rconIndex}].</div>
+                        <div id="rconOutput" class="word-display step-word">${formatHexWord(rconHex)}</div>
+                        <div class="explanation">Rcon[${rconIndex}] is ${formatHexWord(rconHex)}.</div>
+                    </div>
+
+                    <!-- Step 4: SubWord XOR Rcon -->
+                    <div>
+                        <div class="font-medium text-gray-700">4. (SubWord XOR Rcon): XOR step 2 result with step 3.</div>
+                        <div id="xorRconOutput" class="word-display step-word">${formatHexWord(T_hex)}</div>
+                        <div class="explanation">This result is the term 'T'.</div>
+                    </div>
+                `;
+                
+            } else {
+                // --- Case 2: i is NOT a multiple of 4 ---
+                
+                // T is simply w[i-1]
+                T_hex = wIMinus1Hex;
+
+                // Populate dynamic HTML for simple steps
+                 detailsHTML = `
+                    <!-- Step 1: T = w[i-1] -->
+                    <div>
+                        <div class="font-medium text-gray-700">1. T = w[${i-1}]: The T term is simply the preceding word.</div>
+                        <div id="tTermOutput" class="word-display step-word">${formatHexWord(T_hex)}</div>
+                        <div class="explanation">Since 'i' (${i}) is not a multiple of 4, the T term skips RotWord, SubWord, and Rcon.</div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('coreCalculationSteps').innerHTML = detailsHTML;
+
+
+            // --- Final Step: w[i] = w[i-4] XOR T ---
+            const wIResult = xorWords(wIMinus4Hex, T_hex);
+            document.getElementById('wIOutput').textContent = formatHexWord(wIResult);
+        }
+
+        // Calculate the solution immediately on page load
+        window.onload = () => {
+            // Set default labels for the initial w[32] calculation
+            document.getElementById('wIMinus4Label').textContent = 'w[28]:';
+            document.getElementById('wIMinus1Label').textContent = 'w[31]:';
+            calculateWord();
+        };
+    </script>
+</body>
+</html>

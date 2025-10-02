@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES SubBytes Transformation Solver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the matrix display */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        .matrix-cell {
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Inter', monospace;
+        }
+        input[type="text"] {
+            width: 100%;
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            text-transform: uppercase;
+        }
+        .input-cell { background-color: #f3f4f6; }
+        .output-cell { background-color: #ecfdf5; color: #065f46; font-size: 1.25rem; border: 2px solid #34d399; border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl bg-white shadow-2xl rounded-xl p-8 space-y-8">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">AES SubBytes Transformation</h1>
+        <p class="text-center text-gray-600">Solves Question 5: Substitutes each byte of the State Matrix using the provided AES S-Box.</p>
+        
+        <!-- Input Matrix Section -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-bold text-gray-700">Input State Matrix (Hex)</h2>
+            <div id="inputMatrix" class="matrix-grid">
+                <!-- Input fields will be generated here -->
+            </div>
+            <button onclick="calculateSubBytes()"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                Apply SubBytes
+            </button>
+        </div>
+
+        <!-- Output Matrix Section -->
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Output State Matrix (After SubBytes)</h2>
+            <div id="outputMatrix" class="matrix-grid">
+                <!-- Output substitution results will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AES S-Box provided by the user (256 entries). Used for byte substitution.
+        const SBOX = [
+            0x63 ,0x7c ,0x77 ,0x7b ,0xf2 ,0x6b ,0x6f ,0xc5 ,0x30 ,0x01 ,0x67 ,0x2b ,0xfe ,0xd7 ,0xab ,0x76,
+            0xca ,0x82 ,0xc9 ,0x7d ,0xfa ,0x59 ,0x47 ,0xf0 ,0xad ,0xd4 ,0xa2 ,0xaf ,0x9c ,0xa4 ,0x72 ,0xc0,
+            0xb7 ,0xfd ,0x93 ,0x26 ,0x36 ,0x3f ,0xf7 ,0xcc ,0x34 ,0xa5 ,0xe5 ,0xf1 ,0x71 ,0xd8 ,0x31 ,0x15,
+            0x04 ,0xc7 ,0x23 ,0xc3 ,0x18 ,0x96 ,0x05 ,0x9a ,0x07 ,0x12 ,0x80 ,0xe2 ,0xeb ,0x27 ,0xb2 ,0x75,
+            0x09 ,0x83 ,0x2c ,0x1a ,0x1b ,0x6e ,0x5a ,0xa0 ,0x52 ,0x3b ,0xd6 ,0xb3 ,0x29 ,0xe3 ,0x2f ,0x84,
+            0x53 ,0xd1 ,0x00 ,0xed ,0x20 ,0xfc ,0xb1 ,0x5b ,0x6a ,0xcb ,0xbe ,0x39 ,0x4a ,0x4c ,0x58 ,0xcf,
+            0xd0 ,0xef ,0xaa ,0xfb ,0x43 ,0x4d ,0x33 ,0x85 ,0x45 ,0xf9 ,0x02 ,0x7f ,0x50 ,0x3c ,0x9f ,0xa8,
+            0x51 ,0xa3 ,0x40 ,0x8f ,0x92 ,0x9d ,0x38 ,0xf5 ,0xbc ,0xb6 ,0xda ,0x21 ,0x10 ,0xff ,0xf3 ,0xd2,
+            0xcd ,0x0c ,0x13 ,0xec ,0x5f ,0x97 ,0x44 ,0x17 ,0xc4 ,0xa7 ,0x7e ,0x3d ,0x64 ,0x5d ,0x19 ,0x73,
+            0x60 ,0x81 ,0x4f ,0xdc ,0x22 ,0x2a ,0x90 ,0x88 ,0x46 ,0xee ,0xb8 ,0x14 ,0xde ,0x5e ,0x0b ,0xdb,
+            0xe0 ,0x32 ,0x3a ,0x0a ,0x49 ,0x06 ,0x24 ,0x5c ,0xc2 ,0xd3 ,0xac ,0x62 ,0x91 ,0x95 ,0xe4 ,0x79,
+            0xe7 ,0xc8 ,0x37 ,0x6d ,0x8d ,0xd5 ,0x4e ,0xa9 ,0x6c ,0x56 ,0xf4 ,0xea ,0x65 ,0x7a ,0xae ,0x08,
+            0xba ,0x78 ,0x25 ,0x2e ,0x1c ,0xa6 ,0xb4 ,0xc6 ,0xe8 ,0xdd ,0x74 ,0x1f ,0x4b ,0xbd ,0x8b ,0x8a,
+            0x70 ,0x3e ,0xb5 ,0x66 ,0x48 ,0x03 ,0xf6 ,0x0e ,0x61 ,0x35 ,0x57 ,0xb9 ,0x86 ,0xc1 ,0x1d ,0x9e,
+            0xe1 ,0xf8 ,0x98 ,0x11 ,0x69 ,0xd9 ,0x8e ,0x94 ,0x9b ,0x1e ,0x87 ,0xe9 ,0xce ,0x55 ,0x28 ,0xdf,
+            0x8c ,0xa1 ,0x89 ,0x0d ,0xbf ,0xe6 ,0x42 ,0x68 ,0x41 ,0x99 ,0x2d ,0x0f ,0xb0 ,0x54 ,0xbb ,0x16
+        ];
+
+        // Input matrix data for Question 5, reading row by row:
+        const QUESTION_5_INPUT = [
+            "29", "76", "0A", "1B",
+            "8C", "3D", "4E", "5F",
+            "A3", "B7", "C2", "D9",
+            "E0", "F5", "14", "68"
+        ];
+        
+        /**
+         * Converts a decimal number to a 2-character hexadecimal string.
+         * @param {number} dec - Decimal input.
+         * @returns {string} 2-character hex string (e.g., "A5").
+         */
+        function decToHex(dec) {
+            return dec.toString(16).padStart(2, '0').toUpperCase();
+        }
+
+        /**
+         * Performs the SubBytes substitution on a single hex byte.
+         * @param {string} hexByte - The input byte (e.g., "29").
+         * @returns {string} The substituted byte (e.g., "A5").
+         */
+        function substituteByte(hexByte) {
+            // Convert the 2-character hex string directly to a decimal index (0-255)
+            const index = parseInt(hexByte, 16);
+            
+            if (isNaN(index) || index < 0 || index > 255) {
+                // This should be caught by input validation, but acts as a failsafe
+                return "ERR"; 
+            }
+            
+            // Look up the decimal substitution value in the S-Box
+            const substitutedDec = SBOX[index];
+            
+            // Convert the result back to a 2-character hexadecimal string
+            return decToHex(substitutedDec);
+        }
+
+        /**
+         * Dynamically generates the 4x4 input matrix fields and pre-fills Question 5 data.
+         */
+        function generateInputMatrix() {
+            const container = document.getElementById('inputMatrix');
+            let html = '';
+            for (let i = 0; i < 16; i++) {
+                // Input ID reflects its row and column (0-3) for potential complex logic
+                const row = Math.floor(i / 4);
+                const col = i % 4;
+                
+                html += `<div class="matrix-cell input-cell">
+                            <input type="text" id="byte_${row}_${col}" value="${QUESTION_5_INPUT[i]}" 
+                                maxlength="2" 
+                                oninput="this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, '');">
+                        </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        /**
+         * Reads the input matrix, performs SubBytes, and updates the output matrix display.
+         */
+        function calculateSubBytes() {
+            const outputContainer = document.getElementById('outputMatrix');
+            let outputHtml = '';
+            let hasError = false;
+
+            for (let i = 0; i < 16; i++) {
+                const row = Math.floor(i / 4);
+                const col = i % 4;
+                const inputElement = document.getElementById(`byte_${row}_${col}`);
+                const inputByte = inputElement.value.trim().toUpperCase();
+
+                if (inputByte.length !== 2) {
+                    outputHtml += `<div class="matrix-cell output-cell bg-red-100 text-red-700">Invalid</div>`;
+                    hasError = true;
+                    console.error(`Invalid input at (${row}, ${col}): ${inputByte}`);
+                    continue;
+                }
+
+                try {
+                    const resultByte = substituteByte(inputByte);
+                    outputHtml += `<div class="matrix-cell output-cell">${resultByte}</div>`;
+                } catch (e) {
+                    outputHtml += `<div class="matrix-cell output-cell bg-red-100 text-red-700">ERROR</div>`;
+                    hasError = true;
+                    console.error(`Error during substitution for ${inputByte}:`, e);
+                }
+            }
+
+            if (hasError) {
+                // Display an overall error message if any input was bad
+                document.getElementById('outputMatrix').innerHTML = `<div class="col-span-4 text-center text-red-600 font-semibold p-4">Please ensure all 16 input fields contain exactly 2 valid hexadecimal characters.</div>`;
+            } else {
+                outputContainer.innerHTML = outputHtml;
+            }
+        }
+
+        // Initialize the input matrix fields on page load
+        window.onload = () => {
+            generateInputMatrix();
+            calculateSubBytes(); // Calculate the solution for Question 5 immediately
+        };
+    </script>
+</body>
+</html>

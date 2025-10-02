@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GF(2^8) Multiplication Solver (Question 8)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .input-box {
+            font-family: 'Inter', monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            text-transform: uppercase;
+        }
+        .result-box {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-size: 2rem;
+            border: 2px solid #34d399;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.5rem;
+        }
+        .step-detail {
+            font-family: monospace;
+            background-color: #fffbeb;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+            border: 1px dashed #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-xl bg-white shadow-2xl rounded-xl p-8 space-y-8">
+        <h1 class="text-3xl font-extrabold text-center text-gray-800">GF(2^8) Multiplication Solver</h1>
+        <p class="text-center text-gray-600">Solves Question 8: Calculates **A * B** in the AES Finite Field using the shift-and-XOR method.</p>
+        
+        <!-- Input Words -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-bold text-gray-700 border-b pb-2">Input Values (A multiplied by B)</h2>
+            <div class="flex space-x-4 items-center">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700">Multiplier A (14):</label>
+                    <input type="text" id="aInput" value="14" maxlength="2" class="w-full input-box bg-indigo-100" oninput="validateHex(this); calculateGFMultiply();">
+                </div>
+                <div class="text-3xl font-extrabold text-gray-500">*</div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700">Multiplicand B (E6):</label>
+                    <input type="text" id="bInput" value="E6" maxlength="2" class="w-full input-box bg-indigo-100" oninput="validateHex(this); calculateGFMultiply();">
+                </div>
+            </div>
+            <button onclick="calculateGFMultiply()"
+                    class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50">
+                Derive Result
+            </button>
+        </div>
+
+        <!-- Output Steps Section -->
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200 space-y-4">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2">Result: A * B</h2>
+            <div id="finalResult" class="result-box">---</div>
+            
+            <h3 class="font-medium text-gray-700 mt-4">Step-by-Step Derivation:</h3>
+            <div id="derivationSteps" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <script>
+        // Irreducible polynomial for GF(2^8) (x^8 + x^4 + x^3 + x + 1)
+        const MODULUS = 0x11B; 
+        const REDUCTION_TERM = 0x1B; // MODULUS XOR 0x100
+
+        // --- Utility Functions ---
+
+        /** Converts a 2-char hex string to a decimal integer. */
+        function hexToDec(hex) {
+            return parseInt(hex, 16);
+        }
+
+        /** Converts a decimal integer to a 2-char hex string. */
+        function decToHex(dec) {
+            return dec.toString(16).padStart(2, '0').toUpperCase();
+        }
+
+        /** Performs XOR operation on two integers. */
+        function xor(a, b) {
+            return a ^ b;
+        }
+
+        /** Validates and cleans hex input. */
+        function validateHex(inputElement) {
+            inputElement.value = inputElement.value.toUpperCase().replace(/[^0-9A-F]/g, '').substring(0, 2);
+        }
+
+        // --- GF(2^8) Multiplication Function ---
+
+        /**
+         * Multiplies two bytes A and B in GF(2^8) using the shift-and-XOR method.
+         * @param {number} a - Multiplier (e.g., 0x14).
+         * @param {number} b - Multiplicand (e.g., 0xE6).
+         * @returns {number} The result in GF(2^8).
+         */
+        function gfMultiply(a, b) {
+            let p = 0; // The product (starts at 0)
+            let highBit;
+
+            for (let i = 0; i < 8; i++) {
+                // If the LSB of A is 1, XOR the current B into the product P.
+                if (a & 1) {
+                    p = xor(p, b);
+                }
+
+                // Check the MSB of B before shifting
+                highBit = b & 0x80;
+
+                // Left shift B (B = B * x)
+                b <<= 1;
+                b &= 0xFF; // Keep it as 8 bits
+
+                // If the high bit of the original B was set, B was multiplied by x.
+                // We must reduce the result by XORing with 0x1B.
+                if (highBit) {
+                    b = xor(b, REDUCTION_TERM); // B = B XOR 0x1B (modulus reduction)
+                }
+
+                // Right shift A to examine the next bit
+                a >>= 1;
+            }
+            return p;
+        }
+        
+        /**
+         * Main function to calculate and display the GF(2^8) multiplication steps.
+         */
+        function calculateGFMultiply() {
+            const aHex = document.getElementById('aInput').value.trim().toUpperCase();
+            const bHex = document.getElementById('bInput').value.trim().toUpperCase();
+            
+            if (aHex.length !== 2 || bHex.length !== 2) {
+                document.getElementById('finalResult').textContent = "---";
+                document.getElementById('derivationSteps').innerHTML = '';
+                return;
+            }
+
+            const aDec = hexToDec(aHex);
+            const bDec = hexToDec(bHex);
+            
+            let a = aDec; // Copy for iteration
+            let b = bDec; // Copy for iteration
+            let p = 0; // Product
+            let stepsHTML = '';
+            
+            const originalB = bDec;
+
+            // --- Step-by-Step Derivation ---
+
+            stepsHTML += `
+                <div class="step-detail">
+                    A = ${decToHex(aDec)} (Binary: ${aDec.toString(2).padStart(8, '0')})<br>
+                    B = ${decToHex(bDec)} (Binary: ${bDec.toString(2).padStart(8, '0')})<br>
+                    Irreducible Polynomial (0x11B) reduction term: **0x1B**
+                </div>
+            `;
+
+            for (let i = 0; i < 8; i++) {
+                const bit = a & 1;
+                const highBit = b & 0x80;
+                let stepComment = `Bit ${i}: ${bit}. `;
+                let p_before = p;
+                let b_before = b;
+
+                // 1. Check LSB of A
+                if (bit) {
+                    p = xor(p, b);
+                    stepComment += `Product P = P XOR B = ${decToHex(p_before)} XOR ${decToHex(b_before)} = **${decToHex(p)}**. `;
+                } else {
+                    stepComment += `LSB is 0. P remains **${decToHex(p)}**. `;
+                }
+
+                // 2. Shift B (B = B * x)
+                b <<= 1;
+                b &= 0xFF;
+
+                // 3. Reduction if MSB of original B was 1
+                if (highBit) {
+                    b = xor(b, REDUCTION_TERM);
+                    stepComment += `(MSB set, B reduces: ${decToHex(b_before << 1)} XOR 1B = **${decToHex(b)}**). `;
+                } else {
+                    stepComment += `B shifts to **${decToHex(b)}**. `;
+                }
+
+                // 4. Shift A
+                a >>= 1;
+                
+                stepsHTML += `
+                    <div class="step-detail">
+                        <span class="font-bold text-lg">Iteration ${i + 1}</span><br>
+                        ${stepComment}
+                        <div class="text-sm mt-1">Next A: ${decToHex(a)}. Next B: ${decToHex(b)}.</div>
+                    </div>
+                `;
+            }
+
+            const finalResultDec = gfMultiply(aDec, bDec);
+            const finalResultHex = decToHex(finalResultDec);
+            
+            document.getElementById('finalResult').textContent = finalResultHex;
+            document.getElementById('derivationSteps').innerHTML = stepsHTML;
+        }
+        
+        // Initialize and calculate on load
+        window.onload = calculateGFMultiply;
+    </script>
+</body>
+</html>
