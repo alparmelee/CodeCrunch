@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arup's Course Grade Calculator (V2)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .category {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .category-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .input-row {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #e0f7fa;
+            border: 1px solid #00bcd4;
+        }
+        .result-grade {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00796b;
+        }
+        .A { color: green; }
+        .B { color: darkorange; }
+        .C { color: royalblue; }
+        .F { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Arup's Course Grade Calculator (V2)</h2>
+    <p>Enter your scores (points earned / total points possible). <b>Blank scores are ignored</b> (do not count).</p>
+
+    <div class="category" id="homework-section">
+        <div class="category-header">
+            <span>Homework (7 Total) - 25% of Final Grade</span>
+            <span>Completed HW Score: <span id="hw-total-percent">0.0%</span></span>
+        </div>
+        <div class="input-row">
+            <label>HW 1:</label>
+            <input type="number" data-max="25" class="hw-score" value="23"> / <span class="max-points">25</span>
+        </div>
+        <div class="input-row">
+            <label>HW 2:</label>
+            <input type="number" data-max="75" class="hw-score" value="73"> / <span class="max-points">75</span>
+        </div>
+        <div class="input-row">
+            <label>HW 3:</label>
+            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
+        </div>
+        <div class="input-row">
+            <label>HW 4:</label>
+            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
+        </div>
+        <div class="input-row">
+            <label>HW 5:</label>
+            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
+        </div>
+        <div class="input-row">
+            <label>HW 6:</label>
+            <input type="number" data-max="50" class="hw-score"> / <span class="max-points">50</span>
+        </div>
+        <div class="input-row">
+            <label>HW 7:</label>
+            <input type="number" data-max="125" class="hw-score"> / <span class="max-points">125</span>
+        </div>
+    </div>
+
+    <div class="category" id="quiz-section">
+        <div class="category-header">
+            <span>Quizzes (5 Total) - 50% of Final Grade</span>
+            <span>Completed Quiz Score: <span id="quiz-total-percent">0.0%</span></span>
+        </div>
+        <div class="input-row">
+            <label>Quiz 1:</label>
+            <input type="number" data-max="50" class="quiz-score" value="29"> / <span class="max-points">50</span>
+        </div>
+        <div class="input-row">
+            <label>Quiz 2:</label>
+            <input type="number" data-max="50" class="quiz-score" value="36"> / <span class="max-points">50</span>
+        </div>
+        <div class="input-row">
+            <label>Quiz 3:</label>
+            <input type="number" data-max="50" class="quiz-score" value="27"> / <span class="max-points">50</span>
+        </div>
+        <div class="input-row">
+            <label>Quiz 4:</label>
+            <input type="number" data-max="50" class="quiz-score"> / <span class="max-points">50</span>
+        </div>
+        <div class="input-row">
+            <label>Quiz 5:</label>
+            <input type="number" data-max="50" class="quiz-score"> / <span class="max-points">50</span>
+        </div>
+    </div>
+
+    <div class="category" id="other-section">
+        <div class="category-header">
+            <span>Final Exam - 25% of Final Grade</span>
+            <span>Completed Exam Score: <span id="other-total-percent">0.0%</span></span>
+        </div>
+        <div class="input-row">
+            <label>Final Exam:</label>
+            <input type="number" data-max="200" class="other-score"> / <span class="max-points">200</span>
+            <span style="font-size: 0.8em; margin-left: 10px;">(Max points assumed)</span>
+        </div>
+    </div>
+
+    <div class="result">
+        <h3>Your Current Course Grade</h3>
+        <p>Your grade is based on <span id="weight-completed">0.0%</span> of the course work completed.</p>
+        <p><strong>Weighted Average:</strong> <span id="final-percentage" class="result-grade">0.00%</span></p>
+        <p><strong>Letter Grade:</strong> <span id="final-letter" class="result-grade">F</span></p>
+    </div>
+</div>
+
+<script>
+    const WEIGHTS = {
+        'hw': 0.25,
+        'quiz': 0.50,
+        'other': 0.25
+    };
+    const MAX_GRADES = {
+        'A': 85,
+        'B': 70,
+        'C': 50
+    };
+
+    function calculateGrade() {
+        let totalWeightedScore = 0;
+        let totalWeightCompleted = 0;
+
+        // Function to process a category's scores
+        function processCategory(selector, categoryWeight, totalItems) {
+            let inputs = document.querySelectorAll(selector);
+            let pointsEarned = 0;
+            let pointsPossible = 0;
+            let completedCount = 0;
+
+            inputs.forEach(input => {
+                const score = parseFloat(input.value);
+                const max = parseFloat(input.getAttribute('data-max'));
+
+                // Only count the assignment if a score (including 0) is explicitly entered
+                if (!isNaN(score) && input.value !== "") {
+                    completedCount++;
+                    // Cap score at max points to handle over-scoring/extra credit
+                    pointsEarned += Math.min(score, max); 
+                    pointsPossible += max;
+                }
+            });
+
+            if (pointsPossible > 0) {
+                const categoryPercentage = pointsEarned / pointsPossible;
+                
+                // Calculate the weight of the *completed* assignments within this category
+                const weightCompleted = (completedCount / totalItems) * categoryWeight;
+
+                // Add the contribution to the total
+                totalWeightedScore += categoryPercentage * weightCompleted;
+                totalWeightCompleted += weightCompleted;
+                
+                return { percent: categoryPercentage * 100, pointsPossible: pointsPossible };
+            }
+            return { percent: 0, pointsPossible: 0 };
+        }
+
+        // --- 1. Homework (25% Total, 7 Items) ---
+        const hwResult = processCategory('.hw-score', WEIGHTS.hw, 7);
+        document.getElementById('hw-total-percent').textContent = hwResult.percent.toFixed(1) + '%';
+        
+        // --- 2. Quizzes (50% Total, 5 Items) ---
+        const quizResult = processCategory('.quiz-score', WEIGHTS.quiz, 5);
+        document.getElementById('quiz-total-percent').textContent = quizResult.percent.toFixed(1) + '%';
+
+        // --- 3. Other/Final (25% Total, 1 Item) ---
+        const otherResult = processCategory('.other-score', WEIGHTS.other, 1);
+        document.getElementById('other-total-percent').textContent = otherResult.percent.toFixed(1) + '%';
+
+        // --- 4. Final Grade Calculation ---
+        let finalGrade = 0;
+        let letterGrade = 'N/A';
+        let gradeClass = '';
+        let totalWeightPercent = totalWeightCompleted * 100;
+
+        if (totalWeightCompleted > 0) {
+            // Overall current grade = sum of weighted scores / sum of weights completed.
+            finalGrade = (totalWeightedScore / totalWeightCompleted) * 100;
+        } else {
+             finalGrade = 0;
+        }
+        
+        // Determine Letter Grade and styling
+        if (finalGrade >= MAX_GRADES.A) {
+            letterGrade = 'A';
+            gradeClass = 'A';
+        } else if (finalGrade >= MAX_GRADES.B) {
+            letterGrade = 'B';
+            gradeClass = 'B';
+        } else if (finalGrade >= MAX_GRADES.C) {
+            letterGrade = 'C';
+            gradeClass = 'C';
+        } else {
+            letterGrade = 'F';
+            gradeClass = 'F';
+        }
+
+        // Update the display
+        document.getElementById('weight-completed').textContent = totalWeightPercent.toFixed(1) + '%';
+        document.getElementById('final-percentage').textContent = finalGrade.toFixed(2) + '%';
+        document.getElementById('final-percentage').className = 'result-grade ' + gradeClass;
+        document.getElementById('final-letter').textContent = letterGrade;
+        document.getElementById('final-letter').className = 'result-grade ' + gradeClass;
+    }
+
+    // Attach the calculation function to all input changes
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', calculateGrade);
+    });
+
+    // Run the calculation once on load to show initial values
+    window.onload = calculateGrade;
+</script>
+
+</body>
+</html>
