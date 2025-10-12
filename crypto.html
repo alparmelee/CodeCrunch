@@ -22,6 +22,7 @@
             color: #333;
             border-bottom: 2px solid #ccc;
             padding-bottom: 10px;
+            font-weight: 700;
         }
         .category {
             margin-bottom: 20px;
@@ -59,177 +60,171 @@
             font-weight: bold;
             color: #00796b;
         }
-        .A { color: green; }
-        .B { color: darkorange; }
-        .C { color: royalblue; }
-        .F { color: red; }
+        .A { color: #16a34a; /* Tailwind green-600 */ }
+        .B { color: #f97316; /* Tailwind orange-600 */ }
+        .C { color: #1d4ed8; /* Tailwind blue-700 */ }
+        .F { color: #dc2626; /* Tailwind red-600 */ }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>Arup's Course Grade Calculator (V2)</h2>
-    <p>Enter your scores (points earned / total points possible). <b>Blank scores are ignored</b> (do not count).</p>
-
+    <p>Enter your scores (points earned / total points possible). Note: The <b>Current Percentage</b> is calculated based ONLY on <b>HW 1, HW 2, Quiz 1, Quiz 2, and Quiz 3</b>.</p>
+    
+    <!-- Homework Section -->
     <div class="category" id="homework-section">
         <div class="category-header">
-            <span>Homework (7 Total) - 25% of Final Grade</span>
-            <span>Completed HW Score: <span id="hw-total-percent">0.0%</span></span>
+            <span>Homework (7 Total) - Category Weight: 25%</span>
+            <span>Current HW Weighted Score: <span id="hw-total-percent">0.0%</span></span>
+        </div>
+        <!-- HW 1 and HW 2 are included in the current formula calculation -->
+        <div class="input-row">
+            <label>HW 1 (Max 25):</label>
+            <input type="number" data-max="25" class="hw-score-calc" id="hw1-score" value="23">
         </div>
         <div class="input-row">
-            <label>HW 1:</label>
-            <input type="number" data-max="25" class="hw-score" value="23"> / <span class="max-points">25</span>
+            <label>HW 2 (Max 75):</label>
+            <input type="number" data-max="75" class="hw-score-calc" id="hw2-score" value="73">
+        </div>
+        <!-- Remaining HWs listed for tracking/completeness but NOT used in the current formula -->
+        <div class="input-row">
+            <label>HW 3 (Max 100):</label>
+            <input type="number" data-max="100" class="hw-score">
         </div>
         <div class="input-row">
-            <label>HW 2:</label>
-            <input type="number" data-max="75" class="hw-score" value="73"> / <span class="max-points">75</span>
+            <label>HW 4 (Max 100):</label>
+            <input type="number" data-max="100" class="hw-score">
         </div>
         <div class="input-row">
-            <label>HW 3:</label>
-            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
+            <label>HW 5 (Max 100):</label>
+            <input type="number" data-max="100" class="hw-score">
         </div>
         <div class="input-row">
-            <label>HW 4:</label>
-            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
+            <label>HW 6 (Max 100):</label>
+            <input type="number" data-max="100" class="hw-score">
         </div>
         <div class="input-row">
-            <label>HW 5:</label>
-            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
-        </div>
-        <div class="input-row">
-            <label>HW 6:</label>
-            <input type="number" data-max="100" class="hw-score"> / <span class="max-points">100</span>
-        </div>
-        <div class="input-row">
-            <label>HW 7:</label>
-            <input type="number" data-max="125" class="hw-score"> / <span class="max-points">125</span>
+            <label>HW 7 (Max 125):</label>
+            <input type="number" data-max="125" class="hw-score">
         </div>
     </div>
 
+    <!-- Quiz Section -->
     <div class="category" id="quiz-section">
         <div class="category-header">
-            <span>Quizzes (5 Total) - 50% of Final Grade</span>
-            <span>Completed Quiz Score: <span id="quiz-total-percent">0.0%</span></span>
+            <span>Quizzes (5 Total) - Category Weight: 50%</span>
+            <span>Current Quiz Weighted Score: <span id="quiz-total-percent">0.0%</span></span>
+        </div>
+        <!-- Quizzes 1, 2, and 3 are included in the current formula calculation -->
+        <div class="input-row">
+            <label>Quiz 1 (Max 50):</label>
+            <input type="number" data-max="50" class="quiz-score-calc" id="quiz1-score" value="29">
         </div>
         <div class="input-row">
-            <label>Quiz 1:</label>
-            <input type="number" data-max="50" class="quiz-score" value="29"> / <span class="max-points">50</span>
+            <label>Quiz 2 (Max 50):</label>
+            <input type="number" data-max="50" class="quiz-score-calc" id="quiz2-score" value="36">
         </div>
         <div class="input-row">
-            <label>Quiz 2:</label>
-            <input type="number" data-max="50" class="quiz-score" value="36"> / <span class="max-points">50</span>
+            <label>Quiz 3 (Max 50):</label>
+            <input type="number" data-max="50" class="quiz-score-calc" id="quiz3-score" value="27">
+        </div>
+        <!-- Remaining Quizzes listed for tracking/completeness but NOT used in the current formula -->
+        <div class="input-row">
+            <label>Quiz 4 (Max 50):</label>
+            <input type="number" data-max="50" class="quiz-score">
         </div>
         <div class="input-row">
-            <label>Quiz 3:</label>
-            <input type="number" data-max="50" class="quiz-score" value="27"> / <span class="max-points">50</span>
-        </div>
-        <div class="input-row">
-            <label>Quiz 4:</label>
-            <input type="number" data-max="50" class="quiz-score"> / <span class="max-points">50</span>
-        </div>
-        <div class="input-row">
-            <label>Quiz 5:</label>
-            <input type="number" data-max="50" class="quiz-score"> / <span class="max-points">50</span>
+            <label>Quiz 5 (Max 50):</label>
+            <input type="number" data-max="50" class="quiz-score">
         </div>
     </div>
 
+    <!-- Final Exam Section (Not used in current formula) -->
     <div class="category" id="other-section">
         <div class="category-header">
-            <span>Final Exam - 25% of Final Grade</span>
-            <span>Completed Exam Score: <span id="other-total-percent">0.0%</span></span>
+            <span>Final Exam - Category Weight: 25%</span>
+            <span>Final Exam Score: <span id="other-total-percent">N/A</span></span>
         </div>
         <div class="input-row">
-            <label>Final Exam:</label>
-            <input type="number" data-max="200" class="other-score"> / <span class="max-points">200</span>
-            <span style="font-size: 0.8em; margin-left: 10px;">(Max points assumed)</span>
+            <label>Final Exam (Max 200):</label>
+            <input type="number" data-max="200" class="other-score">
         </div>
     </div>
 
     <div class="result">
-        <h3>Your Current Course Grade</h3>
-        <p>Your grade is based on <span id="weight-completed">0.0%</span> of the course work completed.</p>
-        <p><strong>Weighted Average:</strong> <span id="final-percentage" class="result-grade">0.00%</span></p>
-        <p><strong>Letter Grade:</strong> <span id="final-letter" class="result-grade">F</span></p>
+        <h3>Your Current Class Percentage</h3>
+        <p>This percentage is based on the weighted scores of <b></b>HW 1, HW 2, Quiz 1, Quiz 2, and Quiz 3</b> (34% total weighted contribution).</p>
+        <p><strong>Calculated Average:</strong> <span id="final-percentage" class="result-grade">65.41%</span></p>
+        <p><strong>Letter Grade:</strong> <span id="final-letter" class="result-grade B">B</span></p>
+        <div style="font-size: 0.85em; margin-top: 10px;">
+            Cutoffs: A: 80%, B: 65%, C: 49%,
+        </div>
     </div>
 </div>
 
 <script>
-    const WEIGHTS = {
-        'hw': 0.25,
-        'quiz': 0.50,
-        'other': 0.25
-    };
+    // --- GRADING CONSTANTS ---
+    const CURRENT_WEIGHT = 0.34; // The combined weight of the included assignments (HW1, HW2, Q1, Q2, Q3)
+    const MAX_HW_POINTS_CALC = 25 + 75; // Max points for HW1 (25) + HW2 (75) = 100
+    const MAX_QUIZ_POINTS_CALC = 50 + 50 + 50; // Max points for Q1, Q2, Q3 = 150
     const MAX_GRADES = {
-        'A': 85,
-        'B': 70,
-        'C': 50
+        'A': 80,
+        'B': 65,
+        'C': 49
     };
+    
+    function getScore(id) {
+        const input = document.getElementById(id);
+        const score = parseFloat(input.value);
+        const max = parseFloat(input.getAttribute('data-max'));
+        // Return score, capped at max, or 0 if empty/invalid.
+        return Math.min(isNaN(score) || input.value === "" ? 0 : score, max);
+    }
 
     function calculateGrade() {
-        let totalWeightedScore = 0;
-        let totalWeightCompleted = 0;
+        // 1. Get raw scores for the items included in the formula
+        const hw1Score = getScore('hw1-score');
+        const hw2Score = getScore('hw2-score');
+        const quiz1Score = getScore('quiz1-score');
+        const quiz2Score = getScore('quiz2-score');
+        const quiz3Score = getScore('quiz3-score');
 
-        // Function to process a category's scores
-        function processCategory(selector, categoryWeight, totalItems) {
-            let inputs = document.querySelectorAll(selector);
-            let pointsEarned = 0;
-            let pointsPossible = 0;
-            let completedCount = 0;
-
-            inputs.forEach(input => {
-                const score = parseFloat(input.value);
-                const max = parseFloat(input.getAttribute('data-max'));
-
-                // Only count the assignment if a score (including 0) is explicitly entered
-                if (!isNaN(score) && input.value !== "") {
-                    completedCount++;
-                    // Cap score at max points to handle over-scoring/extra credit
-                    pointsEarned += Math.min(score, max); 
-                    pointsPossible += max;
-                }
-            });
-
-            if (pointsPossible > 0) {
-                const categoryPercentage = pointsEarned / pointsPossible;
-                
-                // Calculate the weight of the *completed* assignments within this category
-                const weightCompleted = (completedCount / totalItems) * categoryWeight;
-
-                // Add the contribution to the total
-                totalWeightedScore += categoryPercentage * weightCompleted;
-                totalWeightCompleted += weightCompleted;
-                
-                return { percent: categoryPercentage * 100, pointsPossible: pointsPossible };
-            }
-            return { percent: 0, pointsPossible: 0 };
-        }
-
-        // --- 1. Homework (25% Total, 7 Items) ---
-        const hwResult = processCategory('.hw-score', WEIGHTS.hw, 7);
-        document.getElementById('hw-total-percent').textContent = hwResult.percent.toFixed(1) + '%';
+        // Based on the raw scores and the user's explicit formula:
+        // ( (H1+H2)/25 + (Q1+Q2+Q3)/5 )/.34
         
-        // --- 2. Quizzes (50% Total, 5 Items) ---
-        const quizResult = processCategory('.quiz-score', WEIGHTS.quiz, 5);
-        document.getElementById('quiz-total-percent').textContent = quizResult.percent.toFixed(1) + '%';
+        const hwSum = hw1Score + hw2Score;
+        const quizSum = quiz1Score + quiz2Score + quiz3Score;
 
-        // --- 3. Other/Final (25% Total, 1 Item) ---
-        const otherResult = processCategory('.other-score', WEIGHTS.other, 1);
-        document.getElementById('other-total-percent').textContent = otherResult.percent.toFixed(1) + '%';
+        // Step 1: Calculate the numerator terms
+        // Division by 25 (from user's formula)
+        const hwTerm = hwSum / 25; 
+        // Division by 5 (from user's formula)
+        const quizTerm = quizSum / 5; 
 
-        // --- 4. Final Grade Calculation ---
+        // Step 2: Calculate the weighted sum (Numerator of the big fraction)
+        const weightedSum = hwTerm + quizTerm;
+        
+        // Step 3: Calculate the final percentage
         let finalGrade = 0;
-        let letterGrade = 'N/A';
-        let gradeClass = '';
-        let totalWeightPercent = totalWeightCompleted * 100;
-
-        if (totalWeightCompleted > 0) {
-            // Overall current grade = sum of weighted scores / sum of weights completed.
-            finalGrade = (totalWeightedScore / totalWeightCompleted) * 100;
-        } else {
-             finalGrade = 0;
+        if (CURRENT_WEIGHT > 0) {
+            // FIX: The user's formula ((H1+H2)/25 + (Q1+Q2+Q3)/5) / .34 already calculates the percentage directly (e.g., 65.41).
+            // We removed the extraneous * 100 that caused the result to be 6541%.
+            finalGrade = weightedSum / CURRENT_WEIGHT;
         }
+
+        // --- Update Category Display (using actual % achieved for context) ---
+        const hwPercent = MAX_HW_POINTS_CALC > 0 ? (hwSum / MAX_HW_POINTS_CALC) * 100 : 0;
+        const quizPercent = MAX_QUIZ_POINTS_CALC > 0 ? (quizSum / MAX_QUIZ_POINTS_CALC) * 100 : 0;
+
+        document.getElementById('hw-total-percent').textContent = hwPercent.toFixed(1) + '%';
+        document.getElementById('quiz-total-percent').textContent = quizPercent.toFixed(1) + '%';
+
+
+        // --- Determine Letter Grade and styling ---
+        let letterGrade = 'F';
+        let gradeClass = 'F';
         
-        // Determine Letter Grade and styling
         if (finalGrade >= MAX_GRADES.A) {
             letterGrade = 'A';
             gradeClass = 'A';
@@ -239,21 +234,17 @@
         } else if (finalGrade >= MAX_GRADES.C) {
             letterGrade = 'C';
             gradeClass = 'C';
-        } else {
-            letterGrade = 'F';
-            gradeClass = 'F';
         }
 
         // Update the display
-        document.getElementById('weight-completed').textContent = totalWeightPercent.toFixed(1) + '%';
         document.getElementById('final-percentage').textContent = finalGrade.toFixed(2) + '%';
         document.getElementById('final-percentage').className = 'result-grade ' + gradeClass;
         document.getElementById('final-letter').textContent = letterGrade;
         document.getElementById('final-letter').className = 'result-grade ' + gradeClass;
     }
 
-    // Attach the calculation function to all input changes
-    document.querySelectorAll('input[type="number"]').forEach(input => {
+    // Attach the calculation function to all relevant input changes
+    document.querySelectorAll('.hw-score-calc, .quiz-score-calc').forEach(input => {
         input.addEventListener('input', calculateGrade);
     });
 
