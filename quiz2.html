@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS 3362 Practice Quiz #2: Ciphers and Codes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to enhance the look and feel */
+        .question-card {
+            border-left: 4px solid #f97316; /* Orange color for Quiz 2 */
+        }
+        .correct {
+            color: #047857; /* Green-700 */
+        }
+        .incorrect {
+            color: #b91c1c; /* Red-700 */
+        }
+        .radio-label {
+            display: block;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .radio-label:hover {
+            background-color: #f0f9ff; /* Blue-50 on hover */
+            border-color: #3b82f6; /* Blue-500 on hover */
+        }
+        .radio-label input:checked + .radio-text {
+            font-weight: 600;
+            color: #1d4ed8; /* Blue-700 */
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-orange-600">CIS 3362 Practice Quiz #2</h1>
+            <p class="text-lg text-gray-600 mt-2">Ciphers, Transposition, and Historical Codes Review</p>
+            <button onclick="document.getElementById('quizForm').reset(); resetFeedback()"
+                class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300">
+                Reset Answers
+            </button>
+        </header>
+
+        <form id="quizForm" class="space-y-8">
+
+            <!-- Question 1: Playfair Cipher -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">1. Playfair Cipher Encryption (10 pts)</h3>
+                <p class="mb-4">Encrypt the plaintext "<span class="font-mono bg-yellow-100 px-1 rounded">CUTTINGTHEGRASSNOW</span>" using the Playfair cipher with the key: "<span class="font-mono bg-yellow-100 px-1 rounded">LAWNMOWER</span>". Use padding character 'X' and I/J rule.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q1_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter the ciphertext">
+                    <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition" onclick="checkAnswer(1, 'OZQZZTWHSIRFEWQYYBRL', true)">Check</button>
+                </div>
+                <div id="q1_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 2a, b: Enigma Knowledge -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">2. Enigma Facts (2 pts)</h3>
+                <p class="mb-2 font-semibold">(a) From what country was the mathematician who initially broke the Enigma in the mid 1930s?</p>
+                <input type="text" id="q2a_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter Country">
+                <div id="q2a_feedback" class="feedback mt-3 text-sm mb-4"></div>
+
+                <p class="mb-2 font-semibold">(b) A spy from which country initially obtained the Enigma blueprint from Hans Thilo Schmidt?</p>
+                <input type="text" id="q2b_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter Country">
+                <div id="q2b_feedback" class="feedback mt-3 text-sm"></div>
+                
+                <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition mt-4" onclick="checkMultipleAnswers('2a', 'Poland', true); checkMultipleAnswers('2b', 'France', true);">Check Both</button>
+            </div>
+
+            <!-- Question 2c: Enigma Scrambler Factor -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">2c. Enigma Scrambler Orderings (3 pts)</h3>
+                <p class="mb-4">The Enigma machine went from 3 out of 5 scramblers (60 orderings) to 3 out of 10 scramblers. By what <b>multiplicative factor</b> would this have increased the number of possible orderings?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q2c_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter the factor (e.g., 2)">
+                    <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition" onclick="checkAnswer('2c', '12', false)">Check</button>
+                </div>
+                <div id="q2c_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 3: Hill Cipher -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">3. Hill Cipher Decryption (15 pts)</h3>
+                <p class="mb-4">The ciphertext "<span class="font-mono bg-yellow-100 px-1 rounded">CYPZXRJX</span>" was encrypted using the key matrix <span class="font-mono bg-yellow-100 px-1 rounded">[[3, 9], [2, 7]]</span>. What is the corresponding decryption key (A⁻¹) and the resulting plaintext?</p>
+                
+                <p class="mb-2 font-semibold">Decryption Key (4 matrix elements: A⁻¹):</p>
+                <!-- W-FULL ADDED HERE -->
+                <input type="text" id="q3a_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 w-full" placeholder="Enter 4 elements row-by-row, separated by commas (e.g., 11, -3, 8, 1)">
+                <div id="q3a_feedback" class="feedback mt-3 text-sm mb-4"></div>
+
+                <p class="mb-2 font-semibold">Plaintext:</p>
+                <!-- W-FULL ADDED HERE -->
+                <input type="text" id="q3b_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 w-full" placeholder="Enter the decrypted 8-letter plaintext">
+                <div id="q3b_feedback" class="feedback mt-3 text-sm"></div>
+
+                <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition mt-4" onclick="checkAnswer('3a', '11, -3, 8, 1', true, true); checkAnswer('3b', 'COMPUTER', true);">Check Both</button>
+            </div>
+
+            <!-- Question 4: Column Transposition -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">4. Column Transposition Decryption (10 pts)</h3>
+                <p class="mb-4 text-gray-700">The ciphertext below (54 characters) was encrypted via column transposition with the keyword "<span class="font-mono bg-yellow-100 text-gray-900 px-1 rounded">KLEENEX</span>". Decrypt the message to recover the plaintext.</p>
+                <p class="font-mono bg-gray-200 text-gray-800 p-3 rounded mb-4 break-all">ABIOINHLVEGUHTTDCТETVREIIETIRUIHMHMNUOEE DHNAHHSLHS AEOF</p>
+                
+                <input type="text" id="q4_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter the full plaintext message">
+                <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition mt-4" onclick="checkAnswer(4, 'I HAVE CLIMBED THE HIGHEST MOUNTAIN I HAVE RUN THROUOH THE FIELDS', true, false, true)">Check</button>
+                <div id="q4_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 5: Navajo Code (Multiple Choice) -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">5. Navajo Code Criteria (9 pts)</h3>
+
+                <p class="mb-2 font-semibold">(a) What are the two main criteria used when searching for a Native American language for the secret code in WWII?</p>
+                <p class="text-sm text-gray-600 mb-3">Select the two correct criteria.</p>
+
+                <div id="q5a_options" class="space-y-2">
+                    <label class="radio-label">
+                        <input type="checkbox" name="q5a" value="A" class="mr-2">
+                        <span class="radio-text">The language must be geographically isolated to prevent listening by enemy nations.</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="checkbox" name="q5a" value="B" class="mr-2">
+                        <span class="radio-text">No known exposure of Japanese personnel to the language.</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="checkbox" name="q5a" value="C" class="mr-2">
+                        <span class="radio-text">The tribe must be large enough to provide young men who also knew English and could handle the physical rigors of war.</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="checkbox" name="q5a" value="D" class="mr-2">
+                        <span class="radio-text">The language must have a written dictionary to facilitate training.</span>
+                    </label>
+                </div>
+                <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition mt-4" onclick="checkMultipleChoice('q5a', ['B', 'C'])">Check Criteria</button>
+                <div id="q5a_feedback" class="feedback mt-3 text-sm"></div>
+
+                <p class="mt-6 mb-2 font-semibold">(b) Why did some English letters have more assigned Navajo words than others?</p>
+                <div id="q5b_options" class="space-y-2">
+                    <label class="radio-label">
+                        <input type="radio" name="q5b" value="A" class="mr-2">
+                        <span class="radio-text">The extra words were used to denote rank and sensitive military terms.</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="q5b" value="B" class="mr-2">
+                        <span class="radio-text">To make frequency analysis more difficult by ensuring no single code word represented the true frequency of a letter.</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="q5b" value="C" class="mr-2">
+                        <span class="radio-text">Some letters were used more often in standard military communications, requiring more options.</span>
+                    </label>
+                </div>
+                <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition mt-4" onclick="checkMultipleChoice('q5b', 'B')">Check Frequency Question</button>
+                <div id="q5b_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+
+            <!-- Question 6: General Knowledge -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">6. General Knowledge (1 pt)</h3>
+                <p class="mb-4">Which Native American group previously lived in the same location (and many surrounding areas) as the current day Sioux City?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q6_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="Enter the group name">
+                    <button type="button" class="check-btn px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition" onclick="checkAnswer(6, 'Sioux', true)">Check</button>
+                </div>
+                <div id="q6_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Custom function for multiple choice questions
+        function checkMultipleChoice(name, correctValueOrArray) {
+            const options = document.querySelectorAll(`input[name="${name}"]`);
+            const feedbackElement = document.getElementById(name + '_feedback');
+            let isCorrect = false;
+
+            if (Array.isArray(correctValueOrArray)) {
+                // Checkbox: All correct options must be checked, and no incorrect options must be checked
+                const checked = Array.from(options).filter(opt => opt.checked).map(opt => opt.value);
+                
+                // Compare arrays for exact match (order doesn't matter, but content does)
+                const sortedChecked = checked.sort().join(',');
+                const sortedCorrect = correctValueOrArray.sort().join(',');
+                
+                isCorrect = (sortedChecked === sortedCorrect);
+
+            } else {
+                // Radio button: Only one option is correct
+                const checkedOption = Array.from(options).find(opt => opt.checked);
+                isCorrect = (checkedOption && checkedOption.value === correctValueOrArray);
+            }
+
+            if (isCorrect) {
+                showFeedback(feedbackElement, true);
+            } else {
+                showFeedback(feedbackElement, false);
+            }
+        }
+
+        // Custom function to check answers for multiple small inputs (like 2a and 2b)
+        function checkMultipleAnswers(qNum, correctAns, isCaseInsensitive) {
+            const inputId = 'q' + qNum + '_ans';
+            const feedbackId = 'q' + qNum + '_feedback';
+            let userAns = document.getElementById(inputId).value.trim();
+            const feedbackElement = document.getElementById(feedbackId);
+
+            let formattedUserAns = userAns;
+            let formattedCorrectAns = correctAns;
+            let isCorrect = false;
+
+            if (isCaseInsensitive) {
+                formattedUserAns = formattedUserAns.toLowerCase();
+                formattedCorrectAns = formattedCorrectAns.toLowerCase();
+            }
+
+            if (formattedUserAns === formattedCorrectAns.toLowerCase()) {
+                isCorrect = true;
+            }
+
+            if (isCorrect) {
+                showFeedback(feedbackElement, true);
+            } else {
+                showFeedback(feedbackElement, false);
+            }
+        }
+
+        // Main function to check the user's answer
+        function checkAnswer(qNum, correctAns, isCaseInsensitive, isCommaSeparated = false, keepSpaces = false) {
+            const inputId = 'q' + qNum + '_ans';
+            const feedbackId = 'q' + qNum + '_feedback';
+            let userAns = document.getElementById(inputId).value.trim();
+            const feedbackElement = document.getElementById(feedbackId);
+
+            let formattedUserAns = userAns;
+            let formattedCorrectAns = correctAns;
+            let isCorrect = false;
+
+            // 1. Prepare and Normalize Answers
+            if (isCaseInsensitive) {
+                formattedUserAns = formattedUserAns.toLowerCase();
+                formattedCorrectAns = formattedCorrectAns.toLowerCase();
+            }
+
+            if (isCommaSeparated) {
+                // Handle key pairs (e.g., '11, -3, 8, 1') where order is fixed
+                formattedUserAns = formattedUserAns.replace(/\s/g, '');
+                formattedCorrectAns = formattedCorrectAns.replace(/\s/g, '');
+                isCorrect = (formattedUserAns === formattedCorrectAns);
+
+            } else if (!keepSpaces) {
+                // Remove spaces for ciphertexts and plaintexts (Q1, Q3b, Q2c, Q6)
+                formattedUserAns = formattedUserAns.replace(/\s/g, '');
+                formattedCorrectAns = formattedCorrectAns.replace(/\s/g, '');
+                isCorrect = (formattedUserAns === formattedCorrectAns);
+            } else {
+                // Keep spaces for full sentences like Q4, but normalize multiple spaces/line breaks to single space
+                formattedUserAns = formattedUserAns.replace(/\s+/g, ' ').trim();
+                formattedCorrectAns = formattedCorrectAns.replace(/\s+/g, ' ').trim();
+                isCorrect = (formattedUserAns === formattedCorrectAns);
+            }
+
+            // 2. Provide Feedback without revealing the answer
+            if (isCorrect) {
+                showFeedback(feedbackElement, true);
+            } else {
+                showFeedback(feedbackElement, false);
+            }
+        }
+
+        // Updated showFeedback function to hide the correct answer
+        function showFeedback(element, isCorrect) {
+            if (isCorrect) {
+                element.className = 'feedback mt-3 text-sm font-semibold correct';
+                element.innerHTML = '✅ Correct!';
+            } else {
+                element.className = 'feedback mt-3 text-sm font-semibold incorrect';
+                element.innerHTML = `❌ Incorrect. Review your work and try again.`;
+            }
+        }
+
+        function resetFeedback() {
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(el => el.innerHTML = '');
+        }
+    </script>
+</body>
+</html>

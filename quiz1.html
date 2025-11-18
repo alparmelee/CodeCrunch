@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS 3362 Practice Quiz #1: Cryptography & Number Theory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax script for rendering LaTeX mathematics removed as requested -->
+    <style>
+        /* Custom styles to enhance the look and feel */
+        .question-card {
+            border-left: 4px solid #3498db;
+        }
+        .correct {
+            color: #047857; /* Green-700 */
+        }
+        .incorrect {
+            color: #b91c1c; /* Red-700 */
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-800">CIS 3362 Practice Quiz #1</h1>
+            <p class="text-lg text-gray-600 mt-2">Classical Cryptography and Number Theory Review</p>
+            <button onclick="document.getElementById('quizForm').reset(); resetFeedback()"
+                class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300">
+                Reset Answers
+            </button>
+        </header>
+
+        <form id="quizForm" class="space-y-8">
+            <!-- Correct answers are stored only in the checkAnswer function's arguments, but not displayed to the user. -->
+
+            <!-- Question 1: Shift Cipher -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">1. Shift Cipher Encryption (5 pts)</h3>
+                <p class="mb-4">Encrypt the plaintext "<span class="font-mono bg-yellow-100 px-1 rounded">THIRD</span>" using the Shift Cipher with a key equal to <span class="font-mono bg-yellow-100 px-1 rounded">15</span>.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q1_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the 5-letter ciphertext (e.g., ABCDE)">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(1, 'IWXGS', true)">Check</button>
+                </div>
+                <div id="q1_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 2: Affine Decryption Keys -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">2. Affine Cipher Decryption Keys (6 pts)</h3>
+                <p class="mb-4">The encryption keys for an Affine Cipher (mod 26) are a=11 and b=13. What are the corresponding decryption keys, <b>a⁻¹</b> and <b>b'</b>?</p>
+                <div class="flex flex-col space-y-2">
+                    <input type="text" id="q2_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter key pair separated by a comma (e.g., 1, 2)">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(2, '19, 13', true, true)">Check</button>
+                </div>
+                <div id="q2_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 3: Modular Inverse (EEA) -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">3. Modular Inverse (12 pts)</h3>
+                <p class="mb-4">Determine <span class="font-mono">107⁻¹ mod 243</span>. Give your final answer between 0 and 242.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q3_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the integer inverse">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(3, '134', false)">Check</button>
+                </div>
+                <div id="q3_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 5: Vigenere Cipher Decryption -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">5. Vigenere Cipher Decryption (10 pts)</h3>
+                <p class="mb-4">The ciphertext "<span class="font-mono bg-yellow-100 px-1 rounded">MIHOILYYFH</span>" was encrypted with the key "<span class="font-mono bg-yellow-100 px-1 rounded">HOUSE</span>". What is the plaintext?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q5_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the plaintext (e.g., THEANSWER)">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(5, 'FUNWEEKEND', true)">Check</button>
+                </div>
+                <div id="q5_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 6: Index of Coincidence -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">6. Index of Coincidence (6 pts)</h3>
+                <p class="mb-4">A set of 50 letters contains 20 As, 10 Bs, 10 Cs and 10 Ds. What is the Index of Coincidence (IC) for this set? Express your answer as a fraction in lowest terms.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q6_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the fraction (e.g., 1/2)">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(6, '13/49', true)">Check</button>
+                </div>
+                <div id="q6_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 7: General Knowledge -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">7. General Knowledge (1 pt)</h3>
+                <p class="mb-4">The United States Open, a major tennis tournament, is set to conclude this Sunday. In what country does this tournament take place?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q7_ans" class="answer-input flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the country">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(7, 'United States', true)">Check</button>
+                </div>
+                <div id="q7_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Function to check the user's answer
+        function checkAnswer(qNum, correctAns, isCaseInsensitive, isCommaSeparated = false) {
+            const inputId = 'q' + qNum + '_ans';
+            const feedbackId = 'q' + qNum + '_feedback';
+            let userAns = document.getElementById(inputId).value.trim();
+            const feedbackElement = document.getElementById(feedbackId);
+
+            let formattedUserAns = userAns;
+            let formattedCorrectAns = correctAns;
+            let isCorrect = false;
+
+            // 1. Prepare and Normalize Answers
+            if (isCaseInsensitive) {
+                formattedUserAns = formattedUserAns.toLowerCase();
+                formattedCorrectAns = formattedCorrectAns.toLowerCase();
+            }
+
+            if (isCommaSeparated) {
+                // Handle key pairs (e.g., '19, 13') where order doesn't matter
+                formattedUserAns = formattedUserAns.replace(/\s/g, '').replace(/,\s*/g, ',');
+                formattedCorrectAns = formattedCorrectAns.replace(/\s/g, '').replace(/,\s*/g, ',');
+                
+                // Check if sorted parts match
+                const userParts = formattedUserAns.split(',').map(n => parseInt(n)).sort((a, b) => a - b).join(',');
+                const correctParts = formattedCorrectAns.split(',').map(n => parseInt(n)).sort((a, b) => a - b).join(',');
+                
+                isCorrect = (userParts === correctParts);
+
+            } else {
+                // Remove spaces for non-comma answers (like Q1, Q5, Q6, Q7)
+                formattedUserAns = formattedUserAns.replace(/\s/g, '');
+                formattedCorrectAns = formattedCorrectAns.replace(/\s/g, '');
+                
+                isCorrect = (formattedUserAns === formattedCorrectAns);
+            }
+
+            // 2. Provide Feedback without revealing the answer
+            if (isCorrect) {
+                showFeedback(feedbackElement, true);
+            } else {
+                showFeedback(feedbackElement, false);
+            }
+        }
+
+        // Updated showFeedback function to hide the correct answer
+        function showFeedback(element, isCorrect) {
+            if (isCorrect) {
+                element.className = 'feedback mt-3 text-sm font-semibold correct';
+                element.innerHTML = '✅ Correct!';
+            } else {
+                element.className = 'feedback mt-3 text-sm font-semibold incorrect';
+                element.innerHTML = `❌ Incorrect. Review your calculation and try again.`;
+            }
+        }
+
+        function resetFeedback() {
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(el => el.innerHTML = '');
+        }
+    </script>
+</body>
+</html>

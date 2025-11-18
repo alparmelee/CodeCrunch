@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS 3362 Practice Quiz #4: Number Theory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to enhance the look and feel */
+        .question-card {
+            border-left: 4px solid #3b82f6; /* Blue color for Quiz 4 */
+        }
+        .correct {
+            color: #047857; /* Green-700 */
+        }
+        .incorrect {
+            color: #b91c1c; /* Red-700 */
+        }
+        .math-expr {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1d4ed8;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-600">CIS 3362 Practice Quiz #4</h1>
+            <p class="text-lg text-gray-600 mt-2">Number Theory and Modern Factoring Algorithms Review</p>
+            <button onclick="document.getElementById('quizForm').reset(); resetFeedback()"
+                class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300">
+                Reset Answers
+            </button>
+        </header>
+
+        <form id="quizForm" class="space-y-8">
+
+            <!-- Question 1: Prime Factorization -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">1. Prime Factorization (6 pts)</h3>
+                <p class="mb-4">Determine the <b>Prime Factorization</b> of <span class="font-mono bg-yellow-100 px-1 rounded">1,843,956,000</span>.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q1_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g., 2^2 * 3^3 . . .">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(1, '2^5 * 3^2 * 5^3 * 17 * 23 * 131', true)">Check</button>
+                </div>
+                <div id="q1_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+            
+            <!-- Question 2: Euler's Totient Function -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">2. Euler's Totient Function (8 pts)</h3>
+                <p class="mb-4">Determine φ(1,843,956,000) and give your answer in <b>prime factorized form</b>.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q2_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g., 2^2 * 3^3 . . .">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(2, '2^13 * 3 * 5^3 * 11 * 13', true)">Check</button>
+                </div>
+                <div id="q2_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 3: Fermat's Theorem -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">3. Fermat's Little Theorem (6 pts)</h3>
+                <p class="mb-4">Determine the <b>remainder</b> when <span class="math-expr">47¹²²⁰⁸</span> is divided by <span class="math-expr">719</span> (<span class="math-expr">719</span> is prime).</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q3_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the integer remainder">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(3, '52', false)">Check</button>
+                </div>
+                <div id="q3_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 4: Euler's Theorem -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">4. Euler's Theorem (6 pts)</h3>
+                <p class="mb-4">Determine the <b>remainder</b> when <span class="math-expr">48³⁵⁵⁷⁴³</span> is divided by <span class="math-expr">65219</span>.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q4_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the integer remainder">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(4, '45373', false)">Check</button>
+                </div>
+                <div id="q4_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 5: Discrete Log (Baby-Step Giant-Step) -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">5. Discrete Log Problem (15 pts)</h3>
+                <p class="mb-4">Determine the value of <b>x</b> which satisfies the equation <span class="math-expr">2ˣ &equiv; 6 (mod 101)</span> using the <span class="math-expr">O(&radic;p)</span> technique (Baby-Step Giant-Step). </p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q5_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the integer value of x">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(5, '70', false)">Check</button>
+                </div>
+                <div id="q5_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 6: Pollard-Rho Factoring Algorithm -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">6. Pollard-Rho Factoring (8 pts)</h3>
+                <p class="mb-4">Use the Pollard-Rho Factoring Algorithm to determine the <b>prime factorization</b> of <span class="font-mono bg-yellow-100 px-1 rounded">13231</span>.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q6_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g., 67 * 42">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(6, '101*131', true)">Check</button>
+                </div>
+                <div id="q6_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 7: General Knowledge -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">7. General Knowledge (1 pt)</h3>
+                <p class="mb-4">What type of tea can be purchased at Dang Boba and Musubi House?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q7_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter the type of tea">
+                    <button type="button" class="check-btn px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition" onclick="checkAnswer(7, 'Boba', true)">Check</button>
+                </div>
+                <div id="q7_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Main function to check the user's answer
+        function checkAnswer(qNum, correctAns, isCaseInsensitive, isCommaSeparated = false) {
+            const inputId = 'q' + qNum + '_ans';
+            const feedbackId = 'q' + qNum + '_feedback';
+            let userAns = document.getElementById(inputId).value.trim();
+            const feedbackElement = document.getElementById(feedbackId);
+
+            let formattedUserAns = userAns;
+            let formattedCorrectAns = correctAns;
+            let isCorrect = false;
+
+            // 1. Prepare and Normalize Answers
+            // Normalize all math/multiplication symbols (x, *, ^) to a consistent format for checking factorization
+            formattedUserAns = formattedUserAns.replace(/[\*\^x]/g, '*');
+            formattedCorrectAns = correctAns.replace(/[\*\^x]/g, '*'); // Use original correctAns for normalization
+
+            if (isCaseInsensitive) {
+                // Remove all non-alphanumeric characters except * for robust comparison of hex/binary/text
+                formattedUserAns = formattedUserAns.toLowerCase().replace(/[^a-z0-9\*]/g, '');
+                formattedCorrectAns = formattedCorrectAns.toLowerCase().replace(/[^a-z0-9\*]/g, '');
+            } else {
+                // Remove spaces for non-comma answers
+                formattedUserAns = formattedUserAns.replace(/\s/g, '');
+                formattedCorrectAns = formattedCorrectAns.replace(/\s/g, '');
+            }
+
+
+            if (isCommaSeparated) {
+                // Handle ordered lists of numbers (Not applicable for this specific quiz, but kept for consistency)
+                const userParts = formattedUserAns.split(',').map(s => s.trim());
+                const correctParts = formattedCorrectAns.split(',');
+                
+                if (userParts.length === correctParts.length) {
+                    isCorrect = userParts.every((val, index) => val === correctParts[index]);
+                }
+
+            } else {
+                // Simple equality check (Q3, Q4, Q5, Q7)
+                isCorrect = (formattedUserAns === formattedCorrectAns);
+                
+                // Special check for Q1, Q2, Q6 where factor order might be swapped.
+                if ((qNum === 1 || qNum === 2 || qNum === 6) && formattedUserAns.includes('*')) {
+                    // Split factorization into terms, sort them, and compare.
+                    const userTerms = formattedUserAns.split('*').sort().join('*');
+                    const correctTerms = formattedCorrectAns.split('*').sort().join('*');
+                    
+                    isCorrect = (userTerms === correctTerms);
+
+                } else if (qNum === 1 || qNum === 2 || qNum === 6) {
+                    // For prime factorizations without the explicit '*' symbol, check direct equality
+                    isCorrect = (formattedUserAns === formattedCorrectAns);
+                }
+            }
+
+            // 2. Provide Feedback without revealing the answer
+            if (isCorrect) {
+                showFeedback(feedbackElement, true);
+            } else {
+                showFeedback(feedbackElement, false);
+            }
+        }
+
+        // Updated showFeedback function to hide the correct answer
+        function showFeedback(element, isCorrect) {
+            if (isCorrect) {
+                element.className = 'feedback mt-3 text-sm font-semibold correct';
+                element.innerHTML = '✅ Correct!';
+            } else {
+                element.className = 'feedback mt-3 text-sm font-semibold incorrect';
+                element.innerHTML = `❌ Incorrect. Review your work and try again.`;
+            }
+        }
+
+        function resetFeedback() {
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(el => el.innerHTML = '');
+        }
+    </script>
+</body>
+</html>
