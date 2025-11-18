@@ -35,7 +35,6 @@
         <header class="text-center mb-10">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-emerald-600">CIS 3362 Practice Quiz #3</h1>
             <p class="text-lg text-gray-600 mt-2">DES, AES, and Cryptographic Operations Review</p>
-            <a href="Q3-Sol.pdf" class="tool-link"><u>Solutions</u> </a>
             <button onclick="document.getElementById('quizForm').reset(); resetFeedback()"
                 class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300">
                 Reset Answers
@@ -44,20 +43,47 @@
 
         <form id="quizForm" class="space-y-8">
 
-            <!-- Question 1: Permutation Matrix (NP) -->
+            <!-- Question 1: Permutation Matrix (NP) - REFORMATTED WITH 4x4 INPUT GRID -->
             <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
                 <h3 class="text-xl font-bold text-gray-800 mb-3">1. DES-like Cipher Permutation (8 pts)</h3>
-                <p class="mb-4">A DES-like cipher uses a <b>16-bit block</b> with an <b>IP matrix</b>. Calculate the resulting <b>NP matrix</b> (IP applied twice). You must enter the <b>16 output positions</b> for the original bit positions 1 through 16, separated by commas.</p>
+                <p class="mb-4">A DES-like cipher uses a <b>16-bit block</b> with an <b>IP matrix</b>. Calculate the resulting <b>NP matrix</b> (IP applied twice). Enter the <b>16 output positions</b> directly into the 4x4 grid below, corresponding to the new bit positions for the original bits 1 through 16.</p>
                 <div class="mb-4">
-                    <p class="font-semibold text-sm">Given IP Matrix (1-based index):</p>
-                    <div class="font-mono bg-gray-200 p-2 rounded text-center text-gray-700">
-                        3, 9, 15, 7, 13, 11, 6, 5, 16, 2, 14, 10, 8, 4, 1, 12
+                    <p class="font-semibold text-sm">Given IP Matrix (4x4, 1-based index):</p>
+                    <!-- 4x4 IP Matrix Display -->
+                    <div class="grid grid-cols-4 gap-2 font-mono text-center bg-gray-200 p-3 rounded text-lg font-bold text-gray-700 border border-gray-400">
+                        <div class="col-span-1">3</div><div class="col-span-1">9</div><div class="col-span-1">15</div><div class="col-span-1">7</div>
+                        <div class="col-span-1">13</div><div class="col-span-1">11</div><div class="col-span-1">6</div><div class="col-span-1">5</div>
+                        <div class="col-span-1">16</div><div class="col-span-1">2</div><div class="col-span-1">14</div><div class="col-span-1">10</div>
+                        <div class="col-span-1">8</div><div class="col-span-1">4</div><div class="col-span-1">1</div><div class="col-span-1">12</div>
                     </div>
+                </div>
+                
+                <p class="font-semibold text-sm mb-2">NP Matrix (Input - enter the number of the bit that ends up in this position):</p>
+                <!-- 4x4 Input Grid -->
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                    <input type="text" id="q1_r1c1" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R1C1" maxlength="2">
+                    <input type="text" id="q1_r1c2" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R1C2" maxlength="2">
+                    <input type="text" id="q1_r1c3" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R1C3" maxlength="2">
+                    <input type="text" id="q1_r1c4" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R1C4" maxlength="2">
+                    
+                    <input type="text" id="q1_r2c1" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R2C1" maxlength="2">
+                    <input type="text" id="q1_r2c2" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R2C2" maxlength="2">
+                    <input type="text" id="q1_r2c3" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R2C3" maxlength="2">
+                    <input type="text" id="q1_r2c4" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R2C4" maxlength="2">
+
+                    <input type="text" id="q1_r3c1" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R3C1" maxlength="2">
+                    <input type="text" id="q1_r3c2" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R3C2" maxlength="2">
+                    <input type="text" id="q1_r3c3" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R3C3" maxlength="2">
+                    <input type="text" id="q1_r3c4" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R3C4" maxlength="2">
+                    
+                    <input type="text" id="q1_r4c1" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R4C1" maxlength="2">
+                    <input type="text" id="q1_r4c2" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R4C2" maxlength="2">
+                    <input type="text" id="q1_r4c3" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R4C3" maxlength="2">
+                    <input type="text" id="q1_r4c4" class="w-full text-center p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="R4C4" maxlength="2">
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                    <input type="text" id="q1_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="Enter 16 numbers separated by commas (e.g., 1, 2, 3, ...)">
-                    <button type="button" class="check-btn px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition" onclick="checkAnswer(1, '3,12,1,10,13,5,6,14,15,9,11,7,16,2,4,8', true, true)">Check</button>
+                    <button type="button" class="check-btn px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition" onclick="checkQ1Answer()">Check NP</button>
                 </div>
                 <div id="q1_feedback" class="feedback mt-3 text-sm"></div>
             </div>
@@ -65,7 +91,7 @@
             <!-- Question 2: S-Boxes -->
             <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
                 <h3 class="text-xl font-bold text-gray-800 mb-3">2. DES S-Box Output (8 pts)</h3>
-                <p class="mb-2">Provide the output for the designated inputs. Give your answer as <b></b>4 binary bits</b>.</p>
+                <p class="mb-2">Provide the output for the designated inputs. Give your answer as <b>4 binary bits</b>. (Requires external S-Box tables)</p>
                 
                 <p class="mt-4 font-semibold">(a) S₃(011011) =</p>
                 <input type="text" id="q2a_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 w-1/2 sm:w-1/4" placeholder="Binary Output (4 bits)">
@@ -91,7 +117,7 @@
             <!-- Question 5: AES Key Expansion -->
             <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
                 <h3 class="text-xl font-bold text-gray-800 mb-3">5. AES Key Expansion (8 pts)</h3>
-                <p class="mb-4">Given the following AES key words: <span class="font-mono bg-yellow-100 px-1 rounded">w[20] = D4 69 C2 0A</span> and <span class="font-mono bg-yellow-100 px-1 rounded">w[23] = 1B 37 E5 8F</span> (all in hex), calculate <b>w[24]</b>. Express your answer as <b>8 HEX characters</b> (4 bytes).</p>
+                <p class="mb-4">Given the following AES key words: <span class="font-mono bg-yellow-100 px-1 rounded">w[20] = D4 69 C2 0A</span> and <span class="font-mono bg-yellow-100 px-1 rounded">w[23] = 1B 37 E5 8F</span> (all in hex), calculate <b>w[24]</b>. Express your answer as <b>8 HEX characters</b> (4 bytes). (Requires AES S-Box and Rcon[6])</p>
                 <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <input type="text" id="q5_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="Enter the 8 HEX character answer">
                     <button type="button" class="check-btn px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition" onclick="checkAnswer(5, '6EB0B1A5', true)">Check</button>
@@ -109,7 +135,7 @@
                     <pre>B9 3B 4F 46</pre>
                     <pre>47 D6 C7 6F</pre>
                 </div>
-                <p class="mb-2">What is the value of the entry in <b>row 1, column 3</b> (1-based indexing), right <b>AFTER</b> the MixCols step? Express your answer as <b>2 HEX characters</b>.</p>
+                <p class="mb-2">What is the value of the entry in <b>row 1, column 3</b> (1-based indexing), right <b>AFTER</b> the MixCols step? Express your answer as <b>2 HEX characters</b>. (Requires GF(2^8) math)</p>
                 <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <input type="text" id="q6_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="Enter 2 HEX characters (e.g., 67)">
                     <button type="button" class="check-btn px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition" onclick="checkAnswer(6, '81', true)">Check</button>
@@ -132,25 +158,35 @@
     </div>
 
     <script>
-        // Custom function to check answers for multiple small inputs (like 2a and 2b)
-        function checkMultipleAnswers(qNum, correctAns, isCaseInsensitive) {
-            const inputId = 'q' + qNum + '_ans';
-            const feedbackId = 'q' + qNum + '_feedback';
-            let userAns = document.getElementById(inputId).value.trim();
-            const feedbackElement = document.getElementById(feedbackId);
+        // --- Custom logic for Question 1 (4x4 grid input) ---
+        function checkQ1Answer() {
+            // UPDATED Correct Answer based on user-provided image (15, 16, 1, 6, 8, 14, 11, 13, 12, 9, 4, 2, 5, 7, 3, 10)
+            const correctAns = '15,16,1,6,8,14,11,13,12,9,4,2,5,7,3,10'; 
+            let userParts = [];
+            const feedbackElement = document.getElementById('q1_feedback');
 
-            let formattedUserAns = userAns;
-            let formattedCorrectAns = correctAns;
-            let isCorrect = false;
-
-            if (isCaseInsensitive) {
-                formattedUserAns = formattedUserAns.toLowerCase().replace(/[^a-z0-9]/g, '');
-                formattedCorrectAns = formattedCorrectAns.toLowerCase().replace(/[^a-z0-9]/g, '');
+            // Collect all 16 inputs in row-major order (R1C1 to R4C4)
+            for (let r = 1; r <= 4; r++) {
+                for (let c = 1; c <= 4; c++) {
+                    const input = document.getElementById(`q1_r${r}c${c}`);
+                    let val = input.value.trim().replace(/\s/g, ''); 
+                    
+                    // Basic validation: ensure the value is a number between 1 and 16
+                    if (!val || isNaN(parseInt(val)) || parseInt(val) < 1 || parseInt(val) > 16) {
+                        showFeedback(feedbackElement, false, 'One or more cells contain invalid input (must be a number between 1 and 16).');
+                        return; // Stop checking on first invalid input
+                    }
+                    userParts.push(val); 
+                }
             }
 
-            if (formattedUserAns === formattedCorrectAns.toLowerCase()) {
-                isCorrect = true;
-            }
+            const userAnsString = userParts.join(',');
+
+            // Normalize for final comparison (should only contain numbers and commas)
+            const formattedUserAns = userAnsString.replace(/[^0-9,]/g, '');
+            const formattedCorrectAns = correctAns.replace(/[^0-9,]/g, '');
+
+            const isCorrect = (formattedUserAns === formattedCorrectAns);
 
             if (isCorrect) {
                 showFeedback(feedbackElement, true);
@@ -158,6 +194,8 @@
                 showFeedback(feedbackElement, false);
             }
         }
+        
+        // --- General Answer Checking Logic (Used for Q2, Q5, Q6, Q7) ---
 
         // Main function to check the user's answer
         function checkAnswer(qNum, correctAns, isCaseInsensitive, isCommaSeparated = false) {
@@ -173,8 +211,8 @@
             // 1. Prepare and Normalize Answers
             if (isCaseInsensitive) {
                 // Remove all non-alphanumeric characters for robust comparison of hex/binary/text
-                formattedUserAns = formattedUserAns.toLowerCase().replace(/[^a-z0-9]/g, '');
-                formattedCorrectAns = formattedCorrectAns.toLowerCase().replace(/[^a-z0-9]/g, '');
+                formattedUserAns = formattedUserAns.toLowerCase().replace(/[^a-z0-9,]/g, '');
+                formattedCorrectAns = formattedCorrectAns.toLowerCase().replace(/[^a-z0-9,]/g, '');
             } else {
                 // Remove spaces for non-comma answers
                 formattedUserAns = formattedUserAns.replace(/\s/g, '');
@@ -183,8 +221,8 @@
 
 
             if (isCommaSeparated) {
-                // Handle ordered lists of numbers (Q1: NP matrix output)
-                const userParts = formattedUserAns.split(',').map(s => s.trim());
+                // Handle ordered lists of numbers (Legacy check for Q1, but Q1 now uses checkQ1Answer)
+                const userParts = formattedUserAns.split(',').map(s => s.trim()).filter(s => s !== '');
                 const correctParts = formattedCorrectAns.split(',');
                 
                 // Must have the same length and content in the same order
@@ -205,20 +243,30 @@
             }
         }
 
-        // Updated showFeedback function to hide the correct answer
-        function showFeedback(element, isCorrect) {
+        // Updated showFeedback function to hide the correct answer and allow custom messages
+        function showFeedback(element, isCorrect, message = null) {
             if (isCorrect) {
                 element.className = 'feedback mt-3 text-sm font-semibold correct';
                 element.innerHTML = '✅ Correct!';
             } else {
                 element.className = 'feedback mt-3 text-sm font-semibold incorrect';
-                element.innerHTML = `❌ Incorrect. Review your work and try again.`;
+                element.innerHTML = `❌ Incorrect. ${message || 'Review your work and try again.'}`;
             }
         }
 
         function resetFeedback() {
             const feedbacks = document.querySelectorAll('.feedback');
             feedbacks.forEach(el => el.innerHTML = '');
+
+            // Also clear the 16 input fields for Q1
+            for (let r = 1; r <= 4; r++) {
+                for (let c = 1; c <= 4; c++) {
+                    const input = document.getElementById(`q1_r${r}c${c}`);
+                    if (input) {
+                        input.value = '';
+                    }
+                }
+            }
         }
     </script>
 </body>
