@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIS 3362 Practice Quiz #5: Public Key Encryption</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to enhance the look and feel */
+        /* Deep Indigo theme for Quiz 5 */
+        .question-card {
+            border-left: 4px solid #4f46e5; /* Indigo-600 */
+        }
+        .correct {
+            color: #1e40af; /* Blue-800 */
+        }
+        .incorrect {
+            color: #b91c1c; /* Red-700 */
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4f46e5', /* Indigo 600 */
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 font-sans">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-primary">CIS 3362 Practice Quiz #5</h1>
+            <p class="text-lg text-gray-600 mt-2">Public Key Cryptography (DH, RSA, El Gamal, ECC) Review</p>
+            <a href="Q5-Sol.pdf" class="tool-link"><u>Solutions</u> </a>
+            <button onclick="document.getElementById('quizForm').reset(); resetFeedback()"
+                class="mt-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300">
+                Reset Answers
+            </button>
+        </header>
+
+        <form id="quizForm" class="space-y-8">
+
+            <!-- Question 1: Diffie-Hellman Key Exchange -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">1. Diffie-Hellman Key Exchange (9 pts)</h3>
+                <p class="mb-4">Given public keys p=31, g=3. Alice chooses a=12, Bob chooses b=21. Calculate the following values (final answer mod 31):</p>
+
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q1a_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(a) Value Alice sends to Bob (g<sup>a</sup> mod p):</label>
+                        <input type="text" id="q1a_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="Value">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('1a', '8', true)">Check</button>
+                    </div>
+                    <div id="q1a_feedback" class="feedback text-sm ml-4"></div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q1b_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(b) Value Bob sends to Alice (g<sup>b</sup> mod p):</label>
+                        <input type="text" id="q1b_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="Value">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('1b', '15', true)">Check</button>
+                    </div>
+                    <div id="q1b_feedback" class="feedback text-sm ml-4"></div>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q1c_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(c) The shared key:</label>
+                        <input type="text" id="q1c_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="Shared Key">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('1c', '8', true)">Check</button>
+                    </div>
+                    <div id="q1c_feedback" class="feedback text-sm ml-4"></div>
+                </div>
+            </div>
+
+            <!-- Question 2: RSA System (Find d) -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">2. RSA Decryption Key (10 pts)</h3>
+                <p class="mb-4">In an RSA system, n=493 and the public exponent is e=297. Given that 493 = 17 x 29, find the private decryption key, d.</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q2_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" placeholder="Enter the value of d">
+                    <button type="button" class="check-btn px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer(2, '89', true)">Check</button>
+                </div>
+                <div id="q2_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+            <!-- Question 3: El Gamal Cryptosystem -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">3. El Gamal Encryption (10 pts)</h3>
+                <p class="mb-4">Given public elements q=37, alpha=5. Alice's private key is X<sub>A</sub>=22. Bob sends message M=9 with random k=30.</p>
+
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q3a_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(a) Alice's Public Key Y<sub>A</sub>:</label>
+                        <input type="text" id="q3a_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="Y_A value">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('3a', '4', true)">Check</button>
+                    </div>
+                    <div id="q3a_feedback" class="feedback text-sm ml-4"></div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q3b_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(b) The shared secret K:</label>
+                        <input type="text" id="q3b_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="K value">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('3b', '10', true)">Check</button>
+                    </div>
+                    <div id="q3b_feedback" class="feedback text-sm ml-4"></div>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q3c_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(c) Ciphertext C<sub>1</sub> (alpha<sup>k</sup>):</label>
+                        <input type="text" id="q3c_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="C_1 value">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('3c', '27', true)">Check</button>
+                    </div>
+                    <div id="q3c_feedback" class="feedback text-sm ml-4"></div>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <label for="q3d_ans" class="w-full sm:w-1/2 font-semibold text-gray-700">(d) Ciphertext C<sub>2</sub> (K * M):</label>
+                        <input type="text" id="q3d_ans" class="answer-input p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary w-1/4" placeholder="C_2 value">
+                        <button type="button" class="check-btn px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer('3d', '16', true)">Check</button>
+                    </div>
+                    <div id="q3d_feedback" class="feedback text-sm ml-4"></div>
+                </div>
+            </div>
+
+            <!-- Question 4: Elliptic Curve Point Addition -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">4. Elliptic Curve Point Addition (10 pts)</h3>
+                <p class="mb-4">Let C be the elliptic curve E<sub>31</sub>(3, 5) (i.e., y<sup>2</sup> is congruent to x<sup>3</sup> + 3x + 5 mod 31). One point on C is P=(18,1). What is the result of the point doubling P+P?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q4_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" placeholder="Enter the resulting point as (x,y)">
+                    <button type="button" class="check-btn px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer(4, '(13,3)', true)">Check</button>
+                </div>
+                <div id="q4_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+            
+            <!-- Question 5: General Knowledge (Original Q6) -->
+            <div class="question-card p-5 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">5. General Knowledge (1 pt)</h3>
+                <p class="mb-4">By what acronym is the Public Key Encryption system created by Ron Rivest, Adi Shamir and Leonard Adelman known as?</p>
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input type="text" id="q5_ans" class="answer-input flex-grow w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary" placeholder="Enter the acronym">
+                    <button type="button" class="check-btn px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-indigo-700 transition" onclick="checkAnswer(5, 'RSA', true)">Check</button>
+                </div>
+                <div id="q5_feedback" class="feedback mt-3 text-sm"></div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // --- General Answer Checking Logic (Used for Q1, Q2, Q3, Q4, Q5) ---
+
+        /**
+         * Checks the user's answer against the correct answer.
+         * @param {string|number} qNum - Question number/identifier.
+         * @param {string} correctAns - The correct answer string.
+         * @param {boolean} isCaseInsensitive - True if comparison should ignore case and non-alphanumeric chars.
+         */
+        function checkAnswer(qNum, correctAns, isCaseInsensitive) {
+            const inputId = 'q' + qNum + '_ans';
+            const feedbackId = 'q' + qNum + '_feedback';
+            let userAns = document.getElementById(inputId).value.trim();
+            const feedbackElement = document.getElementById(feedbackId);
+
+            let formattedUserAns = userAns;
+            let formattedCorrectAns = correctAns;
+            let isCorrect = false;
+
+            // 1. Prepare and Normalize Answers
+            if (isCaseInsensitive) {
+                // Remove all spaces, parentheses, commas, etc., to normalize the answer format.
+                formattedUserAns = formattedUserAns.toLowerCase().replace(/[^a-z0-9]/g, '');
+                formattedCorrectAns = formattedCorrectAns.toLowerCase().replace(/[^a-z0-9]/g, '');
+            } else {
+                // Remove only leading/trailing spaces
+                formattedUserAns = formattedUserAns.trim();
+                formattedCorrectAns = formattedCorrectAns.trim();
+            }
+
+            // Simple equality check
+            isCorrect = (formattedUserAns === formattedCorrectAns);
+
+            // 2. Provide Feedback
+            if (isCorrect) {
+                showFeedback(feedbackElement, true);
+            } else {
+                showFeedback(feedbackElement, false);
+            }
+        }
+
+        // Updates the feedback message
+        function showFeedback(element, isCorrect, message = null) {
+            if (isCorrect) {
+                element.className = 'feedback mt-3 text-sm font-semibold correct';
+                element.innerHTML = '✅ Correct!';
+            } else {
+                element.className = 'feedback mt-3 text-sm font-semibold incorrect';
+                element.innerHTML = `❌ Incorrect. ${message || 'Review your work and try again.'}`;
+            }
+        }
+
+        // Clears all feedback messages on reset
+        function resetFeedback() {
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(el => el.innerHTML = '');
+        }
+    </script>
+</body>
+</html>
